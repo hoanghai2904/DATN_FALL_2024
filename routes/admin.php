@@ -28,4 +28,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/list-add',function () {
         return view('admin.list.create');
     });
+    Route::get('/test',function () {
+        return view('admin.list.create');
+    });
 });
