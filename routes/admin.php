@@ -21,4 +21,11 @@ Route::prefix('admin')->as('admin.')->group(function() {
     })->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+
+    Route::get('/list',function () {
+        return view('admin.list.index');
+    });
+    Route::get('/list-add',function () {
+        return view('admin.list.create');
+    });
 });
