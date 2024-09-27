@@ -17,8 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = Product::query()->with(['category'])->get();
-//        dd($data->first()->category);
+        $data = Product::query()->get();
+//        dd($data->first()->category);->with(['category'])
         return view(self::PATH_VIEW.__FUNCTION__, compact('data'));
     }
 
