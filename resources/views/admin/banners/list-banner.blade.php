@@ -19,7 +19,6 @@
 @section('content')
     <div class="row">
         <div class="col-xl-12">
-            <h1>hai dep trai</h1>
             <a href="{{ route('admin.banners.addBanner') }}">
                 <button class="btn btn-success">Thêm mới</button>
             </a>
