@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\UserController;
+
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +21,10 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
+    Route::resource('user_addresses', UserAddressController::class);
+    // Route::middleware(['auth'])->group(function () {
+    //     Route::resource('user_addresses', UserAddressController::class);
+    // });
+    Route::resource('users', UserController::class);
+
 });
