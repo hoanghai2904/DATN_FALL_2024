@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\ProductController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,10 +31,11 @@ Route::get('/',[HomeController::class, 'index'])-> name('home.index');
 
 Route::group(['prefix'=> 'account'], function() {
     route::get('/login',[AccountController::class, 'login'])->name('account.login');
+    Route::get('/verify-account/{token}', [AccountController::class, 'verifyAccount'])->name('account.verify');
     route::post('/login',[AccountController::class, 'Check_login']);
 
     route::get('/rigester',[AccountController::class, 'rigester'])->name('account.rigester');
-    route::post('/rigester',[AccountController::class, 'Check_rigester']);
+    route::post('/rigester',[AccountController::class, 'Check_rigester'])->name('account.Check_rigester');
 
     route::get('/profile',[AccountController::class, 'profile'])->name('account.profile');
     route::post('/profile',[AccountController::class, 'Check_profile']);

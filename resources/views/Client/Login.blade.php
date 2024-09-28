@@ -25,6 +25,17 @@
     <!-- ...:::: Start Customer Login Section :::... -->
     <div class="customer-login mb-10">
       <div class="container">
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
           <div class="row justify-content-center">
               <!--login area start-->
               <div class="col-lg-6 col-md-8">
