@@ -28,6 +28,7 @@
     <!-- custom Css-->
     <link href="{{asset('theme/admin/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
     @yield('style-libs')
+    @stack('style')
 </head>
 
 <body>
@@ -141,6 +142,7 @@
 
     <!-- App js -->
     <script src="{{asset('theme/admin/assets/js/app.js')}}"></script>
+    @stack('script')
 </body>
 
 </html>

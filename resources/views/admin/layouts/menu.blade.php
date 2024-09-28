@@ -200,12 +200,12 @@
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLanding">
-                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Đơn hàng</span>
+                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Banner</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarLanding">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="landing.html" class="nav-link" data-key="t-one-page"> One Page </a>
+                                        <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-one-page"> Quản lý banner </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="nft-landing.html" class="nav-link" data-key="t-nft-landing"> NFT Landing </a>
