@@ -35,11 +35,12 @@
         }
         .btn-confirm:hover {
             background-color: #0056b3; /* Màu nền nút khi hover */
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-image: url('https://mcdn2-coolmate.cdn.vccloud.vn/uploads/December2021/shop-quan-ao-thu-cung.jpg'); background-size: cover; background-repeat: no-repeat; height: 100vh;">
+    <table role="presentation" width="90%" cellspacing="0" cellpadding="0" border="0" style="background-image: url('https://mcdn2-coolmate.cdn.vccloud.vn/uploads/December2021/shop-quan-ao-thu-cung.jpg'); background-size: cover; background-repeat: no-repeat; height: 100vh;">
         <tr>
             <td align="center" valign="top" style="padding: 20px;">
                 <div class="email-container">
