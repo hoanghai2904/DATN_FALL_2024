@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->text('discount_type');
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(0);
             $table->decimal('discount');
             $table->string('qty');
-            $table->timestamps('start');
-            $table->timestamps('end');
+            $table->softDeletes();
+            $table->timestamp('start')->nullable();
+            $table->timestamp('end')->nullable();
             $table->timestamps();
         });
     }
