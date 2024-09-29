@@ -16,22 +16,11 @@ use App\Http\Controllers\ProductController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-// Route::prefix('admin')->as('admin.')->group(function() {
-//     Route::get('/', function () {
-//         return view('admin.dashboard');
-//     })->name('dashboard');
-//     Route::resource('categories', CategoryController::class);
-//     Route::resource('products', ProductController::class);
-// });
-
+route::get('/',[HomeController::class, 'index'])->name('home.index');
 Route::group(['prefix'=> 'account'], function() {
     route::get('/login',[AccountController::class, 'login'])->name('account.login');
     Route::get('/verify-account/{token}', [AccountController::class, 'verifyAccount'])->name('account.verify');
-    route::post('/login',[AccountController::class, 'Check_login']);
+    route::post('/login',[AccountController::class, 'Check_login'])->name('account.Check_login');
 
     route::get('/rigester',[AccountController::class, 'rigester'])->name('account.rigester');
     route::post('/rigester',[AccountController::class, 'Check_rigester'])->name('account.Check_rigester');
