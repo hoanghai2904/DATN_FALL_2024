@@ -47,4 +47,9 @@ class VoucherController extends Controller
         }
         return back();
     }
+    public function destroy($id){
+        $find=Vouchers::find($id);
+        $find->delete();
+        return redirect()->route('admin.vouchers.index')->with('msg',"Xóa thành công");
+    }
 }

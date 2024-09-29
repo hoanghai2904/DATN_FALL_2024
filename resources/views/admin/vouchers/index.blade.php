@@ -21,16 +21,11 @@
 
                     <div class="live-preview">
                         <div class="table-responsive table-card">
-                <button class="btn btn-info" ><a href="{{route('admin.vouchers.create')}}">them</a></button>
+                <a class="btn btn-info" href="{{route('admin.vouchers.create')}}">them</a>
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 46px;">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
-                                                <label class="form-check-label" for="cardtableCheck"></label>
-                                            </div>
-                                        </th>
+                                        <th scope="col" style="width: 46px;"></th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Code</th>
                                         <th scope="col">Tên mã giảm giá</th>
@@ -42,13 +37,14 @@
                                         <th scope="col" style="width: 150px;">Action</th>
                                     </tr>
                                 </thead>
+                                @if(!empty($list))
                                 @foreach ($list as $key => $item)
                                 <tbody>
                                     <tr>
                                         <td>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck01">
-                                                <label class="form-check-label" for="cardtableCheck01"></label>
+                                                <input class="form-check-input" type="checkbox" value="" id="select_all_ids">
+                                                <label class="form-check-label" for="select_all_ids"></label>
                                             </div>
                                         </td>
                                             
@@ -57,7 +53,7 @@
                                         <td>{{$item->name}}</td>
                                         <td>
                                             @if ($item->discount_type != '0')
-                                            {{$item->discount}}Đ
+                                            {{number_format($item->discount, 0, '', '.')}}Đ
                                             @else
                                             {{$item->discount}}%
                                             @endif
@@ -68,10 +64,20 @@
                                         <td>{{$item->qty}}</td>
                                         <td>{{$item->start}}</td>
                                         <td>{{$item->end}}</td>
+                                        <td><form action="{{route('admin.vouchers.destroy',$item->id)}}" method="post">
+                                                @method('DELETE')
+                                                @csrf
+                                            <button href="" type="submit" onclick="return confirm('Có chắc muốn xóa?')" class="btn btn-danger">Xóa</button>
+                                        </form>
+                                    </td>
                                     </tr>
                                 </tbody>
                                 @endforeach
-
+                                @else
+                                <tr>
+                                    <td colspan="11" class="text-center">Không có mã giảm giá nào</td>
+                                </tr>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -80,5 +86,4 @@
         </div><!-- end col -->
     </div>
 <!-- end row -->
-
 @endsection
