@@ -11,7 +11,7 @@
             </div>
 
             <div class="card-body">
-                <form action="{{ route('admin.user_addresses.update', $address->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.orders.update', $order->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -25,56 +25,61 @@
                                             </div>
                                         @endif
 
-                    <div class="mb-3">
-                        <label for="full_name" class="form-label">Họ và tên</label>
-                        <input type="text" name="full_name" id="full_name" class="form-control" value="{{ $address->full_name }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="user_name">	Tên khách hàng: </label>
+                            <input type="text" name="user_name" value="{{ $order->user_name }}" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="cover" class="form-label">Ảnh bìa</label>
-                        <input type="file" name="cover" id="cover" class="form-control">
-                        @if($address->cover)
-                            <img src="{{ Storage::url($address->cover) }}" alt="Cover Image" style="max-width: 100px; max-height: 100px;">
-                        @endif
-                    </div>
+                        <div class="form-group">
+                            <label for="user_email">Email:</label>
+                            <input type="email" name="user_email" value="{{ $order->user_email }}" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Số điện thoại</label>
-                        <input type="text" name="phone" id="phone" class="form-control" value="{{ $address->phone }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="user_phone">Số điện thoại:</label>
+                            <input type="text" name="user_phone" value="{{ $order->user_phone }}" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Địa chỉ</label>
-                        <textarea name="address" id="address" class="form-control" required>{{ $address->address }}</textarea>
-                    </div>
+                        <div class="form-group">
+                            <label for="user_address">Địa chỉ</label>
+                            <textarea name="user_address" class="form-control" required>{{ $order->user_address }}</textarea>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" value="{{ $address->email }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="status_order">Trạng thái đơn hàng</label>
+                            <select name="status_order" class="form-control" required>
+                                <option value="Chưa giải quyết" {{ $order->status_order == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
+                                <option value="Đã vận chuyển" {{ $order->status_order == 'Đã vận chuyển' ? 'selected' : '' }}>Đã vận chuyển</option>
+                                <option value="Đã giao hàng" {{ $order->status_order == 'Đã giao hàng' ? 'selected' : '' }}>Đã giao hàng</option>
+                                <option value="Đã hủy" {{ $order->status_order == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
+                            </select>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="province_id" class="form-label">Tỉnh/Thành phố</label>
-                        <input type="number" name="province_id" id="province_id" class="form-control" value="{{ $address->province_id }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="shipping_fee">Phí vận chuyển</label>
+                            <input type="number" name="shipping_fee" value="{{ $order->shipping_fee }}" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="district_id" class="form-label">Quận/Huyện</label>
-                        <input type="text" name="district_id" id="district_id" class="form-control" value="{{ $address->district_id }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="total_price">Tổng giá</label>
+                            <input type="number" name="total_price" value="{{ $order->total_price }}" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="ward_id" class="form-label">Phường/Xã</label>
-                        <input type="text" name="ward_id" id="ward_id" class="form-control" value="{{ $address->ward_id }}" required>
-                    </div>
+                        <div class="form-group">
+                            <label for="discount_price">Giá giảm giá</label>
+                            <input type="number" name="discount_price" value="{{ $order->discount_price }}" class="form-control">
+                        </div>
 
-                    <!-- <div class="mb-3">
-                        <label for="is_default" class="form-check-label">Địa chỉ mặc định?</label>
-                        <input type="checkbox" name="is_default" id="is_default" class="form-check-input" {{ $address->is_default ? 'checked' : '' }}>
-                    </div> -->
+                        <div class="form-group">
+                            <label for="payment_method">Phương thức thanh toán</label>
+                            <select name="payment_method" class="form-control" required>
+                                <option value="Thanh toán khi nhận hàng" {{ $order->payment_method == 'Thanh toán khi nhận hàng' ? 'selected' : '' }}>Thanh toán khi nhận hàng</option>
+                                <option value="Chuyển Khoản" {{ $order->payment_method == 'Chuyển Khoản' ? 'selected' : '' }}>Chuyển Khoản</option>
+                            </select>
+                        </div>
 
-                    <button type="submit" class="btn btn-primary">Cập nhật địa chỉ</button>
-                    <a href="{{ route('admin.user_addresses.index') }}" class="btn btn-secondary">Trở về</a>
+                        <button type="submit" class="btn btn-primary">Update Order</button>
+                    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Trở về</a>
                 </form>
             </div><!-- end card-body -->
         </div><!-- end card -->
