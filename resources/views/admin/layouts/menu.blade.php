@@ -40,7 +40,7 @@
                                 <ul class="nav nav-sm flex-column">
                                 
                                     <li class="nav-item">
-                                        <a href="{{route('admin.user_addresses.index')}}" class="nav-link" data-key="t-analytics"> Quản lý địa chỉ người dùng </a>
+                                        <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>

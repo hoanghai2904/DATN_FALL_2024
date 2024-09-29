@@ -27,6 +27,11 @@
     <link href="{{asset('theme/admin/assets/css/app.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{asset('theme/admin/assets/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
+    <script src="{{asset('theme/admin/assets/js/layout2.js')}}"></script>
+
+    <!-- API LOCATION 
+      -->.
+  
     @yield('style-libs')
 </head>
 

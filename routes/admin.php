@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserAddressController;
-use App\Http\Controllers\UserController;
+
+use App\Http\Controllers\OrderController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -21,10 +21,12 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
-    Route::resource('user_addresses', UserAddressController::class);
-    // Route::middleware(['auth'])->group(function () {
-    //     Route::resource('user_addresses', UserAddressController::class);
-    // });
-    Route::resource('users', UserController::class);
+    Route::resource('orders',OrderController::class);
+    Route::resource('transactions', TransactionController::class);
+    Route::resource('order-items', OrderItemController::class);
+    Route::resource('order-statuses', OrderStatusController::class);
+    Route::resource('cancelled-orders', CancelledOrderController::class);
+    
+    
 
 });
