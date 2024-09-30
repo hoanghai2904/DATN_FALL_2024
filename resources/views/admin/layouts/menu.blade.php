@@ -49,7 +49,7 @@
                                         <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="index.html" class="nav-link" data-key="t-ecommerce"> Ecommerce </a>
+                                        <a href="{{route('admin.brands.index')}}" class="nav-link" data-key="t-ecommerce"> Thương hiệu </a>
                                     </li>
 
                                     <li class="nav-item">
