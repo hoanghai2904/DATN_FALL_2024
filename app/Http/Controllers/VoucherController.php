@@ -10,12 +10,14 @@ class VoucherController extends Controller
 {
     public function index()
     {
-        $list = Vouchers::all();
+        $query = Vouchers::query();
+        $list= $query->orderBy('id','DESC')->paginate(5)->withQueryString();
         return view('admin.vouchers.index', compact('list'));
     }
     public function create()
     {
-        return view('admin.vouchers.create');
+        $title = "Tạo mới mã giảm giá";
+        return view('admin.vouchers.create', compact('title'));
     }
     public function store(VoucherRequest $req)
     {
@@ -28,7 +30,6 @@ class VoucherController extends Controller
             'qty' => $req->qty,
             'start' => $req->start,
             'end' => $req->end,
-            'description' => $req->description,
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
@@ -49,7 +50,35 @@ class VoucherController extends Controller
     }
     public function destroy($id){
         $find=Vouchers::find($id);
+        if (!$find) {
+            return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
+        }
         $find->delete();
         return redirect()->route('admin.vouchers.index')->with('msg',"Xóa thành công");
+    }
+    public function edit($id)
+    {
+        $title = "Cập nhật giảm giá";
+        $find=Vouchers::find($id);
+        if (!$find) {
+            return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
+        }
+        return view('admin.vouchers.edit',compact('find','title'));
+    }
+    public function update(VoucherRequest $req,$id){
+        $find=Vouchers::find($id);
+        $data = [
+            'code' => $req->code,
+            'name' => $req->name,
+            'discount_type' => $req->discount_type,
+            'status' => $req->status,
+            'discount' => $req->discount,
+            'qty' => $req->qty,
+            'start' => $req->start,
+            'end' => $req->end,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]; 
+        $find->update($data);
+        return redirect()->route('admin.vouchers.index')->with('msg', "Sửa mã giảm giá thành công");
     }
 }

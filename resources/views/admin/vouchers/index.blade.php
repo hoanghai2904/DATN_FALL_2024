@@ -11,6 +11,9 @@
             @if (session('msg'))
             <div class="alert alert-success">{{session('msg')}}</div>
             @endif
+            @if (session('msg_warning'))
+            <div class="alert alert-danger">{{session('msg_warning')}}</div>
+            @endif
             <div class="card">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
@@ -34,7 +37,7 @@
                                         <th scope="col">Số lượng</th>
                                         <th scope="col">Ngày bắt đầu</th>
                                         <th scope="col">Ngày kết thúc</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
+                                        <th scope="col" style="">Action</th>
                                     </tr>
                                 </thead>
                                 @if(!empty($list))
@@ -64,6 +67,7 @@
                                         <td>{{$item->qty}}</td>
                                         <td>{{$item->start}}</td>
                                         <td>{{$item->end}}</td>
+                                        <td><a href="{{route('admin.vouchers.edit',[$item->id])}}" class="btn btn-warning sm-2">Sửa</a></td>
                                         <td><form action="{{route('admin.vouchers.destroy',$item->id)}}" method="post">
                                                 @method('DELETE')
                                                 @csrf
@@ -79,6 +83,9 @@
                                 </tr>
                                 @endif
                             </table>
+                            <div class="float-right">
+                                {{$list->links()}}
+                              </div>
                         </div>
                     </div>
                 </div><!-- end card-body -->
