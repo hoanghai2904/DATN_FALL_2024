@@ -9,6 +9,7 @@
         class="needs-validation" novalidate>
         @method('PUT')
         @csrf
+        <a class="btn btn-info" href="{{route('admin.vouchers.index')}}">Trở về</a>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">

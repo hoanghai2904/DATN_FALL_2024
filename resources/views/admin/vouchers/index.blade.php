@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    danh mục
+    danh mục mã giảm giá
 @endsection
 
 @section('content')
@@ -24,7 +24,7 @@
 
                     <div class="live-preview">
                         <div class="table-responsive table-card">
-                <a class="btn btn-info" href="{{route('admin.vouchers.create')}}">them</a>
+                <a class="btn btn-info" href="{{route('admin.vouchers.create')}}">Thêm mới</a>
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
@@ -58,16 +58,16 @@
                                             @if ($item->discount_type != '0')
                                             {{number_format($item->discount, 0, '', '.')}}Đ
                                             @else
-                                            {{$item->discount}}%
+                                            {{number_format($item->discount,0,'','.')}}%
                                             @endif
                                         </td>
                                         <td><a href="vouchers/{{$item->id}}" class="btn btn-sm btn-{{$item->status ? 'danger' : 'success'}}">
-                                            {{$item->status ? 'Không hoạt động' : 'Hoạt động'}}
+                                            {{$item->status ? 'Ngưng hoạt động' : 'Hoạt động'}}
                                         </a></td>
                                         <td>{{$item->qty}}</td>
                                         <td>{{$item->start}}</td>
                                         <td>{{$item->end}}</td>
-                                        <td><a href="{{route('admin.vouchers.edit',[$item->id])}}" class="btn btn-warning sm-2">Sửa</a></td>
+                                        <td><a href="{{route('admin.vouchers.edit',$item->id)}}" class="btn btn-warning sm-2">Sửa</a></td>
                                         <td><form action="{{route('admin.vouchers.destroy',$item->id)}}" method="post">
                                                 @method('DELETE')
                                                 @csrf
