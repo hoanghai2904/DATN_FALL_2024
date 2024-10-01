@@ -107,7 +107,7 @@
             <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @foreach ($listBanner as $key => $banner)
-                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                        <div class="carousel-item {{ $key === 0 ? 'active' : 'inactive' }}">
                             <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
                         </div>
                     @endforeach
