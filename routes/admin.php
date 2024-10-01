@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CancelledOrderController;
+use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\OrderStatusController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\ProductController;
