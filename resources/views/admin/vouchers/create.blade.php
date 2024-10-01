@@ -8,6 +8,7 @@
     <form id="createproduct-form" method="POST" action="{{ route('admin.vouchers.store') }}" autocomplete="off"
         class="needs-validation" novalidate>
         @csrf
+        <a class="btn btn-info" href="{{route('admin.vouchers.index')}}">Trở về</a>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
