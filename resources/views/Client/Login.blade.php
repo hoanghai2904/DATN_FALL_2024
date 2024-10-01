@@ -10,9 +10,9 @@
                         <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                             <nav aria-label="breadcrumb">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="index.html">Trang chủ</a></li>
                                     <li><a href="shop-grid-sidebar-left.html">Shop</a></li>
-                                    <li class="active" aria-current="page">Login</li>
+                                    <li class="active" aria-current="page">Đăng nhập</li>
                                 </ul>
                             </nav>
                         </div>
@@ -29,7 +29,7 @@
                 <!--login area start-->
                 <div class="col-lg-6 col-md-8">
                     <div class="account_form p-4 border rounded shadow-sm" data-aos="fade-up" data-aos-delay="0">
-                        <h3 class="text-center mb-4">Login</h3>
+                        <h3 class="text-center mb-4">Đăng nhập</h3>
                         <form action="{{ route('account.Check_login') }}" method="POST">
                             @csrf
                             <div class="default-form-box mb-3">
@@ -40,7 +40,7 @@
                                 @endif
                             </div>
                             <div class="default-form-box mb-3">
-                                <label for="password">Passwords <span>*</span></label>
+                                <label for="password">Mật khẩu <span>*</span></label>
                                 <input type="password" class="form-control" id="password" name="password" required />
                                 @if ($errors->has('password'))
                                 <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}</div>
@@ -48,18 +48,18 @@
                             </div>
                             <label class="checkbox-default mb-4" for="offer">
                                 <input type="checkbox" id="remember" name="remember" />
-                                <span>Remember me</span>
+                                <span>Ghi nhớ mật khẩu</span>
                             </label>
                             <div class="login_submit">
-                                <button class="btn btn-primary btn-block mb-3" type="submit">
-                                    Login
+                                <button class="btn btn-md btn-black-default-hover btn-block mb-3" type="submit">
+                                    Đăng nhập
                                 </button>
-                                <a href="#" class="text-decoration-none">Lost your password?</a>
+                                <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
                             </div>
                         </form>
                         <hr />
                         <div class="text-center">
-                            <span>Don't have an account?</span>
+                            <span>Bạn chưa có tài khoản?</span>
                             <a href="{{ route('account.rigester') }}" class="btn btn-outline-secondary btn-block mt-3 mb-5">
                                 Register
                             </a>
