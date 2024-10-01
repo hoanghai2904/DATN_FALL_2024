@@ -1,9 +1,16 @@
 <?php
 
-use App\Http\Controllers\BannerController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CancelledOrderController;
+use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\OrderStatusController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +27,15 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
+    Route::resource('orders',OrderController::class);
+    Route::resource('transactions', TransactionController::class);
+    Route::resource('order-items', OrderItemController::class);
+    Route::resource('order-statuses', OrderStatusController::class);
+    Route::resource('cancelled-orders', CancelledOrderController::class);
+
+    Route::resource('brands', BrandsController::class);
+
+    Route::resource('vouchers',VoucherController::class);
 
     Route::get('/list',function () {
         return view('admin.list.index');
