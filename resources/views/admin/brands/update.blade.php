@@ -22,10 +22,10 @@
                     <label for="" class="form-label">Name:</label>
                     <input type="text" class="form-control" name="name" value="{{$brands->name}}" placeholder="">
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="" class="form-label">Slug:</label>
                     <input type="text" class="form-control" name="slug" value="{{$brands->slug}} placeholder="">
-                </div>
+                </div> --}}
                 <div class="mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success">Sửa </button>
                 </div>
