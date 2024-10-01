@@ -20,19 +20,11 @@ return new class extends Migration
             $table->string('user_phone');
             $table->text('user_address');
             $table->text('user_note')->nullable();
-<<<<<<< HEAD
             $table->string('status_order')->default('Chưa giải quyết'); 
             $table->decimal('shipping_fee', 10, 2);
             $table->decimal('total_price', 10, 2);
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->enum('payment_method', ['Thanh toán khi nhận hàng', 'Chuyển Khoản']);
-=======
-            $table->string('status_order')->default('pending'); // Trạng thái (Pending, Shipped, Delivered, Cancelled)
-            $table->decimal('shipping_fee', 10, 2);
-            $table->decimal('total_price', 10, 2);
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->enum('payment_method', ['COD', 'Banking']);
->>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
             $table->timestamps();
         });
     }

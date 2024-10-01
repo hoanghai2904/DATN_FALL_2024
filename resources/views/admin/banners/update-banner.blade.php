@@ -19,7 +19,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="image-input"> Banner</label>
+                                <label class="form-label" for="image-input">Ảnh Banner</label>
                                 <input type="file" class="form-control" name="banner" id="banner">
                                 @error('banner')
                                 <p class="text-danger">{{ $message }}</p>
@@ -42,21 +42,14 @@
                     <!-- end row -->
 
                     <div class="form-group">
-<<<<<<< HEAD
                         <label for="inputState">Trạng thái</label>
                         <select id="inputState" class="form-control" name="status" required>
                             <option value="" disabled selected>Select status</option>
                             <option value="1" {{ $banner->status == 1 ? 'selected' : '' }}>Đang hoạt động</option>
-=======
-                        <label for="inputState">Trạng Thái</label>
-                        <select id="inputState" class="form-control" name="status" required>
-                            <option value="" disabled selected>Chọn trạng thái</option>
-                            <option value="1" {{ $banner->status == 1 ? 'selected' : '' }}>Hoạt động</option>
->>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                             <option value="0" {{ $banner->status == 0 ? 'selected' : '' }}>Không hoạt động</option>
                             @error('status')
                             <p class="text-danger">{{ $message }}</p>
-                            @enderror
+                        @enderror
                         </select>
                         <div class="invalid-feedback">Vui lòng chọn trạng thái.</div>
                     </div>

@@ -39,16 +39,11 @@
                             <div class="collapse menu-dropdown" id="sidebarDashboards">
                                 <ul class="nav nav-sm flex-column">
                                 
-<<<<<<< HEAD
                                     <li class="nav-item">
                                         <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-analytics"> Quản lý banner </a>
-=======
-                                    <li class="nav-item">
-                                        <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
->>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                     </li>
                                     <li class="nav-item">
                                         <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>

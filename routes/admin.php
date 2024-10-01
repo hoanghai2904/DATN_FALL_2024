@@ -46,7 +46,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/test',function () {
         return view('admin.list.create');
     });
-    
+
     Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
         Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
         Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
