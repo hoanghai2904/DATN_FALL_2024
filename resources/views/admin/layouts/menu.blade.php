@@ -38,13 +38,11 @@
 
                             <div class="collapse menu-dropdown" id="sidebarDashboards">
                                 <ul class="nav nav-sm flex-column">
-                                   <li class="nav-item">
-                                        <a href=" {{route('admin.categories.index')}}" class="nav-link" data-key="t-analytics"> Quản lý danh mục </a>
-                                    </li>
+                                
                                     <li class="nav-item">
                                         <a href="{{route('admin.products.index')}}" class="nav-link" data-key="t-analytics"> Quản lý sản phẩm </a>
-                                    </li>
-
+                                    </li>    
+                                   
                                     <li class="nav-item">
                                         <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>
                                     </li>
@@ -201,26 +199,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLanding">
-                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Banner</span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="sidebarLanding">
-                                <ul class="nav nav-sm flex-column">
-                                    <li class="nav-item">
-                                        <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-one-page"> Quản lý banner </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="nft-landing.html" class="nav-link" data-key="t-nft-landing"> NFT Landing </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="job-landing.html" class="nav-link" data-key="t-job">Job</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLanding">
-                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Khuyến mãi</span>
+                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Đơn hàng</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarLanding">
                                 <ul class="nav nav-sm flex-column">
@@ -238,8 +217,27 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link menu-link" href="#sidebarLanding" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarLanding">
-                                <i class="ri-rocket-line"></i> <span data-key="t-landing">Người dùng</span>
+                            <a class="nav-link menu-link" href="#sidebarForms" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarForms">
+                                <i class="ri-file-list-3-line"></i> <span data-key="t-forms">Forms</span>
+                            </a>
+                            <div class="collapse menu-dropdown" id="sidebarLanding">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="landing.html" class="nav-link" data-key="t-one-page"> One Page </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="nft-landing.html" class="nav-link" data-key="t-nft-landing"> NFT Landing </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="job-landing.html" class="nav-link" data-key="t-job">Job</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link menu-link" href="#sidebarTables" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarTables">
+                                <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Tables</span>
                             </a>
                             <div class="collapse menu-dropdown" id="sidebarLanding">
                                 <ul class="nav nav-sm flex-column">

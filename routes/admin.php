@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\UserController;
+
+
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
@@ -42,4 +46,10 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
     });
+    Route::resource('user_addresses', UserAddressController::class);
+    // Route::middleware(['auth'])->group(function () {
+    //     Route::resource('user_addresses', UserAddressController::class);
+    // });
+    Route::resource('users', UserController::class);
+
 });
