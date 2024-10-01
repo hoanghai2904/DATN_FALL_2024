@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 
@@ -60,4 +60,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
     });
+
+    Route::resource('products',ProductController::class);
+
 });
