@@ -26,6 +26,10 @@ Route::prefix('admin')->as('admin.')->group(function() {
     })->name('dashboard');
  
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
 route::get('/',[HomeController::class, 'index'])->name('home.index');
 Route::group(['prefix'=> 'account'], function() {
     route::get('/login',[AccountController::class, 'login'])->name('account.login');

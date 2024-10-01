@@ -49,10 +49,17 @@
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
+<<<<<<< HEAD
                                         <th scope="col">Ảnh Banner</th>
                                         <th scope="col">Url</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
+=======
+                                        <th scope="col">Banner</th>
+                                        <th scope="col">URL</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col" style="width: 150px;">Hành Động</th>
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,7 +81,11 @@
                                             <td>{{ $value->status ? 'Đang hoạt động' : 'Không hoạt động' }}</td>
                                             <td>
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
+<<<<<<< HEAD
                                                     class="btn btn-info btn-sm">Chi tiết</a>
+=======
+                                                    class="btn btn-info btn-sm">Chi Tiết</a>
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
                                                     class="btn btn-warning btn-sm">Sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
@@ -83,7 +94,11 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có muốn xóa không?')">
+<<<<<<< HEAD
                                                         Xóa
+=======
+                                                        Xoá
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                                     </button>
                                                 </form>
 

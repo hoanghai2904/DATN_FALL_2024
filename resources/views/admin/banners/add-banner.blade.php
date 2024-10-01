@@ -18,7 +18,11 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
+<<<<<<< HEAD
                                     <label class="form-label" for="image-input">Ảnh Banner </label>
+=======
+                                    <label class="form-label" for="image-input">Banner </label>
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                     <input type="file" class="form-control" name="banner" id="banner">
                                     @error('banner')
                                         <p class="text-danger">{{ $message }}</p>
@@ -44,14 +48,20 @@
                         <div class="form-group">
                             <label for="inputState">Trạng Thái</label>
                             <select id="inputState" class="form-control" name="status">
+<<<<<<< HEAD
                                 <option value="" disabled selected>Chọn trạng thái</option>
                                 <option value="1">Đang hoạt động</option>
+=======
+                                <option value="" disabled selected>Chọn Trạng Thái</option>
+                                <option value="1">Hoạt động</option>
+>>>>>>> 45fccf81dd0db1a6d9fc4581b1660a197a6fec42
                                 <option value="0">Không hoạt động</option>
                             </select>
                             @error('status')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
+                        
 
                         <!-- end row -->
                     </div>
