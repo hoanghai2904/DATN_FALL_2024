@@ -51,8 +51,8 @@
                                         <th scope="col">ID</th>
                                         <th scope="col">Banner</th>
                                         <th scope="col">URL</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col" style="width: 150px;">Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,16 +74,16 @@
                                             <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
                                             <td>
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
-                                                    class="btn btn-info btn-sm">Detail</a>
+                                                    class="btn btn-info btn-sm">Chi Tiết</a>
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
-                                                    class="btn btn-warning btn-sm">Edit</a>
+                                                    class="btn btn-warning btn-sm">Sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có muốn xóa không?')">
-                                                        Delete
+                                                        Xoá
                                                     </button>
                                                 </form>
 
