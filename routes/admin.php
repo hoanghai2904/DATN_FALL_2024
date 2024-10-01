@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VoucherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::resource('cancelled-orders', CancelledOrderController::class);
 
     Route::resource('brands', BrandsController::class);
+
+    Route::resource('vouchers',VoucherController::class);
 
     Route::get('/list',function () {
         return view('admin.list.index');
