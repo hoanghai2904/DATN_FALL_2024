@@ -21,10 +21,10 @@
                     <label for="" class="form-label">Name:</label>
                     <input type="text" class="form-control" name="name" placeholder="">
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label for="" class="form-label">Slug:</label>
                     <input type="text" class="form-control" name="slug" placeholder="">
-                </div>
+                </div> --}}
                 <div class="mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success">Thêm mới</button>
                 </div>
