@@ -20,13 +20,12 @@ use App\Http\Controllers\ProductController;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::prefix('admin')->as('admin.')->group(function() {
-//     Route::get('/', function () {
-//         return view('admin.dashboard');
-//     })->name('dashboard');
-//     Route::resource('categories', CategoryController::class);
-//     Route::resource('products', ProductController::class);
-// });
+Route::prefix('admin')->as('admin.')->group(function() {
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+ 
+});
 
 Route::group(['prefix'=> 'account'], function() {
     route::get('/login',[AccountController::class, 'login'])->name('account.login');
