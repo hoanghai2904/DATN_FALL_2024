@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Dashboard
+    Bảng điều khiển
 @endsection
 
 @section('content')

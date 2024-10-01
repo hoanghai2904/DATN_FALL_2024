@@ -35,7 +35,7 @@ class User extends Authenticatable
         'remember_token', // Token ghi nhớ đăng nhập
         'email_verified_at', // Thời điểm email xác thực
     ];
-
+    
     /**
      * The attributes that should be hidden for serialization.
      *

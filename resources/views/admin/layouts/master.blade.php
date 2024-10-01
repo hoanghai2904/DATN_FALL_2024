@@ -33,6 +33,7 @@
       -->.
   
     @yield('style-libs')
+    @stack('style')
 </head>
 
 <body>
@@ -146,6 +147,7 @@
 
     <!-- App js -->
     <script src="{{asset('theme/admin/assets/js/app.js')}}"></script>
+    @stack('script')
 </body>
 
 </html>
