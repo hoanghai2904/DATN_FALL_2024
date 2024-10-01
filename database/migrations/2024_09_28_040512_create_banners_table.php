@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('banner');
-            $table->text('url');
-            $table->tinyInteger('status');
+            $table->text('banner');     
+            $table->text('url');     
+            $table->tinyInteger('status'); 
             $table->timestamps();
-            $table->softDeletes(); // Thêm trường deleted_at để hỗ trợ xóa mềm
         });
     }
 
