@@ -24,20 +24,23 @@
 
                     <div class="live-preview">
                         <div class="table-responsive table-card">
-                <a class="btn btn-info" href="{{route('admin.vouchers.create')}}">them</a>
+                            <div style="margin:10px">
+                                 <a class="btn btn-info" href="{{route('admin.vouchers.create')}}">Thêm</a>
+                            </div>
+                     
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col" style="width: 46px;"></th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Code</th>
+                                        <th scope="col">Mã số</th>
                                         <th scope="col">Tên mã giảm giá</th>
-                                        <th scope="col">Discount</th>
+                                        <th scope="col">Giảm giá</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Số lượng</th>
                                         <th scope="col">Ngày bắt đầu</th>
                                         <th scope="col">Ngày kết thúc</th>
-                                        <th scope="col" style="">Action</th>
+                                        <th scope="col" style="">Hành động</th>
                                     </tr>
                                 </thead>
                                 @if(!empty($list))
@@ -67,13 +70,16 @@
                                         <td>{{$item->qty}}</td>
                                         <td>{{$item->start}}</td>
                                         <td>{{$item->end}}</td>
-                                        <td><a href="{{route('admin.vouchers.edit',[$item->id])}}" class="btn btn-warning sm-2">Sửa</a></td>
-                                        <td><form action="{{route('admin.vouchers.destroy',$item->id)}}" method="post">
+                                        <td>
+                                            <a href="{{route('admin.vouchers.edit',[$item->id])}}" class="btn btn-warning sm-2">Sửa</a>
+                                      
+                                        <form action="{{route('admin.vouchers.destroy',$item->id)}}" method="post" style="display:inline;">
                                                 @method('DELETE')
                                                 @csrf
                                             <button href="" type="submit" onclick="return confirm('Có chắc muốn xóa?')" class="btn btn-danger">Xóa</button>
                                         </form>
                                     </td>
+                                       
                                     </tr>
                                 </tbody>
                                 @endforeach
