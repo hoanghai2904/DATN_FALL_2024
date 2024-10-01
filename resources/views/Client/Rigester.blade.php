@@ -30,14 +30,14 @@
                 <!--register area start-->
                 <div class="col-lg-8 col-md-10">
                     <div class="account_form register p-4 border rounded shadow-sm">
-                        <h3 class="mb-4 text-center">Register</h3>
+                        <h3 class="mb-4 text-center">Đăng kí</h3>
     
                         <form action="{{ route('account.Check_rigester') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3">
-                                        <label for="full_name">Full Name <span>*</span></label>
+                                        <label for="full_name">Họ và Tên <span>*</span></label>
                                         <input type="text" id="full_name" name="full_name" class="form-control"
                                             value="{{ old('full_name') }}" required />
                                         @error('full_name')
@@ -49,7 +49,7 @@
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3 d-flex align-items-center">
                                         <div>
-                                            <label for="cover">Avatar</label>
+                                            <label for="cover">Ảnh đại diện</label>
                                             <input type="file" id="cover" name="cover" class="form-control-file"
                                                 onchange="previewAvatar(event)" />
                                             @error('cover')
@@ -63,7 +63,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3">
-                                        <label for="phone">Phone <span>*</span></label>
+                                        <label for="phone">Số điện thoại <span>*</span></label>
                                         <input type="text" id="phone" name="phone" class="form-control"
                                             value="{{ old('phone') }}" required />
                                         @error('phone')
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3">
-                                        <label for="email">Email Address <span>*</span></label>
+                                        <label for="email">Emai<span>*</span></label>
                                         <input type="email" id="email" name="email" class="form-control"
                                             value="{{ old('email') }}" required />
                                         @error('email')
@@ -86,13 +86,13 @@
     
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3">
-                                        <label for="gender">Gender</label>
+                                        <label for="gender">Giới tính</label>
                                         <select id="gender" name="gender" class="form-control">
-                                            <option value="" selected disabled>Select Gender</option>
-                                            <option value="1" {{ old('gender') == 1 ? 'selected' : '' }}>Male</option>
-                                            <option value="2" {{ old('gender') == 2 ? 'selected' : '' }}>Female
+                                            <option value="" selected disabled>Chọn giới tính</option>
+                                            <option value="1" {{ old('gender') == 1 ? 'selected' : '' }}>Nam</option>
+                                            <option value="2" {{ old('gender') == 2 ? 'selected' : '' }}>Nữ
                                             </option>
-                                            <option value="3" {{ old('gender') == 3 ? 'selected' : '' }}>Other
+                                            <option value="3" {{ old('gender') == 3 ? 'selected' : '' }}>Khác
                                             </option>
                                         </select>
                                         @error('gender')
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="default-form-box mb-3">
-                                        <label for="password">Password <span>*</span></label>
+                                        <label for="password">Mật khẩu <span>*</span></label>
                                         <input type="password" id="password" name="password" class="form-control"
                                             required />
                                         @error('password')
@@ -114,11 +114,11 @@
                                 </div>
                             </div>
                             <div class="login_submit text-center d-flex justify-content-center align-items-center mt-4">
-                                <button class="btn btn-primary mr-2" type="submit" style="width: 150px;">
-                                    Register
+                                <button class="btn btn-md btn-black-default-hover mr-2" type="submit" style="width: 150px;">
+                                    Đăng kí
                                 </button>
-                                <a href="{{ route('account.login') }}" class="btn btn-secondary"
-                                    style="width: 100px;">Back</a>
+                                <a href="{{ route('account.login') }}" class="btn btn-outline-secondary btn-block"
+                                    style="width: 100px;">Quay lại</a>
                             </div>
                         </form>
                     </div>
