@@ -23,7 +23,7 @@
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                {{-- <a href="#" class="btn btn-danger mx-2">Xóa</a> --}}
+                <a href="#" class="btn btn-danger mx-2">Chi tiet</a>
                 <a href="{{ route('admin.brands.create') }}" class="btn btn-success">Thêm mới</a>
             </div>
             <!-- end card header -->
@@ -68,6 +68,7 @@
                                     <a href="{{ route('admin.brands.edit', $item->id) }}">
                                         <button class="btn btn-sm btn-warning">Sửa</button>
                                     </a>
+
                                     <form action="{{ route('admin.brands.destroy', $item->id) }}" method="post" class="d-inline">
                                         @method('DELETE')
                                         @csrf
