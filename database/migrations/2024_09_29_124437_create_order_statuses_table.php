@@ -9,13 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('order_statuses', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->string('status'); // Trạng thái (Pending, Shipped, Delivered, Cancelled)
+            $table->timestamp('changed_at')->useCurrent();
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.

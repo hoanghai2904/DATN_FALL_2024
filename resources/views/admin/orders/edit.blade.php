@@ -77,9 +77,11 @@
                                 <option value="Chuyển Khoản" {{ $order->payment_method == 'Chuyển Khoản' ? 'selected' : '' }}>Chuyển Khoản</option>
                             </select>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">Update Order</button>
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Trở về</a>
+                        <div style="margin-top:10px">
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Trở về</a>
+                        </div>
+                   
                 </form>
             </div><!-- end card-body -->
         </div><!-- end card -->
