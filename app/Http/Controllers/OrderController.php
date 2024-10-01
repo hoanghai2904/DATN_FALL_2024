@@ -17,6 +17,7 @@ class OrderController extends Controller
     // Tạo đơn hàng mới
     public function create()
     {
+        $orders = Order::all();
         return view('admin.orders.create');
     }
 
