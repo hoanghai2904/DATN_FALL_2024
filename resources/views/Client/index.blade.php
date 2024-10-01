@@ -55,11 +55,15 @@
                         </div>
                         <div class="header-top-right">
                             <div class="header-top-user-link header-top-user-link-color--white header-top-user-link-hover-color--green">
-                                <a href="wishlist.html">Wishlist</a>
-                                <a href="cart.html">Cart</a> 
-                                <a href="checkout.html">Checkout</a>
+                                @auth
+                                    <span>Xin chào: {{ Auth::user()->full_name }}</span>  
+                                @else
+                                    <a href="{{ route('account.login') }}">Đăng nhập</a> 
+                                    <a href="{{ route('account.rigester') }}">Đăng kí</a>
+                                @endauth
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -72,7 +76,7 @@
                              <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href="index.html"><img src="{{ asset('assets') }}/images/logo/logo_black.png" alt=""></a>
+                                    <a href="{{route('home.index')}}"><img src="{{ asset('assets') }}/images/logo/logo_black.png" alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -82,7 +86,7 @@
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="index.html">Home <i class="fa fa-angle-down"></i></a>
+                                            <a class="active main-menu-link" href="index.html">Trag chủ <i class="fa fa-angle-down"></i></a>
                                             <!-- Sub Menu -->
                                             <ul class="sub-menu">
                                                 <li><a href="index.html">Home 1</a></li>
@@ -152,7 +156,7 @@
                                             </div>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="blog-single-sidebar-left.html">Blog <i class="fa fa-angle-down"></i></a>
+                                            <a href="blog-single-sidebar-left.html">Tin tức <i class="fa fa-angle-down"></i></a>
                                             <!-- Sub Menu -->
                                             <ul class="sub-menu">
                                                 <li><a href="blog-grid-sidebar-left.html">Blog Grid Sidebar left</a></li>
@@ -174,10 +178,10 @@
                                             </ul>
                                         </li>
                                         <li>
-                                            <a href="about-us.html">About Us</a>
+                                            <a href="about-us.html">Giới thiệu</a>
                                         </li>
                                         <li>
-                                            <a href="contact-us.html">Contact Us</a>
+                                            <a href="contact-us.html">Liên hệ</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -199,10 +203,11 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#search">
-                                        <i class="icon-magnifier"></i>
+                                    <a href="{{ route('account.profile') }}">
+                                        <i class="icon-user"></i>
                                     </a>
                                 </li>
+                               
                             </ul>
                             <!-- End Header Action Link -->
                         </div>
@@ -213,58 +218,6 @@
         </div>
     </header>
 
-    <!-- Start Mobile Header -->
-    <div class="mobile-header mobile-header-bg-color--white section-fluid d-lg-block d-xl-none">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 d-flex align-items-center justify-content-between">
-                    <!-- Start Mobile Left Side -->
-                    <div class="mobile-header-left">
-                        <ul class="mobile-menu-logo">
-                            <li>
-                                <a href="index.html">
-                                    <div class="logo">
-                                        <img src="{{ asset('assets') }}/images/logo/logo_black.png" alt="">
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                     <!-- End Mobile Left Side -->
-
-                     <!-- Start Mobile Right Side -->
-                     <div class="mobile-right-side">
-                        <ul class="header-action-link action-color--black action-hover-color--green">
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-wishlish" class="offcanvas-toggle">
-                                    <i class="icon-heart"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
-                                    <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#mobile-menu-offcanvas" class="offcanvas-toggle offside-menu">
-                                    <i class="icon-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                     </div>
-                     <!-- End Mobile Right Side -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Mobile Header -->
 
     <!--  Start Offcanvas Mobile Menu Section -->
     <div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
@@ -944,8 +897,8 @@
     <script src="{{ asset('assets') }}/js/plugins/ajax-mail.js"></script>
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
-    <script src="{{ asset('assets') }}/js/vendor/vendor.min.js"></script>
-    <script src="{{ asset('assets') }}/js/plugins/plugins.min.js"></script> 
+    {{-- <script src="{{ asset('assets') }}/js/vendor/vendor.min.js"></script>
+    <script src="{{ asset('assets') }}/js/plugins/plugins.min.js"></script>  --}}
 
     <!-- Main JS -->
     <script src="{{ asset('assets') }}/js/main.js"></script>

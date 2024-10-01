@@ -51,7 +51,8 @@ class AccountController extends Controller
          'password' => 'Mật khẩu không chính xác.',
      ])->withInput();
  }
-     
+   
+ // log out
  public function logout(Request $request)
  {
      Auth::logout();
@@ -139,7 +140,7 @@ class AccountController extends Controller
 
    public function profile()
    {
-      return view('Client.Login');
+      return view('Client.myAccount');
    }
 
    public function check_profile() {}

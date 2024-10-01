@@ -23,9 +23,11 @@ Route::group(['prefix'=> 'account'], function() {
 
     route::get('/logout',[AccountController::class, 'logout'])->name('account.logout');
 
-    Route::get('/verify-account/{token}', [AccountController::class, 'verifyAccount'])->name('account.verify');
     route::post('/login',[AccountController::class, 'Check_login'])->name('account.Check_login');
 
+    route::get('/logout',[AccountController::class, 'logout'])->name('account.logout');
+
+    Route::get('/verify-account/{token}', [AccountController::class, 'verifyAccount'])->name('account.verify');
     route::get('/rigester',[AccountController::class, 'rigester'])->name('account.rigester');
     route::post('/rigester',[AccountController::class, 'Check_rigester'])->name('account.Check_rigester');
     Route::get('/verify-account/{token}', [AccountController::class, 'verifyAccount'])->name('account.verify');
