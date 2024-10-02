@@ -33,10 +33,10 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    {{-- <div>
                         <label class="form-label" for="meta-description-input">Meta Description</label>
                         <textarea class="form-control" id="meta-description-input" placeholder="Enter meta description" rows="3"></textarea>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="text-end mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success w-sm">Thêm mới</button>
