@@ -20,11 +20,11 @@ return new class extends Migration
             $table->string('user_phone');
             $table->text('user_address');
             $table->text('user_note')->nullable();
-            $table->string('status_order')->default('pending'); // Trạng thái (Pending, Shipped, Delivered, Cancelled)
+            $table->string('status_order')->default('Chưa giải quyết'); 
             $table->decimal('shipping_fee', 10, 2);
             $table->decimal('total_price', 10, 2);
             $table->decimal('discount_price', 10, 2)->nullable();
-            $table->enum('payment_method', ['COD', 'Banking']);
+            $table->enum('payment_method', ['Thanh toán khi nhận hàng', 'Chuyển Khoản']);
             $table->timestamps();
         });
     }

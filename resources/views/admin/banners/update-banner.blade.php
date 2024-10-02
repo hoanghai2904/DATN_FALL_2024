@@ -42,16 +42,16 @@
                     <!-- end row -->
 
                     <div class="form-group">
-                        <label for="inputState">Status</label>
+                        <label for="inputState">Trạng thái</label>
                         <select id="inputState" class="form-control" name="status" required>
                             <option value="" disabled selected>Select status</option>
-                            <option value="1" {{ $banner->status == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ $banner->status == 0 ? 'selected' : '' }}>Inactive</option>
+                            <option value="1" {{ $banner->status == 1 ? 'selected' : '' }}>Đang hoạt động</option>
+                            <option value="0" {{ $banner->status == 0 ? 'selected' : '' }}>Không hoạt động</option>
                             @error('status')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
                         </select>
-                        <div class="invalid-feedback">Please select a status.</div>
+                        <div class="invalid-feedback">Vui lòng chọn trạng thái.</div>
                     </div>
                     <!-- end row -->
                 </div>
