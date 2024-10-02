@@ -19,9 +19,15 @@ class CategoryController extends Controller
     public function index()
     {
         // $data = Category::query()->latest('id')->paginate(5);
-        $data = null;
-//        dd($data);
-        return view(self::PATH_VIEW.__FUNCTION__, compact('data'));
+        // $data = null;
+        // //        dd($data);
+        // return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
+        $activeCategories = Category::where('status', 1)->latest()->paginate(2);
+        $inactiveCategories = Category::where('status', 0)->latest()->paginate(2);
+        return view('admin.list.index')->with([
+            'activeCategories' => $activeCategories,
+            'inactiveCategories' => $inactiveCategories
+        ]);
     }
 
     /**
@@ -29,7 +35,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view(self::PATH_VIEW.__FUNCTION__);
+        return view(self::PATH_VIEW . __FUNCTION__);
     }
 
     /**
@@ -37,18 +43,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
-//         $data = $request->except('cover');
-// //        $data['is_active'] = isset($data['is_active']) ? 1 : 0;
-//         $data['is_active'] ??= 0;
-//         if ($request->hasFile('cover')) {
-//             $data['cover'] = Storage::put(self::PATH_UPLOAD, $request->file('cover'));
-//         } else {
-//             $data['cover'] = '';
-//         }
-//         Category::query()->create($data);
+        //        dd($request->all());
+        //         $data = $request->except('cover');
+        // //        $data['is_active'] = isset($data['is_active']) ? 1 : 0;
+        //         $data['is_active'] ??= 0;
+        //         if ($request->hasFile('cover')) {
+        //             $data['cover'] = Storage::put(self::PATH_UPLOAD, $request->file('cover'));
+        //         } else {
+        //             $data['cover'] = '';
+        //         }
+        //         Category::query()->create($data);
 
-//         return redirect()->route('admin.categories.index')->with('message', 'Thêm mới thành công');
+        //         return redirect()->route('admin.categories.index')->with('message', 'Thêm mới thành công');
     }
 
     /**
@@ -56,7 +62,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return view(self::PATH_VIEW.__FUNCTION__, compact('category'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('category'));
     }
 
     /**
@@ -64,7 +70,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view(self::PATH_VIEW.__FUNCTION__, compact('category'));
+        return view(self::PATH_VIEW . __FUNCTION__, compact('category'));
     }
 
     /**

@@ -9,17 +9,20 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $table = 'categories';
     protected $fillable = [
         'name',
-        'cover',
-        'is_active',
+        'slug',
+        'parent_id',
+        'status'
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean'
-    ];
+    // protected $casts = [
+    //     'is_active' => 'boolean'
+    // ];
 
-    public function products() {
-        return $this->hasMany(Product::class);
-    }
+    // public function products()
+    // {
+    //     return $this->hasMany(Product::class);
+    // }
 }

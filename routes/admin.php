@@ -15,20 +15,48 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('admin')->as('admin.')->group(function() {
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
 
-    Route::get('/list',function () {
-        return view('admin.list.index');
-    });
-    Route::get('/list-add',function () {
+
+
+
+
+
+
+
+
+
+
+    Route::get('/list', [CategoryController::class, 'index'])->name('listCategory');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Route::get('/list-add', function () {
         return view('admin.list.create');
     });
-    Route::get('/test',function () {
+    Route::get('/test', function () {
         return view('admin.list.create');
     });
 });
