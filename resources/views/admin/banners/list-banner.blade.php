@@ -49,10 +49,10 @@
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Banner</th>
-                                        <th scope="col">URL</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
+                                        <th scope="col">Ảnh Banner</th>
+                                        <th scope="col">Url</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,19 +71,19 @@
                                                 <img src="{{ Storage::url($value->banner) }}" alt="" width="150px">
                                             </td>
                                             <td>{{ $value->url }}</td>
-                                            <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
+                                            <td>{{ $value->status ? 'Đang hoạt động' : 'Không hoạt động' }}</td>
                                             <td>
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
-                                                    class="btn btn-info btn-sm">Detail</a>
+                                                    class="btn btn-info btn-sm">Chi tiết</a>
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
-                                                    class="btn btn-warning btn-sm">Edit</a>
+                                                    class="btn btn-warning btn-sm">Sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có muốn xóa không?')">
-                                                        Delete
+                                                        Xóa
                                                     </button>
                                                 </form>
 
@@ -101,7 +101,7 @@
     <!-- end row -->
     <div class="card mt-4">
         <div class="card-header">
-            <h4 class="card-title">Slideshow Banners</h4>
+            <h4 class="card-title">Trình chiếu Banner</h4>
         </div>
         <div class="card-body">
             <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -114,11 +114,11 @@
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">Tiến</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">Lùi</span>
                 </button>
             </div>
         </div>
