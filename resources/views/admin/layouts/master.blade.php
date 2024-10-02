@@ -11,6 +11,8 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href=" {{asset('theme/admin/assets/images/favicon.ico')}}">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!-- jsvectormap css -->
     <link href=" {{asset('theme/admin/assets/libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
 
@@ -132,6 +134,13 @@
     <script src="{{asset('theme/admin/assets/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
     <script src="{{asset('theme/admin/assets/js/plugins.js')}}"></script>
 
+    <!--jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!--select2 cdn-->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <script src="{{asset('theme/admin/assets/js/pages/select2.init.j') }}"></script>
+
     <!-- apexcharts -->
     <script src="{{asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js')}}"></script>
 
@@ -145,6 +154,7 @@
     <!-- Dashboard init -->
     <script src="{{asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js')}}"></script>
 
+    
     <!-- App js -->
     <script src="{{asset('theme/admin/assets/js/app.js')}}"></script>
     @stack('script')
