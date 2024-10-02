@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,6 +34,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
 
     Route::get('/list', [CategoryController::class, 'index'])->name('listCategory');
+    Route::get('/list-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+    Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
 
 
 
@@ -44,19 +47,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
 
 
-
-
-
-
-
-
-
-
-
-    Route::get('/list-add', function () {
-        return view('admin.list.create');
-    });
-    Route::get('/test', function () {
-        return view('admin.list.create');
-    });
+    // Route::get('/test', function () {
+    //     return view('admin.list.create');
+    // });
 });

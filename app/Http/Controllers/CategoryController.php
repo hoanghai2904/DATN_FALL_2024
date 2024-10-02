@@ -33,16 +33,36 @@ class CategoryController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function addCategory()
     {
-        return view(self::PATH_VIEW . __FUNCTION__);
+
+        $category = Category::all();
+        return view('admin.list.create')->with((['category' => $category]));
+        // return view(self::PATH_VIEW . __FUNCTION__);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function addPostCategory(Request $req)
     {
+        $req->validate([
+            'name' => 'required|string|max:255',
+
+        ], [
+            'name.required' => 'Tên danh mục không được để trống',
+            'name.string' => 'Tên danh mục phải là chuỗi ký tự',
+            'name.max' => 'Tên danh mục quá dài',
+
+        ]);
+        $data = [
+            'name' => $req->name,
+            'slug' => $req->slug,
+            'parent_id' => $req->parent_id
+        ];
+        Category::create($data);
+        return redirect()->route('admin.listCategory')->with(['message' => "Thêm mới thành công"]);
+
         //        dd($request->all());
         //         $data = $request->except('cover');
         // //        $data['is_active'] = isset($data['is_active']) ? 1 : 0;

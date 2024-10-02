@@ -14,7 +14,10 @@ class Category extends Model
         'name',
         'slug',
         'parent_id',
-        'status'
+        'status',
+        ' updated_at',
+        ' created_at'
+
     ];
 
     // protected $casts = [

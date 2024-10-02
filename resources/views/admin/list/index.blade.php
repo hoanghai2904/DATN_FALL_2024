@@ -6,6 +6,13 @@
 
 @section('content')
     <div class="row">
+        <a href="{{ route('admin.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
+        @if (session('message'))
+            <div class="alert alert-primary" role="alert">
+                {{ session('message') }};
+            </div>
+        @endif
+
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header align-items-center d-flex">
@@ -27,6 +34,8 @@
                                         <th scope="col">ID</th>
                                         <th scope="col">Tên Danh Mục</th>
                                         <th scope="col"> Danh Mục Cha</th>
+                                        <th scope="col"> Slug</th>
+
 
                                         <th scope="col">Trạng Thái</th>
 
@@ -41,6 +50,8 @@
                                             <td>{{ $value->id }}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>{{ $value->parent_id }}</td>
+                                            <td>{{ $value->slug }}</td>
+
 
                                             <td>
                                                 @if ($value->status == 1)
