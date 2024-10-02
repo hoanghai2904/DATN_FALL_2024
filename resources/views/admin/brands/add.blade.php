@@ -2,7 +2,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Thêm 
+    Tạo mới thương hiệu
 @endsection
 
 {{-- section: định nghĩa nội dung của section --}}
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="text-end mb-3 d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success w-sm">Submit</button>
+                    <button type="submit" class="btn btn-success w-sm">Thêm mới</button>
                 </div>
             </div>
            
