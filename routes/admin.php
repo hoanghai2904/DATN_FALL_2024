@@ -36,6 +36,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/list', [CategoryController::class, 'index'])->name('listCategory');
     Route::get('/list-add', [CategoryController::class, 'addCategory'])->name('addCategory');
     Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+    Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+    Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+
+
 
 
 

@@ -22,8 +22,8 @@ class CategoryController extends Controller
         // $data = null;
         // //        dd($data);
         // return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-        $activeCategories = Category::where('status', 1)->latest()->paginate(2);
-        $inactiveCategories = Category::where('status', 0)->latest()->paginate(2);
+        $activeCategories = Category::where('status', 1)->latest()->paginate(5);
+        $inactiveCategories = Category::withTrashed()->where('status', 0)->latest()->paginate(5);
         return view('admin.list.index')->with([
             'activeCategories' => $activeCategories,
             'inactiveCategories' => $inactiveCategories
@@ -118,9 +118,38 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    // public function deleteCategory($id)
+    // {
+    //     $category = Category::find($id);
+    //     $category->delete();
+    //     return redirect()->route('admin.listCategory')->with(['message' => 'Xóa thành công']);
+    // }
+    public function deleteCategory($id)
     {
-        $category->delete();
-        return back()->with('message', 'Xóa thành công');
+        $category = Category::find($id);
+
+        if ($category) {
+            $category->status = 0;
+            $category->save();
+
+            $category->delete();
+            return redirect()->route('admin.listCategory')->with(['message' => 'Xóa thành công']);
+        }
+
+        return redirect()->route('admin.listCategory')->with(['message' => 'Danh mục không tồn tại']);
+    }
+    public function restoreCategory($id)
+    {
+        $category = Category::withTrashed()->find($id);
+
+        if ($category) {
+            $category->status = 1;
+            $category->save();
+
+            $category->restore();
+            return redirect()->route('admin.listCategory')->with(['message' => 'Cập nhật thành công']);
+        }
+
+        return redirect()->route('admin.listCategory')->with(['message' => 'Danh mục không tồn tại']);
     }
 }

@@ -51,8 +51,6 @@
                                             <td>{{ $value->name }}</td>
                                             <td>{{ $value->parent_id }}</td>
                                             <td>{{ $value->slug }}</td>
-
-
                                             <td>
                                                 @if ($value->status == 1)
                                                     <span class="badge bg-success">Đang Hoạt Động</span>
@@ -63,7 +61,15 @@
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-info">Details</button>
+                                                <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+                                                <form action="{{ route('admin.deleteCategory', $value->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button
+                                                        onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
+                                                        href="" class="btn btn-sm btn-danger">Tạm dừng</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -129,7 +135,13 @@
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-info">Details</button>
+                                                <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+                                                <form action="{{ route('admin.restoreCategory', $value->id) }}"
+                                                    method="post">
+                                                    @csrf
+                                                    <button onclick="return confirm('Bạn có muốn khôi mục danh mục không?')"
+                                                        href="" class="btn btn-sm btn-danger">Khôi phục</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -146,6 +158,7 @@
 
     </div>
     {{ $inactiveCategories->links('pagination::bootstrap-5') }}
+
 
 
     <!-- end row -->
