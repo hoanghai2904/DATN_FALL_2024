@@ -21,17 +21,23 @@ class VoucherRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'code'=>'required',
-            'name'=>'required',
-            'discount_type'=>'required',
-            'status'=>'required',
-            'discount'=>'required|min:1|numeric',
-            'qty'=>'required|min:1|numeric',
-            'start'=>'required|date|after_or_equal:today',
-            'end'=>'required|date|after_or_equal:start'
-        ];
+        $rules = [
+            'code' => 'required',
+            'name' => 'required',
+            'discount_type' => 'required',
+            'status' => 'required',
+            'discount' => 'required|numeric|min:1',
+            'qty' => 'required|numeric|min:1',
+            'start' => 'required|date|after_or_equal:today',
+            'end' => 'required|date|after_or_equal:start'
+        ];    
+        if ($this->input('discount_type') == 0) {
+            $rules['discount'] = 'required|numeric|min:1|max:100'; // Percentage discounts between 1 and 100
+        }
+    
+        return $rules;
     }
+    
     public function messages(){
         return[
             'code.required'=>'Mã giảm giá không được bỏ trống',
@@ -40,6 +46,7 @@ class VoucherRequest extends FormRequest
             'status.required'=>'Vui lòng chọn trạng thái',
             'discount.required'=>'Giá không được để trống',
             'discount.numeric'=>'Giá phải là số',
+            'discount.max'=>'giá trị nhỏ hơn 100%',
             'discount.min'=>'Giá phải lớn hơn 1',
             'qty.required'=>'Số lượng không được để trống',
             'qty.numeric'=>'Số lượng phải là số',
