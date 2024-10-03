@@ -31,10 +31,10 @@
                 <div class="dashboard_tab_button" data-aos="fade-up"  data-aos-delay="0">
                     <ul role="tablist" class="nav flex-column dashboard-list">
                         <li><a href="#dashboard" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover active">Dashboard</a></li>
-                        <li> <a href="#orders" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Orders</a></li>
+                        <li> <a href="#orders" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Đơn hàng</a></li>
                         <li><a href="#downloads" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Downloads</a></li>
                         <li><a href="#address" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Addresses</a></li>
-                        <li><a href="#account-details" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Account details</a></li>
+                        <li><a href="#account-details" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Tài Khoản</a></li>
                         <li><a href="{{route('account.logout')}}" class="nav-link btn btn-block btn-md btn-black-default-hover">logout</a></li>
                     </ul>
                 </div>
@@ -123,51 +123,38 @@
                         <p>Bangladesh</p>
                     </div>
                     <div class="tab-pane fade" id="account-details">
-                        <h3>Account details </h3>
+                        <h3>Tài khoản chi tiết</h3>
                         <div class="login">
                             <div class="login_form_container">
                                 <div class="account_login_form">
                                     <form action="#">
-                                        <p>Already have an account? <a href="#">Log in instead!</a></p>
-                                        <div class="input-radio">
-                                            <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mr.</span>
-                                            <span class="custom-radio"><input type="radio" value="1" name="id_gender"> Mrs.</span>
-                                        </div> <br>
+                                        @csrf
                                         <div class="default-form-box mb-20">
-                                            <label>First Name</label>
+                                            <label>Địa chỉ</label>
                                             <input type="text" name="first-name">
                                         </div>
                                         <div class="default-form-box mb-20">
-                                            <label>Last Name</label>
-                                            <input type="text" name="last-name">
+                                            <label>Tỉnh/Thành phố </label>
+                                            <input type="text" name="province">
                                         </div>
                                         <div class="default-form-box mb-20">
-                                            <label>Email</label>
-                                            <input type="text" name="email-name">
+                                            <label>Quận/Huyện</label>
+                                            <input type="text" name="district">
                                         </div>
                                         <div class="default-form-box mb-20">
-                                            <label>Password</label>
-                                            <input type="password" name="user-password">
+                                            <label>Phường/Xã</label>
+                                            <input type="text" name="ward">
                                         </div>
                                         <div class="default-form-box mb-20">
-                                            <label>Birthdate</label>
+                                            <label>Ngày sinh</label>
                                             <input type="date" name="birthday">
                                         </div>
-                                        <span class="example">
-                                              (E.g.: 05/31/1970)
-                                            </span>
-                                        <br>
-                                        <label class="checkbox-default" for="offer">
-                                            <input type="checkbox" id="offer">
-                                            <span>Receive offers from our partners</span>
-                                        </label>
-                                        <br>
-                                        <label class="checkbox-default checkbox-default-more-text" for="newsletter">
-                                            <input type="checkbox" id="newsletter">
-                                            <span>Sign up for our newsletter<br><em>You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.</em></span>
-                                        </label>
+                                        <div class="default-form-box mb-20">
+                                            <label>Mật Khẩu</label>
+                                            <input type="password" name="password">
+                                        </div>
                                         <div class="save_button mt-3">
-                                            <button class="btn btn-md btn-black-default-hover" type="submit">Save</button>
+                                            <button class="btn btn-md btn-black-default-hover" type="submit">Lưu</button>
                                         </div>
                                     </form>
                                 </div>
