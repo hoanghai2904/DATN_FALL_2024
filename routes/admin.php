@@ -16,6 +16,7 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
+Route::get('admin.brands.trash', [BrandsController::class,'trash']);
 Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
@@ -23,6 +24,8 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('brands', BrandsController::class);
+
+    
 
     Route::get('/list',function () {
         return view('admin.list.index');

@@ -22,6 +22,11 @@ class BrandsController extends Controller
         $listBrands = Brands::all();
         return view('admin.brands.index', ['brands' => $listBrands]);
     }
+    public function trash()
+    {
+        $listBrands = Brands::all()->where('deleted',1);
+        return view('admin.brands.trash', ['brands' => $listBrands]);
+    }
 
     /**
      * Show the form for creating a new resource.

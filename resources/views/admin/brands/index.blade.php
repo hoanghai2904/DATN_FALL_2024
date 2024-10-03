@@ -23,8 +23,8 @@
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                {{-- <a href="#" class="btn btn-danger mx-2">Chi tiet</a> --}}
                 <a href="{{ route('admin.brands.create') }}" class="btn btn-success">Thêm mới</a>
+                <a href="{{ url('admin.brands.trash') }}" class="btn btn-secondary mx-2">Thùng rác</a>
             </div>
             <!-- end card header -->
 
