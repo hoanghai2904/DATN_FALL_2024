@@ -32,7 +32,7 @@ class VoucherRequest extends FormRequest
             'end' => 'required|date|after_or_equal:start'
         ];    
         if ($this->input('discount_type') == 0) {
-            $rules['discount'] = 'required|numeric|min:1|max:100'; // Percentage discounts between 1 and 100
+            $rules['discount'] = 'required|numeric|min:1|max:100'; 
         }
     
         return $rules;

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('discount_type');
             $table->tinyInteger('status')->default(0);
-            $table->decimal('discount');
+            $table->float('discount');
             $table->string('qty');
             $table->softDeletes();
             $table->timestamp('start')->nullable();
