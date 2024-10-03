@@ -17,6 +17,8 @@ return new class extends Migration
             // unique dữ liệu ko được phép trùng nhau
             $table->string('logo', 100);
             $table->string('slug', 100);
+            $table->boolean('deleted')->default(false);
+            $table->datetime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
