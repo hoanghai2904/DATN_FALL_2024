@@ -69,7 +69,7 @@
                                         <button class="btn btn-sm btn-warning">Sửa</button>
                                     </a>
 
-                                    <form action="{{ route('admin.brands.destroy', $item->id) }}" method="post" class="d-inline">
+                                    <form action="{{ url('admin.brands.delete', $item->id) }}" method="post" class="d-inline">
                                         @method('DELETE')
                                         @csrf
                                         <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button>

@@ -17,6 +17,7 @@ use App\Http\Controllers\CategoryController;
 */
 
 Route::get('admin.brands.trash', [BrandsController::class,'trash']);
+Route::post('admin.brands.delete', [BrandsController::class,'delete']);
 Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');

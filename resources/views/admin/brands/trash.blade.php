@@ -23,7 +23,7 @@
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                <a href="{{ route('admin.brands.index') }}" class="btn btn-success">Quay lại</a>
+                <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">Quay lại</a>
             </div>
             <!-- end card header -->
 
@@ -64,7 +64,7 @@
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->slug }}</td>
                                 <td>
-                                    <a href="{{ route('admin.brands.edit', $item->id) }}">
+                                    <a href="">
                                         <button class="btn btn-sm btn-warning">Phục hồi</button>
                                     </a>
                                     {{-- <a href="{{ route('admin.brands.edit', $item->id) }}">
