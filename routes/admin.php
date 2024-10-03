@@ -38,6 +38,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
     Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
     Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+    Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+    Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
 
 
 
