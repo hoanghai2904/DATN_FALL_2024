@@ -45,6 +45,7 @@
                                     <li class="nav-item">
                                         <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-analytics"> Quản lý banner </a>
                                     </li>
+                                 
                                     <li class="nav-item">
                                         <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>
                                     </li>
