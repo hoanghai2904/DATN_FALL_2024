@@ -35,14 +35,13 @@
 
                             <div class="col-lg-3" data-select2-id="select2-data-2">
                                 <h6 class="fw-semibold">Thương hiệu</h6>
-                                <select class="js-example-basic-single select2-hidden-accessible"  name="state" multiple="" data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
+                                <select class="js-example-basic-single select2-hidden-accessible"  name="state"  data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
                                     <option value="AL" data-select2-id="select2-data-18-9avy">Alabama</option>
                                     <option value="MA" data-select2-id="select2-data-73-26iq">Madrid</option>
                                     <option value="TO" data-select2-id="select2-data-74-9rir">Toronto</option>
                                     <option value="LO" data-select2-id="select2-data-75-jxz2">Londan</option>
                                     <option value="WY" data-select2-id="select2-data-76-uypr">Wyoming</option>
                                 </select>
-                                {{-- <span class="select2 select2-container select2-container--default select2-container--below select2-container--focus" dir="ltr" data-select2-id="select2-data-17-4pqi" style="width: 85.6px;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-state-hz-container" aria-controls="select2-state-hz-container"><span class="select2-selection__rendered" id="select2-state-hz-container" role="textbox" aria-readonly="true" title="Alabama">Alabama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span> --}}
                             </div>
 
                             <div class="col-lg-4">
@@ -126,5 +125,10 @@
 @endsection
 
 @push('script')
-
+    <script>
+        $(document).ready(function () {
+            $(".js-example-basic-single").select2(),
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
 @endpush

@@ -62,5 +62,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     });
 
     Route::resource('products',ProductController::class);
-
+    Route::get('/test-variant',function () {
+        return view('admin.products.test');
+    });
 });
