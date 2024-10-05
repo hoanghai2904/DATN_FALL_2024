@@ -50,7 +50,7 @@
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Banner</th>
-                                        <th scope="col">URL</th>
+                                        {{-- <th scope="col">URL</th> --}}
                                         <th scope="col">Status</th>
                                         <th scope="col" style="width: 150px;">Action</th>
                                     </tr>
@@ -67,10 +67,10 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item + 1 }}</td>
-                                            <td>
+                                            <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
                                                 <img src="{{ Storage::url($value->banner) }}" alt="" width="150px">
                                             </td>
-                                            <td>{{ $value->url }}</td>
+                                            {{-- <td>{{ $value->url }}</td> --}}
                                             <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
                                             <td>
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
