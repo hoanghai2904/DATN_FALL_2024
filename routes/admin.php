@@ -1,12 +1,17 @@
+
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserAddressController;
+use App\Http\Controllers\UserController;
+
+
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -55,5 +60,10 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
         Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+    });
+
+    Route::resource('products',ProductController::class);
+    Route::get('/test-variant',function () {
+        return view('admin.products.test');
     });
 });

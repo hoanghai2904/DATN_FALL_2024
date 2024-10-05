@@ -36,7 +36,6 @@
                                     <th>Tên khách hàng</th>
                                     <th>Email</th>
                                     <th>Trạng thái</th>
-                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -6,12 +6,12 @@
 @push('style')
 <style>
     #bannerCarousel {
-        max-width: 400px; /* Adjust the width to your preference */
-        margin: 0 auto; /* Centers the carousel horizontally */
+        max-width: 100%; /* Adjust the width to your preference */
+      
     }
     #bannerCarousel img {
-        max-height: 500px; /* Adjust the height to your preference */
-        object-fit: cover; /* Ensures the images fit within the container without distortion */
+        max-height: 400px; /* Adjust the height to your preference */
+        object-fit: fill; /* Ensures the images fit within the container without distortion */
     }
 </style>
 @endpush
@@ -49,10 +49,10 @@
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Ảnh Banner</th>
-                                        <th scope="col">Url</th>
-                                        <th scope="col">Trạng thái</th>
-                                        <th scope="col" style="width: 150px;">Hành động</th>
+                                        <th scope="col">Banner</th>
+                                        {{-- <th scope="col">URL</th> --}}
+                                        <th scope="col">Status</th>
+                                        <th scope="col" style="width: 150px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,23 +67,23 @@
                                                 </div>
                                             </td>
                                             <td>{{ $item + 1 }}</td>
-                                            <td>
-                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="150px">
+                                            <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
+                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
-                                            <td>{{ $value->url }}</td>
-                                            <td>{{ $value->status ? 'Đang hoạt động' : 'Không hoạt động' }}</td>
+                                            {{-- <td>{{ $value->url }}</td> --}}
+                                            <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
                                             <td>
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
-                                                    class="btn btn-info btn-sm">Chi tiết</a>
+                                                    class="btn btn-info btn-sm">Detail</a>
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
-                                                    class="btn btn-warning btn-sm">Sửa</a>
+                                                    class="btn btn-warning btn-sm">Edit</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
                                                     method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm"
                                                         onclick="return confirm('Bạn có muốn xóa không?')">
-                                                        Xóa
+                                                        Delete
                                                     </button>
                                                 </form>
 
@@ -101,24 +101,24 @@
     <!-- end row -->
     <div class="card mt-4">
         <div class="card-header">
-            <h4 class="card-title">Trình chiếu Banner</h4>
+            <h4 class="card-title">Slideshow Banners</h4>
         </div>
         <div class="card-body">
             <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @foreach ($listBanner as $key => $banner)
-                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                        <div class="carousel-item {{ $key === 0 ? 'active' : 'inactive' }}">
                             <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
                         </div>
                     @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Tiến</span>
+                    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Lùi</span>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </div>
@@ -146,5 +146,4 @@
         statusSelect.addEventListener('change', toggleSlideshow);
     });
 </script>
-
 @endpush

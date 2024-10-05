@@ -1,45 +1,57 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    Tạo mới danh mục
+    Thêm mới danh mục
 @endsection
 
 @section('content')
-<form id="createproduct-form" autocomplete="off" class="needs-validation" novalidate>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="meta-title-input">Meta title</label>
-                                <input type="text" class="form-control" placeholder="Enter meta title" id="meta-title-input">
-                            </div>
-                        </div>
-                        <!-- end col -->
+    <form class="needs-validation" action="{{ route('admin.addPostCategory') }}" method="POST">
+        @csrf
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tên danh mục</label>
+                                    <input type="text" class="form-control" placeholder="Nhập tên danh mục"
+                                        name="name" id="categoryName">
 
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="meta-keywords-input">Meta Keywords</label>
-                                <input type="text" class="form-control" placeholder="Enter meta keywords" id="meta-keywords-input">
+                                </div>
+                                @error('name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
+                            <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Slug</label>
+                                    <input type="text" class="form-control  text-light" style="background-color: #4b4e51"
+                                        placeholder="Slug sẽ tự được sinh ra khi nhập tên" name="slug" id="categorySlug"
+                                        readonly>
+                                </div>
+                            </div>
+                            <!-- end col -->
                         </div>
-                        <!-- end col -->
-                    </div>
-                    <!-- end row -->
-                    <div>
-                        <label class="form-label" for="meta-description-input">Meta Description</label>
-                        <textarea class="form-control" id="meta-description-input" placeholder="Enter meta description" rows="3"></textarea>
+                        <!-- end row -->
+                        <div>
+                            <label class="form-label">Danh mục cha</label>
+                            <select class="form-control" name="parent_id" rows="3">
+                                @foreach ($category->unique('parent_id') as $value)
+                                    <option>{{ $value->parent_id }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- end card -->
-            
+                <!-- end card -->
 
 
 
-            {{-- <div class="card">
+
+                {{-- <div class="card">
                 <div class="card-header">
                     <ul class="nav nav-tabs-custom card-header-tabs border-bottom-0" role="tablist">
                         <li class="nav-item">
@@ -146,14 +158,14 @@
                 </div>
                 <!-- end card body -->
             </div> --}}
-            <!-- end card -->
-            <div class="text-end mb-3">
-                <button type="submit" class="btn btn-success w-sm">Submit</button>
+                <!-- end card -->
+                <div class="text-end mb-3">
+                    <button type="submit" class="btn btn-success w-sm">Thêm mới</button>
+                </div>
             </div>
-        </div>
-        <!-- end col -->
+            <!-- end col -->
 
-        {{-- <div class="col-lg-4">
+            {{-- <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Publish</h5>
@@ -244,9 +256,26 @@
             <!-- end card -->
 
         </div> --}}
-        <!-- end col -->
-    </div>
-    <!-- end row -->
+            <!-- end col -->
+        </div>
+        <!-- end row -->
 
-</form>
+    </form>
+    <script>
+        function slugify(text) {
+            // Bỏ dấu tiếng Việt
+            text = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            // Tạo slug
+            return text.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+        }
+
+        document.getElementById('categoryName').addEventListener('input', function() {
+            let name = this.value;
+            let slug = slugify(name);
+            document.getElementById('categorySlug').value = slug;
+        });
+    </script>
 @endsection
