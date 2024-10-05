@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.master')
 
 @section('title')
@@ -43,27 +44,25 @@
                                     <tr>
                                         <th scope="col" style="width: 46px;">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="cardtableCheck">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Banner</th>
+                                        <th scope="col">Hình ảnh</th>
                                         {{-- <th scope="col">URL</th> --}}
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($listBanner as $item => $value)
                                         <tr>
+                                            
                                             <td>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="itemCheck{{ $item }}">
-                                                    <label class="form-check-label"
-                                                        for="itemCheck{{ $item }}"></label>
+                                                    <input class="form-check-input" type="checkbox" value="" id="itemCheck{{ $item }}">
+                                                    <label class="form-check-label" for="itemCheck{{ $item }}"></label>
                                                 </div>
                                             </td>
                                             <td>{{ $item + 1 }}</td>
@@ -71,22 +70,17 @@
                                                 <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
                                             {{-- <td>{{ $value->url }}</td> --}}
-                                            <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
+                                            <td>{{ $value->status ? 'Kích hoạt' : 'Không kích hoạt' }}</td>
                                             <td>
-                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
-                                                    class="btn btn-info btn-sm">Detail</a>
-                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
-                                                    class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
-                                                    method="POST" style="display:inline;">
+                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Bạn có muốn xóa không?')">
-                                                        Delete
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
+                                                        Xóa
                                                     </button>
                                                 </form>
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -95,6 +89,7 @@
                         </div>
                     </div>
                 </div><!-- end card-body -->
+                
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
