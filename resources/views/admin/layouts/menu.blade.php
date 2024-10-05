@@ -51,16 +51,12 @@
                                     <li class="nav-item">
                                         <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-analytics"> Quản lý banner </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="dashboard-analytics.html" class="nav-link" data-key="t-analytics"> Analytics </a>
-                                    </li>
+                                    
                                     <li class="nav-item">
                                         <a href="{{route('admin.brands.index')}}" class="nav-link" data-key="t-ecommerce"> Thương hiệu </a>
                                     </li>
 
-                                    <li class="nav-item">
-                                        <a href="dashboard-projects.html" class="nav-link" data-key="t-projects"> Projects </a>
-                                    </li>
+                                    
                                 </ul>
                             </div>
                         </li> <!-- end Dashboard Menu -->
