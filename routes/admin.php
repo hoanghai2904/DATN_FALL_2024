@@ -7,7 +7,7 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BannerController;  
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VoucherController;

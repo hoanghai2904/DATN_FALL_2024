@@ -38,7 +38,9 @@
 
                             <div class="collapse menu-dropdown" id="sidebarDashboards">
                                 <ul class="nav nav-sm flex-column">
-                                
+                                <li class="nav-item">
+                                        <a href="{{route('admin.listCategory')}}" class="nav-link" data-key="t-analytics"> Quản lý danh mục </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
                                     </li>
