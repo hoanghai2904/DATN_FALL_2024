@@ -32,6 +32,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+    Route::resource('categories', CategoryController::class);
     Route::resource('orders',OrderController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('order-items', OrderItemController::class);
@@ -41,16 +42,6 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::resource('brands', BrandsController::class);
 
     Route::resource('vouchers',VoucherController::class);
-
-    Route::get('/list',function () {
-        return view('admin.list.index');
-    });
-    Route::get('/list-add',function () {
-        return view('admin.list.create');
-    });
-    Route::get('/test',function () {
-        return view('admin.list.create');
-    });
 
     Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
         Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
