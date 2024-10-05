@@ -98,18 +98,5 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    <!-- end row -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#checkboxesMain').on('click', function(e) {
-                if ($(this).is(':checked',true)) {
-                    $(".checkbox").prop('checked', true);
-                } else {
-                    $(".checkbox").prop('checked', false);
-                }
-            });
-        });
-    </script>
-    
+    <!-- end row --> 
 @endsection
