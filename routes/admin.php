@@ -11,7 +11,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VoucherController;
-
+use App\Models\Category;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,7 +23,7 @@ use App\Http\Controllers\VoucherController;
 |
 */
 
-Route::prefix('admin')->as('admin.')->group(function() {
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
@@ -36,7 +36,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::resource('brands', BrandsController::class);
 
     Route::resource('vouchers',VoucherController::class);
-
+    Route::resource('categories', CategoryController::class);
     Route::get('/list',function () {
         return view('admin.list.index');
     });
@@ -56,4 +56,11 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
     });
+
+    Route::get('/list', [CategoryController::class, 'index'])->name('listCategory');
+    Route::get('/list-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+    Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+    Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+    Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+
 });
