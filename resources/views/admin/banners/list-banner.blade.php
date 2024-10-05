@@ -6,12 +6,12 @@
 @push('style')
 <style>
     #bannerCarousel {
-        max-width: 400px; /* Adjust the width to your preference */
-        margin: 0 auto; /* Centers the carousel horizontally */
+        max-width: 100%; /* Adjust the width to your preference */
+      
     }
     #bannerCarousel img {
-        max-height: 500px; /* Adjust the height to your preference */
-        object-fit: cover; /* Ensures the images fit within the container without distortion */
+        max-height: 400px; /* Adjust the height to your preference */
+        object-fit: fill; /* Ensures the images fit within the container without distortion */
     }
 </style>
 @endpush
@@ -68,7 +68,7 @@
                                             </td>
                                             <td>{{ $item + 1 }}</td>
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
-                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="150px">
+                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
                                             {{-- <td>{{ $value->url }}</td> --}}
                                             <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
