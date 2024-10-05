@@ -103,14 +103,15 @@ class BrandsController extends Controller
         return redirect()->route('admin.brands.index');
     }
 
-    public function delete(string $id){
-        $brands = $this->brands->find($id);
-        if (!$brands) {
-            return redirect()->route('admin.brands.index');
-        }
-        if ($brands->logo) {
-            Storage::disk('public')->delete($brands->logo);
-        }
+    public function delete(Request $request){
+        //$brands = Brands::findOrfail($request->id);
+        $brands = $this->brands->find($request);
+        // if (!$brands) {
+        //     return redirect()->route('admin.brands.index');
+        // }
+        // if ($brands->logo) {
+        //     Storage::disk('public')->delete($brands->logo);
+        // }
         $brands->deleted=true;
         $brands->save();
         return redirect()->route('admin.brands.index');
@@ -122,7 +123,7 @@ class BrandsController extends Controller
      */
     public function destroy(string $id)
     {
-        echo($id->id);
+        
         $brands = $this->brands->find($id);
         if (!$brands) {
             return redirect()->route('admin.brands.index');
