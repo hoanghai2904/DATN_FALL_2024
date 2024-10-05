@@ -204,9 +204,18 @@
                                 </li>
                                 <li>
                                     <a href="{{ route('account.profile') }}">
-                                        <i class="icon-user"></i>
+                                        @if(auth()->check())
+                                            @if(auth()->user()->cover)
+                                                <img src="{{ asset('storage/' . auth()->user()->cover) }}" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
+                                            @else
+                                                <i class="icon-user"></i>
+                                            @endif
+                                        @else
+                                            <i class="icon-user"></i>
+                                        @endif
                                     </a>
                                 </li>
+                                
                                
                             </ul>
                             <!-- End Header Action Link -->

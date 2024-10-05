@@ -30,12 +30,12 @@
                 <!-- Nav tabs -->
                 <div class="dashboard_tab_button" data-aos="fade-up"  data-aos-delay="0">
                     <ul role="tablist" class="nav flex-column dashboard-list">
-                        <li><a href="#dashboard" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover active">Dashboard</a></li>
+                        <li><a href="#dashboard" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover active">Tài khoản </a></li>
                         <li> <a href="#orders" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Đơn hàng</a></li>
                         <li><a href="#downloads" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Downloads</a></li>
-                        <li><a href="#address" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Addresses</a></li>
-                        <li><a href="#account-details" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Tài Khoản</a></li>
-                        <li><a href="{{route('account.logout')}}" class="nav-link btn btn-block btn-md btn-black-default-hover">logout</a></li>
+                        <li><a href="#address" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>
+                        <li><a href="#account-details" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">abc</a></li>
+                        <li><a href="{{route('account.logout')}}" class="nav-link btn btn-block btn-md btn-black-default-hover">Đăng xuât</a></li>
                     </ul>
                 </div>
             </div>
@@ -43,8 +43,62 @@
                 <!-- Tab panes -->
                 <div class="tab-content dashboard_content" data-aos="fade-up"  data-aos-delay="200">
                     <div class="tab-pane fade show active" id="dashboard">
-                        <h4>Dashboard </h4>
-                        <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a href="#">Edit your password and account details.</a></p>
+                        <h3>Tài khoản chi tiết</h3>
+                        <div class="login">
+                            <div class="login_form_container">
+                                <div class="account_login_form">
+                                    <form action="#" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                    
+                                        <div class="default-form-box mb-20">
+                                            <label>Họ và tên</label>
+                                            <input type="text" value="{{ $auth->full_name }}" name="full_name" required>
+                                        </div>
+                                        
+                                        <div class="default-form-box mb-20">
+                                            <label>Ảnh đại diện</label>
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="file" name="cover" accept="image/*" onchange="previewAvatar(event)" style="margin-right: 10px; width: auto;">
+                                                <img id="coverPreview" src="{{asset('storage/'. $auth->cover)}}" alt="Ảnh đại diện" style="display: block; width: 80px; height: 80px; object-fit: cover; margin-left: 10px;">
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="default-form-box mb-20">
+                                            <label>Số điện thoại</label>
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" name="phone" value="{{ $auth->phone }}" placeholder="Số điện thoại" required>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="default-form-box mb-20">
+                                            <label>Ngày sinh</label>
+                                            <input type="date" name="birthday" value="{{ $auth->birthday }}">
+                                        </div>
+                                    
+                                        <div class="default-form-box mb-20">
+                                            <label>Email</label>
+                                            <input type="email" name="email" value="{{ $auth->email }}" required>
+                                        </div>
+                                    
+                                        <div class="default-form-box mb-20">
+                                            <label>Mật Khẩu</label>
+                                            <input type="password" name="password" placeholder="Nhập mật khẩu để cập nhật ">
+                                            @error('password')
+                                            <small
+                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                        @enderror
+                                        </div>
+                                    
+                                        <div class="save_button mt-3">
+                                            <button class="btn btn-md btn-black-default-hover" type="submit">Cập nhật</button>
+                                        </div>
+                                    </form>
+                                    
+                           
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="orders">
                         <h4>Orders</h4>
@@ -108,22 +162,7 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="address">
-                        <p>The following addresses will be used on the checkout page by default.</p>
-                        <h5 class="billing-address">Billing address</h5>
-                        <a href="#" class="view">Edit</a>
-                        <p><strong>Bobby Jackson</strong></p>
-                        <address>
-                            House #15<br>
-                                Road #1<br>
-                                Block #C <br>
-                                Banasree <br>
-                                Dhaka <br>
-                                1212
-                        </address>
-                        <p>Bangladesh</p>
-                    </div>
-                    <div class="tab-pane fade" id="account-details">
-                        <h3>Tài khoản chi tiết</h3>
+                        <h3>Địa Chỉ khách hàng</h3>
                         <div class="login">
                             <div class="login_form_container">
                                 <div class="account_login_form">
@@ -145,25 +184,38 @@
                                             <label>Phường/Xã</label>
                                             <input type="text" name="ward">
                                         </div>
-                                        <div class="default-form-box mb-20">
-                                            <label>Ngày sinh</label>
-                                            <input type="date" name="birthday">
-                                        </div>
-                                        <div class="default-form-box mb-20">
-                                            <label>Mật Khẩu</label>
-                                            <input type="password" name="password">
-                                        </div>
                                         <div class="save_button mt-3">
-                                            <button class="btn btn-md btn-black-default-hover" type="submit">Lưu</button>
+                                            <button class="btn btn-md btn-black-default-hover" type="submit">Thêm</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="account-details">
+                      
+                    </div>
+                  
                 </div>
             </div>
         </div>
     </div>
 </div> <!-- ...:::: End Account Dashboard Section:::... -->
+
+<script>
+    function previewAvatar(event) {
+        const input = event.target;
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            const avatarPreview = document.getElementById('coverPreview');
+            avatarPreview.src = reader.result;
+            avatarPreview.style.display = 'block';
+        }
+
+        if (input.files && input.files[0]) {
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 @endsection

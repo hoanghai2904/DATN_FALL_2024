@@ -7,7 +7,9 @@ use App\Mail\VerifyAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 class AccountController extends Controller
 
@@ -140,10 +142,66 @@ class AccountController extends Controller
 
    public function profile()
    {
-      return view('Client.myAccount');
+    $auth = auth()->user();
+      return view('Client.myAccount',compact('auth'));
    }
 
-   public function check_profile() {}
+   public function check_profile(Request $request) 
+{
+    $auth = auth()->user(); 
+    $data = $request->validate([
+        'full_name' => 'required|min:6|max:100',
+        'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:10|unique:users,phone,' . $auth->id,
+        'email' => 'required|email|unique:users,email,' . $auth->id,
+        'birthday' => 'nullable|date',
+        'password' => 'required',
+    ], [
+        'full_name.required' => 'Vui lòng nhập tên đầy đủ.',
+        'full_name.min' => 'Tên đầy đủ phải có ít nhất 6 ký tự.',
+        'full_name.max' => 'Tên đầy đủ không được vượt quá 100 ký tự.',
+        'cover.image' => 'Hãy chọn một tệp hình ảnh hợp lệ.',
+        'cover.mimes' => 'Hãy chọn tệp hình ảnh có định dạng jpeg, png, jpg, gif hoặc svg.',
+        'cover.max' => 'Kích thước tệp hình ảnh không được vượt quá 2MB.',
+        'phone.required' => 'Vui lòng nhập số điện thoại.',
+        'phone.regex' => 'Số điện thoại không hợp lệ.',
+        'phone.min' => 'Số điện thoại phải có ít nhất 10 ký tự.',
+        'phone.max' => 'Số điện thoại không được vượt quá 10 ký tự.',
+        'phone.unique' => 'Số điện thoại này đã được sử dụng.',      
+        'email.required' => 'Vui lòng nhập địa chỉ email.',
+        'email.email' => 'Địa chỉ email không hợp lệ.',
+        'email.unique' => 'Email này đã được sử dụng.',
+        'password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+    ]);
+
+    // Kiểm tra mật khẩu hiện tại
+    if (!Hash::check($request->password, $auth->password)) {
+        return back()->withErrors(['password' => 'Mật khẩu của bạn không chính xác']);
+    }
+
+    // Kiểm tra xem có file cover hay không
+    if ($request->hasFile('cover')) {
+        // Xóa ảnh cũ nếu có
+        if ($auth->cover) {
+            Storage::delete($auth->cover);
+        }
+
+        // Lưu hình ảnh mới vào thư mục 'images' và lấy đường dẫn
+        $path_cover_art = $request->file('cover')->store('images');
+        $data['cover'] = $path_cover_art;
+    }
+
+    // Xóa trường password khỏi dữ liệu
+    unset($data['password']);
+
+    // Cập nhật thông tin người dùng
+    $auth->update($data);
+
+    // Chuyển hướng về trang tài khoản với thông báo thành công
+    return redirect()->route('home.index')->with('success', 'Cập nhật thông tin thành công!');
+}
+
+   
 
    public function change_pass()
    {
