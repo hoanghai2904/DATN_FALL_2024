@@ -33,7 +33,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
-                                    <th>Tên khách hàng</th>
+                                    <th>Tên khách hàngg</th>
                                     <th>Email</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
