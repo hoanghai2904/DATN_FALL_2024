@@ -19,6 +19,8 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="image-input">Ảnh Banner </label>
+                                    <label class="form-label" for="image-input">Ảnh Banner1 </label>
+                                    <label class="form-label" for="image-input">Ảnh Banner1 </label>
                                     <input type="file" class="form-control" name="banner" id="banner">
                                     @error('banner')
                                         <p class="text-danger">{{ $message }}</p>
