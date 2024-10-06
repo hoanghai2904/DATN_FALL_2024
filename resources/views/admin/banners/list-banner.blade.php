@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.master')
 
 @section('title')
@@ -44,6 +45,7 @@
                                         <th scope="col" style="width: 46px;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
@@ -80,8 +82,12 @@
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
+                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                         Xóa
                                                     </button>
@@ -101,7 +107,7 @@
     <!-- end row -->
     {{-- <div class="card mt-4">
         <div class="card-header">
-            <h4 class="card-title">Trình chiếu Banner</h4>
+            <h4 class="card-title">Slideshow Banners</h4>
         </div>
         <div class="card-body">
             <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -114,11 +120,11 @@
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Tiến</span>
+                    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Lùi</span>
+                    <span class="visually-hidden">Next</span>
                 </button>
             </div>
         </div>

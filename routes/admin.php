@@ -28,10 +28,11 @@ use App\Http\Controllers\VoucherController;
 |
 */
 
-Route::prefix('admin')->as('admin.')->group(function () {
+Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+    Route::resource('categories', CategoryController::class);
     Route::resource('orders',OrderController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('order-items', OrderItemController::class);
@@ -76,4 +77,15 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/test-variant',function () {
         return view('admin.products.test');
     });
+    // Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+
+    //     Route::get('/category', [CategoryController::class, 'index'])->name('listCategory');
+    //     Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+    //     Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+    //     Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+    //     Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+    //     Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+    //     Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+    // });
+
 });

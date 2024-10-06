@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-  đơn hàng
+  Danh mục
 @endsection
 
 @section('style-libs')
@@ -29,7 +29,7 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div class="table-responsive table-card">
-                    <table class="table table-sm align-middle table-nowrap table-striped-columns mb-0"> 
+                        <table class="table table-sm align-middle table-nowrap table-striped-columns mb-0"> 
                             <thead class="table-light">
                                 <tr>
                                 <th scope="col" style="width: 46px;">
@@ -39,32 +39,34 @@
                                             </div>
                                         </th>
                                     <th>ID</th>
-                                    <th>Tên khách hàng</th>
-                                    <th>Email</th>
+                                    <th>Tên danh mục</th>
+                                    <th>Slug</th>
                                     <th>Trạng thái</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach ($orders as $order)
-                                    <tr> 
-                                        <td>
+                                @foreach ($categories as $category)
+                                    <tr>
+                                    <td>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="cardtableCheck01">
                                                 <label class="form-check-label" for="cardtableCheck01"></label>
                                             </div>
                                         </td>
-                                        <td>{{ $order->id }}</td>
-                                        <td>{{ $order->user_name }}</td>
-                                        <td>{{ $order->user_email }}</td>
-                                        <td>{{ $order->status_order }}</td>
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->name }}</td>
+                                        <td>{{ $category->slug }}</td>
                                         <td>
-                                            <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-info">Chi tiết</a>
-                                            <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-warning">Chỉnh sửa</a>
-                                            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;">
+                                            {!! $category->status ? '<span class="badge bg-success">Hoạt động</span>' : '<span class="badge bg-danger">Không hoạt động</span>' !!}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('admin.categories.show', $category->id) }}" class="btn btn-info">Chi tiết</a>
+                                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Chỉnh sửa</a>
+                                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Xóa</button>
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa danh mục này không?')">Xóa</button>
                                             </form>
                                         </td>
                                     </tr>
