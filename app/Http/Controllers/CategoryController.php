@@ -3,19 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    const PATH_VIEW = 'admin.categories.';
-    const PATH_UPLOAD = 'categories';
-
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         // $data = Category::query()->latest('id')->paginate(5);

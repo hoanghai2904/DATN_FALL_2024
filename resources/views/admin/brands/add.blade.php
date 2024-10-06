@@ -14,11 +14,11 @@
                 {{-- 1 cơ chế bảo mật của laravel --}}
                 @csrf
                 <div class="mb-3">
-                    <label for="" class="form-label">Logo:</label>
+                    <label for="" class="form-label">Nhãn hiệu:</label>
                     <input type="file" class="form-control" name="logo">
                 </div>
                 <div class="mb-3">
-                    <label for="" class="form-label">Name:</label>
+                    <label for="" class="form-label">Tên thương hiệu:</label>
                     <input type="text" class="form-control" name="name" placeholder="">
                 </div>
                 <div class="mb-3">

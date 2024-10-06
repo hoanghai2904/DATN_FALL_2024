@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.master')
 
 @section('title')
@@ -6,12 +7,12 @@
 @push('style')
 <style>
     #bannerCarousel {
-        max-width: 400px; /* Adjust the width to your preference */
-        margin: 0 auto; /* Centers the carousel horizontally */
+        max-width: 100%; /* Adjust the width to your preference */
+      
     }
     #bannerCarousel img {
-        max-height: 500px; /* Adjust the height to your preference */
-        object-fit: cover; /* Ensures the images fit within the container without distortion */
+        max-height: 400px; /* Adjust the height to your preference */
+        object-fit: fill; /* Ensures the images fit within the container without distortion */
     }
 </style>
 @endpush
@@ -43,50 +44,43 @@
                                     <tr>
                                         <th scope="col" style="width: 46px;">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="cardtableCheck">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Banner</th>
-                                        <th scope="col">URL</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
+                                        <th scope="col">Hình ảnh</th>
+                                        {{-- <th scope="col">URL</th> --}}
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($listBanner as $item => $value)
                                         <tr>
+                                            
                                             <td>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="itemCheck{{ $item }}">
-                                                    <label class="form-check-label"
-                                                        for="itemCheck{{ $item }}"></label>
+                                                    <input class="form-check-input" type="checkbox" value="" id="itemCheck{{ $item }}">
+                                                    <label class="form-check-label" for="itemCheck{{ $item }}"></label>
                                                 </div>
                                             </td>
                                             <td>{{ $item + 1 }}</td>
-                                            <td>
-                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="150px">
+                                            <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
+                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
-                                            <td>{{ $value->url }}</td>
-                                            <td>{{ $value->status ? 'Active' : 'Inactive' }}</td>
+                                            {{-- <td>{{ $value->url }}</td> --}}
+                                            <td>{{ $value->status ? 'Kích hoạt' : 'Không kích hoạt' }}</td>
                                             <td>
-                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}"
-                                                    class="btn btn-info btn-sm">Detail</a>
-                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}"
-                                                    class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}"
-                                                    method="POST" style="display:inline;">
+                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Bạn có muốn xóa không?')">
-                                                        Delete
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
+                                                        Xóa
                                                     </button>
                                                 </form>
-
                                             </td>
                                         </tr>
                                     @endforeach
@@ -95,6 +89,7 @@
                         </div>
                     </div>
                 </div><!-- end card-body -->
+                
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
@@ -107,7 +102,7 @@
             <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     @foreach ($listBanner as $key => $banner)
-                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                        <div class="carousel-item {{ $key === 0 ? 'active' : 'inactive' }}">
                             <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
                         </div>
                     @endforeach
@@ -146,5 +141,4 @@
         statusSelect.addEventListener('change', toggleSlideshow);
     });
 </script>
-
 @endpush

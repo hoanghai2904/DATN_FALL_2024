@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
@@ -27,10 +28,11 @@ use App\Models\Category;
 |
 */
 
-Route::prefix('admin')->as('admin.')->group(function () {
+Route::prefix('admin')->as('admin.')->group(function() {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
+    Route::resource('categories', CategoryController::class);
     Route::resource('orders',OrderController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('order-items', OrderItemController::class);
