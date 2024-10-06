@@ -49,7 +49,7 @@
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Hình ảnh</th>
-                                        {{-- <th scope="col">URL</th> --}}
+                                        <th scope="col">Đường link</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
