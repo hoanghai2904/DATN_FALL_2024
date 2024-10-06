@@ -51,6 +51,8 @@
                                         <th scope="col">Hình ảnh</th>
                                         <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
+                                        <th scope="col">Trạng thái</th>
+                                        
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
@@ -126,10 +128,7 @@
 
     <div class="card mt-4">
         <div class="card-header">
-            <h1>slideshow</h1>
-            <h2>shiwssdadasd</h2>
-            <h3>DSFADWDADAS</h3>
-            <h5>dasdsfasada</h5>
+            
             <h4 class="card-title">Slideshow Banners</h4>
         </div>
         <div class="card-body">
