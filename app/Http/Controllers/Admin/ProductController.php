@@ -1,25 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Category;
-use App\Models\Product;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
-use App\Models\ProductColor;
-use App\Models\ProductSize;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    const PATH_VIEW = 'admin.products.';
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Product::query()->get();
-//        dd($data->first()->category);->with(['category'])
-        return view(self::PATH_VIEW.__FUNCTION__, compact('data'));
+        return view('admin.products.index');
     }
 
     /**
@@ -27,16 +20,13 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::query()->pluck('name', 'id')->all();
-        $sizes = ProductSize::query()->pluck('name', 'id')->all();
-        $colors = ProductColor::query()->pluck('name', 'id')->all();
-        return view(self::PATH_VIEW.__FUNCTION__, compact('categories', 'sizes', 'colors'));
+        return view('admin.products.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(Request $request)
     {
         dd($request->all());
     }
@@ -44,24 +34,23 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(string $id)
     {
-        return view(self::PATH_VIEW.__FUNCTION__, compact('product'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(string $id)
     {
-        return view(self::PATH_VIEW.__FUNCTION__, compact('product'));
-
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -69,7 +58,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
         //
     }

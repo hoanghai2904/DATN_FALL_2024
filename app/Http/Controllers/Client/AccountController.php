@@ -241,10 +241,6 @@ class AccountController extends Controller
 }
 
 
-//    public function forgot_pass()
-//    {
-//       return view('Client.Login');
-//    }
 
    public function Check_forgotPass()
     {
