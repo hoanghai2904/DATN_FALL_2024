@@ -23,6 +23,9 @@
                                     @error('banner')
                                         <p class="text-danger">{{ $message }}</p>
                                     @enderror
+                                    @error('banner')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                                 </div>
                             </div>
                             <!-- end col -->
@@ -51,12 +54,6 @@
                             @error('status')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
-                            @error('status')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
-                        @error('status')
-                        <p class="text-danger">{{ $message }}</p>
-                    @enderror
                         </div>
 
                         <!-- end row -->
