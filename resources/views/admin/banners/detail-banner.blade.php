@@ -17,6 +17,8 @@
         <p>
             <strong>URL:</strong> 
             <a href="{{ $banner->url }}" target="_blank">Đường Dẫn Banner</a>
+            <a href="{{ $banner->url }}" target="_blank">Đường Dẫn Banner</a>
+            <a href="{{ $banner->url }}" target="_blank">Đường Dẫn Banner</a>
             {{-- <a href="{{ $banner->url }}" target="_blank">{{ $banner->url }}</a> --}}
         </p>
 
