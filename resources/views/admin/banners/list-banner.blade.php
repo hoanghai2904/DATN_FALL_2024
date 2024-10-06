@@ -49,7 +49,7 @@
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Hình ảnh</th>
-                                        <th scope="col">Đường link</th>
+                                        <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
@@ -68,7 +68,7 @@
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
                                                 <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
-                                            {{-- <td>{{ $value->url }}</td> --}}
+                                            <td><a href="{{ $value->url }}" target="_blank">Đường Link</a></td>
                                             <td>
                                                 <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
                                                     <input type="checkbox" class="form-check-input" id="customSwitch{{ $value->id }}" 
