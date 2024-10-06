@@ -126,6 +126,7 @@
 
     <div class="card mt-4">
         <div class="card-header">
+            <h1>slideshow</h1>
             <h4 class="card-title">Slideshow Banners</h4>
         </div>
         <div class="card-body">
