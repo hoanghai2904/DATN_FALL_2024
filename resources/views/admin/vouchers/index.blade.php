@@ -124,8 +124,7 @@
                     id: voucherId,
                     status: status
                 },
-                success: function(response) {
-                    alert(response.message);
+                success: function() {
                     location.reload(); // Reload the page after success
                 },
                 error: function(xhr, status, error) {

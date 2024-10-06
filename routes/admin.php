@@ -44,7 +44,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
     
     // Route::resource('vouchers', VoucherController::class);
     Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
-        Route::get('index', [VoucherController::class, 'index'])->name('index');
+        Route::get('/', [VoucherController::class, 'index'])->name('index');
         Route::get('create', [VoucherController::class, 'create'])->name('create');
         Route::post('store', [VoucherController::class, 'store'])->name('store');
         Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
