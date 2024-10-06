@@ -5,8 +5,10 @@
 @endsection
 
 @section('content')
+    <a href="{{ route('admin.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
+
     <div class="row">
-        <a href="{{ route('admin.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
+
         @if (session('message'))
             <div class="alert alert-primary" role="alert">
                 {{ session('message') }};
@@ -62,10 +64,10 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
-                                                <a href="{{ route('admin.updateCategory', $value->id) }}" type="button"
-                                                    class="btn btn-sm btn-warning">Chỉnh sửa</a>
+                                                <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
+                                                    type="button" class="btn btn-sm btn-warning">Chỉnh sửa</a>
 
-                                                <form action="{{ route('admin.deleteCategory', $value->id) }}"
+                                                <form action="{{ route('admin.categories.deleteCategory', $value->id) }}"
                                                     method="post">
                                                     @csrf
                                                     @method('delete')
@@ -139,7 +141,7 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
-                                                <form action="{{ route('admin.restoreCategory', $value->id) }}"
+                                                <form action="{{ route('admin.categories.restoreCategory', $value->id) }}"
                                                     method="post">
                                                     @csrf
                                                     <button onclick="return confirm('Bạn có muốn khôi mục danh mục không?')"

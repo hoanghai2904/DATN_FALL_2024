@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name', 255);
             $table->string('slug', 255);
-            $table->integer('parent_id')->unsigned();
+            $table->integer('parent_id')->nullable();
             $table->boolean('status')->default(1);
             $table->timestamps();
             $table->softDeletes();

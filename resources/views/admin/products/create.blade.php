@@ -3,257 +3,242 @@
 @section('title')
     Tạo mới sản phẩm
 @endsection
-@section('style-libs')
-    <!-- Plugins css -->
-    <link href="{{asset('theme/admin/libs/dropzone/dropzone.css')}}" rel="stylesheet" type="text/css"/>
-@endsection
-@section('script-libs')
-    <!-- ckeditor -->
-    <script src="{{asset('theme/admin/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js')}}"></script>
-    <!-- dropzone js -->
-    <script src="{{asset('theme/admin/libs/dropzone/dropzone-min.js')}}"></script>
 
-    <script src="{{asset('theme/admin/js/create-product.init.js')}}"></script>
+@section('style-libs')
+  
 @endsection
+
 @section('content')
-    <form action="{{route('admin.products.store')}}" method="POST" enctype="multipart/form-data">
+    <form id="createproduct-form" action="{{ route('admin.products.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
-            <!--   left content-->
-            <div class="col-xl-8 col-lg-7">
-                <div class="card shadow mb-4">
-                    <!-- Main products information -->
-                    <a href="#collapseProductInfo" class="d-block card-header py-3" data-toggle="collapse"
-                       role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                        <h6 class="m-0 font-weight-bold text-primary">Thông tin sản phẩm</h6>
-                    </a>
-                    <!-- Card Content - Collapse -->
-                    <div class="collapse show" id="collapseProductInfo">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#name"
+                        aria-expanded="true" aria-controls="name">
+                        <h5 class="card-title mb-0">Tên sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="name">
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label for="product-title-input" class="form-label">Tên</label>
-                                <input type="text" class="form-control" id="product-title-input" placeholder="Tên sản phẩm"
-                                       name="name">
+                            <div class="mb-0">
+                                <input type="text" class="form-control" id="product-title-input" value=""
+                                    placeholder="Tên sản phẩm" name="name">
+                                <div class="invalid-feedback">Please Enter a product title.</div>
                             </div>
-                            <div class="mb-3">
-                                <label for="product-title-input" class="form-label">Giá</label>
-                                <input type="text" class="form-control" id="product-title-input" placeholder="Giá sản phẩm"
-                                       name="price">
-                            </div>
-                            <div class="mb-3">
-                                <label for="product-title-input" class="form-label">Giá sale</label>
-                                <input type="text" class="form-control" id="product-title-input" placeholder="Giá giảm"
-                                       name="price_sale">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Product Description</label>
-                                <div id="ckeditor-classic" name="description">
-                                    <ul>
-                                        <li>Full Sleeve</li>
-                                        <li>Cotton</li>
-                                        <li>All Sizes available</li>
-                                        <li>4 Different Color</li>
-                                    </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#general-info"
+                    aria-expanded="true" aria-controls="general-info">
+                        <h5 class="card-title mb-0">Thông tin chung</h5>
+                    </div>
+                    <!-- end card header -->
+                    <div class="collapse show" id="general-info">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="sku">Mã sản phẩm</label>
+                                        <input type="text" class="form-control" name="sku" id="sku" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="price">Giá bán thường</label>
+                                        <div class="input-group has-validation mb-3">
+                                            <input type="text" class="form-control" id="price" name="price" placeholder="Enter price">
+                                            <span class="input-group-text">VNĐ</span>
+                                            <div class="invalid-feedback">Please Enter a product price.</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="price">Giá khuyến mại</label>
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control" name="price_sale" id="price" placeholder="Enter price">
+                                            <span class="input-group-text">VNĐ</span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <!--    gallery -->
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Accordion -->
-                    <a href="#collapseProductGallery" class="d-block card-header py-3" data-toggle="collapse"
-                       role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                        <h6 class="m-0 font-weight-bold text-primary">Ảnh sản phẩm</h6>
-                    </a>
-                    <!-- Card Content - Collapse -->
-                    <div class="collapse show" id="collapseProductGallery">
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <h5 class="fs-14 mb-1">Ảnh sản phẩm</h5>
-                                <p class="text-muted">Thêm ảnh sản phẩm</p>
-                                <input type="file" name="img_thumb" class="form-control">
-                                {{--                            <div class="text-center">--}}
-                                {{--                                <div class="position-relative d-inline-block">--}}
-                                {{--                                    <div class="position-absolute top-100 start-100 translate-middle">--}}
-                                {{--                                        <label for="product-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">--}}
-                                {{--                                            <div class="avatar-xs">--}}
-                                {{--                                                <div class="avatar-title bg-light border rounded-circle text-muted cursor-pointer">--}}
-                                {{--                                                    <i class="fa-solid fa-upload"></i>--}}
-                                {{--                                                </div>--}}
-                                {{--                                            </div>--}}
-                                {{--                                        </label>--}}
-                                {{--                                        <input class="form-control d-none" value="" id="product-image-input" type="file" accept="image/png, image/gif, image/jpeg">--}}
-                                {{--                                    </div>--}}
-                                {{--                                    <div class="avatar-lg">--}}
-                                {{--                                        <div class="avatar-title bg-light rounded">--}}
-                                {{--                                            <img src="" id="product-img" class="avatar-md h-auto" />--}}
-                                {{--                                        </div>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                {{--                            </div>--}}
-                            </div>
-                            <div>
-                                <h5 class="fs-14 mb-1">Thư viện ảnh</h5>
-                                <p class="text-muted">Thêm thư viện ảnh sản phẩm</p>
-                                <input type="file" name="product_galleries[]" multiple class="form-control">
+                            <!-- end row -->
 
-                                {{--                            <div class="dropzone">--}}
-                                {{--                                <div class="fallback">--}}
-                                {{--                                    <input name="file" type="file" multiple="multiple">--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="dz-message needsclick">--}}
-                                {{--                                    <div class="mb-3">--}}
-                                {{--                                        <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>--}}
-                                {{--                                    </div>--}}
+                            <div class="row">
 
-                                {{--                                    <h5>Drop files here or click to upload.</h5>--}}
-                                {{--                                </div>--}}
-                                {{--                            </div>--}}
-
-                                {{--                            <ul class="list-unstyled mb-0" id="dropzone-preview">--}}
-                                {{--                                <li class="mt-2" id="dropzone-preview-list">--}}
-                                {{--                                    <!-- This is used as the file preview template -->--}}
-                                {{--                                    <div class="border rounded">--}}
-                                {{--                                        <div class="d-flex p-2">--}}
-                                {{--                                            <div class="flex-shrink-0 me-3">--}}
-                                {{--                                                <div class="avatar-sm bg-light rounded">--}}
-                                {{--                                                    <img data-dz-thumbnail class="img-fluid rounded d-block" src="#" alt="Product-Image" />--}}
-                                {{--                                                </div>--}}
-                                {{--                                            </div>--}}
-                                {{--                                            <div class="flex-grow-1">--}}
-                                {{--                                                <div class="pt-1">--}}
-                                {{--                                                    <h5 class="fs-14 mb-1" data-dz-name>&nbsp;</h5>--}}
-                                {{--                                                    <p class="fs-13 text-muted mb-0" data-dz-size></p>--}}
-                                {{--                                                    <strong class="error text-danger" data-dz-errormessage></strong>--}}
-                                {{--                                                </div>--}}
-                                {{--                                            </div>--}}
-                                {{--                                            <div class="flex-shrink-0 ms-3">--}}
-                                {{--                                                <button data-dz-remove class="btn btn-sm btn-danger">Delete</button>--}}
-                                {{--                                            </div>--}}
-                                {{--                                        </div>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </li>--}}
-                                {{--                            </ul>--}}
-                                <!-- end dropzon-preview -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{--            Biến thể sản phẩm--}}
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Accordion -->
-                    <a href="#collapseProductGallery" class="d-block card-header py-3" data-toggle="collapse"
-                       role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                        <h6 class="m-0 font-weight-bold text-primary">Biến thể sản phẩm</h6>
-                    </a>
-                    <div class="collapse show" id="collapseProductGallery">
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Size</th>
-                                        <th>Màu</th>
-                                        <th>Ảnh</th>
-                                        <th>Số lượng</th>
-                                        <th>Giá</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @php $rows = 5; @endphp
-                                    @for($index = 1; $index <= $rows; $index++)
-                                        <tr>
-                                            <td>
-                                                <select name="product_variants[{{$index}}][size]" class="form-control">
-                                                    @foreach($sizes as $size_id => $size_name)
-                                                        <option value="{{$size_id}}">{{$size_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="product_variants[{{$index}}][color]" class="form-control">
-                                                    @foreach($colors as $color_id => $color_name)
-                                                        <option value="{{$color_id}}">{{$color_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="file" name="product_variants[{{$index}}][image]" class="form-control">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="product_variants[{{$index}}][quantity]" class="form-control">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="product_variants[{{$index}}][price]" class="form-control">
-                                            </td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                                <button class="btn btn-info">Thêm biến thể</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--                        Button -->
-
-                <div class="d-flex justify-content-end mb-3">
-                    <button class="btn btn-success w-sm">Submit</button>
-                </div>
-            </div>
-            <!-- end left content    -->
-            <!-- right content          -->
-            <div class="col-xl-4 col-lg-5">
-                <div class="card shadow mb-4">
-                    <!-- Card Header - Accordion -->
-                    <a href="#collapseStatus" class="d-block card-header py-3" data-toggle="collapse"
-                       role="button" aria-expanded="true" aria-controls="collapseCardExample">
-                        <h6 class="m-0 font-weight-bold text-primary">Trạng thái sản phẩm</h6>
-                    </a>
-                    <!-- Card Content - Collapse -->
-                    <div class="collapse show" id="collapseStatus">
-                        <!-- end card body -->
-                        <div class="card-body">
-                            <label for="choices-category-input" class="form-label">Danh mục sản phẩm</label>
-                            <select class="form-control" aria-label="Default select example"
-                                    id="choices-category-input" name="category_id">
-                                @foreach($categories as $id => $name)
-                                    <option value="{{$id}}">{{$name}}</option>
-                                @endforeach
-                            </select>
-                            <label for="choices-publish-status-input" class="form-label">Trạng thái</label>
-                            <select class="form-control form-select-lg mb-3" id="choices-publish-status-input"
-                                    aria-label="Default select example">
-                                <option selected>--Chọn trạng thái--</option>
-                                <option value="1">Hoạt động</option>
-                                <option value="0">Không hoạt động</option>
-                            </select>
-                            @php
-                                $types = [
-                                    'is_best_sale' => 'Bán chạy',
-                                    'is_40_sale' => 'Giảm 40%',
-                                    'is_hot_online' => 'Hot online',
-                                ];
-                            @endphp
-                            <label for="choices-publish-type-input" class="form-label">Loại sản phẩm</label>
-                            <div class="d-flex align-items-center">
-                                @foreach($types as $key => $value)
-                                    <div class="form-group custom-control custom-checkbox small col-md-3">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck-{{$key}}"
-                                               name="{{$key}}">
-                                        <label for="customCheck-{{$key}}" class="custom-control-label">{{$value}}</label>
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="qty">Số lượng</label>
+                                        <input type="text" class="form-control" id="qty" name="qty" placeholder="">
                                     </div>
-                                @endforeach
+                                </div>
+
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="product_status">Trạng thái</label>
+                                        <select name="status" id="product_status"  class="form-select">
+                                            <option value="0">Ẩn</option>
+                                            <option value="1" selected>Kích hoạt</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- end col -->
                             </div>
-                            <label for="choices-publish-type-input" class="form-label">Mã sản phẩm</label>
-                            <input type="text" class="form-control" name="sku" value="{{strtoupper(\Str::random(9))}}">
+                            <!-- end row -->
+                        </div>
+                    </div>
+                    <!-- end card body -->
+                </div>
+                <!-- end card -->
+
+                <div class="card">
+                    <div class="card-header align-items-center justify-content-between d-flex" >
+                        <h5 class="card-title mb-0" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#variants"
+                        aria-expanded="true" aria-controls="variants">Thuộc tính</h5>
+                        <a class="btn btn-info">Thêm thuộc tính mới </a>
+                    </div> 
+                    <div class="collapse show" id="variants">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-lg-10 d-flex ">
+                                    
+                                    <div class="w-75">
+                                        <select name="status" id="product_status" class="form-select">
+                                            <option value="" selected disabled>Thêm hiện có</option>
+                                            <option value="0">Kích thước</option>
+                                            <option value="1" >Trọng lượng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- end col -->
+                            </div>
+                            <!-- end row -->
+                            {{-- <div>
+                                <label class="form-label" for="meta-description-input">Meta Description</label>
+                                <textarea class="form-control" id="meta-description-input" placeholder="Enter meta description" rows="3"></textarea>
+                            </div> --}}
+                            
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- end right content       -->
 
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
+                        aria-expanded="true" aria-controls="content">
+                        <h5 class="card-title mb-0">Mô tả sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="content">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <textarea id="ckeditor-classic" name="content"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#description" aria-expanded="true" aria-controls="description">
+                        <h5 class="card-title mb-0">Mô tả ngắn của sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="description">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <textarea name="description" class="form-control" id="" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+                <div class="text-end mb-3">
+                    <button type="submit" class="btn btn-success w-sm">Submit</button>
+                </div>
+            </div>
+            <!-- end col -->
+
+            <div class="col-lg-4">
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#thumbnails" aria-expanded="true" aria-controls="thumbnails">
+                        <h5 class="card-title mb-0">Ảnh sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="thumbnails">
+                        <div class="card-body">
+                            <input type="file" name="thumbnail" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#galleries" aria-expanded="true" aria-controls="galleries">
+                        <h5 class="card-title mb-0">Album hình ảnh sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="galleries">
+                        <div class="card-body">
+                            <input type="file" name="galleries[]" multiple class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#categories" aria-expanded="true" aria-controls="categories">
+                        <h5 class="card-title mb-0">Danh mục</h5>
+                    </div>
+                    <div class="collapse show" id="categories">
+                        <div class="card-body">
+                            <p class="text-muted mb-2"> <a href="#"
+                                    class="float-end text-decoration-underline">Thêm mới</a>Chọn danh mục </p>
+                            <select class="form-select" name="category_id">
+                                <option value="0">Appliances</option>
+                                <option value="1">Automotive Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#brands"
+                        aria-expanded="true" aria-controls="brands">
+                        <h5 class="card-title mb-0">Thương hiệu</h5>
+                    </div>
+                    <div class="collapse show" id="brands">
+                        <div class="card-body">
+                            <p class="text-muted mb-2"> <a href="#"
+                                    class="float-end text-decoration-underline">Thêm mới</a>Chọn danh mục </p>
+                            <select class="form-select" name="brand_id">
+                                <option value="0">Appliances</option>
+                                <option value="1">Automotive Accessories</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            <!-- end col -->
         </div>
+        <!-- end row -->
+
     </form>
 @endsection
+
+@push('script')
+    <!-- ckeditor -->
+    <script src="{{ asset('theme/admin/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+
+    <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
+
+@endpush
