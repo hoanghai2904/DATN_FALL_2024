@@ -98,7 +98,7 @@ class VoucherController extends Controller
         $voucher->status = $request->status;
         $voucher->save();
         
-        return response()->json(['message' => 'Thay đổi trạng thái thành công.']);
+        return response()->json(null,204 );
     }
 
     return response()->json(['message' => 'Không tìm thấy voucher.'], 404);
