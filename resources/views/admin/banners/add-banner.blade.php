@@ -47,10 +47,6 @@
                                 <option value="" disabled selected>Chọn trạng thái</option>
                                 <option value="1">Đang hoạt động</option>
                                 <option value="0">Không hoạt động</option>
-                                <option value="2">Không hoạt động</option>
-                                <option value="3">Không hoạt động</option>
-                                <option value="0">Không hoạt động</option>
-                                <option value="0">Không hoạt động</option>
                             </select>
                             @error('status')
                                 <p class="text-danger">{{ $message }}</p>
