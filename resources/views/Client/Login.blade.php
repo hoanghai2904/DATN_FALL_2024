@@ -44,7 +44,7 @@
                                 <input type="password" class="form-control" id="password" name="password" required />
                                 @if ($errors->has('password'))
                                 <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}</div>
-                            @endif
+                                @endif
                             </div>
                             <label class="checkbox-default mb-4" for="offer">
                                 <input type="checkbox" id="remember" name="remember" />
@@ -54,7 +54,8 @@
                                 <button class="btn btn-md btn-black-default-hover btn-block mb-3" type="submit">
                                     Đăng nhập
                                 </button>
-                                <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
+                                <!-- Button trigger modal -->
+                                <a href="#" class="text-decoration-none" data-toggle="modal" data-target="#forgotPasswordModal">Quên mật khẩu?</a>
                             </div>
                         </form>
                         <hr />
@@ -70,4 +71,47 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Quên mật khẩu -->
+  <!-- Modal Quên mật khẩu -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Quên mật khẩu</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" id="forgotPasswordForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <input type="email" class="form-control" id="forgot-email" name="email" required />
+                    </div>
+                    <center>
+                    <button type="submit" class="btn btn-md btn-black-default-hover btn-block mb-3 mt-5 custom-width">Đặt lại mật khẩu</button>
+                </center>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #forgotPasswordModal .modal-dialog {
+        max-width: 400px; /* Giảm kích thước modal */
+        margin: auto; /* Căn giữa modal */
+    }
+    #forgotPasswordModal .modal-content {
+        padding: 20px;
+    }
+    .custom-width {
+        width: 30%; /* Điều chỉnh kích thước cho phù hợp */
+        max-width: 200px; /* Đặt kích thước tối đa cho nút */
+        margin: 0 auto; /* Căn giữa nút */
+    }
+</style>
+
+    <!-- ...:::: End Modal :::... -->
 @endsection

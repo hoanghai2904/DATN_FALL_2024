@@ -34,7 +34,7 @@ Route::group(['prefix' => 'account'], function () {
         route::post('/profile', [AccountController::class, 'Check_profile']);
 
         route::get('/change_pass', [AccountController::class, 'change_pass'])->name('account.change_pass');
-        route::post('/change_pass', [AccountController::class, 'Check_changePass']);
+        route::post('/change_pass', [AccountController::class, 'Check_changePass'])->name('account.Check_changePass');
     });
 
 

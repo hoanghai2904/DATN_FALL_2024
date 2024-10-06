@@ -185,7 +185,6 @@ class AccountController extends Controller
         if ($auth->cover) {
             Storage::delete($auth->cover);
         }
-
         // Lưu hình ảnh mới vào thư mục 'images' và lấy đường dẫn
         $path_cover_art = $request->file('cover')->store('images');
         $data['cover'] = $path_cover_art;
@@ -205,17 +204,52 @@ class AccountController extends Controller
 
    public function change_pass()
    {
-      return view('Client.Login');
+      return view('account.Check_changePass');
    }
 
-   public function Check_changePass() {}
+   public function Check_changePass(Request $request) 
+{
+    $auth = auth()->user(); 
+    $data = $request->validate([
+        'password' => 'required',
+        'password_new' => 'required|min:4|max:20',
+        'password_confirm' => 'required|same:password_new',
+    ], [
+        'password.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+        'password_new.required' => 'Vui lòng nhập mật khẩu mới.',
+        'password_new.min' => 'Mật khẩu phải có ít nhất 4 ký tự.',
+        'password_new.max' => 'Mật khẩu không được vượt quá 20 ký tự.',
+        'password_confirm.required' => 'Vui lòng xác nhận lại mật khẩu.',
+        'password_confirm.same' => 'Mật khẩu không đúng với mật khẩu mới.',
+    ]);
 
-   public function forgot_pass()
-   {
-      return view('Client.Login');
-   }
+    if (!Hash::check($request->password, $auth->password)) {
+        return back()->withErrors(['password' => 'Mật khẩu của bạn không chính xác']);
+    }
 
-   public function Check_forgotPass() {}
+    // Mã hóa mật khẩu mới
+    $auth->password = bcrypt($request->input('password_new'));
+
+    // Update vào database
+    if ($auth->update()) {
+        auth()->logout();
+        // Chuyển hướng về trang index với thông báo thành công
+        return redirect()->route('home.index')->with('success', 'Bạn đã đổi mật khẩu thành công, bạn hãy đăng nhập lại!');
+    } else {
+        return redirect()->route('home.index')->with('error', 'Đã có lỗi xảy ra, vui lòng kiểm tra lại!');
+    }
+}
+
+
+//    public function forgot_pass()
+//    {
+//       return view('Client.Login');
+//    }
+
+   public function Check_forgotPass()
+    {
+        
+    }
 
    public function reset_pass()
    {
