@@ -44,19 +44,19 @@ class VoucherController extends Controller
         Vouchers::create($data);
         return redirect()->route('admin.vouchers.index')->with('msg',"Thêm mã giảm giá thành công");
     }
-    public function show($id){
-        $find = Vouchers::find($id);
-        if($find){
-            if($find->status){
-                $find->status = 0;
-            }
-            else{
-                $find->status = 1;
-            }
-            $find->save();
-        }
-        return back();
-    }
+    // public function show($id){
+    //     $find = Vouchers::find($id);
+    //     if($find){
+    //         if($find->status){
+    //             $find->status = 0;
+    //         }
+    //         else{
+    //             $find->status = 1;
+    //         }
+    //         $find->save();
+    //     }
+    //     return back();
+    // }
     public function destroy($id){
         $find=Vouchers::find($id);
         if (!$find) {

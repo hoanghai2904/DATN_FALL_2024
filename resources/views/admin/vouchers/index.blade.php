@@ -25,9 +25,9 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option>Trạng thái</option>
-                                            <option value="1">Hoạt động</option>
-                                            <option value="0">Ngừng hoạt động</option>
+                                            <option value="">Trạng thái</option>
+                                            <option value="2">Hoạt động</option>
+                                            <option value="1">Ngừng hoạt động</option>
                                         </select>
                                         <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
@@ -73,7 +73,7 @@
                                                     <div class="form-check form-switch form-switch-info">
                                                         <input class="form-check-input" type="checkbox" role="switch"
                                                             id="SwitchCheck{{ $item->id }}"
-                                                            {{ $item->status == 0 ? 'checked' : '' }}
+                                                            {{ $item->status == 2 ? 'checked' : '' }}
                                                             onchange="updateStatus({{ $item->id }}, this.checked)">
                                                     </div>
                                                 </td>
@@ -114,7 +114,7 @@
     </div>
     <script>
         function updateStatus(voucherId, isChecked) {
-            var status = isChecked ? 0 : 1;
+            var status = isChecked ? 2 : 1;
 
             $.ajax({
                 url: '{{ route('admin.vouchers.updateStatus') }}', // Corrected route with 'admin.' prefix
