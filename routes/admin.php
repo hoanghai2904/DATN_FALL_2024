@@ -41,7 +41,18 @@ Route::prefix('admin')->as('admin.')->group(function() {
 
     Route::resource('brands', BrandsController::class);
 
-    Route::resource('vouchers',VoucherController::class);
+    // Route::post('/vouchers/update-status', [VoucherController::class, 'updateStatus'])->name('admin.vouchers.updateStatus');
+    
+    // Route::resource('vouchers', VoucherController::class);
+    Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
+        Route::get('index', [VoucherController::class, 'index'])->name('index');
+        Route::get('create', [VoucherController::class, 'create'])->name('create');
+        Route::post('store', [VoucherController::class, 'store'])->name('store');
+        Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
+        Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
+        Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
+        Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+    });
 
     Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
         Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
@@ -49,7 +60,7 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
         Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');    
         Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
-        Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
+        Route::get('updater/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
     });
 
