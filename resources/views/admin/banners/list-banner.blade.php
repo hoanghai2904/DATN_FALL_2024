@@ -52,7 +52,7 @@
                                         <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Trạng thái</th>
-                                        
+                                        <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
