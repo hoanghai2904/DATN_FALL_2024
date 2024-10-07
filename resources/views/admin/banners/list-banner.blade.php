@@ -46,11 +46,13 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
                                                
+                                               
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Hình ảnh</th>
+                                        <th scope="col">Liên Kết</th>
                                         <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
@@ -79,11 +81,12 @@
                                             </td>
                                             
                                             <td>
-                                                {{-- <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a> --}}
-                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Sửa</a>
+                                                
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
+                                                   
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                         Xóa
                                                     </button>
