@@ -2,6 +2,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
@@ -10,8 +11,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
-
-
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CategoryController;
@@ -58,9 +57,19 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //Forgot password
         route::get('/forgot_pass', [AdminAccountController::class, 'forgot_pass'])->name('forgot_pass');
         route::post('/forgot_pass', [AdminAccountController::class, 'Check_forgotPass']);
-    
+
         route::get('/reset_pass', [AdminAccountController::class, 'reset_pass'])->name('reset_pass');
         route::post('/reset_pass', [AdminAccountController::class, 'Check_resetPass']);
+
+        //Khách hàng (cusstomer)
+        route::get('/cusstomer', [AdminUserController::class, 'listCusstomer'])->name('listCusstomer');
+        Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
+        Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
+       
+
+
+
+
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);
@@ -74,14 +83,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //banner
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
-        Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
-        Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
-        Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
-        Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');    
-        Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
-        Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
-        Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
-    });
+            Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
+            Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
+            Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
+            Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');
+            Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
+            Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
+            Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+        });
 
     Route::resource('products',ProductController::class);
     Route::get('/test-variant',function () {

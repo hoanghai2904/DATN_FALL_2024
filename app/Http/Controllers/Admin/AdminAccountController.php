@@ -105,10 +105,11 @@ class AdminAccountController extends Controller
      return redirect()->route('admin.profile')->with('success', 'Cập nhật thông tin thành công!');
  }
 
+ 
  //còn chức năng forgot password
 
  // còn chức năng phân quyền
- 
+
  //còn chức năng tạo tài khoản nhân viên (super admin tạo và phân quyền)
 
 }

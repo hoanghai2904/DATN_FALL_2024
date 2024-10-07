@@ -104,7 +104,7 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="tab-content">
-                            <div class="tab-pane active" >
+                            <div class="tab-pane active" id="personalDetails">
                                 <form action="{{route('admin.Check_profile')}}" method="POST">
                                     @csrf
                                     <div class="row">
@@ -192,7 +192,7 @@
                             </div>
                             <!--end tab-pane-->
                             <div class="tab-pane" id="changePassword" role="tabpanel">
-                                <form action="" method="POST" enctype="multipart/form-data">
+                                <form action="" method="POST" >
                                     @csrf
                                     <div class="row g-2">
                                         <div class="col-lg-4">

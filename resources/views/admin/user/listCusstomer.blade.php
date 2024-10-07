@@ -17,42 +17,18 @@
                 <!-- end card header -->
 
                 <div class="card-body">
-                    <form action="abc">
-                        <div class="row mb-5 ">
-                            <div class="col-lg-3" data-select2-id="select2-data-1">
-                                <h6 class="fw-semibold">Danh mục</h6>
-                                <select class="js-example-basic-multiple select2-hidden-accessible" name="states[]"
-                                    multiple="" data-select2-id="select2-data-2" tabindex="-1" aria-hidden="true">
-                                    <optgroup label="ABC" data-select2-id="select2-data-43-nhx0">
-                                        <option value="A" selected data-select2-id="select2-data-44-2wrh">A</option>
-                                        <option value="B" selected="" data-select2-id="select2-data-21-9hc0">B
-                                        </option>
-                                        <option value="C" data-select2-id="select2-data-45-zi4r">C</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-
-                            <div class="col-lg-3" data-select2-id="select2-data-2">
-                                <h6 class="fw-semibold">Thương hiệu</h6>
-                                <select class="js-example-basic-single select2-hidden-accessible" name="state"
-                                    data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
-                                    <option value="AL" data-select2-id="select2-data-18-9avy">Alabama</option>
-                                    <option value="MA" data-select2-id="select2-data-73-26iq">Madrid</option>
-                                    <option value="TO" data-select2-id="select2-data-74-9rir">Toronto</option>
-                                    <option value="LO" data-select2-id="select2-data-75-jxz2">Londan</option>
-                                    <option value="WY" data-select2-id="select2-data-76-uypr">Wyoming</option>
-                                </select>
-                            </div>
-
+                    <form action="{{ route('admin.listCusstomer') }}" method="GET">
+                        @csrf
+                        <div class="row mb-2 ">
                             <div class="col-lg-4">
-                                <div class="d-flex justify-content-start mt-4">
+                                <div class="d-flex justify-content-start">
                                     <div class="search-box ms-2 w-100">
-                                        <input type="text" class="form-control search" placeholder="Search...">
+                                        <input type="text" name="query" class="form-control search" placeholder="Search...">
                                         <i class="ri-search-line search-icon"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-2 d-flex justify-content-end mt-4">
+                            <div class="col-lg-2 d-flex justify-content-start">
                                 <a href="b" class="btn btn-primary">Tìm kiếm</a>
                             </div>
                         </div>
@@ -70,7 +46,6 @@
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
-                                        {{-- <th scope="col">ID</th> --}}
                                         <th scope="col">ID</th>
                                         <th scope="col">Họ và Tên</th>
                                         <th scope="col">Avatar</th>
@@ -83,47 +58,212 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    id="cardtableCheck01">
-                                                <label class="form-check-label" for="cardtableCheck01"></label>
-                                            </div>
-                                        </td>
-                                        <td>123</td>
-                                        <td>Nguyễn văn A</td>
-                                        <td>
-                                            <img width="80px" class="img-thumbnail"
-                                                src="https://product.hstatic.net/200000264739/product/royal_canin_kitten_645acb46d6a84c83bef4336c7db15fd9_master.jpg"
-                                                alt="">
-                                        </td>
-                                        <td>baotheha@gmail.com</td>
-                                        <td>Ngày sinh</td>
-                                        <td>0377887668</td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
-                                            <button type="button" class="btn btn-sm btn-warning">Sửa</button>
-                                            <button type="button" class="btn   btn-sm btn-danger">Xóa</button>
-                                        </td>
-                                    </tr>
-
+                                    @foreach ($listCustomer as $customer)
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value=""
+                                                        id="cardtableCheck{{ $customer->id }}">
+                                                    <label class="form-check-label" for="cardtableCheck{{ $customer->id }}"></label>
+                                                </div>
+                                            </td>
+                                            <td>{{ $customer->id }}</td>
+                                            <td>{{ $customer->full_name }}</td>
+                                            <td>
+                                                @if ($customer->cover)
+                                                    <img width="80px" class="img-thumbnail"
+                                                        src="{{ asset('storage/' . $customer->cover) }}" alt="Avatar">
+                                                @else
+                                                    <img width="80px" class="img-thumbnail"
+                                                        src="https://via.placeholder.com/80" alt="Default Avatar">
+                                                @endif
+                                            </td>
+                                            <td>{{ $customer->email }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($customer->birthday)->format('d/m/Y') }}</td>
+                                            <td>{{ $customer->phone }}</td>
+                                            <td>{{ $customer->gender == 1 ? 'Nam' : ($customer->gender == 2 ? 'Nữ' : 'Khác') }}</td>
+                                            <td>
+                                                <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                    <input type="checkbox" class="form-check-input"
+                                                           {{ $customer->status === 'active' ? 'checked' : '' }}
+                                                           id="statusCheckbox{{ $customer->id }}"
+                                                           onchange="confirmStatusChange({{ $customer->id }}, this)">
+                                                </div>
+                                            </td>
+                                            {{-- <td>
+                                                <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+                                                <button type="button" class="btn btn-sm btn-danger">Xóa</button>
+                                            </td> --}}
+                                            <td>
+                                                <a href="" class="btn btn-sm btn-info">Chi tiết</a>
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteModal({{ $customer->id }})">
+                                                    Xóa
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="mt-4">
+                        {{ $listCustomer->links() }}
                     </div>
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
     <!-- end row -->
+    {{-- modal update status --}}
+   <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-2 text-center">
+                    <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                        <h4>Khóa tài khoản !</h4>
+                        <p class="text-muted mx-4 mb-0">Bạn có muốn khóa tài khoản này không ?</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn w-sm btn-danger" id="updateStatus">Đồng ý</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+   {{-- modal delete --}}
+   <div id="deleteCustomer" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-2 text-center">
+                    <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
+                    <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                        <h4>Xóa tài khoản</h4>
+                        <p class="text-muted mx-4 mb-0">Bạn có muốn xóa tài khoản này không ?</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                    <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn w-sm btn-danger" id="confirmDelete">Đồng ý</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 @endsection
 
-@push('script')
-    <script>
-        $(document).ready(function() {
-            $(".js-example-basic-single").select2(),
-                $(".js-example-basic-multiple").select2();
+<script>
+    function confirmStatusChange(customerId, checkbox) {
+        const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
+        console.log("Trạng thái ban đầu:", originalChecked);
+
+        // Hiển thị modal
+        $('#removeNotificationModal').modal('show');
+
+        // Khi người dùng xác nhận cập nhật
+        $('#updateStatus').off('click').on('click', function() {
+            updateStatus(customerId, checkbox); // Truyền checkbox để xử lý
+            $('#removeNotificationModal').modal('hide');
+
+            // Loại bỏ sự kiện hủy khi đã xác nhận
+            $('#removeNotificationModal').off('hidden.bs.modal');
         });
-    </script>
-@endpush
+
+        // Khi người dùng hủy modal
+        $('#removeNotificationModal').on('hidden.bs.modal', function() {
+            checkbox.checked = !originalChecked; // Khôi phục trạng thái nếu người dùng hủy
+            console.log("Trạng thái sau khi hủy:", checkbox.checked);
+        });
+    }
+
+    function updateStatus(customerId, checkbox) {
+        const isChecked = checkbox.checked;
+        const status = isChecked ? 'active' : 'inactive'; // Cập nhật theo giá trị mong muốn
+
+        fetch('{{ route("admin.updateStatus", ":id") }}'.replace(':id', customerId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ status: status })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response:', data); // Kiểm tra phản hồi
+            if (data.success) {
+                console.log("Cập nhật thành công");
+                checkbox.checked = isChecked; // Giữ nguyên trạng thái sau khi thành công
+                console.log("Trạng thái sau update thành công:", checkbox.checked);
+                
+            } else {
+                alert('Cập nhật trạng thái không thành công!');
+                checkbox.checked = !isChecked; // Khôi phục trạng thái nếu không thành công
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
+        });
+    }
+
+
+
+// Hàm hiển thị modal xác nhận xóa
+let deleteCustomerId;
+
+function showDeleteModal(customerId) {
+    deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
+    $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
+
+$('#confirmDelete').on('click', function() {
+    if (deleteCustomerId) {
+        // Thực hiện yêu cầu xóa qua AJAX
+        fetch('{{ route("admin.deleteCustomer", ":id") }}'.replace(':id', deleteCustomerId), {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Hiển thị thông báo thành công
+                alert('Xóa tài khoản thành công!');
+                $('#deleteCustomer').modal('hide'); // Ẩn modal
+                // Cập nhật danh sách khách hàng (có thể reload trang hoặc xóa hàng từ table)
+                location.reload(); // Tải lại trang sau khi xóa
+            } else {
+                alert('Xóa tài khoản không thành công!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra trong quá trình xóa.');
+        });
+    }
+});
+}
+
+</script>
+
+
+    
+  
+
