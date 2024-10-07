@@ -156,6 +156,7 @@ class AccountController extends Controller
         'email' => 'required|email|unique:users,email,' . $auth->id,
         'birthday' => 'nullable|date',
         'password' => 'required',
+        'gender' => 'nullable',
     ], [
         'full_name.required' => 'Vui lòng nhập tên đầy đủ.',
         'full_name.min' => 'Tên đầy đủ phải có ít nhất 6 ký tự.',

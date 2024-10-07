@@ -50,7 +50,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Proffile
         route::get('/profile', [AdminAccountController::class, 'profile'])->name('profile');
-        route::post('/profile', [AdminAccountController::class, 'Check_profile']);
+        route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
 
         //Change password
         route::get('/change_pass', [AdminAccountController::class, 'change_pass'])->name('change_pass');
