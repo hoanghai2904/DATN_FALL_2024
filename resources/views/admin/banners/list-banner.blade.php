@@ -45,12 +45,13 @@
                                         <th scope="col" style="width: 46px;">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Hình ảnh</th>
-                                        {{-- <th scope="col">URL</th> --}}
+                                        <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
@@ -69,14 +70,24 @@
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
                                                 <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
-                                            {{-- <td>{{ $value->url }}</td> --}}
-                                            <td>{{ $value->status ? 'Kích hoạt' : 'Không kích hoạt' }}</td>
+                                            <td><a href="{{ $value->url }}" target="_blank">Đường Link</a></td>
                                             <td>
+                                                <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                    <input type="checkbox" class="form-check-input" id="customSwitch{{ $value->id }}" 
+                                                           {{ $value->status ? 'checked' : '' }} onchange="toggleStatus({{ $value->id }})">
+                                                </div>
+                                            </td>
+                                            
+                                            <td>
+                                                <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                 <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                         Xóa
                                                     </button>
@@ -94,7 +105,7 @@
         </div><!-- end col -->
     </div>
     <!-- end row -->
-    <div class="card mt-4">
+    {{-- <div class="card mt-4">
         <div class="card-header">
             <h4 class="card-title">Slideshow Banners</h4>
         </div>
@@ -117,7 +128,46 @@
                 </button>
             </div>
         </div>
+    </div> --}}
+
+    <div class="card mt-4">
+        <div class="card-header">
+            
+            <h4 class="card-title">Slideshow Banners</h4>
+        </div>
+        <div class="card-body">
+            <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @php
+                        $activeSet = false; // Biến để đánh dấu banner đầu tiên được hiển thị
+                    @endphp
+                    @foreach ($listBanner as $key => $banner)
+                        @if ($banner->status) <!-- Kiểm tra trạng thái của banner -->
+                            <div class="carousel-item {{ !$activeSet ? 'active' : '' }}">
+                                <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
+                            </div>
+                            @php
+                                $activeSet = true; // Đặt trạng thái active cho banner đầu tiên
+                            @endphp
+                        @endif
+                    @endforeach
+                </div>
+    
+                <!-- Nếu có ít nhất 1 banner, hiển thị điều khiển carousel -->
+                @if ($activeSet)
+                    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                @endif
+            </div>
+        </div>
     </div>
+    
 @endsection
 @push('script')
 <script>
