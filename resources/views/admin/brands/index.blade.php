@@ -24,10 +24,13 @@
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
                 <a href="{{ route('admin.brands.create') }}" class="btn btn-success">Thêm mới</a>
-                <a href="{{ url('admin.brands.trash') }}" class="btn btn-secondary mx-2">Thùng rác</a>
             </div>
             <!-- end card header -->
-
+            @if (session('message'))
+            <div class="alert alert-info" role="alert">
+                {{ session('message') }}
+            </div>
+        @endif
             <div class="card-body">
                 {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
 
@@ -69,8 +72,8 @@
                                         <button class="btn btn-sm btn-warning">Sửa</button>
                                     </a>
 
-                                    <form action="{{ url('admin.brands.delete') }}" method="post" class="d-inline">
-                                        {{-- @method('DELETE') --}}
+                                    <form action="{{ route('admin.brands.destroy', $item->id) }}" method="post" class="d-inline">
+                                        @method('DELETE')
                                         @csrf
                                         <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button>
                                     </form>

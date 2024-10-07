@@ -53,7 +53,7 @@ class BrandsController extends Controller
             'slug' => $request->slug,
         ];
         $this->brands->createBrands($dataInsert);
-        return redirect()->route('admin.brands.index');
+        return redirect()->route('admin.brands.index')->with(['message' => 'Thêm Thành Công']);
     }
 
     /**
@@ -100,22 +100,7 @@ class BrandsController extends Controller
         ];
 
         $brands->updateBrands($dataUpdate, $id);
-        return redirect()->route('admin.brands.index');
-    }
-
-    public function delete(Request $request){
-        //$brands = Brands::findOrfail($request->id);
-        $brands = $this->brands->find($request);
-        // if (!$brands) {
-        //     return redirect()->route('admin.brands.index');
-        // }
-        // if ($brands->logo) {
-        //     Storage::disk('public')->delete($brands->logo);
-        // }
-        $brands->deleted=true;
-        $brands->save();
-        return redirect()->route('admin.brands.index');
-
+        return redirect()->route('admin.brands.index')->with(['message' => 'Sửa Thành Công']);
     }
 
     /**
@@ -132,6 +117,6 @@ class BrandsController extends Controller
             Storage::disk('public')->delete($brands->logo);
         }
         $brands->delete();
-        return redirect()->route('admin.brands.index');
+        return redirect()->route('admin.brands.index')->with(['message' => 'Xóa Thành Công']);
     }
 }
