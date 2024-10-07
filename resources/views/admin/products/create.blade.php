@@ -23,9 +23,9 @@
                             <div class="mb-0">
                                 <input type="text" class="form-control" id="product-title-input" value=""
                                     placeholder="Tên sản phẩm" name="name">
-                                    @error('name')
-                                        <p class="text-danger">{{ $message }}</p>
-                                    @enderror
+                                @error('name')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -54,12 +54,12 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="price">Giá bán thường</label>
                                         <div class="input-group has-validation mb-3">
-                                            <input type="text" class="form-control" id="price" name="price"
+                                            <input type="text" class="form-control" id="price numberInput" name="price"
                                                 placeholder="Enter price">
                                             <span class="input-group-text">VNĐ</span>
                                             @error('price')
-                                        <p class="text-danger">{{ $message }}</p>
-                                    @enderror
+                                                <p class="text-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
 
                                     </div>
@@ -68,8 +68,8 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="price">Giá khuyến mại</label>
                                         <div class="input-group mb-3">
-                                            <input type="text" class="form-control" name="price_sale" id="price"
-                                                placeholder="Enter price">
+                                            <input type="text" class="form-control" name="price_sale"
+                                                id="price numberInput" placeholder="Enter price">
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
 
@@ -85,9 +85,9 @@
                                         <label class="form-label" for="qty">Số lượng</label>
                                         <input type="text" class="form-control" id="qty" name="qty"
                                             placeholder="">
-                                            @error('qty')
+                                        @error('qty')
                                             <p class="text-danger">{{ $message }}</p>
-                                        @enderror    
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -100,7 +100,7 @@
                                         </select>
                                         @error('status')
                                             <p class="text-danger">{{ $message }}</p>
-                                        @enderror  
+                                        @enderror
                                     </div>
                                 </div>
                                 <!-- end col -->
@@ -112,36 +112,31 @@
                 </div>
                 <!-- end card -->
 
-                {{-- <div class="card">
-                    <div class="card-header align-items-center justify-content-between d-flex">
-                        <h5 class="card-title mb-0" data-bs-toggle="collapse" style="cursor:pointer"
-                            data-bs-target="#variants" aria-expanded="true" aria-controls="variants">Thuộc tính</h5>
-                        <a class="btn btn-info">Thêm thuộc tính mới </a>
+                {{-- Biến thể sản phẩm --}}
+                <div class="card mt-4">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#variantsSection" aria-expanded="true" aria-controls="variantsSection">
+                        <h5 class="card-title mb-0">Biến thể sản phẩm</h5>
                     </div>
-                    <div class="collapse show" id="variants">
+
+                    <div class="collapse show" id="variantsSection">
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-lg-10 d-flex ">
-
-                                    <div class="w-75">
-                                        <select name="status" id="product_status" class="form-select">
-                                            <option value="" selected disabled>Thêm hiện có</option>
-                                            <option value="0">Kích thước</option>
-                                            <option value="1">Trọng lượng</option>
-                                        </select>
-                                    </div>
+                            <div class="form-group row">
+                                <button type="button" class="col-md-3 btn btn-primary mb-3 mx-3" id="addVariant">Thêm
+                                    biến thể</button>
+                                <div class="col-md-7">
+                                    <select class="js-example-basic-multiple select2-hidden-accessible" name="states[]"
+                                        multiple="" id="attributeSelect">
+                                        <option value="type">Loại</option>
+                                        <option value="weight">Trọng lượng</option>
+                                    </select>
                                 </div>
-                                <!-- end col -->
-                            </div>
-                            <!-- end row -->
-                            <div>
-                                <label class="form-label" for="meta-description-input">Meta Description</label>
-                                <textarea class="form-control" id="meta-description-input" placeholder="Enter meta description" rows="3"></textarea>
                             </div>
 
+                            <div id="variants"></div> <!-- Khởi tạo là rỗng, sẽ thêm vào khi người dùng nhấn nút -->
                         </div>
                     </div>
-                </div> --}}
+                </div>
 
                 <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
@@ -154,8 +149,8 @@
                                 <textarea id="ckeditor-classic" name="content"></textarea>
                             </div>
                             @error('content')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror  
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -172,8 +167,8 @@
                                 <textarea name="description" class="form-control" id="" rows="10"></textarea>
                             </div>
                             @error('description')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror  
+                                <p class="text-danger">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
                 </div>
@@ -196,8 +191,8 @@
                             <input type="file" name="thumbnail" class="form-control">
                         </div>
                         @error('thumbnail')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror  
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -220,9 +215,8 @@
                     </div>
                     <div class="collapse show" id="categories" data-select2-id="select2-data-2">
                         <div class="card-body">
-                            <p class="text-muted mb-2"> <a href="#"
-                                    class="float-end text-decoration-underline">Thêm mới</a>Chọn danh mục </p>
-                            <select name="categories[]" multiple class="js-example-basic-multiple" style="width: 100%">
+                            <p class="text-muted mb-2"> 
+                            <select name="categories" class="js-example-basic-multiple" style="width: 100%">
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}">
                                         {{ $category->name }}
@@ -240,10 +234,9 @@
                     </div>
                     <div class="collapse show" id="brands">
                         <div class="card-body">
-                            <p class="text-muted mb-2"> <a href="#"
-                                    class="float-end text-decoration-underline">Thêm mới</a>Chọn thương hiệu </p>
-                            <select name="brands[]" multiple class="js-example-basic-multiple" style="width: 100%">
-                                @foreach ( $brands as $brand )
+                            <p class="text-muted mb-2"> 
+                            <select name="brands" class="js-example-basic-multiple" style="width: 100%">
+                                @foreach ($brands as $brand)
                                     <option value="{{ $brand->id }}">
                                         {{ $brand->name }}
                                     </option>
@@ -252,6 +245,28 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#product_type"
+                        aria-expanded="true" aria-controls="product_type">
+                        <h5 class="card-title mb-0">Nhãn</h5>
+                    </div>
+                    <div class="collapse show" id="product_type">
+                        <div class="card-body">
+                            <p class="text-muted mb-2"> 
+                                @foreach ($brands as $brand)
+                                    <div class="form-check mb-3" style="font-size: large">
+                                        <input class="form-check-input" type="checkbox" name="brands[]" id="brand{{ $brand->id }}" value="{{ $brand->id }}">
+                                        <label class="form-check-label" for="brand{{ $brand->id }}">
+                                            {{ $brand->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
 
 
             </div>
@@ -271,6 +286,144 @@
     <script>
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2({});
+        });
+    </script>
+
+    <script>
+        let variantIndex = 0;
+        let variantCombinations = []; // Danh sách chứa các tổ hợp type - weight đã chọn cho từng biến thể
+
+        document.getElementById('addVariant').addEventListener('click', function() {
+            const selectedOptions = $('#attributeSelect').val(); // Lấy giá trị các thuộc tính đã chọn
+            if (selectedOptions.length > 0) {
+                variantIndex++; // Tăng chỉ số biến thể mỗi khi nhấn nút "Thêm biến thể"
+
+                let variantHTML = `<div class="variant-group card mb-3" id="variant-${variantIndex}">
+                <div class="card-body">
+                    <div class="row">`;
+
+                // Kiểm tra loại sản phẩm đã tồn tại
+                let existingProductTypes = document.querySelectorAll(
+                    '[name^="variants"][name$="[product_type_id]"]');
+                let existingProductTypeValues = Array.from(existingProductTypes).map(select => select.value);
+
+                // Nếu chọn 'type', thêm trường Loại sản phẩm
+                if (selectedOptions.includes('type')) {
+                    variantHTML += `
+                <div class="form-group col-md-4">
+                    <label for="type">Loại sản phẩm:</label>
+                    <select id="typeSelect-${variantIndex}" name="variants[${variantIndex}][product_type_id]" class="form-control">
+                        <option value="">Chọn loại sản phẩm</option>`;
+
+                    @foreach ($types as $type)
+                        variantHTML += `
+                <option value="{{ $type->id }}">
+                    {{ $type->name }}
+                </option>`;
+                    @endforeach
+
+                    variantHTML += `</select>
+                </div>`;
+                }
+
+                // Nếu chọn 'weight', thêm trường Trọng lượng
+                if (selectedOptions.includes('weight')) {
+                    variantHTML += `
+                <div class="form-group col-md-4">
+                    <label for="weight">Trọng lượng:</label>
+                    <select id="weightSelect-${variantIndex}" name="variants[${variantIndex}][product_weight_id]" class="form-control">
+                        <option value="">Chọn trọng lượng</option>`;
+
+                    @foreach ($weights as $weight)
+                        variantHTML += `
+                <option value="{{ $weight->id }}">
+                    {{ $weight->name }}
+                </option>`;
+                    @endforeach
+
+                    variantHTML += `</select>
+                </div>`;
+                }
+
+                // Các trường khác: Số lượng, Giá biến thể, Hình ảnh biến thể
+                variantHTML += `
+                        <div class="form-group col-md-4">
+                            <label for="qty">Số lượng:</label>
+                            <input type="number" name="variants[${variantIndex}][qty]" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="form-group col-md-4">
+                            <label class="form-label" for="price_variant">Giá biến thể:</label>
+                            <div class="input-group">
+                                <input type="text" name="variants[${variantIndex}][price_variant]" class="form-control" required>
+                                <span class="input-group-text">VNĐ</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label for="image">Hình ảnh biến thể:</label>
+                            <input type="file" name="variants[${variantIndex}][image]" class="form-control">
+                        </div>
+
+                        <div class="form-group col-md-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger remove-variant" data-variant-id="variant-${variantIndex}">Xóa biến thể</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+                // Chèn nội dung mới vào div #variants
+                document.getElementById('variants').insertAdjacentHTML('beforeend', variantHTML);
+
+                // Gán sự kiện xóa cho nút "Xóa biến thể"
+                document.querySelectorAll('.remove-variant').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let variantId = this.getAttribute('data-variant-id');
+                        document.getElementById(variantId).remove();
+                        // Xóa tổ hợp khỏi danh sách
+                        let combinationToRemove = `${selectedType}-${selectedWeight}`;
+                        variantCombinations = variantCombinations.filter(combination =>
+                            combination !== combinationToRemove);
+                    });
+                });
+
+                let selectedType = '';
+                let selectedWeight = '';
+
+                // Khi các select box (type và weight) thay đổi, kiểm tra và lưu tổ hợp
+                document.getElementById(`typeSelect-${variantIndex}`).addEventListener('change', function() {
+                    selectedType = this.value;
+                    checkCombination();
+                });
+
+                document.getElementById(`weightSelect-${variantIndex}`).addEventListener('change', function() {
+                    selectedWeight = this.value;
+                    checkCombination();
+                });
+
+                // Kiểm tra tổ hợp type - weight có hợp lệ không
+                function checkCombination() {
+                    if (selectedType && selectedWeight) {
+                        let combination = `${selectedType}-${selectedWeight}`;
+                        if (variantCombinations.includes(combination)) {
+                            alert('Giá trị đã tồn tại! Vui lòng chọn loại hoặc trọng lượng khác.');
+                            document.getElementById(`variant-${variantIndex}`).remove();
+                            return; // Dừng không thêm biến thể
+                        }
+                        // Nếu tổ hợp chưa tồn tại, thêm vào danh sách
+                        variantCombinations.push(combination);
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(".js-example-basic-single").select2(),
+                $(".js-example-basic-multiple").select2();
         });
     </script>
 @endpush

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\admin\Product;
+use App\Models\admin\ProductTypes;
+use App\Models\admin\ProductVariants;
+use App\Models\admin\ProductWeights;
 use App\Models\Brands;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
@@ -25,12 +28,17 @@ class ProductController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {   
+    {
         $categories = Category::all();
         $brands = Brands::all();
-        return view('admin.products.create',compact(
+        $types = ProductTypes::all();
+        $weights = ProductWeights::all();
+        // dd($types,$weights);
+        return view('admin.products.create', compact(
             'categories',
-            'brands'
+            'brands',
+            'types',
+            'weights'
         ));
     }
 
@@ -39,38 +47,29 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
 
         $productValidate = $request->validate([
             'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
             'name' => ['required'],
-            'category_id' => ['required','array'],
-            // 'categories.*' => 'exists:categories,id',
-            // 'brands' => ['required','array'],
-            // 'brands.*' => 'exists:brands,id',
+            'categories' => ['required'],
+            'brands' => ['required'],
             'qty' => ['required'],
             'description' => ['required', 'max:500'],
             'content' => ['required'],
             'price' => ['required'],
             // 'product_type' => ['required'],
             'status' => ['required'],
+            'variants' => ['array'],
+            'variants.*.product_type_id' => ['nullable','exists:product_types,id'],
+            'variants.*.product_weight_id' => ['nullable','exists:product_weights,id'],
+            'variants.*.qty' => ['required','integer','min:0'],
+            'variants.*.price_variant' => ['required','numeric','min:0'], // Validate giá biến thể
+            'variants.*.image' => ['nullable','image','mimes:jpeg,png,jpg,svg,webp','max:2048'],
         ]);
-        // $product = $request->validate([
-        //     'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
-        //     'name' => ['required'],
-        //     'category_id' => ['required'],
-        //     'brand_id' => ['required'],
-        //     'qty' => ['required'],
-        //     'description' => ['required', 'max:500'],
-        //     'content' => ['required'],
-        //     'price' => ['required'],
-        //     'product_type' => ['required'],
-        //     'status' => ['required'],
-        // ]);
-        // $productValidate['slug'] = slug($request->name);
-        // $productValidate['sku'] = generateSKU();
+
         $path = null;
-        if($request->hasFile('thumbnail')){
+        if ($request->hasFile('thumbnail')) {
             $image = $request->file('thumbnail');
             $newImage = time() . '.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('uploads/products', $newImage, 'public');
@@ -82,21 +81,38 @@ class ProductController extends Controller
             'slug' => slug($request->name),
             'sku' => generateSKU(),
             'thumbnail' => $path,
-            'description'=> $productValidate['description'],
-            'content'=> $productValidate['content'],
-            'price'=> $productValidate['price'],
-            'price_sale'=> $price_sale,
-            'product_type'=> 1,
+            'description' => $productValidate['description'],
+            'content' => $productValidate['content'],
+            'price' => $productValidate['price'],
+            'price_sale' => $price_sale,
+            'product_type' => 1,
             'qty' => $productValidate['qty'], // Thêm qty
             'status' => $productValidate['status'], // Thêm status
-            // 'category_id'=>1,
-            'brand_id'=>1   
+            'category_id' => $productValidate['categories'],
+            'brand_id' => $productValidate['brands'],
         ]);
 
-
-        $product->categories()->sync($productValidate['categories']);
-        // $product->brands()->sync($productValidate['brands']);
-        // dd($product->categories()->sync($productValidate['categories']));
+        if($request->has('variants')){
+            foreach ($request->variants as $variant) {
+                // Lưu biến thể
+                $productVariant = new ProductVariants();
+                $productVariant->product_id = $product->id;
+                $productVariant->product_type_id = $variant['product_type_id'];
+                $productVariant->product_weight_id = $variant['product_weight_id'];
+                $productVariant->qty = $variant['qty'];
+                $productVariant->price_variant = $variant['price_variant'];
+    
+                // Xử lý hình ảnh biến thể
+                if (isset($variant['image'])) {
+                    $image = $variant['image'];
+                    $newImage = time() . '_' . $variant['product_type_id'] . '_' . $variant['product_weight_id'] . '.' . $image->getClientOriginalExtension();
+                    $pathVariant = $image->storeAs('uploads/products/variants', $newImage, 'public');
+                    $productVariant->image = $pathVariant;
+                }
+    
+                $productVariant->save();
+            }
+        }
 
         return '123';
         // return redirect()->route('admin.products');
