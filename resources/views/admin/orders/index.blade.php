@@ -32,6 +32,12 @@
                     <table class="table table-sm align-middle table-nowrap table-striped-columns mb-0"> 
                             <thead class="table-light">
                                 <tr>
+                                <th scope="col" style="width: 46px;">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
+                                                <label class="form-check-label" for="cardtableCheck"></label>
+                                            </div>
+                                        </th>
                                     <th>ID</th>
                                     <th>Tên khách hàng</th>
                                     <th>Email</th>
@@ -41,7 +47,13 @@
                             </thead>
                             <tbody>
                             @foreach ($orders as $order)
-                                    <tr>
+                                    <tr> 
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="cardtableCheck01">
+                                                <label class="form-check-label" for="cardtableCheck01"></label>
+                                            </div>
+                                        </td>
                                         <td>{{ $order->id }}</td>
                                         <td>{{ $order->user_name }}</td>
                                         <td>{{ $order->user_email }}</td>

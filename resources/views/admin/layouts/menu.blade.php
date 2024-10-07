@@ -1,4 +1,5 @@
 
+
 <div class="app-menu navbar-menu">
             <!-- LOGO -->
             <div class="navbar-brand-box">
@@ -40,9 +41,6 @@
                             <div class="collapse menu-dropdown" id="sidebarDashboards">
                                 <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                        <a href="{{route('admin.categories.index')}}" class="nav-link" data-key="t-analytics"> Quản lý danh mục </a>
-                                    </li>
-                                <li class="nav-item">
                                         <a href="{{route('admin.products.index')}}" class="nav-link" data-key="t-analytics"> Quản lý sản phẩm</a>
                                     </li>
                                     <li class="nav-item">
@@ -51,7 +49,10 @@
                                     <li class="nav-item">
                                         <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
                                     </li>
-
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.banners.listBanner')}}" class="nav-link" data-key="t-analytics"> Quản lý banner </a>
+                                    </li>
+                                    
                                     <li class="nav-item">
                                         <a href="{{route('admin.brands.index')}}" class="nav-link" data-key="t-ecommerce"> Thương hiệu </a>
                                     </li>
