@@ -45,6 +45,9 @@
                                     <li class="nav-item">
                                         <a href="{{route('admin.orders.index')}}" class="nav-link" data-key="t-analytics"> Quản lý đơn hàng </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{route('admin.vouchers.index')}}" class="nav-link" data-key="t-analytics"> Quản lý khuyến mãi</a>
+                                    </li>
                         </li> <!-- end Dashboard Menu -->              
                     </ul>
                     <ul class="navbar-nav" id="navbar-nav">
