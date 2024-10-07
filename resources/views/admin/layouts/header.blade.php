@@ -40,17 +40,23 @@
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             @if(auth()->check())
+                            {{-- Nếu người dùng đã đăng nhập --}}
                             @if(auth()->user()->cover)
-                                <img class="rounded-circle header-profile-user" src="{{ asset('storage/' . auth()->user()->cover) }}" alt="Avatar" >
+                                {{-- Nếu người dùng có ảnh đại diện, hiển thị ảnh --}}
+                                <img class="rounded-circle header-profile-user" src="{{ asset('storage/' . auth()->user()->cover) }}" alt="Avatar">
                             @else
+                                {{-- Nếu không có ảnh đại diện, hiển thị biểu tượng người dùng --}}
                                 <i class="icon-user"></i>
                             @endif
                         @else
+                            {{-- Nếu người dùng chưa đăng nhập, hiển thị biểu tượng người dùng --}}
                             <i class="icon-user"></i>
                         @endif
+                        
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->full_name }}</span>
-                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Role user</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text badge bg-success-subtle text-success">Role user</span>
+                              
                             </span>
                         </span>
                     </button>
