@@ -31,7 +31,7 @@
     <link href="{{ asset('theme/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('theme/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-    <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script>
+    {{-- <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script> --}}
 
 
     @yield('style-libs')
@@ -143,7 +143,7 @@
     <!--select2 cdn-->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script src="{{ asset('theme/admin/assets/js/pages/select2.init.j') }}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/select2.init.js') }}"></script>
 
     <!-- apexcharts -->
     <script src="{{ asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js') }}"></script>

@@ -10,8 +10,11 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
+  
     <link rel="shortcut icon" href="{{ asset('theme/admin/assets') }}/images/favicon.ico">
-
+    <!-- Sweet Alert css-->
+    <link href="{{ asset('theme/admin/assets') }}/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet"
+        type="text/css" />
     <!-- Layout config Js -->
     <script src="{{ asset('theme/admin/assets') }}/js/layout.js"></script>
     <!-- Bootstrap Css -->
@@ -22,6 +25,8 @@
     <link href="{{ asset('theme/admin/assets') }}/css/app.min.css" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('theme/admin/assets') }}/css/custom.min.css" rel="stylesheet" type="text/css" />
+    <script src="{{ asset('theme/admin/assets') }}/js/vendor/jquery-3.5.1.min.js"></script>
+   
 
 </head>
 
@@ -68,18 +73,22 @@
                                     <p class="text-muted">Sign in to continue</p>
                                 </div>
                                 <div class="p-2 mt-4">
-                                    <form action="{{route('admin.Check_login')}}" method="POST">
-                                    @csrf
+                                    <form action="{{ route('admin.Check_login') }}" method="POST">
+                                        @csrf
                                         <div class="mb-3">
                                             <label for="username" class="form-label">Email</label>
                                             <input type="text" class="form-control" id="username" name="email"
                                                 placeholder="Enter username">
                                         </div>
-                                        @if ($errors->has('email') && $errors->first('email') !== 'Tài khoản của bạn chưa được xác minh email. Vui lòng kiểm tra email để xác minh tài khoản.')
-                                        <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}</div>
+                                        @if (
+                                            $errors->has('email') &&
+                                                $errors->first('email') !==
+                                                    'Tài khoản của bạn chưa được xác minh email. Vui lòng kiểm tra email để xác minh tài khoản.')
+                                            <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}
+                                            </div>
                                         @endif
                                         <div class="mb-3">
-                                           
+
                                             <label class="form-label" for="password-input">Mật khẩu</label>
                                             <div class="position-relative auth-pass-inputgroup mb-3">
                                                 <input type="password" class="form-control pe-5 password-input"
@@ -91,7 +100,8 @@
                                             </div>
                                         </div>
                                         @if ($errors->has('password'))
-                                        <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}</div>
+                                            <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}
+                                            </div>
                                         @endif
                                         <div class="mt-4">
                                             <button class="btn btn-success w-100" type="submit">Đăng nhập</button>
@@ -149,6 +159,16 @@
     <script src="{{ asset('theme/admin/assets') }}/js/pages/particles.app.js"></script>
     <!-- password-addon init -->
     <script src="{{ asset('theme/admin/assets') }}/js/pages/password-addon.init.js"></script>
+
+    <script src="{{ asset('theme/admin/assets') }}/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- Sweet alert init js-->
+    <script src="{{ asset('theme/admin/assets') }}/js/pages/sweetalerts.init.js"></script>
+
+    <!-- App js -->
+    <script src="{{ asset('theme/admin/assets') }}/js/app.js"></script>
+   
+ 
 </body>
 
 </html>
