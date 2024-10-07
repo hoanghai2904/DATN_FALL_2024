@@ -53,6 +53,12 @@ class AdminAccountController extends Controller
      Auth::logout();
      $request->session()->invalidate();
      $request->session()->regenerateToken();
-     return redirect()->route('account.login')->with('success', 'Đăng xuất thành công!');
+     return redirect()->route('admin.login')->with('success', 'Đăng xuất thành công!');
+ }
+
+
+ public function profile()
+ {
+     return view('admin.Login.profile');
  }
 }
