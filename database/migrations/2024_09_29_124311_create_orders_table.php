@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('voucher_id')->nullable();
+            $table->string('order_code');
             $table->string('user_name');
             $table->string('user_email');
             $table->string('user_phone');
