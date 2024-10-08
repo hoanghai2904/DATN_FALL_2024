@@ -14,10 +14,25 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
+                        {{-- <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label" for="meta-title-input">Hình ảnh:</label>
                                 <input type="file" class="form-control" name="logo">
+                            </div>
+                        </div> --}}
+                        <div class="col-md-6">
+                            <div class="default-form-box mb-3 d-flex align-items-center">
+                                <div>
+                                    <label for="cover">Ảnh đại diện</label>
+                                    <input type="file" id="cover" name="cover" class="form-control-file"
+                                        onchange="previewAvatar(event)" />
+                                    @error('cover')
+                                        <small
+                                            style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <img id="avatarPreview" src="" alt="Avatar Preview"
+                                    class="ml-3 rounded d-none float-left" width="70" height="70" />
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -46,4 +61,17 @@
         </div>
     </div>
 </form>
+<script>
+    function previewAvatar(event) {
+        const avatarPreview = document.getElementById('avatarPreview');
+        const file = event.target.files[0];
+        if (file) {
+            avatarPreview.src = URL.createObjectURL(file);
+            avatarPreview.classList.remove('d-none');
+        } else {
+            avatarPreview.src = '';
+            avatarPreview.classList.add('d-none');
+        }
+    }
+</script>
 @endsection
