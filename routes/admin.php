@@ -75,8 +75,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
         Route::resource('brands', BrandsController::class);
-        Route::resource('vouchers', VoucherController::class);
-
+        // Route::resource('vouchers', VoucherController::class);
+        Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
+            Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('create', [VoucherController::class, 'create'])->name('create');
+            Route::post('store', [VoucherController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
+            Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
+            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
             Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
