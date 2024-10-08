@@ -13,29 +13,15 @@
 
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="{{ asset('assets') }}/images/favicon.ico" type="image/png">
-
-    <!-- ::::::::::::::All CSS Files here :::::::::::::: -->
-    <!-- Vendor CSS -->
-    <!-- <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/font-awesome.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/ionicons.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/simple-line-icons.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/jquery-ui.min.css"> -->
-
-    <!-- Plugin CSS -->
-    <!-- <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/swiper-bundle.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/animate.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/nice-select.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/venobox.min.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/jquery.lineProgressbar.css">
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/aos.min.css"> -->
-
-    <!-- Main CSS -->
-    <!-- <link rel="stylesheet" href="{{ asset('assets') }}/sass/style.css"> -->
-
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
     <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/vendor.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/plugins.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/style.min.css">
+    <!-- Nhúng CSS cho toastr -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.css" />
+
+    <!-- Nhúng JavaScript cho toastr -->
 
 </head>
 
@@ -49,8 +35,8 @@
                             <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href="{{route('home.index')}}"><img src="{{ asset('assets') }}/images/logo/logo_black.png"
-                                            alt=""></a>
+                                    <a href="{{ route('home.index') }}"><img
+                                            src="{{ asset('assets') }}/images/logo/logo_black.png" alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -100,7 +86,7 @@
                                                             <li><a href="wishlist.html">Wishlist</a></li>
                                                             <li><a href="compare.html">Compare</a></li>
                                                             <li><a href="checkout.html">Checkout</a></li>
-                                                            <li><a href="{{route('account.login')}}">Login</a></li>
+                                                            <li><a href="{{ route('account.login') }}">Login</a></li>
                                                             <li><a href="my-account.html">My Account</a></li>
                                                         </ul>
                                                     </li>
@@ -230,16 +216,16 @@
                             <li>
                                 <a href="index.html">
                                     <div class="logo">
-                                        <img src="{{asset('assets')}}/images/logo/logo_black.png" alt="">
+                                        <img src="{{ asset('assets') }}/images/logo/logo_black.png" alt="">
                                     </div>
                                 </a>
                             </li>
                         </ul>
                     </div>
-                     <!-- End Mobile Left Side -->
-    
-                     <!-- Start Mobile Right Side -->
-                     <div class="mobile-right-side">
+                    <!-- End Mobile Left Side -->
+
+                    <!-- Start Mobile Right Side -->
+                    <div class="mobile-right-side">
                         <ul class="header-action-link action-color--black action-hover-color--golden">
                             <li>
                                 <a href="#search">
@@ -264,14 +250,14 @@
                                 </a>
                             </li>
                         </ul>
-                     </div>
-                     <!-- End Mobile Right Side -->
+                    </div>
+                    <!-- End Mobile Right Side -->
                 </div>
             </div>
         </div>
     </div>
     <!-- End Mobile Header -->
-    
+
     <!--  Start Offcanvas Mobile Menu Section -->
     <div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
         <!-- Start Offcanvas Header -->
@@ -383,26 +369,27 @@
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
             </div> <!-- End Mobile Menu -->
-    
+
             <!-- Start Mobile contact Info -->
             <div class="mobile-contact-info">
                 <div class="logo">
-                  <a href="index.html"><img src="{{asset('assets')}}/images/logo/logo_white.png" alt=""></a>  
+                    <a href="index.html"><img src="{{ asset('assets') }}/images/logo/logo_white.png"
+                            alt=""></a>
                 </div>
-    
+
                 <address class="address">
-                    <span>Address: 4710-4890 Breckinridge St, Fayettevill</span> 
-                    <span>Call Us: (+800) 345 678, (+800) 123 456</span> 
-                    <span>Email: yourmail@mail.com</span>    
+                    <span>Address: 4710-4890 Breckinridge St, Fayettevill</span>
+                    <span>Call Us: (+800) 345 678, (+800) 123 456</span>
+                    <span>Email: yourmail@mail.com</span>
                 </address>
-    
+
                 <ul class="social-link">
                     <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                     <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                     <li><a href="#"><i class="fa fa-instagram"></i></a></li>
                     <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
                 </ul>
-    
+
                 <ul class="user-link">
                     <li><a href="wishlist.html">Wishlist</a></li>
                     <li><a href="cart.html">Cart</a></li>
@@ -410,10 +397,10 @@
                 </ul>
             </div>
             <!-- End Mobile contact Info -->
-    
+
         </div> <!-- End Offcanvas Mobile Menu Wrapper -->
     </div> <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
-    
+
     <!-- Start Offcanvas Mobile Menu Section -->
     <div id="offcanvas-about" class="offcanvas offcanvas-rightside offcanvas-mobile-about-section">
         <!-- Start Offcanvas Header -->
@@ -421,41 +408,41 @@
             <button class="offcanvas-close"><i class="ion-android-close"></i></button>
         </div> <!-- End Offcanvas Header -->
         <!-- Start Offcanvas Mobile Menu Wrapper -->
-            <!-- Start Mobile contact Info -->
-            <div class="mobile-contact-info">
-                <div class="logo">
-                  <a href="index.html"><img src="{{asset('assets')}}/images/logo/logo_white.png" alt=""></a>  
-                </div>
-    
-                <address class="address">
-                    <span>Address: 4710-4890 Breckinridge St, Fayettevill</span> 
-                    <span>Call Us: (+800) 345 678, (+800) 123 456</span> 
-                    <span>Email: yourmail@mail.com</span>    
-                </address>
-    
-                <ul class="social-link">
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                </ul>
-    
-                <ul class="user-link">
-                    <li><a href="wishlist.html">Wishlist</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                    <li><a href="checkout.html">Checkout</a></li>
-                </ul>
+        <!-- Start Mobile contact Info -->
+        <div class="mobile-contact-info">
+            <div class="logo">
+                <a href="index.html"><img src="{{ asset('assets') }}/images/logo/logo_white.png" alt=""></a>
             </div>
-            <!-- End Mobile contact Info -->
+
+            <address class="address">
+                <span>Address: 4710-4890 Breckinridge St, Fayettevill</span>
+                <span>Call Us: (+800) 345 678, (+800) 123 456</span>
+                <span>Email: yourmail@mail.com</span>
+            </address>
+
+            <ul class="social-link">
+                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+
+            <ul class="user-link">
+                <li><a href="wishlist.html">Wishlist</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="checkout.html">Checkout</a></li>
+            </ul>
+        </div>
+        <!-- End Mobile contact Info -->
     </div> <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
-    
+
     <!-- Start Offcanvas Addcart Section -->
     <div id="offcanvas-add-cart" class="offcanvas offcanvas-rightside offcanvas-add-cart-section">
         <!-- Start Offcanvas Header -->
         <div class="offcanvas-header text-right">
             <button class="offcanvas-close"><i class="ion-android-close"></i></button>
         </div> <!-- End Offcanvas Header -->
-    
+
         <!-- Start  Offcanvas Addcart Wrapper -->
         <div class="offcanvas-add-cart-wrapper">
             <h4 class="offcanvas-title">Shopping Cart</h4>
@@ -463,7 +450,8 @@
                 <li class="offcanvas-cart-item-single">
                     <div class="offcanvas-cart-item-block">
                         <a href="#" class="offcanvas-cart-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-1/default-1.jpg" alt="" class="offcanvas-cart-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-1/default-1.jpg"
+                                alt="" class="offcanvas-cart-image">
                         </a>
                         <div class="offcanvas-cart-item-content">
                             <a href="#" class="offcanvas-cart-item-link">Car Wheel</a>
@@ -480,7 +468,8 @@
                 <li class="offcanvas-cart-item-single">
                     <div class="offcanvas-cart-item-block">
                         <a href="#" class="offcanvas-cart-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-2/default-1.jpg" alt="" class="offcanvas-cart-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-2/default-1.jpg"
+                                alt="" class="offcanvas-cart-image">
                         </a>
                         <div class="offcanvas-cart-item-content">
                             <a href="#" class="offcanvas-cart-item-link">Car Vails</a>
@@ -497,7 +486,8 @@
                 <li class="offcanvas-cart-item-single">
                     <div class="offcanvas-cart-item-block">
                         <a href="#" class="offcanvas-cart-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-3/default-1.jpg" alt="" class="offcanvas-cart-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-3/default-1.jpg"
+                                alt="" class="offcanvas-cart-image">
                         </a>
                         <div class="offcanvas-cart-item-content">
                             <a href="#" class="offcanvas-cart-item-link">Shock Absorber</a>
@@ -521,16 +511,16 @@
                 <li><a href="compare.html" class=" btn btn-block btn-golden mt-5">Checkout</a></li>
             </ul>
         </div> <!-- End  Offcanvas Addcart Wrapper -->
-    
+
     </div> <!-- End  Offcanvas Addcart Section -->
-    
+
     <!-- Start Offcanvas Mobile Menu Section -->
     <div id="offcanvas-wishlish" class="offcanvas offcanvas-rightside offcanvas-add-cart-section">
         <!-- Start Offcanvas Header -->
         <div class="offcanvas-header text-right">
             <button class="offcanvas-close"><i class="ion-android-close"></i></button>
         </div> <!-- ENd Offcanvas Header -->
-    
+
         <!-- Start Offcanvas Mobile Menu Wrapper -->
         <div class="offcanvas-wishlist-wrapper">
             <h4 class="offcanvas-title">Wishlist</h4>
@@ -538,7 +528,8 @@
                 <li class="offcanvas-wishlist-item-single">
                     <div class="offcanvas-wishlist-item-block">
                         <a href="#" class="offcanvas-wishlist-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-1/default-1.jpg" alt="" class="offcanvas-wishlist-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-1/default-1.jpg"
+                                alt="" class="offcanvas-wishlist-image">
                         </a>
                         <div class="offcanvas-wishlist-item-content">
                             <a href="#" class="offcanvas-wishlist-item-link">Car Wheel</a>
@@ -555,7 +546,8 @@
                 <li class="offcanvas-wishlist-item-single">
                     <div class="offcanvas-wishlist-item-block">
                         <a href="#" class="offcanvas-wishlist-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-2/default-1.jpg" alt="" class="offcanvas-wishlist-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-2/default-1.jpg"
+                                alt="" class="offcanvas-wishlist-image">
                         </a>
                         <div class="offcanvas-wishlist-item-content">
                             <a href="#" class="offcanvas-wishlist-item-link">Car Vails</a>
@@ -572,7 +564,8 @@
                 <li class="offcanvas-wishlist-item-single">
                     <div class="offcanvas-wishlist-item-block">
                         <a href="#" class="offcanvas-wishlist-item-image-link">
-                            <img src="{{asset('assets')}}/images/product/default/home-3/default-1.jpg" alt="" class="offcanvas-wishlist-image">
+                            <img src="{{ asset('assets') }}/images/product/default/home-3/default-1.jpg"
+                                alt="" class="offcanvas-wishlist-image">
                         </a>
                         <div class="offcanvas-wishlist-item-content">
                             <a href="#" class="offcanvas-wishlist-item-link">Shock Absorber</a>
@@ -591,9 +584,9 @@
                 <li><a href="#" class="btn btn-block btn-golden">View wishlist</a></li>
             </ul>
         </div> <!-- End Offcanvas Mobile Menu Wrapper -->
-    
+
     </div> <!-- End Offcanvas Mobile Menu Section -->
-    
+
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
@@ -604,7 +597,7 @@
     </div>
     <!-- End Offcanvas Search Bar Section -->
     @yield('main')
-    
+
     <!-- Start Footer Section -->
     <footer class="footer-section footer-bg">
         <div class="footer-wrapper">
@@ -981,6 +974,31 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets') }}/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-toast-plugin/1.3.2/jquery.toast.min.js"
+        integrity="sha512-zlWWyZq71UMApAjih4WkaRpikgY9Bz1oXIW5G0fED4vk14JjGlQ1UmkGM392jEULP8jbNMiwLWdM8Z87Hu88Fw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@if (Session::has('success'))
+    <script>
+        $.toast({
+            heading: 'Thông báo',
+            text: "{{Session::get('success')}}",
+            showHideTransition: 'slide',
+            icon: 'success',
+            position: 'top-right'
+        })
+    </script>
+@endif
+@if (Session::has('error'))
+    <script>
+        $.toast({
+            heading: 'Thông báo',
+            text: "{{Session::get('error')}}",
+            showHideTransition: 'slide',
+            icon: 'error',
+            position: 'top-right'
+        })
+    </script>
+@endif
 </body>
 
 <!-- Mirrored from htmldemo.hasthemes.com/hono/hono/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Jan 2021 00:31:38 GMT -->

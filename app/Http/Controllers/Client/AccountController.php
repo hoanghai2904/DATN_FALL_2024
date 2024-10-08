@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\VerifyAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 class AccountController extends Controller
@@ -16,7 +17,49 @@ class AccountController extends Controller
       return view('Client.Login');
    }
 
-   public function check_login() {}
+   public function Check_login(Request $request) 
+   {
+      $data = $request->validate([
+         'email' => 'required|exists:users,email',
+         'password' => 'required',
+     ], [
+         'email.required' => 'Vui lòng nhập email.',
+         'email.exists' => 'Email không tồn tại trong hệ thống.',
+         'password.required' => 'Vui lòng nhập mật khẩu.',
+     ]);
+     $user = User::where('email', $data['email'])->first();
+
+     // Kiểm tra nếu tài khoản chưa xác nhận email
+     if (is_null($user->email_verified_at)) {
+         return back()->withErrors([
+             'email' => 'Tài khoản của bạn chưa được xác nhận. Vui lòng kiểm tra email để xác nhận tài khoản.',
+         ])->withInput();
+     }
+
+     // Kiểm tra thông tin đăng nhập
+     $remember = $request->has('remember'); // Kiểm tra nếu checkbox "Remember me" được chọn
+
+     if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $remember)) {
+         // Đăng nhập thành công
+         $request->session()->regenerate();
+         return redirect()->route('home.index')->with('success', 'Đăng nhập thành công!');
+
+     }
+
+     // Đăng nhập thất bại
+     return back()->withErrors([
+         'password' => 'Mật khẩu không chính xác.',
+     ])->withInput();
+ }
+     
+ public function logout(Request $request)
+ {
+     Auth::logout();
+     $request->session()->invalidate();
+     $request->session()->regenerateToken();
+     return redirect()->route('account.login')->with('success', 'Đăng xuất thành công!');
+ }
+    
 
    public function rigester()
    {
@@ -29,7 +72,7 @@ class AccountController extends Controller
           'full_name' => 'required|min:6|max:100',
           'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:10|unique:users,phone',
-          'password' => 'required|min:8|max:255',
+          'password' => 'required|min:4|max:20',
           'email' => 'required|email|unique:users,email',
           'gender' => 'nullable|in:1,2,3',
       ], [
@@ -45,8 +88,8 @@ class AccountController extends Controller
           'phone.max' => 'Số điện thoại không được vượt quá 10 ký tự.',
           'phone.unique' => 'Số điện thoại này đã được sử dụng.',
           'password.required' => 'Vui lòng nhập mật khẩu.',
-          'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
-          'password.max' => 'Mật khẩu không được vượt quá 255 ký tự.',
+          'password.min' => 'Mật khẩu phải có ít nhất 4 ký tự.',
+          'password.max' => 'Mật khẩu không được vượt quá 20 ký tự.',
           'email.required' => 'Vui lòng nhập địa chỉ email.',
           'email.email' => 'Địa chỉ email không hợp lệ.',
           'email.unique' => 'Email này đã được sử dụng.',

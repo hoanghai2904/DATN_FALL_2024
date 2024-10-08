@@ -1,5 +1,5 @@
 @extends('Client.index');
-@section('main')
+@section('main');
     <!-- ...:::: Start Breadcrumb Section:::... -->
     <div class="breadcrumb-section breadcrumb-bg-color--golden">
         <div class="breadcrumb-wrapper">
@@ -25,18 +25,6 @@
 
     <!-- ...:::: Start Customer Login Section :::... -->
     <div class="container">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-    
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-    
         <div class="customer-register mb-10">
             <div class="row justify-content-center">
                 <!--register area start-->
@@ -138,10 +126,7 @@
                 <!--register area end-->
             </div>
         </div>
-    </div>
-    
-    
-    
+    </div> 
     <script>
         function previewAvatar(event) {
             const avatarPreview = document.getElementById('avatarPreview');
@@ -155,5 +140,4 @@
             }
         }
     </script>
-    
 @endsection
