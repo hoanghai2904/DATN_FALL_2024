@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 
 class VoucherController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $query = Vouchers::query();
+        $search = null;
+        $search = $request->input('keywords');
+        if (!empty($request->status)) {
+            $status = $request->status;
+            $query->where('status', '=', $status);
+        }   
+        if ($search) {
+            $query->where('name', 'like', '%'.$search.'%');
+        }
         $list= $query->orderBy('id','DESC')->paginate(5)->withQueryString();
         return view('admin.vouchers.index', compact('list'));
     }
@@ -35,19 +44,19 @@ class VoucherController extends Controller
         Vouchers::create($data);
         return redirect()->route('admin.vouchers.index')->with('msg',"Thêm mã giảm giá thành công");
     }
-    public function show($id){
-        $find = Vouchers::find($id);
-        if($find){
-            if($find->status){
-                $find->status = 0;
-            }
-            else{
-                $find->status = 1;
-            }
-            $find->save();
-        }
-        return back();
-    }
+    // public function show($id){
+    //     $find = Vouchers::find($id);
+    //     if($find){
+    //         if($find->status){
+    //             $find->status = 0;
+    //         }
+    //         else{
+    //             $find->status = 1;
+    //         }
+    //         $find->save();
+    //     }
+    //     return back();
+    // }
     public function destroy($id){
         $find=Vouchers::find($id);
         if (!$find) {
@@ -81,4 +90,18 @@ class VoucherController extends Controller
         $find->update($data);
         return redirect()->route('admin.vouchers.index')->with('msg', "Sửa mã giảm giá thành công");
     }
+    public function updateStatus(Request $request)
+{
+    $voucher = Vouchers::find($request->id);
+    
+    if ($voucher) {
+        $voucher->status = $request->status;
+        $voucher->save();
+        
+        return response()->json(null,204 );
+    }
+
+    return response()->json(['message' => 'Không tìm thấy voucher.'], 404);
+}
+
 }
