@@ -67,8 +67,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
         Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
        
+        //user
+        route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
 
-
+        //Role user
+        route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
 
 
 

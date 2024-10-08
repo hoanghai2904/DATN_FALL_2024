@@ -31,7 +31,7 @@
     <link href="{{ asset('theme/admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('theme/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-    {{-- <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script> --}}
+    <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script>
 
 
     @yield('style-libs')
@@ -157,10 +157,16 @@
 
     <!-- Dashboard init -->
     <script src="{{ asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
-
-
     <!-- App js -->
     <script src="{{ asset('theme/admin/assets/js/app.js') }}"></script>
+
+     <!-- list.js min js -->
+     <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
+
+     <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
+     <script src="{{ asset('assets/js/pages/crm-leads.init.js') }}"></script>
+
+
     @stack('script')
 </body>
 

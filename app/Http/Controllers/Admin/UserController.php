@@ -19,10 +19,10 @@ class UserController extends Controller
             // Tìm kiếm theo email hoặc số điện thoại và phân trang (mỗi trang có 10 người dùng)
             $listCustomer = User::where('email', 'like', "%{$searchQuery}%")
                 ->orWhere('phone', 'like', "%{$searchQuery}%")
-                ->paginate(10);
+                ->paginate(1);
         } else {
             // Nếu không nhập gì, lấy toàn bộ người dùng và phân trang
-            $listCustomer = User::paginate(10);
+            $listCustomer = User::paginate(1);
         }
     
         return view('admin.user.listCusstomer', compact('listCustomer'));
@@ -57,9 +57,21 @@ class UserController extends Controller
     }
 
 
+    // user
+
 
     
+     public function listUser() // Thêm Request vào tham số
+    {
     
+        return view('admin.user.listUser');
+    }
+    
+     //role
+    public function listRole() // Thêm Request vào tham số
+    {
+        return view('admin.user.roleUser');
+    }
 
 
 

@@ -1,6 +1,5 @@
 @extends('admin.layouts.master')
-@push('style')
-@endpush
+
 
 @section('title')
     Khách hàng
@@ -10,10 +9,7 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                    {{-- <a href="#" class="btn btn-danger mx-2">Xóa</a> --}}
-                </div>
+                
                 <!-- end card header -->
 
                 <div class="card-body">
@@ -29,32 +25,32 @@
                                 </div>
                             </div>
                             <div class="col-lg-2 d-flex justify-content-start">
-                                <a href="b" class="btn btn-primary">Tìm kiếm</a>
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                             </div>
                         </div>
                     </form>
 
                     <div class="live-preview mt-4">
                         <div class="table-responsive table-card">
-                            <table class="table align-middle table-nowrap table-striped-columns mb-0">
+                            <table class="table align-middle small" id="customerTable">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 46px;">
+                                        <th scope="col">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value=""
                                                     id="cardtableCheck">
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Họ và Tên</th>
-                                        <th scope="col">Avatar</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Ngày sinh</th>
-                                        <th scope="col">Số điện thoại</th>
-                                        <th scope="col">Giới tính</th>
-                                        <th scope="col">Trạng thái</th>
-                                        <th scope="col" style="width: 150px;">Hành động</th>
+                                        <th class="sort" data-sort="name">ID</th>
+                                        <th class="sort" data-sort="name">Họ và Tên</th>
+                                        
+                                        <th class="sort" data-sort="name">Email</th>
+                                        <th class="sort" data-sort="name">Ngày sinh</th>
+                                        <th class="sort" data-sort="name">Số điện thoại</th>
+                                        <th class="sort" data-sort="name">Giới tính</th>
+                                        <th class="sort" data-sort="name">Trạng thái</th>
+                                        <th >Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,32 +64,22 @@
                                                 </div>
                                             </td>
                                             <td>{{ $customer->id }}</td>
-                                            <td>{{ $customer->full_name }}</td>
-                                            <td>
-                                                @if ($customer->cover)
-                                                    <img width="80px" class="img-thumbnail"
-                                                        src="{{ asset('storage/' . $customer->cover) }}" alt="Avatar">
-                                                @else
-                                                    <img width="80px" class="img-thumbnail"
-                                                        src="https://via.placeholder.com/80" alt="Default Avatar">
-                                                @endif
+                                            <td><img src="{{ asset('storage/' . auth()->user()->cover) }}" alt="" class="avatar-xs rounded-circle me-2">
+                                                <a href="#javascript: void(0);" class="text-body fw-medium">{{$customer->full_name}}</a>
                                             </td>
+                                          
                                             <td>{{ $customer->email }}</td>
                                             <td>{{ \Carbon\Carbon::parse($customer->birthday)->format('d/m/Y') }}</td>
                                             <td>{{ $customer->phone }}</td>
                                             <td>{{ $customer->gender == 1 ? 'Nam' : ($customer->gender == 2 ? 'Nữ' : 'Khác') }}</td>
                                             <td>
-                                                <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                <div class="form-check form-switch form-switch-success form-switch-md" dir="ltr">
                                                     <input type="checkbox" class="form-check-input"
                                                            {{ $customer->status === 'active' ? 'checked' : '' }}
                                                            id="statusCheckbox{{ $customer->id }}"
                                                            onchange="confirmStatusChange({{ $customer->id }}, this)">
                                                 </div>
                                             </td>
-                                            {{-- <td>
-                                                <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
-                                                <button type="button" class="btn btn-sm btn-danger">Xóa</button>
-                                            </td> --}}
                                             <td>
                                                 <a href="" class="btn btn-sm btn-info">Chi tiết</a>
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteModal({{ $customer->id }})">
@@ -163,6 +149,7 @@
 @endsection
 
 <script>
+    // confirm status 
     function confirmStatusChange(customerId, checkbox) {
         const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
         console.log("Trạng thái ban đầu:", originalChecked);
@@ -226,11 +213,9 @@
 
 // Hàm hiển thị modal xác nhận xóa
 let deleteCustomerId;
-
 function showDeleteModal(customerId) {
     deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
     $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
-
 $('#confirmDelete').on('click', function() {
     if (deleteCustomerId) {
         // Thực hiện yêu cầu xóa qua AJAX
