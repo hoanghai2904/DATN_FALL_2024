@@ -80,7 +80,7 @@
                                             
                                             <td>
                                                 {{-- <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a> --}}
-                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
