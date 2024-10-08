@@ -32,6 +32,16 @@
             </div>
         @endif
             <div class="card-body">
+                <div class="col-lg-3" data-select2-id="select2-data-2">
+                    <h6 class="fw-semibold">Thương hiệu</h6>
+                    <select class="js-example-basic-single select2-hidden-accessible"  name="state"  data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
+                        <option value="AL" data-select2-id="select2-data-18-9avy">Alabama</option>
+                        <option value="MA" data-select2-id="select2-data-73-26iq">Madrid</option>
+                        <option value="TO" data-select2-id="select2-data-74-9rir">Toronto</option>
+                        <option value="LO" data-select2-id="select2-data-75-jxz2">Londan</option>
+                        <option value="WY" data-select2-id="select2-data-76-uypr">Wyoming</option>
+                    </select>
+                </div>
                 {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
 
                 <div class="live-preview">
