@@ -79,11 +79,12 @@
                                             </td>
                                             
                                             <td>
-                                                {{-- <a href="{{ route('admin.banners.detailBanner', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a> --}}
+                                                
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
                                                 <form action="{{ route('admin.banners.deleteBanner', $value->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
+                                                   
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có muốn xóa không?')">
                                                         Xóa
                                                     </button>
