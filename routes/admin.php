@@ -77,8 +77,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('brands', BrandsController::class);
         Route::resource('vouchers', VoucherController::class);
 
-        Route::resource('brands', BrandsController::class);
-
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
             Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
