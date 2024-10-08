@@ -25,9 +25,9 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="">Trạng thái</option>
-                                            <option value="2">Hoạt động</option>
-                                            <option value="1">Ngừng hoạt động</option>
+                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
+                                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
+                                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
                                         </select>
                                         <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
@@ -113,25 +113,29 @@
         </div><!-- end col -->
     </div>
     <script>
-        function updateStatus(voucherId, isChecked) {
-            var status = isChecked ? 2 : 1;
+function updateStatus(voucherId, isChecked) {
+    var status = isChecked ? 2 : 1;
 
-            $.ajax({
-                url: '{{ route('admin.vouchers.updateStatus') }}', // Corrected route with 'admin.' prefix
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}', // Laravel's CSRF token
-                    id: voucherId,
-                    status: status
-                },
-                success: function() {
-                    location.reload(); // Reload the page after success
-                },
-                error: function(xhr, status, error) {
-                    alert('An error occurred while updating the status.');
-                }
-            });
+    $.ajax({
+        url: '{{ route('admin.vouchers.updateStatus') }}',
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: voucherId,
+            status: status
+        },
+        success: function(response) {
+            // Optionally, update some status text or notification here
+            console.log(response.message); // Optionally log the response
+            // You can display a message or visually highlight the row
+            $('#tr_' + voucherId).addClass('updated');
+        },
+        error: function(xhr, status, error) {
+            alert('An error occurred while updating the status.');
         }
+    });
+}
+
     </script>
 
 @endsection

@@ -37,28 +37,28 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example"
-                                        name="discount_type">
-                                        <option value="" disabled selected>Chọn loại giảm giá</option>
-                                        <option value="0">%</option>
-                                        <option value="1">Đ</option>
+                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
+                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
+                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
+                                        <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
                                     </select>
                                     @error('discount_type')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                        <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
+                                
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="" disabled selected>Chọn trạng thái</option>
-                                        <option value="2">Hoạt động</option>
-                                        <option value="1">Ngừng hoạt động</option>
+                                        <option value="" disabled>Chọn trạng thái</option>
+                                        <option value="2" {{ (isset($voucher) ? $voucher->status : request('status')) == '2' ? 'selected' : '' }}>Hoạt động</option>
+                                        <option value="1" {{ (isset($voucher) ? $voucher->status : request('status')) == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
                                     </select>
                                     @error('status')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                    <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
                             </div>
