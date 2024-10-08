@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\Admin\ProductController;
@@ -28,12 +27,12 @@ use App\Models\Category;
 |
 */
 
-Route::prefix('admin')->as('admin.')->group(function() {
+Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
     Route::resource('categories', CategoryController::class);
-    Route::resource('orders',OrderController::class);
+    Route::resource('orders', OrderController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('order-items', OrderItemController::class);
     Route::resource('order-statuses', OrderStatusController::class);
@@ -41,15 +40,15 @@ Route::prefix('admin')->as('admin.')->group(function() {
     Route::resource('categories', CategoryController::class);
     Route::resource('brands', BrandsController::class);
 
-    Route::resource('vouchers',VoucherController::class);
+    Route::resource('vouchers', VoucherController::class);
 
-    Route::get('/list',function () {
+    Route::get('/list', function () {
         return view('admin.list.index');
     });
-    Route::get('/list-add',function () {
+    Route::get('/list-add', function () {
         return view('admin.list.create');
     });
-    Route::get('/test',function () {
+    Route::get('/test', function () {
         return view('admin.list.create');
     });
 
@@ -65,14 +64,17 @@ Route::prefix('admin')->as('admin.')->group(function() {
         Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
         Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
         Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
-        Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');    
+        Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');
         Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
         Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
         Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
     });
 
-    Route::resource('products',ProductController::class);
-    Route::get('/test-variant',function () {
+    Route::resource('products', ProductController::class);
+    Route::get('/test-variant', function () {
         return view('admin.products.test');
     });
+    Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
+    Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
+    Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
 });

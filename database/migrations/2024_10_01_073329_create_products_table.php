@@ -24,7 +24,7 @@ return new class extends Migration
             $table->text('content')->nullable(); // Nội dung chi tiết sản phẩm
             $table->decimal('price', 10, 2); // Giá sản phẩm
             $table->decimal('price_sale', 10, 2)->nullable(); // Giá khuyến mãi sản phẩm
-            $table->enum('product_type', ['0', '1'])->default(0); // Loại sản phẩm 0: Sale , 1: Hot Trend ,v.v.v
+            // $table->enum('product_type', ['0', '1'])->default(0); // Loại sản phẩm 0: Sale , 1: Hot Trend ,v.v.v
             $table->tinyInteger('status')->default(1); // Trạng thái hoạt động (0: ẩn, 1: hiện)
             $table->timestamps(); // created_at và updated_at
             $table->softDeletes(); // deleted_at (xóa mềm)
