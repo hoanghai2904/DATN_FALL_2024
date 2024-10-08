@@ -34,6 +34,17 @@ class User extends Authenticatable
       
     ];
     
+     // Một người dùng thuộc về một vai trò
+     public function role()
+     {
+         return $this->belongsTo(Role::class);
+     }
+ 
+     // Một người dùng có nhiều quyền qua bảng role_permissions
+     public function permissions()
+     {
+         return $this->hasManyThrough(Permission::class, RolePermission::class);
+     }
     /**
      * The attributes that should be hidden for serialization.
      *

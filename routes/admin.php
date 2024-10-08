@@ -72,7 +72,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Role user
         route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
-
+        route::post('/role', [AdminUserController::class, 'store'])->name('addRole');
 
 
         //Ai làm cái gì thì ghi cmt lên trên này  

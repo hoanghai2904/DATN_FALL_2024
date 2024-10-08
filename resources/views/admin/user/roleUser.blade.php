@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-4" >
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Tạo mới vai trò</h4>
@@ -15,32 +15,42 @@
     
             <div class="card-body">
                 <div class="live-preview">
-                    <form class="row g-3 needs-validation" novalidate>
+                    <form action="{{route('admin.addRole')}}" class="row g-3 needs-validation" method="POST">
+                        @csrf
                         <div class="col-md-6 position-relative">
                             <label for="validationTooltip01" class="form-label">Vai trò *</label>
-                            <input type="text" class="form-control" id="validationTooltip01" placeholder="Nhập tên vai trò" required="">
+                            <input type="text" value="{{ old('role_name') }}" class="form-control" id="validationTooltip01" name="role_name" placeholder="Nhập tên vai trò" >
+                            @error('role_name')
+                            <small
+                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}
+                            </small>
+                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label for="" class="form-label">Thêm quyền mới</label>
-                            <input type="text" class="form-control" placeholder="Nhập quyền mới">
+                            <input type="text" value="{{ old('permission_name') }}" class="form-control" name="permission_name" placeholder="Nhập quyền mới">
                         </div>
                         <div class="col-md-12">
                             <label for="validationCustom04" class="form-label">Quyền *</label>
                             <span class="badge bg-danger-subtle text-danger">Click vào input để chọn quyền !</span>
-                            <select id="validationCustom04" class="form-select js-example-basic-multiple select2-hidden-accessible" name="states[]" multiple="" data-select2-id="select2-data-2" tabindex="-1" aria-hidden="true" required>
-                                <optgroup data-select2-id="select2-data-43-nhx0">
-                                    <option value="A">Create</option>
-                                    <option value="B">Edit</option>
-                                    <option value="C">View</option>
-                                    <option value="D">Delete</option>
+                            <select id="validationCustom04" class="form-select js-example-basic-multiple select2-hidden-accessible" name="permissions[]" multiple >
+                                <optgroup label="Quyền hiện có">
+                                    @foreach($permissions as $permission)
+                                        <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                                    @endforeach
                                 </optgroup>
                             </select>
-                           
+                            @error('permissions')
+                            <small
+                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}
+                            </small>
+                            @enderror
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary " type="submit">Tạo mới</button>
+                            <button class="btn btn-primary" type="submit">Tạo mới</button>
                         </div>
                     </form>
+                    
                 </div>
             </div>
         </div>
@@ -79,70 +89,59 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th class="sort" data-sort="name">ID</th>
-                                    <th class="sort" data-sort="name">Vai trò</th>
-                                    <th class="sort" data-sort="phone">hành động</th>                 
-                                    <th class="sort" data-sort="tags">Ngày tạo</th>
-                                    <th class="sort" data-sort="date">Trạng thái</th>
-                                    <th>Hành độnng</th>
+                                    <th>ID</th>
+                                    <th>Vai trò</th>
+                                    <th class="text-center">Quyền hạn</th>                 
+                                    <th>Ngày tạo</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all">
-                                <tr>
-                                    <th scope="row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                                        </div>
-                                    </th>
-                                    <td class="id"><a href="javascript:void(0);" class="fw-medium link-primary">#VZ2101</a></td>
-                                    
-                                        <td class="leads_score">admin</td>
-                                    
-                                    <td class="tags">
-                                        <span class="badge bg-primary-subtle text-primary">view</span>
-                                        <span class="badge bg-primary-subtle text-primary">Create</span>
-                                        <span class="badge bg-primary-subtle text-primary">Update</span>
-                                        <span class="badge bg-primary-subtle text-primary">delete</span>
-                                        
-                                    </td>
-                                  
-                                    <td class="date">07 Apr, 2021</td>
-                                    <td>
-                                        <div class="form-check form-switch form-switch-success form-switch-md text-center" dir="ltr">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <ul class="list-inline hstack gap-2 mb-0">
-                                          
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
-                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
+                                @foreach($roles as $role)
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="chk_child" value="option{{ $role->id }}">
+                                            </div>
+                                        </th>
+                                        <td class="id"><a href="javascript:void(0);" class="fw-medium link-primary">#{{ $role->id }}</a></td>
+                                        <td class="leads_score">{{ $role->name }}</td>
+                                        <td class="tags text-center" style="width: 300px;">
+                                            @foreach($role->permissions as $permission)
+                                                <span class="badge bg-primary-subtle text-primary">{{ $permission->name }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td class="date">{{ $role->created_at->format('d M, Y') }}</td>
+                                        <td>
+                                            <div class="form-check form-switch form-switch-success form-switch-md text-center" dir="ltr">
+                                                <input type="checkbox" class="form-check-input" {{ $role->deleted_at ? '' : 'checked' }}>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <ul class="list-inline hstack gap-2 mb-0">
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                    <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                    <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal" data-id="{{ $role->id }}"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+                                                    <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal" data-id="{{ $role->id }}">
+                                                        <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
+                        
                      
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <div class="pagination-wrap hstack gap-2">
-                            <a class="page-item pagination-prev disabled" href="#">
-                                Previous
-                            </a>
-                            <ul class="pagination listjs-pagination mb-0"></ul>
-                            <a class="page-item pagination-next" href="#">
-                                Next
-                            </a>
-                        </div>
+                    <div class="mt-4">
+                        {{ $roles->links() }}
                     </div>
                 </div>
 
