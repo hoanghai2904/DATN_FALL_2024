@@ -64,7 +64,7 @@
                                                 <td>{{ $item->name }}</td>
                                                 <td>
                                                     @if ($item->discount_type != '0')
-                                                        {{ number_format($item->discount, 0, '', '.') }}Đ
+                                                        {{ number_format($item->discount, 0, '', '.') }}₫
                                                     @else
                                                         {{ number_format($item->discount, 0, '', '.') }}%
                                                     @endif

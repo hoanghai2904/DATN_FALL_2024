@@ -41,6 +41,7 @@
                                     <label class="form-label" for="meta-title-input">loại giảm giá</label>
                                     <select class="form-select mb-3" aria-label="Default select example"
                                         name="discount_type">
+                                        <option value="" disabled selected>Chọn loại giảm giá</option>
                                         <option value="0">%</option>
                                         <option value="1">Đ</option>
                                     </select>
@@ -53,19 +54,20 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="0">Hoạt động</option>
+                                        <option value="" disabled selected>Chọn trạng thái</option>
+                                        <option value="2">Hoạt động</option>
                                         <option value="1">Ngừng hoạt động</option>
                                     </select>
                                     @error('status')
                                     <h5 style="color: red">{{$message}}</h5>
                                     @enderror
-                                </div>
+                                </div>                                
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
                                     <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
-                                        id="meta-title-input" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
+                                    id="numberInput" oninput="formatNumber(this)" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
                                         @error('discount')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
@@ -75,7 +77,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Số lượng</label>
                                     <input type="text" class="form-control" placeholder="Nhập số lượng..."
-                                        id="meta-title-input" name="qty" min="1" value="{{old('qty') ?? $find->qty}}">
+                                    id="numberInput" oninput="formatNumber(this)" name="qty" min="1" value="{{old('qty') ?? $find->qty}}">
                                         @error('qty')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
@@ -112,4 +114,13 @@
         <!-- end row -->
 
     </form>
+    <script>
+        function formatNumber(input) {
+            // Remove non-numeric characters (but keep commas)
+            let value = input.value.replace(/[^0-9]/g, '');
+
+            // Add commas for every 3 digits
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+    </script>
 @endsection
