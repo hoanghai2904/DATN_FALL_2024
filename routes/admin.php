@@ -66,13 +66,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
         route::get('/cusstomer', [AdminUserController::class, 'listCusstomer'])->name('listCusstomer');
         Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
         Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
-       
+
         //user
         route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
 
         //Role user
         route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
         route::post('/role', [AdminUserController::class, 'store'])->name('addRole');
+        route::delete('/role/{id}', [AdminUserController::class, 'deleteRole'])->name('deleteRole');
+        Route::post('/role/{id}', [AdminUserController::class, 'updateStatusRole'])->name('updateStatusRole');
+        Route::get('/roles/{id}/edit', [AdminUserController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{role}/edit', [AdminUserController::class, 'update'])->name('roles.update');
 
 
         //Ai làm cái gì thì ghi cmt lên trên này  

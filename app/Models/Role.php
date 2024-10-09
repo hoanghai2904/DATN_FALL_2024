@@ -10,7 +10,7 @@ class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'status'];
 
     // Một vai trò có thể có nhiều người dùng
     public function users()

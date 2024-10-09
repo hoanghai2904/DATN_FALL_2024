@@ -216,7 +216,7 @@ let deleteCustomerId;
 function showDeleteModal(customerId) {
     deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
     $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
-$('#confirmDelete').on('click', function() {
+$('#confirmDelete').on('click', function() {    
     if (deleteCustomerId) {
         // Thực hiện yêu cầu xóa qua AJAX
         fetch('{{ route("admin.deleteCustomer", ":id") }}'.replace(':id', deleteCustomerId), {
@@ -225,12 +225,10 @@ $('#confirmDelete').on('click', function() {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
-        })
+        }) 
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Hiển thị thông báo thành công
-                alert('Xóa tài khoản thành công!');
                 $('#deleteCustomer').modal('hide'); // Ẩn modal
                 // Cập nhật danh sách khách hàng (có thể reload trang hoặc xóa hàng từ table)
                 location.reload(); // Tải lại trang sau khi xóa
