@@ -30,20 +30,45 @@
             <div class="alert alert-info" role="alert">
                 {{ session('message') }}
             </div>
+            
         @endif
             <div class="card-body">
-                <div class="col-lg-3" data-select2-id="select2-data-2">
-                    <h6 class="fw-semibold">Thương hiệu</h6>
-                    <select class="js-example-basic-single select2-hidden-accessible"  name="state"  data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
-                        <option value="AL" data-select2-id="select2-data-18-9avy">Alabama</option>
-                        <option value="MA" data-select2-id="select2-data-73-26iq">Madrid</option>
-                        <option value="TO" data-select2-id="select2-data-74-9rir">Toronto</option>
-                        <option value="LO" data-select2-id="select2-data-75-jxz2">Londan</option>
-                        <option value="WY" data-select2-id="select2-data-76-uypr">Wyoming</option>
-                    </select>
-                </div>
                 {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
+                <div class="row mb-5 ">
+                    <div class="col-lg-3" data-select2-id="select2-data-1">
+                        <h6 class="fw-semibold">Danh mục</h6>
+                        <select class="js-example-basic-multiple select2-hidden-accessible" name="states[]" multiple="" data-select2-id="select2-data-2" tabindex="-1" aria-hidden="true">
+                            <optgroup label="ABC" data-select2-id="select2-data-43-nhx0">
+                                <option value="A" selected data-select2-id="select2-data-44-2wrh">A</option>
+                                <option value="B" selected="" data-select2-id="select2-data-21-9hc0">B</option>
+                                <option value="C" data-select2-id="select2-data-45-zi4r">C</option>
+                            </optgroup>
+                        </select>
+                    </div>
 
+                    <div class="col-lg-3" data-select2-id="select2-data-2">
+                        <h6 class="fw-semibold">Thương hiệu</h6>
+                        <select class="js-example-basic-single select2-hidden-accessible"  name="state"  data-select2-id="select2-data-16-g9og" tabindex="-1" aria-hidden="true">
+                            <option value="AL" data-select2-id="select2-data-18-9avy">Alabama</option>
+                            <option value="MA" data-select2-id="select2-data-73-26iq">Madrid</option>
+                            <option value="TO" data-select2-id="select2-data-74-9rir">Toronto</option>
+                            <option value="LO" data-select2-id="select2-data-75-jxz2">Londan</option>
+                            <option value="WY" data-select2-id="select2-data-76-uypr">Wyoming</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="d-flex justify-content-start mt-4">
+                            <div class="search-box ms-2 w-100">
+                                <input type="text" class="form-control search" placeholder="Search...">
+                                <i class="ri-search-line search-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 d-flex justify-content-end mt-4">
+                        <a href="b" class="btn btn-primary">Tìm kiếm</a>
+                    </div>
+                </div>
                 <div class="live-preview">
                     <div class="table-responsive table-card">
                         <table class="table align-middle table-nowrap table-striped-columns mb-0">
@@ -102,3 +127,11 @@
     
         
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $(".js-example-basic-single").select2(),
+            $(".js-example-basic-multiple").select2();
+        });
+    </script>
+@endpush
