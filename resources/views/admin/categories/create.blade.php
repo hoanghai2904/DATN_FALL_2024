@@ -1,24 +1,22 @@
 @extends('admin.layouts.master')
 
-@section('title')
-    Tạo mới danh mục
-@endsection
+@section('title', 'Tạo mới danh mục')
 
 @section('content')
-    <form action="{{route('admin.categories.store')}}" method="POST" enctype="multipart/form-data">
+    <form action="{{route('admin.categories.store')}}" method="POST">
         @csrf
-        <div class="mb-3">
-            <label for="">Tên:</label>
-            <input type="text" name="name">
+        <div>
+            <label>Tên:</label>
+            <input type="text" name="name" required>
         </div>
-        <div class="mb-3">
-            <label for="">Ảnh:</label>
-            <input type="file" name="cover">
+        <div>
+            <label>Slug:</label>
+            <input type="text" name="slug" required>
         </div>
-        <div class="mb-3">
-            <label for="">Trạng thái:</label>
-            <input class="form-check-input" type="checkbox" value="1" name="is_active" checked>
+        <div>
+            <label>Trạng thái:</label>
+            <input type="checkbox" name="status" value="1" checked> Hoạt động
         </div>
-        <button type="submit" class="btn btn-success">Tạo mới</button>
+        <button type="submit">Tạo mới</button>
     </form>
 @endsection

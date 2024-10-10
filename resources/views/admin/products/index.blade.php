@@ -108,7 +108,7 @@
                                         <td>
                                             <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
                                             <button type="button" class="btn btn-sm btn-warning">Sửa</button>
-                                            {{-- <button type="button" class="btn   btn-sm btn-danger">Xóa</button> --}}
+                                            <button type="button" class="btn   btn-sm btn-danger">Xóa</button>
                                         </td>
                                     </tr>
 

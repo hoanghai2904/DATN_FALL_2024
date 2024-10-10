@@ -5,7 +5,11 @@
 @endsection
 
 @section('content')
+<<<<<<< HEAD
     <form class="needs-validation" action="{{ route('admin.category.addPostCategory') }}" method="POST">
+=======
+    <form class="needs-validation" action="{{ route('admin.addPostCategory') }}" method="POST">
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63
         @csrf
         <div class="row">
             <div class="col-lg-12">
@@ -278,4 +282,8 @@
             document.getElementById('categorySlug').value = slug;
         });
     </script>
+<<<<<<< HEAD
 @endsection
+=======
+@endsection
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63

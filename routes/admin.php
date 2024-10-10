@@ -1,7 +1,8 @@
-
 <?php
 
+use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
@@ -10,11 +11,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
-
-
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\VoucherController;
 
 /*
@@ -29,56 +28,77 @@ use App\Http\Controllers\VoucherController;
 */
 
 Route::prefix('admin')->as('admin.')->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
-    Route::resource('categories', CategoryController::class);
-    Route::resource('orders', OrderController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::resource('order-items', OrderItemController::class);
-    Route::resource('order-statuses', OrderStatusController::class);
-    Route::resource('cancelled-orders', CancelledOrderController::class);
+    // Route cho trang login
+    Route::get('login', [AdminAccountController::class, 'login'])->name('login');
+    Route::post('login', [AdminAccountController::class, 'Check_login'])->name('Check_login');
 
-    Route::resource('brands', BrandsController::class);
+    // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
+    Route::middleware('auth')->group(function () {
+        Route::get('/', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+        //Account to Admin
+        //logout
+        route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
 
-    Route::resource('vouchers', VoucherController::class);
+        //Create account by User
+        route::get('/rigester', [AdminAccountController::class, 'rigester'])->name('rigester');
+        route::post('/rigester', [AdminAccountController::class, 'Check_rigester'])->name('Check_rigester');
+        Route::get('/verify-account/{token}', [AdminAccountController::class, 'verifyAccount'])->name('.verify');
 
-    Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
-        Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
-        Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
-        Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
-        Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');
-        Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
-        Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
-        Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+        //Proffile
+        route::get('/profile', [AdminAccountController::class, 'profile'])->name('profile');
+        route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
+
+        //Change password
+        route::get('/change_pass', [AdminAccountController::class, 'change_pass'])->name('change_pass');
+        route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
+
+        //Forgot password
+        route::get('/forgot_pass', [AdminAccountController::class, 'forgot_pass'])->name('forgot_pass');
+        route::post('/forgot_pass', [AdminAccountController::class, 'Check_forgotPass']);
+
+        route::get('/reset_pass', [AdminAccountController::class, 'reset_pass'])->name('reset_pass');
+        route::post('/reset_pass', [AdminAccountController::class, 'Check_resetPass']);
+
+        //Khách hàng (cusstomer)
+        route::get('/cusstomer', [AdminUserController::class, 'listCusstomer'])->name('listCusstomer');
+        Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
+        Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
+
+
+        //Ai làm cái gì thì ghi cmt lên trên này  
+        Route::resource('categories', CategoryController::class);
+        Route::resource('orders', OrderController::class);
+        Route::resource('transactions', TransactionController::class);
+        Route::resource('order-items', OrderItemController::class);
+        Route::resource('order-statuses', OrderStatusController::class);
+        Route::resource('cancelled-orders', CancelledOrderController::class);
+        Route::resource('brands', BrandsController::class);
+        // Route::resource('vouchers', VoucherController::class);
+        Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
+            Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('create', [VoucherController::class, 'create'])->name('create');
+            Route::post('store', [VoucherController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
+            Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
+            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
+        Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
+            Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
+            Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
+            Route::post('add-banner', [BannerController::class, 'addPostBanner'])->name('addPostBanner');
+            Route::get('detail-banner/{id}', [BannerController::class, 'detailBanner'])->name('detailBanner');
+            Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
+            Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
+            Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+        });
+
+        Route::resource('products', ProductController::class);
+        Route::get('/test-variant', function () {
+            return view('admin.products.test');
+        });
+
     });
-
-
-    Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
-
-        Route::get('/category', [CategoryController::class, 'index'])->name('listCategory');
-        Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
-        Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
-        Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
-        Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
-        Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
-        Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Route::get('/test', function () {
-    //     return view('admin.list.create');
-    // });
 });

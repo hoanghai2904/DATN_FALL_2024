@@ -5,10 +5,15 @@
 @endsection
 
 @section('content')
+<<<<<<< HEAD
     <a href="{{ route('admin.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
 
     <div class="row">
 
+=======
+    <div class="row">
+        <a href="{{ route('admin.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63
         @if (session('message'))
             <div class="alert alert-primary" role="alert">
                 {{ session('message') }};
@@ -64,10 +69,14 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+<<<<<<< HEAD
                                                 <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
                                                     type="button" class="btn btn-sm btn-warning">Chỉnh sửa</a>
 
                                                 <form action="{{ route('admin.categories.deleteCategory', $value->id) }}"
+=======
+                                                <form action="{{ route('admin.deleteCategory', $value->id) }}"
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63
                                                     method="post">
                                                     @csrf
                                                     @method('delete')
@@ -141,7 +150,11 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+<<<<<<< HEAD
                                                 <form action="{{ route('admin.categories.restoreCategory', $value->id) }}"
+=======
+                                                <form action="{{ route('admin.restoreCategory', $value->id) }}"
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63
                                                     method="post">
                                                     @csrf
                                                     <button onclick="return confirm('Bạn có muốn khôi mục danh mục không?')"
@@ -167,4 +180,8 @@
 
 
     <!-- end row -->
+<<<<<<< HEAD
 @endsection
+=======
+@endsection
+>>>>>>> b371fb1e2bdeae1811ab6f521996cdaf17801b63
