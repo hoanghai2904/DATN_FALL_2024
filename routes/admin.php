@@ -16,7 +16,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
-
+use App\Models\Category;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -104,11 +104,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
         });
-
+        // Sản phẩm
+        Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
         Route::get('/test-variant', function () {
             return view('admin.products.test');
         });
-
+        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
+        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
+        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
     });
 });
