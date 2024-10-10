@@ -2,6 +2,7 @@
 
 namespace App\Models\admin;
 
+use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,10 +23,19 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariants::class);
     }
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+    public function brand(){
+        return $this->belongsTo(Brands::class);
+    }
     // belongsToMany : thiết lập mối quan hệ nhiều-nhiều giữa hai model.
     // Tag::class là tham chiếu đến class Tag. Nó chỉ ra rằng Product có quan hệ với Tag
     // 'product_tags' : bảng trung gian (pivot table) kết nối hai bảng products và tags.
     public function tags(){
         return $this->belongsToMany(Tag::class, 'product_tags');
+    }
+    public function galleries(){
+        return $this->hasMany(ProductGallery::class);
     }
 }

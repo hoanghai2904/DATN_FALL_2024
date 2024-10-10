@@ -94,7 +94,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
         });
-
+        // Sản phẩm
+        Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
         Route::get('/test-variant', function () {
             return view('admin.products.test');

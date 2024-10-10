@@ -9,6 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    {{-- CSRF Token --}}
+
     <!-- App favicon -->
     <link rel="shortcut icon" href=" {{ asset('theme/admin/assets/images/favicon.ico') }}">
 
@@ -33,6 +37,15 @@
     <link href="{{ asset('theme/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     {{-- <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script> --}}
 
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+    <!-- CDN Notyf CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
 
     @yield('style-libs')
     @stack('style')
@@ -164,9 +177,88 @@
     <!-- nestable init js -->
     <script src="{{ asset('theme/admin/assets/js/pages/nestable.init.js') }}"></script>
 
+    <!-- Sweetalert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+    <script src="{{ asset('theme/admin/assets/js/pages/datatables.init.js') }}"></script>
+
+    <!-- CDN Notyf JS -->
+    <script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+
     <!-- App js -->
     <script src="{{ asset('theme/admin/assets/js/app.js') }}"></script>
     @stack('script')
+
+    <script>
+        $(document).ready(function() {
+            // CSRF Token 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            // End CSRF Token
+
+            // Sweet Alert 
+            $('body').on('click', '.delete-item', function(event) {
+                event.preventDefault();
+
+                let deleteUrl = $(this).attr('href');
+
+                Swal.fire({
+                    title: 'Bạn có chắc muốn xóa không ?',
+                    text: "Bạn có thể khôi phục lại được dữ liệu!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            type: 'DELETE',
+                            url: deleteUrl,
+
+                            success: function(data) {
+
+                                if (data.status == 'success') {
+                                    Swal.fire(
+                                        'Đã xóa!',
+                                        data.message,
+                                        'success'
+                                    )
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 2000);
+                                } else if (data.status == 'error') {
+                                    Swal.fire(
+                                        'Cant Delete',
+                                        data.message,
+                                        'error'
+                                    )
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log(error);
+                            }
+                        })
+                    }
+                })
+            })
+        })
+    </script>
+
 </body>
 
 </html>

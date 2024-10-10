@@ -5,6 +5,7 @@
 @endsection
 
 @section('style-libs')
+    <link rel="stylesheet" href="{{ asset('assets/css/uploadFile.css') }}">
 @endsection
 
 @section('content')
@@ -172,6 +173,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#galleries" aria-expanded="true" aria-controls="galleries">
+                        <h5 class="card-title mb-0">Album hình ảnh sản phẩm</h5>
+                    </div>
+                    <div class="collapse show" id="galleries">
+                        <div class="card-body">
+                            <div id="addGalleryButton" class="text-center mt-3"
+                                style="cursor: pointer; border: 2px dashed #007bff; padding: 20px; border-radius: 5px;">
+                                <span class="text-primary">Nhấn vào đây để thêm album hình ảnh</span>
+                            </div>
+                            <input type="file" id="galleryInput" name="galleries[]" multiple accept="image/*" class="d-none">
+                            <div class="row" id="galleryPreviewContainer"></div>
+                            <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button>
+                        </div>
+                    </div>
+                </div>
                 <!-- end card -->
                 <div class="text-end mb-3">
                     <button type="submit" class="btn btn-success w-sm">Lưu</button>
@@ -182,13 +201,19 @@
             <div class="col-lg-4">
 
                 <div class="card">
-                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
-                        data-bs-target="#thumbnails" aria-expanded="true" aria-controls="thumbnails">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#thumbnails"
+                        aria-expanded="true" aria-controls="thumbnails">
                         <h5 class="card-title mb-0">Ảnh sản phẩm</h5>
                     </div>
                     <div class="collapse show" id="thumbnails">
                         <div class="card-body">
-                            <input type="file" name="thumbnail" class="form-control">
+                            <div id="addImageButton" class="text-center mt-3"
+                                style="cursor: pointer; border: 2px dashed #007bff; padding: 20px; border-radius: 5px;">
+                                <span class="text-primary">Nhấn vào đây để thêm hình ảnh</span>
+                            </div>
+                            <input type="file" id="imageInput" name="thumbnail" accept="image/*" class="d-none">
+                            <div class="row" id="imagePreviewContainer"></div>
+                            {{-- <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button> --}}
                         </div>
                         @error('thumbnail')
                             <p class="text-danger">{{ $message }}</p>
@@ -203,7 +228,13 @@
                     </div>
                     <div class="collapse show" id="galleries">
                         <div class="card-body">
-                            <input type="file" name="galleries[]" multiple class="form-control">
+                            <div id="addGalleryButton" class="text-center mt-3"
+                                style="cursor: pointer; border: 2px dashed #007bff; padding: 20px; border-radius: 5px;">
+                                <span class="text-primary">Nhấn vào đây để thêm album hình ảnh</span>
+                            </div>
+                            <input type="file" id="galleryInput" name="galleries[]" multiple accept="image/*" class="d-none">
+                            <div class="row" id="galleryPreviewContainer"></div>
+                            <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button>
                         </div>
                     </div>
                 </div>
@@ -249,7 +280,7 @@
                 <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
                         data-bs-target="#product_type" aria-expanded="true" aria-controls="product_type">
-                        <h5 class="card-title mb-0">Nhãn</h5>
+                        <h5 class="card-title mb-0">Bộ sưu tập</h5>
                     </div>
                     <div class="collapse show" id="product_type">
                         <div class="card-body">
@@ -269,7 +300,6 @@
                 </div>
 
 
-
             </div>
             <!-- end col -->
         </div>
@@ -283,7 +313,11 @@
     <script src="{{ asset('theme/admin/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
 
     <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
+    {{-- upload File  --}}
+    <script src="{{ asset('assets/js/uploadFile.js') }}"></script>
+    {{-- end upload File  --}}
 
+    {{-- Biến thể sản phẩm --}}
     <script>
         $(document).ready(function() {
             let variantIndex = 0;
@@ -302,7 +336,7 @@
                     // Nếu chọn 'type', thêm trường Loại sản phẩm
                     if (selectedOptions.includes('type')) {
                         variantHTML += `
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-4 mt-2">
                                 <label for="type">Loại sản phẩm:</label>
                                 <select id="typeSelect-${variantIndex}" name="variants[${variantIndex}][product_type_id]" class="form-control">
                                     <option value="">Chọn loại sản phẩm</option>`;
@@ -317,7 +351,7 @@
                     // Nếu chọn 'weight', thêm trường Trọng lượng
                     if (selectedOptions.includes('weight')) {
                         variantHTML += `
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-4 mt-2">
                                 <label for="weight">Trọng lượng:</label>
                                 <select id="weightSelect-${variantIndex}" name="variants[${variantIndex}][product_weight_id]" class="form-control">
                                     <option value="">Chọn trọng lượng</option>`;
@@ -331,27 +365,21 @@
 
                     // Các trường khác: Số lượng, Giá biến thể, Hình ảnh biến thể
                     variantHTML += `
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 mt-2">
                                         <label for="qty">Số lượng:</label>
                                         <input type="number" name="variants[${variantIndex}][qty]" class="form-control" required>
                                     </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-4 mt-2">
                                         <label class="form-label" for="price_variant">Giá biến thể:</label>
                                         <div class="input-group">
                                             <input type="text" name="variants[${variantIndex}][price_variant]" class="form-control" required>
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="form-group col-md-4">
-                                        <label for="image">Hình ảnh biến thể:</label>
-                                        <input type="file" name="variants[${variantIndex}][image]" class="form-control">
-                                    </div>
-
-                                    <div class="form-group col-md-4 d-flex align-items-end">
+                                <div class="row mt-3">
+                                    <div class="form-group col-md-10 d-flex align-items-end">
                                         <button type="button" class="btn btn-danger remove-variant" data-variant-id="variant-${variantIndex}">Xóa biến thể</button>
                                     </div>
                                 </div>
@@ -410,6 +438,8 @@
             });
         });
     </script>
+    {{-- End biến thể sản phẩm  --}}
+
     <script>
         // Khi người dùng nhập tên sản phẩm, tự động tạo SKU
         $('#product-title-input').on('input', function() {
@@ -422,13 +452,14 @@
                 // Tạo một chuỗi số ngẫu nhiên
                 let randomNum = Math.floor(1000 + Math.random() * 9000);
                 // Ghép lại để tạo SKU
-                let sku = 'SKU-' + skuPrefix + '-' +randomNum;
+                let sku = 'SKU-' + skuPrefix + '-' + randomNum;
                 $('#sku').val(sku); // Gán giá trị cho ô nhập SKU
             } else {
                 $('#sku').val(''); // Xóa SKU nếu không có tên sản phẩm
             }
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $(".js-example-basic-single").select2(),
