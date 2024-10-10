@@ -13,9 +13,9 @@ use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\VoucherController;
-
+use App\Models\Category;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,10 +75,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
         Route::resource('brands', BrandsController::class);
-        Route::resource('vouchers', VoucherController::class);
-
-        Route::resource('brands', BrandsController::class);
-
+        // Route::resource('vouchers', VoucherController::class);
+        Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
+            Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('create', [VoucherController::class, 'create'])->name('create');
+            Route::post('store', [VoucherController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
+            Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
+            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
             Route::get('add-banner', [BannerController::class, 'addBanner'])->name('addBanner');
@@ -88,11 +94,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
         });
-
+        // Sản phẩm
+        Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
         Route::get('/test-variant', function () {
             return view('admin.products.test');
         });
-
+        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
+        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
+        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
     });
 });

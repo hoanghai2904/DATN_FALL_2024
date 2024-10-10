@@ -62,6 +62,9 @@
 
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
+                                                <a href="{{ route('admin.updateCategory', $value->id) }}" type="button"
+                                                    class="btn btn-sm btn-warning">Chỉnh sửa</a>
+
                                                 <form action="{{ route('admin.deleteCategory', $value->id) }}"
                                                     method="post">
                                                     @csrf
