@@ -15,7 +15,7 @@ class Role extends Model
     // Một vai trò có thể có nhiều người dùng
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class, 'user_roles', 'role_id', 'user_id');
     }
 
     // Một vai trò có thể có nhiều quyền

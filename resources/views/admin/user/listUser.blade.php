@@ -44,86 +44,83 @@
                     <div class="table-responsive table-card">
                         <table class="table align-middle" id="customerTable">
                             <thead class="table-light">
-                                <tr>
+                                <tr class="">
                                     <th scope="col" style="width: 50px;">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-
-                                    <th class="sort" data-sort="name">Name</th>
-                                    <th class="sort" data-sort="company_name">Email</th>
-                                    <th class="sort" data-sort="phone">Phone</th>                 
-                                    <th class="sort" data-sort="tags">Chức vụ</th>
-                                    <th class="sort" data-sort="tags">Trạng thái</th>
-                                    <th class="sort" data-sort="date">Create Date</th>
-                                    <th>Hành độnng</th>
+                                    <th>#ID</th>
+                                    <th style="padding-left: 50px">Name</th>
+                                    <th style="padding-left: 50px">Email</th>
+                                    <th>Phone</th>                 
+                                    <th>Vai trò</th>
+                                    <th>Trạng thái</th>
+                                    <th>Create Date</th>
+                                    <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all">
-                                <tr>
-                                    <th scope="row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
-                                        </div>
-                                    </th>
-                                    <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">#VZ2101</a></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0">
-                                                <img src="assets/images/users/avatar-10.jpg" alt="" class="avatar-xxs rounded-circle image_src object-fit-cover">
+                                @foreach($employees as $employee)
+                                    <tr >
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="chk_child" value="{{ $employee->id }}">
                                             </div>
-                                            <div class="flex-grow-1 ms-2 name">Tonya Noble</div>
-                                        </div>
-                                    </td>
-                              
-                                    <td class="leads_score">baotheha@gmail.com</td>
-                                    <td class="phone">580-464-4694</td>
-                                
-                                    <td class="tags">
-                                        <span class="badge bg-primary-subtle text-primary">Lead</span>
-                                        <span class="badge bg-primary-subtle text-primary">Partner</span>
-                                    </td>
-                                    <td>
-                                        <div class="form-check form-switch form-switch-success form-switch-md text-center" dir="ltr">
-                                            <input type="checkbox" class="form-check-input">
-                                        </div>
-                                    </td>
-                                    <td class="date">07 Apr, 2021</td>
-                                    <td>
-                                        <ul class="list-inline hstack gap-2 mb-0">
-                                          
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
-                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
+                                        </th>
+                                        <td>{{ $employee->id }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <img src="{{ $employee->cover ? asset('storage/'.$employee->cover) : asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}" 
+                                                    alt="" 
+                                                    class="avatar-xxs rounded-circle image_src object-fit-cover">
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 name text-start">{{ $employee->full_name }}</div>
+                                            </div>
+                                        </td>
+                                        <td >{{ $employee->email }}</td>
+                                        <td>{{ $employee->phone }}</td>
+                                        <td class="tags">
+                                            @foreach($employee->roles as $role)
+                                                <span class="badge bg-primary-subtle text-primary">{{ $role->name }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-switch form-switch-success form-switch-md text-center" dir="ltr">
+                                                <input type="checkbox" class="form-check-input" {{ $employee->status == 'active' ? 'checked' : '' }} >
+                                            </div>
+                                        </td>
+                                        <td>{{ $employee->created_at->format('d M, Y') }}</td>
+                                        <td>
+                                            <ul class="list-inline hstack gap-2 mb-0">
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                    <a href="javascript:void(0);"><i class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                    <a class="edit-item-btn" href="#showModal" data-bs-toggle="modal"><i class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+                                                    <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
+                                                        <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
+                        
+                        <!-- Phân trang -->
+                    
                      
                     </div>
-                    <div class="d-flex justify-content-end mt-3">
-                        <div class="pagination-wrap hstack gap-2">
-                            <a class="page-item pagination-prev disabled" href="#">
-                                Previous
-                            </a>
-                            <ul class="pagination listjs-pagination mb-0"></ul>
-                            <a class="page-item pagination-next" href="#">
-                                Next
-                            </a>
-                        </div>
+                    <div class="mt-3">
+                        {{ $employees->links() }}
                     </div>
                 </div>
-
+              
                 <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -131,94 +128,102 @@
                                 <h5 class="modal-title" id="exampleModalLabel"></h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
                             </div>
-                            <form class="tablelist-form" autocomplete="off">
+                            <form class="tablelist-form" autocomplete="off" enctype="multipart/form-data">
                                 <div class="modal-body">
                                     <input type="hidden" id="id-field" />
                                     <div class="row g-3">
+                                        <!-- Hình đại diện -->
                                         <div class="col-lg-12">
                                             <div class="text-center">
                                                 <div class="position-relative d-inline-block">
                                                     <div class="position-absolute bottom-0 end-0">
-                                                        <label for="lead-image-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Select Image">
+                                                        <label for="avatar-input" class="mb-0" data-bs-toggle="tooltip" data-bs-placement="right" title="Chọn ảnh">
                                                             <div class="avatar-xs cursor-pointer">
                                                                 <div class="avatar-title bg-light border rounded-circle text-muted">
                                                                     <i class="ri-image-fill"></i>
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <input class="form-control d-none" value="" id="lead-image-input" type="file" accept="image/png, image/gif, image/jpeg">
+                                                        <input class="form-control d-none" id="avatar-input" type="file" accept="image/png, image/gif, image/jpeg" onchange="previewImage(event)">
                                                     </div>
                                                     <div class="avatar-lg p-1">
                                                         <div class="avatar-title bg-light rounded-circle">
-                                                            <img src="assets/images/users/user-dummy-img.jpg" id="lead-img" class="avatar-md rounded-circle object-fit-cover" />
+                                                            <!-- Thẻ img sẽ hiển thị ảnh đại diện -->
+                                                            <img src="{{asset('theme/admin/assets/images/users/user-dummy-img.jpg')}}" id="avatar-img" class="avatar-md rounded-circle object-fit-cover" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <h5 class="fs-13 mt-3">Lead Image</h5>
-                                            </div>
-                                            <div>
-                                                <label for="leadname-field" class="form-label">Name</label>
-                                                <input type="text" id="leadname-field" class="form-control" placeholder="Enter Name" required />
+                                                <h5 class="fs-13 mt-3">Ảnh đại diện</h5>
                                             </div>
                                         </div>
-                                        <!--end col-->
-                                        <div class="col-lg-12">
-                                            <div>
-                                                <label for="company_name-field" class="form-label">Company Name</label>
-                                                <input type="text" id="company_name-field" class="form-control" placeholder="Enter company name" required />
-                                            </div>
-                                        </div>
-                                        <!--end col-->
+                                        <!-- Họ và tên -->
                                         <div class="col-lg-6">
                                             <div>
-                                                <label for="leads_score-field" class="form-label">Leads Score</label>
-                                                <input type="text" id="leads_score-field" class="form-control" placeholder="Enter lead score" required />
+                                                <label for="name-field" class="form-label">Họ và tên *</label>
+                                                <input type="text" id="name-field" class="form-control" placeholder="Nhập họ và tên" required />
                                             </div>
                                         </div>
-                                        <!--end col-->
+                            
+                                        <!-- Ngày sinh -->
                                         <div class="col-lg-6">
                                             <div>
-                                                <label for="phone-field" class="form-label">Phone</label>
-                                                <input type="text" id="phone-field" class="form-control" placeholder="Enter phone no" required />
+                                                <label for="dob-field" class="form-label">Ngày sinh</label>
+                                                <input type="date" id="dob-field" class="form-control" placeholder="Chọn ngày sinh" />
                                             </div>
                                         </div>
-                                        <!--end col-->
+                            
+                                        <!-- Email -->
+                                        <div class="col-lg-6">
+                                            <div>
+                                                <label for="email-field" class="form-label">Email *</label>
+                                                <input type="email" id="email-field" class="form-control" placeholder="Nhập email" required />
+                                            </div>
+                                        </div>
+                            
+                                        <!-- Điện thoại -->
+                                        <div class="col-lg-6">
+                                            <div>
+                                                <label for="phone-field" class="form-label">Điện thoại *</label>
+                                                <input type="text" id="phone-field" class="form-control" placeholder="Nhập số điện thoại" required />
+                                            </div>
+                                        </div>
+                            
+                                        <!-- Mật khẩu -->
                                         <div class="col-lg-12">
                                             <div>
-                                                <label for="location-field" class="form-label">Location</label>
-                                                <input type="text" id="location-field" class="form-control" placeholder="Enter location" required />
+                                                <label for="password-field" class="form-label">Mật khẩu *</label>
+                                                <input type="password" id="password-field" class="form-control" placeholder="Nhập mật khẩu" required />
                                             </div>
                                         </div>
-                                        <!--end col-->
-                                        <div class="col-lg-12">
-                                            <div>
-                                                <label for="taginput-choices" class="form-label">Tags</label>
-                                                <select class="form-control" name="taginput-choices" id="taginput-choices" multiple>
-                                                    <option value="Lead">Lead</option>
-                                                    <option value="Partner">Partner</option>
-                                                    <option value="Exiting">Exiting</option>
-                                                    <option value="Long-term">Long-term</option>
-                                                </select>
-                                            </div>
+                            
+                                        <!-- Vai trò -->
+                                        <div class="col-md-12">
+                                            <label for="role-field" class="form-label">Vai trò *</label>
+                                            <span class="badge bg-danger-subtle text-danger">Click vào để chọn vai trò!</span>
+                                            <select id="role-field" class="form-select js-example-basic-multiple" name="roles[]" multiple>
+                                                <optgroup label="Quyền hiện có">
+                                                    @foreach ($roles as $role)
+                                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                            </select>
+                                            @error('roles')
+                                                <small style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                            @enderror
                                         </div>
-                                        <div class="col-lg-12">
-                                            <div>
-                                                <label for="date-field" class="form-label">Created Date</label>
-                                                <input type="date" id="date-field" class="form-control" data-provider="flatpickr" data-date-format="d M, Y" placeholder="Select Date" required />
-                                            </div>
-                                        </div>
-                                        <!--end col-->
+                            
                                     </div>
-                                    <!--end row-->
+                                    <!-- end row -->
                                 </div>
+                            
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-success" id="add-btn">Add leads</button>
-                                        <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                                        <button type="submit" class="btn btn-success" id="add-btn">Thêm mới</button>
                                     </div>
                                 </div>
                             </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -255,4 +260,90 @@
     </div>
     <!--end col-->
 </div>
+<script>
+    function previewImage(event) {
+    const input = event.target;
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        const imgElement = document.getElementById('avatar-img');
+        imgElement.src = reader.result; // Cập nhật ảnh mới được chọn
+    }
+
+    if (input.files && input.files[0]) {
+        reader.readAsDataURL(input.files[0]); // Đọc dữ liệu ảnh
+    }
+}
+
+// add user và tạo role cho user đó
+document.getElementById('add-btn').addEventListener('click', function(event) {
+    event.preventDefault(); // Ngăn chặn form submit mặc định
+
+    // Lấy dữ liệu từ form
+    const name = document.getElementById('name-field').value;
+    const dob = document.getElementById('dob-field').value;
+    const email = document.getElementById('email-field').value;
+    const phone = document.getElementById('phone-field').value;
+    const password = document.getElementById('password-field').value;
+    const roles = Array.from(document.querySelectorAll('#role-field option:checked')).map(option => option.value);
+    
+    // Tạo FormData để gửi lên server
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('dob', dob);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('password', password);
+    formData.append('roles', JSON.stringify(roles));
+
+    const avatarInput = document.getElementById('avatar-input');
+    if (avatarInput.files.length > 0) {
+        formData.append('avatar', avatarInput.files[0]);
+    }
+
+    // Gửi dữ liệu lên server bằng Fetch API
+    fetch('/users', { // Đường dẫn này cần thay đổi cho phù hợp với route lưu người dùng của bạn
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Bảo vệ CSRF
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Hiển thị thông báo thành công
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Thêm người dùng thành công!',
+                confirmButtonText: 'Đồng ý'
+            }).then(() => {
+                // Đóng modal
+                $('#showModal').modal('hide');
+                // Có thể refresh lại danh sách người dùng ở đây nếu cần
+            });
+        } else {
+            // Hiển thị thông báo lỗi
+            Swal.fire({
+                icon: 'error',
+                title: 'Có lỗi xảy ra!',
+                text: data.message,
+                confirmButtonText: 'Đồng ý'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi:', error);
+        // Thông báo lỗi khi có sự cố mạng hoặc vấn đề khác
+        Swal.fire({
+            icon: 'error',
+            title: 'Có lỗi xảy ra!',
+            text: 'Không thể kết nối tới máy chủ.',
+            confirmButtonText: 'Đồng ý'
+        });
+    });
+});
+
+</script>
 @endsection

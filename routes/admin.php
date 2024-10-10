@@ -69,6 +69,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //user
         route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
+        Route::post('/user', [AdminUserController::class, 'addUser'])->name('addUser');
 
         //Role user
         route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');

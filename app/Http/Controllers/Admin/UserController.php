@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
@@ -59,11 +57,46 @@ class UserController extends Controller
 
 
     // user
-     public function listUser() // Thêm Request vào tham số
+    public function listUser(Request $request)
     {
-    
-        return view('admin.user.listUser');
+        // Khởi tạo truy vấn cho User với các vai trò, chỉ lấy những user có vai trò
+        $query = User::with('roles')->has('roles');
+        
+        // Phân trang kết quả
+        $employees = $query->paginate(7);
+        $roles = Permission::all();
+        // Truyền employees đến view
+        return view('admin.user.listUser', compact('employees','roles'));
     }
+
+    // add user and roles
+    public function addUser(Request $request)
+{ 
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'phone' => 'required|string|max:15',
+        'password' => 'required|string|min:8|confirmed',
+        'roles' => 'required|array',
+        'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Tạo người dùng mới
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => bcrypt($request->password),
+        'avatar' => $request->file('avatar') ? $request->file('avatar')->store('avatars', 'public') : null,
+    ]);
+
+    // Gán vai trò cho người dùng
+    $user->roles()->sync($request->roles);
+
+    return response()->json(['success' => true, 'message' => 'User added successfully.']);
+}
+
+    
     
      //role
      public function listRole(Request $request) // Thêm Request vào tham số
@@ -190,9 +223,6 @@ public function update(Request $request, $id)
 
     return response()->json(['message' => 'Cập nhật quyền thành công!']);
 }
-
-
-
 
 
 }

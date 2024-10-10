@@ -43,7 +43,7 @@
                                             </div>
                                         </th>
                                         <th class="sort" data-sort="name">ID</th>
-                                        <th class="sort" data-sort="name">Họ và Tên</th>
+                                        <th class="sor" style="padding-left: 50px"   data-sort="name">Họ và Tên</th>
                                         
                                         <th class="sort" data-sort="name">Email</th>
                                         <th class="sort" data-sort="name">Ngày sinh</th>
@@ -64,8 +64,15 @@
                                                 </div>
                                             </td>
                                             <td>{{ $customer->id }}</td>
-                                            <td><img src="{{ asset('storage/' . auth()->user()->cover) }}" alt="" class="avatar-xs rounded-circle me-2">
-                                                <a href="#javascript: void(0);" class="text-body fw-medium">{{$customer->full_name}}</a>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="flex-shrink-0">
+                                                        <img src="{{ $customer->cover ? asset('storage/'.$customer->cover) : asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}" 
+                                                        alt="" 
+                                                        class="avatar-xxs rounded-circle image_src object-fit-cover">
+                                                    </div>
+                                                    <div class="flex-grow-1 ms-2 name text-start">{{ $customer->full_name }}</div>
+                                                </div>
                                             </td>
                                           
                                             <td>{{ $customer->email }}</td>

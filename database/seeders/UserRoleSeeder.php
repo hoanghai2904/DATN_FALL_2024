@@ -13,6 +13,6 @@ class UserRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        UserRole::factory()->count(10)->create();
+        UserRole::factory()->count(5)->create();
     }
 }

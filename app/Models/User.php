@@ -35,10 +35,10 @@ class User extends Authenticatable
     ];
     
      // Một người dùng thuộc về một vai trò
-     public function role()
-     {
-         return $this->belongsTo(Role::class);
-     }
+     public function roles()
+{
+    return $this->belongsToMany(Role::class,'user_roles', 'user_id', 'role_id');
+}
  
      // Một người dùng có nhiều quyền qua bảng role_permissions
      public function permissions()

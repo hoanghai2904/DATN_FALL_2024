@@ -128,7 +128,8 @@
                                             <td class="tags text-center" style="width: 200px;">
                                                 @foreach ($role->permissions as $permission)
                                                     <span
-                                                        class="badge bg-primary-subtle text-primary">{{ $permission->name }}</span>
+                                                        class="badge bg-primary-subtle text-primary">{{ $permission->name }}
+                                                    </span>
                                                 @endforeach
                                             </td>
                                             <td class="date">{{ $role->created_at->format('d M, Y') }}</td>
@@ -177,7 +178,7 @@
 
 
                         </div>
-                        <div class="mt-4">
+                        <div class="mt-2">
                             {{ $roles->links() }}
                         </div>
                     </div>
