@@ -110,8 +110,8 @@
                                     <th class="sort" data-sort="user_email">Email</th>
                                     <th class="sort" data-sort="created_at">Ngày đặt hàng</th>
                                     <th class="sort" data-sort="total_price">Tổng tiền</th>
-                                    <th class="sort" data-sort="payment_method">Phương thức thanh toán</th>
-                                    <th class="sort" data-sort="status_order">Trạng thái đơn hàng</th>
+                                    <th class="sort" data-sort="payment_method">Phương thức </th>
+                                    <th class="sort" data-sort="status_order">Trạng thái </th>
                                     <th class="sort" data-sort="city">Hành động</th>
                                 </tr>
                             </thead>
@@ -175,4 +175,3 @@
 </div>
 <!-- end row -->
 @endsection
-
