@@ -51,18 +51,17 @@
                                             </div>
                                         </th>
                                         <th class="sort" data-sort="name">ID</th>
-                                        <th class="sor" style="padding-left: 50px"   data-sort="name">Họ và Tên</th>
-                                        
-                                        <th class="sort" data-sort="name">Email</th>
-                                        <th class="sort" data-sort="name">Ngày sinh</th>
-                                        <th class="sort" data-sort="name">Số điện thoại</th>
-                                        <th class="sort" data-sort="name">Giới tính</th>
+                                        <th class="sor" style="padding-left: 50px"   data-sort="name">Họ và Tên</th>                                      
+                                        <th class="sort" data-sort="name">Tỉnh/Thành phố</th>
+                                        <th class="sort" data-sort="name">Quận/Huyện</th>
+                                        <th class="sort" data-sort="name">Phường/Xã</th>
+                                        <th class="sort" data-sort="name">Địa chỉ chi tiết </th>
                                         <th class="sort" data-sort="name">Trạng thái</th>
                                         <th >Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($listCustomer as $customer)
+                                    @foreach ( as )
                                         <tr>
                                             <td>
                                                 <div class="form-check">
@@ -92,7 +91,7 @@
                                                     <input type="checkbox" class="form-check-input"
                                                            {{ $customer->status === 'active' ? 'checked' : '' }}
                                                            id="statusCheckbox{{ $customer->id }}"
-                                                           onchange="confirmStatusChange({{ $customer->id }}, this)">
+                                                           onchange="confirmStatusChange({{  }}, this)">
                                                 </div>
                                             </td>
                                             <td>
@@ -111,7 +110,7 @@
                                                         data-bs-trigger="hover" data-bs-placement="top" title="Delete">
                                                         <a class="remove-item-btn" data-bs-toggle="modal"
                                                             href="#deleteRecordModal"
-                                                            onclick="showDeleteModal({{ $customer->id }})">
+                                                            onclick="showDeleteModal({{ }})">
                                                             <i class="ri-delete-bin-fill align-bottom text-muted"></i>
                                                         </a>
                                                     </li>

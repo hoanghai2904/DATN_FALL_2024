@@ -16,24 +16,28 @@ class UserController extends Controller
 {
     
     //list and search by phonn and email Customer---------------------------------------------------------
-    public function listCusstomer(Request $request) // Thêm Request vào tham số
-    {
-        // Lấy dữ liệu tìm kiếm từ form (email và số điện thoại)
-        $searchQuery = $request->input('query');
+ public function listCusstomer(Request $request) // Thêm Request vào tham số
+{
+    // Lấy dữ liệu tìm kiếm từ form (email và số điện thoại)
+    $searchQuery = $request->input('query');
 
-        // Kiểm tra nếu có giá trị tìm kiếm
-        if ($searchQuery) {
-            // Tìm kiếm theo email hoặc số điện thoại và phân trang (mỗi trang có 10 người dùng)
-            $listCustomer = User::where('email', 'like', "%{$searchQuery}%")
-                ->orWhere('phone', 'like', "%{$searchQuery}%")
-                ->paginate(7);
-        } else {
-            // Nếu không nhập gì, lấy toàn bộ người dùng và phân trang
-            $listCustomer = User::paginate(7);
-        }
-
-        return view('admin.user.listCusstomer', compact('listCustomer'));
+    // Kiểm tra nếu có giá trị tìm kiếm
+    if ($searchQuery) {
+        // Tìm kiếm theo email hoặc số điện thoại, loại bỏ những người dùng có vai trò và phân trang
+        $listCustomer = User::doesntHave('roles')
+            ->where(function($query) use ($searchQuery) {
+                $query->where('email', 'like', "%{$searchQuery}%")
+                      ->orWhere('phone', 'like', "%{$searchQuery}%");
+            })
+            ->paginate(7);
+    } else {
+        // Nếu không nhập gì, lấy toàn bộ người dùng không có vai trò và phân trang
+        $listCustomer = User::doesntHave('roles')->paginate(7);
     }
+
+    return view('admin.user.listCusstomer', compact('listCustomer'));
+}
+
 
 
     //delete
@@ -64,16 +68,40 @@ class UserController extends Controller
 
     // user-----------------------------------------------------------------------------
     public function listUser(Request $request)
-    {
-        // Khởi tạo truy vấn cho User với các vai trò, chỉ lấy những user có vai trò
-        $query = User::with('roles')->has('roles');
+{
+    // Lấy ID của người dùng đang đăng nhập
+    $currentUserId = auth()->id();
 
-        // Phân trang kết quả
-        $employees = $query->paginate(7);
-        $roles = Role::all();
-        // Truyền employees đến view
-        return view('admin.user.listUser', compact('employees', 'roles'));
+    // Khởi tạo truy vấn cho User với các vai trò, chỉ lấy những user có vai trò
+    $query = User::with('roles')->has('roles')->where('id', '!=', $currentUserId);
+
+     // Tìm kiếm theo trạng thái và vai trò nếu có
+     if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
     }
+
+    if ($request->has('role_id') && $request->role_id != '') {
+        $query->whereHas('roles', function ($q) use ($request) {
+            $q->where('roles.id', $request->role_id);
+        });
+    }
+
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%");
+        });
+    }
+
+    // Phân trang kết quả
+    $employees = $query->paginate(7);
+    $roles = Role::all();
+
+    // Truyền employees đến view
+    return view('admin.user.listUser', compact('employees', 'roles'));
+}
+
 
     // add user and roles
     public function addUser(Request $request)
@@ -204,6 +232,20 @@ class UserController extends Controller
         $user->delete();
         return response()->json(['success' => true, 'message' => 'User and roles deleted successfully.']);
     }
+     //update status
+    //  public function updateStatusUser(Request $request, $id)
+    //  {
+    //      $customer = User::find($id);
+ 
+    //      if ($customer) {
+    //          // Chuyển trạng thái dựa trên giá trị checkbox
+    //          $customer->status = $request->input('status') === 'active' ? 'active' : 'inactive';
+    //          $customer->save();
+    //          return response()->json(['success' => true, 'status' => $customer->status]);
+    //      }
+    //      return response()->json(['success' => false], 404);
+    //  }
+ 
 
     //role-------------------------------------------------------------------------------
     public function listRole(Request $request) // Thêm Request vào tham số
