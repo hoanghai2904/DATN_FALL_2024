@@ -94,6 +94,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
         });
+
+        // Categories
+        Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+            Route::get('/category', [CategoryController::class, 'show'])->name('listCategory');
+            Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+            Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+            Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+            Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+        });
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
