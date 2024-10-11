@@ -24,9 +24,6 @@
                             <div class="mb-0">
                                 <input type="text" class="form-control" id="product-title-input" value=""
                                     placeholder="Tên sản phẩm" name="name">
-                                @error('name')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
                             </div>
                         </div>
                     </div>
@@ -58,9 +55,6 @@
                                             <input type="text" class="form-control" id="price numberInput" name="price"
                                                 placeholder="Enter price">
                                             <span class="input-group-text">VNĐ</span>
-                                            @error('price')
-                                                <p class="text-danger">{{ $message }}</p>
-                                            @enderror
                                         </div>
 
                                     </div>
@@ -86,9 +80,6 @@
                                         <label class="form-label" for="qty">Số lượng</label>
                                         <input type="text" class="form-control" id="qty" name="qty"
                                             placeholder="">
-                                        @error('qty')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
                                     </div>
                                 </div>
 
@@ -99,9 +90,6 @@
                                             <option value="0">Ẩn</option>
                                             <option value="1" selected>Kích hoạt</option>
                                         </select>
-                                        @error('status')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
                                     </div>
                                 </div>
                                 <!-- end col -->
@@ -149,9 +137,6 @@
                             <div class="mb-3">
                                 <textarea id="ckeditor-classic" name="content"></textarea>
                             </div>
-                            @error('content')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -167,9 +152,6 @@
                             <div class="mb-3">
                                 <textarea name="description" class="form-control" id="" rows="10"></textarea>
                             </div>
-                            @error('description')
-                                <p class="text-danger">{{ $message }}</p>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -216,13 +198,11 @@
                             <div class="row" id="imagePreviewContainer"></div>
                             {{-- <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button> --}}
                         </div>
-                        @error('thumbnail')
-                            <p class="text-danger">{{ $message }}</p>
-                        @enderror
+                        
                     </div>
                 </div>
 
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
                         data-bs-target="#galleries" aria-expanded="true" aria-controls="galleries">
                         <h5 class="card-title mb-0">Album hình ảnh sản phẩm</h5>
@@ -238,7 +218,7 @@
                             <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
