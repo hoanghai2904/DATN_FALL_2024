@@ -46,7 +46,9 @@
 
     <!-- CDN Notyf CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
-
+    
+    {{-- Toastr hiện thông báo lỗi --}}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     @yield('style-libs')
     @stack('style')
 </head>
@@ -189,7 +191,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-
+    {{-- Toastr hiện thông báo lỗi --}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('theme/admin/assets/js/pages/datatables.init.js') }}"></script>
 
     <!-- CDN Notyf JS -->
@@ -198,6 +201,23 @@
     <!-- App js -->
     <script src="{{ asset('theme/admin/assets/js/app.js') }}"></script>
     @stack('script')
+
+    @if (session('success'))
+        <script>
+            var notyf = new Notyf();
+            notyf.success('{{ session('success') }}');
+        </script>
+    @endif
+
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <script>
+                // var notyf = new Notyf();
+                // notyf.error('{{$error}}');
+                toastr.error("{{$error}}")
+            </script>
+        @endforeach
+    @endif
 
     <script>
         $(document).ready(function() {
