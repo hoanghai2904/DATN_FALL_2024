@@ -32,8 +32,38 @@ class PostController extends Controller
         Posts::create($data);
         return redirect()->route('admin.posts.index')->with('msg',"Thêm mã giảm giá thành công");
     }
-    public function destroy(){}
-    public function update(){}
+    public function destroy($id){
+        $find=Posts::find($id);
+        if (!$find) {
+            return redirect()->route('admin.posts.index')->with('msg_warning', 'Giảm giá không tồn tại');
+        }
+        $find->delete();
+        return redirect()->route('admin.posts.index')->with('msg',"Xóa thành công");
+    }
+    public function edit($id)
+    {
+        $title = "Cập nhật giảm giá";
+        $find=Posts::find($id);
+        $allCate = Category::all();
+        if (!$find) {
+            return redirect()->route('admin.posts.index')->with('msg_warning', 'Giảm giá không tồn tại');
+        }
+        return view('admin.posts.edit',compact('find','title','allCate'));
+    }
+    public function update(PostRequest $req,$id){
+        $find = Posts::find($id);
+        $data = [
+            'title' => $req->title,
+            'user_id' => $req->user_id,
+            'status' => $req->status,
+            'category_id' => $req->category_id,
+            'body' => $req->body,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+        $find->update($data);
+    
+        return redirect()->route('admin.posts.index')->with('msg', "Sửa bài viết thành công");
+    }
     public function updateStatus(Request $request)
     {
         $voucher = Posts::find($request->id);

@@ -5,11 +5,11 @@
 @endsection
 
 @section('content')
-    <form id="createproduct-form" method="POST" action="{{ route('admin.vouchers.update',[$find->id]) }}" autocomplete="off"
+    <form id="createproduct-form" method="POST" action="{{ route('admin.posts.update',[$find->id]) }}" autocomplete="off"
         class="needs-validation" novalidate>
         @method('PUT')
         @csrf
-        <a class="btn btn-info" href="{{route('admin.vouchers.index')}}">Trở về</a>
+        <a class="btn btn-info" href="{{route('admin.posts.index')}}">Trở về</a>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -17,10 +17,10 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Code</label>
-                                    <input type="text" class="form-control" placeholder="Mã giảm giá..."
-                                        id="meta-title-input" name="code" value="{{old('code') ?? $find->code}}">
-                                        @error('code')
+                                    <label class="form-label" for="meta-title-input">Tiêu đề</label>
+                                    <input type="text" class="form-control" placeholder="Tiêu đề..."
+                                        id="meta-title-input" name="title" value="{{old('title') ?? $find->title}}">
+                                        @error('title')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
                                 </div>
@@ -28,76 +28,56 @@
                             <!-- end col -->
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-keywords-input">Tên mã giảm giá</label>
-                                    <input type="text" class="form-control" placeholder="Tên mã giảm giá..."
-                                        id="meta-keywords-input" name="name" value="{{old('name') ?? $find->name}}">
-                                        @error('name')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
+                                    <label class="form-label" for="meta-keywords-input">Tên tác giả</label>
+                                    <input type="text" class="form-control" placeholder="Tên tác giả..." 
+                                           id="meta-keywords-input" value="{{ Auth::user()->full_name }}" disabled>
+                                    @error('user_id')
+                                    <h5 style="color: red">{{ $message }}</h5>
+                                    @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
-                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
-                                        <option value="0" {{ old('discount_type', $find->discount_type) == '0' ? 'selected' : '' }}>%</option>
-                                        <option value="1" {{ old('discount_type', $find->discount_type) == '1' ? 'selected' : '' }}>Đ</option>
-                                    </select>
-                                    @error('discount_type')
-                                        <h5 style="color: red">{{ $message }}</h5>
-                                    @enderror
-                                </div>                                
-                            </div>
+                            
+                            <!-- Hidden field to store user_id -->
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">                            
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
                                         <option value="" disabled {{ old('status', $find->status) == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                        <option value="2" {{ old('status', $find->status) == '2' ? 'selected' : '' }}>Hoạt động</option>
-                                        <option value="1" {{ old('status', $find->status) == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
+                                        <option value="2" {{ old('status', $find->status) == '2' ? 'selected' : '' }}>Public</option>
+                                        <option value="1" {{ old('status', $find->status) == '1' ? 'selected' : '' }}>Private</option>
                                     </select>
                                     @error('status')
                                         <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>                                 
-                            </div>                                                     
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
-                                    <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
-                                    id="numberInput" oninput="formatNumber(this)" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
-                                        @error('discount')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
-                                </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Số lượng</label>
-                                    <input type="text" class="form-control" placeholder="Nhập số lượng..."
-                                    id="numberInput" oninput="formatNumber(this)" name="qty" min="1" value="{{old('qty') ?? $find->qty}}">
-                                        @error('qty')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Ngày bắt đầu</label>
-                                    <input type="datetime-local" class="form-control" id="meta-title-input" name="start" value="{{old('start') ?? $find->start}}">
-                                    @error('start')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                    <label class="form-label" for="meta-title-input">Danh mục</label>
+                                    <select class="form-select mb-3" aria-label="Default select example" name="category_id">
+                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Danh mục</option>
+                                        @foreach ($allCate as $key => $item)
+                                        <option value="{{$item->id}}" {{old('category_id')==$item->id || $find->category_id==$item->id?'selected':false}}>{{$item->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
+                                    <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Ngày kết thúc</label>
-                                    <input type="datetime-local" class="form-control" id="meta-title-input" name="end" value="{{old('end') ?? $find->end}}">
-                                    @error('end')
-                                    <h5 style="color: red">{{$message}}</h5>
-                                    @enderror
+
+                            <div class="card">
+                                <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
+                                    aria-expanded="true" aria-controls="content">
+                                    <h5 class="card-title mb-0">Nội dung</h5>
+                                </div>
+                                <div class="collapse show" id="content">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <textarea id="ckeditor-classic" name="body">{{ old('body') ?? $find->body }}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end col -->
@@ -113,6 +93,9 @@
         <!-- end row -->
 
     </form>
+    <script src="{{ asset('theme/admin/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+
+    <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
     <script>
         function formatNumber(input) {
             // Remove non-numeric characters (but keep commas)
@@ -120,6 +103,7 @@
 
             // Add commas for every 3 digits
             input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
         }
     </script>
 @endsection

@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    danh mục mã giảm giá
+    bài viết
 @endsection
 
 @section('content')
@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
                             </div> --}}
-                            {{-- <a class="btn btn-info" href="{{ route('admin.posts.create') }}" style="width: 150px;">Thêm mới</a> --}}
+                            <a class="btn btn-info" href="{{ route('admin.posts.create') }}" style="width: 150px;">Thêm mới</a>
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
@@ -46,6 +46,7 @@
                                         <th scope="col">Tiêu đề</th>
                                         <th scope="col">Danh mục</th>
                                         <th scope="col">Trạng thái</th>
+                                        <th scope="col">Ngày viết</th>
                                         <th scope="col" style="">Hành động</th>
                                     </tr>
                                 </thead>
@@ -65,6 +66,7 @@
                                                             onchange="updateStatus({{ $item->id }}, this.checked)">
                                                     </div>
                                                 </td>
+                                                <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <a href="{{ route('admin.posts.edit', [$item->id]) }}"
                                                         class="btn btn-warning sm-2">Sửa</a>
@@ -85,7 +87,7 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="11" class="text-center">Không có mã giảm giá nào</td>
+                                        <td colspan="11" class="text-center">Không có bài viết nào</td>
                                     </tr>
                                 @endif
                             </table>
