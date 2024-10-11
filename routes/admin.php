@@ -70,6 +70,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //user
         route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
         Route::post('/user', [AdminUserController::class, 'addUser'])->name('addUser');
+        Route::get('/user/{id}', [AdminUserController::class, 'showUser'])->name('showUser');
+        Route::put('/user/{user}/edit', [AdminUserController::class, 'updateUser'])->name('updateUser');
+        Route::delete('/users/{id}', [AdminUserController::class, 'destroyUser'])->name('destroyUser');
+
+
+
 
         //Role user
         route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');

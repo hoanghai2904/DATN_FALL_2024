@@ -147,8 +147,7 @@
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                        <a href="javascript:void(0);"><i
-                                                                class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                        
                                                     </li>
 
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
