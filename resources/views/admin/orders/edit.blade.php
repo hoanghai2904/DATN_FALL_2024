@@ -36,8 +36,8 @@
                             <label for="status_order">Trạng thái đơn hàng</label>
                             <select name="status_order" class="form-control" required>
                                 <option value="Chưa giải quyết" {{ $order->status_order == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
-                                <option value="Đã vận chuyển" {{ $order->status_order == 'Đã vận chuyển' ? 'selected' : '' }}>Đã vận chuyển</option>
-                                <option value="Đã giao hàng" {{ $order->status_order == 'Đã giao hàng' ? 'selected' : '' }}>Đã giao hàng</option>
+                                <option value="Đang xử lý" {{ $order->status_order == 'Đang xử lý' ? 'selected' : '' }}>Đang xử lý</option>
+                                <option value="Hoàn thành" {{ $order->status_order == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
                                 <option value="Đã hủy" {{ $order->status_order == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
                             </select>
                         </div>             

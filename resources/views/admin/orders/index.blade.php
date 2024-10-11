@@ -43,85 +43,131 @@
             <div class="card-body">
                 <div class="live-preview">
               <!-- Form tìm kiếm -->
-              <form action="{{ route('admin.orders.index') }}" method="GET">
-                    <div class="row mb-5">
-                        <!-- Ô tìm kiếm Mã đơn hàng -->
-                        <div class="col-lg-3">
-                            <h6 class="fw-semibold">Mã đơn hàng</h6>
-                            <div class="input-group">
-                                <input type="text" name="order_code" class="form-control" placeholder="Nhập mã đơn hàng" value="{{ request('order_code') }}">
-                                <button type="submit" class="btn btn-primary">Áp dụng</button>
+                     <form action="{{ route('admin.orders.index') }}" method="GET">
+                        <div class="row mb-5">
+                            <!-- Tìm kiếm chung -->
+                            <div class="col-lg-3 mb-3">
+                                <h6 class="fw-semibold">Tìm kiếm chung</h6>
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                                    <span class="input-group-text">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Tìm kiếm theo mã đơn hàng -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Mã đơn hàng</h6>
+                                <div class="input-group">
+                                    <input type="text" name="order_code" class="form-control" placeholder="Nhập mã đơn hàng" value="{{ request('order_code') }}">
+                                </div>
+                            </div>
+                                                        <!-- Tìm kiếm theo tên khách hàng -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Tên khách hàng</h6>
+                                <div class="input-group">
+                                    <input type="text" name="user_name" class="form-control" placeholder="Nhập tên khách hàng" value="{{ request('user_name') }}">
+                                </div>
+                            </div>
+
+              
+                            <!-- Lọc theo trạng thái đơn hàng -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Trạng thái đơn hàng</h6>
+                                <div class="input-group">
+                                    <select name="status_order" class="form-control">
+                                        <option value="">Tất cả</option> <!-- Tùy chọn này hiển thị tất cả các đơn hàng -->
+                                        <option value="Chưa giải quyết" {{ request('status_order') == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
+                                        <option value="Đang xử lý" {{ request('status_order') == 'Đang xử lý' ? 'selected' : '' }}>Đang xử lý</option>
+                                        <option value="Hoàn thành" {{ request('status_order') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
+                                        <option value="Đã hủy" {{ request('status_order') == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Nút tìm kiếm -->
+                            <div class="col-lg-2 mb-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                             </div>
                         </div>
+                    </form>
 
-                        <!-- Ô tìm kiếm Tên khách hàng -->
-                        <div class="col-lg-3">
-                            <h6 class="fw-semibold">Tên khách hàng</h6>
-                            <div class="input-group">
-                                <input type="text" name="user_name" class="form-control" placeholder="Nhập tên khách hàng" value="{{ request('user_name') }}">
-                                <button type="submit" class="btn btn-primary">Áp dụng</button>
-                            </div>
-                        </div>
 
-                        <!-- Ô tìm kiếm chung -->
-                        <div class="col-lg-3">
-                            <h6 class="fw-semibold">Tìm kiếm chung</h6>
-                            <div class="search-box w-100">
-                                <input type="text" name="search" class="form-control search" placeholder="Search..." value="{{ request('search') }}">
-                                <i class="ri-search-line search-icon"></i>
-                            </div>
-                        </div>
-
-                        <!-- Nút tìm kiếm -->
-                        <div class="col-lg-3 d-flex align-items-end justify-content-end">
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        </div>
-                    </div>
-                </form>
 
 
 
                     <!-- Bảng danh sách đơn hàng -->
-                    <div class="table-responsive table-card">
-                        <table class="table table-sm align-middle table-nowrap table-striped-columns mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Mã đơn hàng</th>
-                                    <th>Tên khách hàng</th>
-                                    <th>Email</th>
-                                    <th>Thanh toán</th>
-                                    <th>Trạng thái</th>
-                                    <th>Ngày</th>
-                                    <th>Hành động</th>
+                    <div class="table-responsive table-card mb-1">
+                        <table class="table table-nowrap align-middle" id="orderTable">
+                            <thead class="text-muted table-light">
+                                <tr class="text-uppercase">
+                                    <th scope="col" style="width: 25px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                        </div>
+                                    </th>
+                                    <th class="sort" data-sort="order_code">Mã đơn hàng</th>
+                                    <th class="sort" data-sort="user_name">Tên khách hàng</th>
+                                    <th class="sort" data-sort="user_email">Email</th>
+                                    <th class="sort" data-sort="created_at">Ngày đặt hàng</th>
+                                    <th class="sort" data-sort="total_price">Tổng tiền</th>
+                                    <th class="sort" data-sort="payment_method">Phương thức thanh toán</th>
+                                    <th class="sort" data-sort="status_order">Trạng thái đơn hàng</th>
+                                    <th class="sort" data-sort="city">Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            @foreach ($orders as $order)
-                                <tr>
-                                    <td>{{ $order->id }}</td>
-                                    <td>{{ $order->order_code }}</td>
-                                    <td>{{ $order->user_name }}</td>
-                                    <td>{{ $order->user_email }}</td>
-                                    <td>{{ $order->payment_method }}</td>
-                                    <td>{{ $order->status_order }}</td>
-                                    <td>{{ $order->created_at}}</td>
-                                    <td>
-                                        <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-info">Chi tiết</a>
-                                        <a href="{{ route('admin.orders.edit', $order->id) }}" class="btn btn-warning">Chỉnh sửa</a>
-                                        @if ($order->status_order == 'Đã hủy')
-                                            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Xóa</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tbody class="list form-check-all">
+                                @foreach ($orders as $order)
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
+                                            </div>
+                                        </th>
+                                        <td class="id">
+                                            <a href="{{ route('admin.orders.show', $order->order_code) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
+                                        </td>
+                                        <td class="user_name">{{ $order->user_name }}</td>
+                                        <td class="user_email">{{ $order->user_email }}</td>
+                                        <td class="created_at">
+                                                    {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }},
+                                                    <small class="text-muted">{{ \Carbon\Carbon::parse($order->created_at)->format('H:i') }}</small>
+                                                </td>
+
+                                        <td class="total_price">${{ $order->total_price }}</td>
+                                        <td class="payment_method">{{ $order->payment_method }}</td>
+                                        <td>{{ $order->status_order }}</td>
+                                        <td>
+                                            <ul class="list-inline hstack gap-2 mb-0">
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="text-primary d-inline-block">
+                                                        <i class="ri-eye-fill fs-16"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="text-primary d-inline-block edit-item-btn">
+                                                        <i class="ri-pencil-fill fs-16"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                                @if ($order->status_order == 'Đã hủy')
+                                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn" style="border: none; background: none;">
+                                                            <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                </li>
+
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div><!-- end card-body -->
         </div><!-- end card -->
