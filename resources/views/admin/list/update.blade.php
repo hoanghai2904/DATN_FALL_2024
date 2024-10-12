@@ -37,13 +37,14 @@
                             <!-- end col -->
                         </div>
                         <!-- end row -->
+
                         <div>
                             <label class="form-label">Danh mục cha</label>
                             <select class="form-control" name="parent_id" rows="3">
                                 @foreach ($categories as $value)
-                                    <option value="{{ $value->parent_id }}"
-                                        {{ $category->parent_id == $value->parent_id ? 'selected' : '' }}>
-                                        {{ $value->parent_id }}
+                                    <option value="{{ $value->id }}"
+                                        {{ $category->parent_id == $value->id ? 'selected' : '' }}>
+                                        {{ $value->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -52,14 +53,10 @@
                 </div>
                 <!-- end card -->
 
-
-
-
-
                 <!-- end card -->
 
                 <div class="text-end mb-3">
-                    <button onclick="history.back() type="button" class="btn btn-danger w-sm">Quay lại</button>
+                    <button onclick="history.back()" type="button" class="btn btn-danger w-sm">Quay lại</button>
 
                     <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                 </div>
