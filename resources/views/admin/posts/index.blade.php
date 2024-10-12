@@ -21,14 +21,14 @@
                 <div class="card-body">
                     <div class="live-preview">
                         <div>
-                            {{-- <div class="row mb-2">
+                            <div class="row mb-2">
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
-                                        <select name="status" id="" class="form-control me-3" style="width: 200px;">
+                                        {{-- <select name="status" id="" class="form-control me-3" style="width: 200px;">
                                             <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
                                             <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
                                             <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
-                                        </select>
+                                        </select> --}}
                                         <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
                                     </form>
@@ -36,8 +36,7 @@
                                         <a class="btn btn-info" href="{{ route('admin.vouchers.create') }}" style="width: 150px;">Thêm mới</a>
                                     </div>
                                 </div>
-                            </div> --}}
-                            <a class="btn btn-info" href="{{ route('admin.posts.create') }}" style="width: 150px;">Thêm mới</a>
+                            </div>
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>

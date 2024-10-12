@@ -10,9 +10,19 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     //
-    public function index(){
-        $list = Posts::all();
+    public function index(Request $request){
+        $query = Posts::query();
         $allCate = Category::all();
+        $search = null;
+        $search = $request->input('keywords');
+          
+        if ($search) {
+            // Nếu có từ khóa tìm kiếm, thêm điều kiện join và where để lọc bình luận theo fullname trong bảng users
+            $query->whereHas('user', function($q) use ($search){
+            $q->where('full_name', 'like', '%'.$search.'%');
+            });
+        }
+        $list= $query->orderBy('id','DESC')->paginate(5)->withQueryString();
         return view('admin.posts.index', compact('list','allCate'));
     }
     public function create(){
@@ -30,7 +40,7 @@ class PostController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Posts::create($data);
-        return redirect()->route('admin.posts.index')->with('msg',"Thêm mã giảm giá thành công");
+        return redirect()->route('admin.posts.index');
     }
     public function destroy($id){
         $find=Posts::find($id);
