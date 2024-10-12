@@ -32,6 +32,7 @@ class CategoryController extends Controller
     {
 
         $category = Category::all();
+        dd($category);
         return view('admin.list.create')->with((['category' => $category]));
         // return view(self::PATH_VIEW . __FUNCTION__);
     }

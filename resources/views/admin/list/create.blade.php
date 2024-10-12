@@ -36,7 +36,7 @@
                         <div>
                             <label class="form-label">Danh mục cha</label>
                             <select class="form-control" name="parent_id">
-                                @foreach ($categories as $value)
+                                @foreach ($category as $value)
                                     <option value="{{ $value->id }}">
                                         {{ $value->name }}
                                     </option>
