@@ -11,11 +11,11 @@
     </div>
 
     <div class="row">
-        @if (Session::has('message'))
+        {{-- @if (Session::has('message'))
             <script>
                 toastr.success("{{ Session::get('message') }}");
             </script>
-        @endif
+        @endif --}}
 
         <div class="col-xl-12">
             <div class="card">

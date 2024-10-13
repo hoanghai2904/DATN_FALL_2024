@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form class="needs-validation" action="{{ route('admin.addPostCategory') }}" method="POST">
+    <form class="needs-validation" action="{{ route('admin.categories.addPostCategory') }}" method="POST">
         @csrf
         <div class="row">
             <div class="col-lg-12">

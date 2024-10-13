@@ -32,11 +32,10 @@ class CategoryController extends Controller
     {
 
         $category = Category::all();
-        dd($category);
+        // dd($category);
         return view('admin.list.create')->with((['category' => $category]));
         // return view(self::PATH_VIEW . __FUNCTION__);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -56,7 +55,7 @@ class CategoryController extends Controller
             'parent_id' => $req->parent_id
         ];
         Category::create($data);
-        return redirect()->route('admin.listCategory')->with(['message' => "Thêm mới thành công"]);
+        return redirect()->route('admin.categories.listCategory');
     }
 
 
