@@ -42,8 +42,12 @@
                                 </div>
                             </div>
                             <h5 class="fs-16 mb-1">{{ auth()->user()->full_name }}</h5>
-                            <span class="badge bg-success-subtle text-success">Role user</span>
-
+                            @if(Auth::user()->roles->isNotEmpty())
+                            <span class="badge bg-success-subtle text-success">
+                                {{ Auth::user()->roles->first()->name }} <!-- Lấy vai trò đầu tiên -->
+                            </span>
+                        @endif
+                           
                         </div>
                     </div>
                 </div>
