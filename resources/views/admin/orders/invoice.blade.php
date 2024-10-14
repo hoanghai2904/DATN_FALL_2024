@@ -31,32 +31,12 @@
     <div class="col-xxl-9">
         <div class="card" id="demo">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="card-header border-bottom-dashed p-4">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <!-- <img src="assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="logo dark" height="17">
-                                <img src="assets/images/logo-light.png" class="card-logo card-logo-light" alt="logo light" height="17"> -->
-                                <div class="mt-sm-5 mt-4">
-                                    <h6 class="text-muted text-uppercase fw-semibold">Địa chỉ</h6>
-                                    <p class="text-muted mb-1" id="address-details">{{ $order->user_address}}</p>
-                                    <p class="text-muted mb-0" id="zip-code"><span>Mã đơn:</span> {{ $order->order_code }}</p>
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0 mt-sm-0 mt-3">
-                               
-                                <h6><span class="text-muted fw-normal">Email:</span><span id="email">{{ $order->user_email }}</span></h6>
-                                <h6><span class="text-muted fw-normal">Số liên lạc: </span><span id="user_phone">{{ $order->user_phone }}</span></h6>
-                               
-                            </div>
-                        </div>
-                    </div>
-                </div>
+     
                 <div class="col-lg-12">
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-lg-3 col-6">
-                                <p class="text-muted mb-2 text-uppercase fw-semibold">Số hóa đơn</p>
+                                <p class="text-muted mb-2 text-uppercase fw-semibold">Mã đơn</p>
                                 <h5 class="fs-14 mb-0">#VL<span id="invoice-no">{{ $order->order_code }}</span></h5>
                             </div>
                             <div class="col-lg-3 col-6">
