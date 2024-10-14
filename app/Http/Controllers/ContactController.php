@@ -3,17 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactResponseMail;
 
 class ContactController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $contacts = Contact::all(); // Lấy tất cả thông tin liên hệ
-        return view('admin.contacts.index', compact('contacts')); // Trả về view
+        // Khởi tạo query để lọc liên hệ
+        $query = Contact::query();
+    
+        // Lọc theo trạng thái liên hệ
+        if ($request->filled('status_contacts')) {
+            $query->where('status_contacts', $request->status_contacts);
+        }
+    
+        // Lọc theo email
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+    
+        // Lọc theo tên khách hàng
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+    
+        // Lọc theo tìm kiếm chung
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')   
+                  ->orWhere('phone', 'like', '%' . $search . '%')
+                  ->orWhere('message', 'like', '%' . $search . '%')
+                  ->orWhere('status_contacts', 'like', '%' . $search . '%');
+            });
+        }
+    
+        // Lấy danh sách liên hệ với phân trang
+        $contacts = $query->orderBy('created_at', 'desc')->paginate(10);
+    
+        // Trả về view danh sách liên hệ
+        return view('admin.contacts.index', compact('contacts'));
     }
+    
 
     public function create()
     {
@@ -47,7 +82,7 @@ class ContactController extends Controller
     public function update(Request $request, Contact $contact)
     {
         $request->validate([
-            'status_contacts' => 'required|string|in:Chưa giải quyết,Đã liên hệ',
+            'status_contacts' => 'required|string|in:Chưa phản hồi,Đã phản hồi',
         ]);
 
         // Cập nhật trạng thái
@@ -92,13 +127,11 @@ class ContactController extends Controller
     
         // Cập nhật trạng thái liên hệ thành "Đã liên hệ" sau khi gửi phản hồi
         $contact->update([
-            'status_contacts' => 'Đã liên hệ',
+            'status_contacts' => 'Đã phản hồi',
         ]);
     
         return redirect()->route('admin.contacts.index')->with('success', 'Phản hồi đã được gửi thành công và trạng thái đã được cập nhật!');
     }
-    
-    
 
     public function destroy($id)
     {

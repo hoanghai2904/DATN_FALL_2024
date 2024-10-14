@@ -13,73 +13,139 @@
     <!-- Page level plugins -->
     <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-    <!-- Page level custom scripts -->
-
-
-      <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
     <script src="{{ asset('theme/admin/js/demo/datatables-demo.js') }}"></script>
     
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+            $('.js-example-basic-single').select2();
 
-
+            // Chức năng chọn tất cả checkbox
+            $('#checkAll').on('change', function() {
+                $('input[name="checkAll"]').prop('checked', this.checked);
+            });
+        });
+    </script>
 @endsection
 
 @section('content')
-<div class="container">
-    <h1>Danh sách liên hệ</h1>
-
-    @if(session('success'))
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
+            </div>
+            <!-- end card header -->
+            @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-    <table class="table align-middle table-nowrap table-striped-columns mb-0">
-        <thead class="table-light">
-            <tr>
-                <th scope="col" style="width: 46px;">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="cardtableCheck">
-
-                        <label class="form-check-label" for="cardtableCheck"></label>
-                    </div>
-                </th>
-                <th scope="col">ID</th>
-                <th>Tên</th>
-                <th>Email</th>
-                <th>Điện thoại</th>
-                <th>Thông điệp</th>
-                <th>Trạng thái</th>
-                <th>Hoạt động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($contacts as $contact)
-            <tr>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="contactCheck{{ $contact }}">
-                        <label class="form-check-label" for="contactCheck{{ $contact }}"></label>
-                    </div>
-                </td>
-                <td>{{$contact->id }}</td>
-                <td>{{ $contact->name }}</td>
-                <td>{{ $contact->email }}</td>
-                <td>{{ $contact->phone }}</td>
-                <td>{{ $contact->message }}</td>
-                <td>{{ $contact->status_contacts}}</td>
-                <td>
-                 
-                    <a href="{{ route('admin.contacts.reply', $contact->id) }}" class="btn btn-info">Phản hồi</a>
-                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST"
-                        style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Xóa</button>
+            <div class="card-body">
+                <div class="live-preview">
+                    <!-- Form tìm kiếm -->
+                    <form action="{{ route('admin.contacts.index') }}" method="GET">
+                        <div class="row mb-5">
+                            <!-- Tìm kiếm chung -->
+                            <div class="col-lg-3 mb-3">
+                                <h6 class="fw-semibold">Tìm kiếm chung</h6>
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                                    <span class="input-group-text">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Tìm kiếm theo email -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Email</h6>
+                                <div class="input-group">
+                                    <input type="text" name="email" class="form-control" placeholder="Nhập email" value="{{ request('email') }}">
+                                </div>
+                            </div>
+                            <!-- Lọc theo trạng thái liên hệ -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Trạng thái</h6>
+                                <div class="input-group">
+                                    <select name="status_contacts" class="form-control">
+                                        <option value="">Tất cả</option>
+                                        <option value="Chưa phản hồi" {{ request('status_contacts') == 'Chưa phản hồi' ? 'selected' : '' }}>Chưa phản hồi</option>
+                                        <option value="Đã phản hồi" {{ request('status_contacts') == 'Đã phản hồi' ? 'selected' : '' }}>Đã phản hồi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Nút tìm kiếm -->
+                            <div class="col-lg-2 mb-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </div>
                     </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+                    <!-- Bảng danh sách liên hệ -->
+                    <div class="table-responsive table-card mb-1">
+                        <table class="table table-nowrap align-middle" id="contactTable">
+                            <thead class="text-muted table-light">
+                                <tr class="text-uppercase">
+                                    <th scope="col" style="width: 25px;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="checkAll" value="option">
+                                        </div>
+                                    </th>
+                                    <th class="sort" data-sort="id">ID</th>
+                                    <th class="sort" data-sort="name">Tên</th>
+                                    <th class="sort" data-sort="email">Email</th>
+                                    <th class="sort" data-sort="phone">Điện thoại</th>
+                                    <th class="sort" data-sort="message">Thông điệp</th>
+                                    <th class="sort" data-sort="status">Trạng thái</th>
+                                    <th class="sort" data-sort="actions">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody class="list form-check-all">
+                                @foreach ($contacts as $contact)
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
+                                            </div>
+                                        </th>
+                                        <td class="id">{{ $contact->id }}</td>
+                                        <td class="name">{{ $contact->name }}</td>
+                                        <td class="email">{{ $contact->email }}</td>
+                                        <td class="phone">{{ $contact->phone }}</td>
+                                        <td class="message">{{ $contact->message }}</td>
+                                        <td class="status_contacts">{{ $contact->status_contacts}}</td>
+                                        <td>
+                                            <ul class="list-inline hstack gap-2 mb-0">
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Reply">
+                                                    <a href="{{ route('admin.contacts.reply', $contact->id) }}" class="text-primary d-inline-block">
+                                                        <i class="ri-mail-send-line fs-16"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa liên hệ này?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn" style="border: none; background: none;">
+                                                            <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-end">
+                        {{ $contacts->links() }}
+                    </div>
+
+                </div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
 </div>
+<!-- end row -->
 @endsection

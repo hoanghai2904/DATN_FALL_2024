@@ -11,7 +11,12 @@
             <div class="col-md-8">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0">Danh sách sản phẩm</h5>
+                        <div class="d-flex align-items-center">
+                                        <h5 class="card-title flex-grow-1 mb-0">Danh sách đơn hàng</h5>
+                                        <div class="flex-shrink-0">
+                                            <a href="{{ route('admin.orders.invoice', $order->id) }}" class="btn btn-success btn-sm"><i class="ri-download-2-fill align-middle me-1"></i> Invoice</a>
+                                        </div>
+                                    </div>
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered">
