@@ -22,7 +22,21 @@ class PostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required',
+            'user_id' => 'required',
+            'status' => 'required',
+            'category_id' => 'required',
+            'body' => 'required',
+        ];
+    }
+    public function messages(){
+        return[
+            'title.required'=>'Tiêu đề không được bỏ trống',
+            'user_id.required'=>'Tác giả không được bỏ trống',
+            'status.required'=>'Trạng thái không được bỏ trống',
+            'category_id.required'=>'Danh mục không được bỏ trống',
+            'body.required'=>'Nội dung không được bỏ trống',
+            
         ];
     }
 }

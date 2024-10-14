@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\VoucherRequest;
 use App\Models\admin\Vouchers;
+use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
-
 class VoucherController extends Controller
 {
     public function index(Request $request)
@@ -51,7 +51,8 @@ class VoucherController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
-        return redirect()->route('admin.vouchers.index')->with('msg',"Thêm mã giảm giá thành công");
+        notyf()->success('Thêm mới sản phẩm thành công.');
+        return redirect()->route('admin.vouchers.index');
     }
     // public function show($id){
     //     $find = Vouchers::find($id);
@@ -111,14 +112,11 @@ class VoucherController extends Controller
 {
     $voucher = Vouchers::find($request->id);
     
-    if ($voucher) {
-        $voucher->status = $request->status;
-        $voucher->save();
-        
-        return response()->json(null,204 );
-    }
+    $voucher->status = $request->status == 'true' ? 2:1;
+    $voucher->save();
 
-    return response()->json(['message' => 'Không tìm thấy voucher.'], 404);
+    return response(['message' => 'Cập nhật trạng thái thành công!']);
+        
 }
 
 }

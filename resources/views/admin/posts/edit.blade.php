@@ -30,12 +30,12 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-keywords-input">Tên tác giả</label>
                                     <input type="text" class="form-control" placeholder="Tên tác giả..." 
-                                           id="meta-keywords-input" value="{{ Auth::user()->full_name }}" disabled>
+                                           id="meta-keywords-input" value="{{ old('user_id') ?? $find->user->full_name }}" disabled>
                                     @error('user_id')
                                     <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
-                            </div>
+                            </div>                            
                             
                             <!-- Hidden field to store user_id -->
                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">                            
@@ -56,7 +56,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Danh mục</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="category_id">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Danh mục</option>
+                                        <option value="" disabled {{ old('status', isset($posts) ? $posts->status : '') == '' ? 'selected' : '' }}>Danh mục</option>
                                         @foreach ($allCate as $key => $item)
                                         <option value="{{$item->id}}" {{old('category_id')==$item->id || $find->category_id==$item->id?'selected':false}}>{{$item->name}}</option>
                                         @endforeach
@@ -96,14 +96,4 @@
     <script src="{{ asset('theme/admin/assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
 
     <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
-    <script>
-        function formatNumber(input) {
-            // Remove non-numeric characters (but keep commas)
-            let value = input.value.replace(/[^0-9]/g, '');
-
-            // Add commas for every 3 digits
-            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            
-        }
-    </script>
 @endsection

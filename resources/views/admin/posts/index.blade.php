@@ -33,7 +33,7 @@
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
                                     </form>
                                     <div>
-                                        <a class="btn btn-info" href="{{ route('admin.vouchers.create') }}" style="width: 150px;">Thêm mới</a>
+                                        <a class="btn btn-info" href="{{ route('admin.posts.create') }}" style="width: 150px;">Thêm mới</a>
                                     </div>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                                             onclick="return confirm('Có chắc muốn xóa?')"
                                                             class="btn btn-danger">Xóa</button>
                                                     </form>
-                                                    <a href="" class="btn btn-info">Xem chi tiết</a>
+                                                    <a href="{{ route('admin.posts.show', [$item->id]) }}" class="btn btn-info">Xem chi tiết</a>
                                                 </td>
 
                                             </tr>
@@ -112,9 +112,7 @@ function updateStatus(voucherId, isChecked) {
             status: status
         },
         success: function(response) {
-            // Optionally, update some status text or notification here
-            console.log(response.message); // Optionally log the response
-            // You can display a message or visually highlight the row
+            console.log(response.message); 
             $('#tr_' + voucherId).addClass('updated');
         },
         error: function(xhr, status, error) {
@@ -124,5 +122,4 @@ function updateStatus(voucherId, isChecked) {
 }
 
     </script>
-
 @endsection

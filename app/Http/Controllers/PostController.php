@@ -76,15 +76,20 @@ class PostController extends Controller
     }
     public function updateStatus(Request $request)
     {
-        $voucher = Posts::find($request->id);
+        $find = Posts::find($request->id);
         
-        if ($voucher) {
-            $voucher->status = $request->status;
-            $voucher->save();
+        if ($find) {
+            $find->status = $request->status;
+            $find->save();
             
             return response()->json(null,204 );
         }
     
         return response()->json(['message' => 'Không tìm thấy post.'], 404);
+    }
+    public function show($id){
+        $find = Posts::find($id);
+        return view('admin.posts.show',compact('find'));
+
     }
 }

@@ -70,12 +70,17 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <div class="form-check form-switch form-switch-info">
-                                                        <input class="form-check-input" type="checkbox" role="switch"
-                                                            id="SwitchCheck{{ $item->id }}"
-                                                            {{ $item->status == 2 ? 'checked' : '' }}
-                                                            onchange="updateStatus({{ $item->id }}, this.checked)">
+                                                    @if ($item->status == 2)
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" checked data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
                                                     </div>
+                                                @else
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @endif
                                                 </td>
                                                 <td>{{ $item->qty }}</td>
                                                 <td>{{ $item->start }}</td>
@@ -112,30 +117,11 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    <script>
-function updateStatus(voucherId, isChecked) {
-    var status = isChecked ? 2 : 1;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    $.ajax({
-        url: '{{ route('admin.vouchers.updateStatus') }}',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            id: voucherId,
-            status: status
-        },
-        success: function(response) {
-            // Optionally, update some status text or notification here
-            console.log(response.message); // Optionally log the response
-            // You can display a message or visually highlight the row
-            $('#tr_' + voucherId).addClass('updated');
-        },
-        error: function(xhr, status, error) {
-            alert('An error occurred while updating the status.');
-        }
-    });
-}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
 
-    </script>
+
 
 @endsection
