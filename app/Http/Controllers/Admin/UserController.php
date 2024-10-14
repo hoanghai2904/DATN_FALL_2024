@@ -17,28 +17,32 @@ class UserController extends Controller
 {
     
     //list and search by phonn and email Customer---------------------------------------------------------
- public function listCusstomer(Request $request) // Thêm Request vào tham số
-{
-    // Lấy dữ liệu tìm kiếm từ form (email và số điện thoại)
-    $searchQuery = $request->input('query');
-
-    // Kiểm tra nếu có giá trị tìm kiếm
-    if ($searchQuery) {
-        // Tìm kiếm theo email hoặc số điện thoại, loại bỏ những người dùng có vai trò và phân trang
-        $listCustomer = User::doesntHave('roles')
-            ->where(function($query) use ($searchQuery) {
-                $query->where('email', 'like', "%{$searchQuery}%")
-                      ->orWhere('phone', 'like', "%{$searchQuery}%");
-            })
-            ->paginate(7);
-    } else {
-        // Nếu không nhập gì, lấy toàn bộ người dùng không có vai trò và phân trang
-        $listCustomer = User::doesntHave('roles')->paginate(7);
+    public function listCusstomer(Request $request) // Thêm Request vào tham số
+    {
+        // Lấy dữ liệu tìm kiếm từ form (email, số điện thoại, tên, và trạng thái)
+        $searchQuery = $request->input('query');
+        $status = $request->input('status'); // Giả sử bạn gửi trạng thái từ form tìm kiếm
+    
+        // Kiểm tra nếu có giá trị tìm kiếm
+        $listCustomer = User::doesntHave('roles')->where(function($query) use ($searchQuery, $status) {
+            if ($searchQuery) {
+                $query->where(function($q) use ($searchQuery) {
+                    $q->where('email', 'like', "%{$searchQuery}%")
+                      ->orWhere('phone', 'like', "%{$searchQuery}%")
+                      ->orWhere('full_name', 'like', "%{$searchQuery}%"); // Tìm kiếm theo tên
+                });
+            }
+    
+            // Kiểm tra trạng thái nếu có
+            if ($status) {
+                $query->where('status', $status); // Tìm kiếm theo trạng thái
+            }
+        })
+        ->paginate(7);
+    
+        return view('admin.user.listCusstomer', compact('listCustomer'));
     }
-
-    return view('admin.user.listCusstomer', compact('listCustomer'));
-}
-
+    
 
 
     //delete
