@@ -14,6 +14,6 @@ class ProductTypes extends Model
 
     public function variants()
     {
-        return $this->hasMany(ProductVariants::class, 'product_type_id');
+        return $this->hasMany(ProductVariants::class, foreignKey: 'product_type_id');
     }
 }

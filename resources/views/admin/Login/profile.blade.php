@@ -42,8 +42,12 @@
                                 </div>
                             </div>
                             <h5 class="fs-16 mb-1">{{ auth()->user()->full_name }}</h5>
-                            <span class="badge bg-success-subtle text-success">Role user</span>
-
+                            @if(Auth::user()->roles->isNotEmpty())
+                            <span class="badge bg-success-subtle text-success">
+                                {{ Auth::user()->roles->first()->name }} <!-- Lấy vai trò đầu tiên -->
+                            </span>
+                        @endif
+                           
                         </div>
                     </div>
                 </div>
@@ -192,14 +196,18 @@
                             </div>
                             <!--end tab-pane-->
                             <div class="tab-pane" id="changePassword" role="tabpanel">
-                                <form action="" method="POST" >
+                                <form action="{{route('admin.Check_changePass')}}" method="POST" >
                                     @csrf
                                     <div class="row g-2">
                                         <div class="col-lg-4">
                                             <div>
                                                 <label for="oldpasswordInput" class="form-label">Mật khẩu cũ*</label>
                                                 <input type="password" class="form-control" id="oldpasswordInput "
-                                                    placeholder="Enter current password" name="oldPassword">
+                                                    placeholder="Nhập mật khẩu cũ..." name="oldPassword" required>
+                                                    @error('oldPassword')
+                                                    <small
+                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -207,7 +215,11 @@
                                             <div>
                                                 <label for="newpasswordInput" class="form-label">Mật khẩu mới*</label>
                                                 <input type="password" class="form-control" id="newpasswordInput"
-                                                    placeholder="Enter new password" name="newPassword">
+                                                    placeholder="Nhập mật khẩu mới..." name="newPassword" required>
+                                                    @error('newPassword')
+                                                    <small
+                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -216,7 +228,11 @@
                                                 <label for="confirmpasswordInput" class="form-label">Xác nhận mật khẩu
                                                     mới*</label>
                                                 <input type="password" class="form-control" id="confirmpasswordInput"
-                                                    placeholder="Confirm password" name="confirmPassword">
+                                                    placeholder="Xác nhận lại mật khẩu..." name="confirmPassword" required>
+                                                    @error('confirmPassword')
+                                                    <small
+                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -230,6 +246,7 @@
                                         <div class="col-lg-12">
                                             <div class="text-end">
                                                 <button type="submit" class="btn btn-success">Thay đổi mật khẩu </button>
+  
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -253,21 +270,38 @@
     <!-- container-fluid -->
     </div><!-- End Page-content -->
 
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> © Shop pet.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end d-none d-sm-block">
-                        Design & Develop by shop pet
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+   
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        // Lấy thông báo từ session và kiểm tra xem có giá trị không
+        const successMessage = @json(session('success', ''));  // Trả về chuỗi rỗng nếu không có giá trị
+        const errorMessage = @json(session('error', ''));
+    
+        if (successMessage) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: successMessage,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ route('admin.login') }}";
+                }
+            });
+        }
+    
+        if (errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: errorMessage,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Thử lại'
+            });
+        }
+    });
+    
+    </script>
 @endsection
