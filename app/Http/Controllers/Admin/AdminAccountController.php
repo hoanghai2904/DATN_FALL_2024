@@ -17,36 +17,38 @@ class AdminAccountController extends Controller
 
    public function Check_login(Request $request) 
    {
-    $data = $request->validate([
-        'email' => 'required|exists:users,email',
-        'password' => 'required',
-    ], [
-        'email.required' => 'Vui lòng nhập email.',
-        'email.exists' => 'Email không tồn tại trong hệ thống.',
-        'password.required' => 'Vui lòng nhập mật khẩu.',
-    ]);
+       $data = $request->validate([
+           'email' => 'required|exists:users,email',
+           'password' => 'required',
+       ], [
+           'email.required' => 'Vui lòng nhập email.',
+           'email.exists' => 'Email không tồn tại trong hệ thống.',
+           'password.required' => 'Vui lòng nhập mật khẩu.',
+       ]);
+      
+       $user = User::where('email', $data['email'])->first();
+       
+       // Kiểm tra thông tin đăng nhập
+       if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+           // Kiểm tra xem người dùng có ít nhất một vai trò hay không
+           if ($user->roles->isEmpty()) {
+               Auth::logout(); // Đăng xuất nếu không có vai trò
+               return back()->withErrors([
+                   'email' => 'Bạn không có quyền truy cập vào trang quản trị.',
+               ])->withInput();
+           }
+           
+           // Đăng nhập thành công
+           $request->session()->regenerate();
+           return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
+       }
    
-    $user = User::where('email', $data['email'])->first();
-
-    // Kiểm tra nếu tài khoản chưa xác nhận email
-    if (is_null($user->email_verified_at)) {
-        return back()->withErrors([
-            'email' => 'Tài khoản của bạn chưa được xác nhận. Vui lòng kiểm tra email để xác nhận tài khoản.',
-        ])->withInput();
-    }
-    // Kiểm tra thông tin đăng nhập
-  
-    if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-        // Đăng nhập thành công
-        $request->session()->regenerate();
-        return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
-
-    }
-    // Đăng nhập thất bại
-    return back()->withErrors([
-        'password' => 'Mật khẩu không chính xác.',
-    ])->withInput();
+       // Đăng nhập thất bại
+       return back()->withErrors([
+           'password' => 'Mật khẩu không chính xác.',
+       ])->withInput();
    }
+   
 
    // log out
  public function logout(Request $request)
