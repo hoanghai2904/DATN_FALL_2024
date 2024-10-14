@@ -68,6 +68,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-2 mt-4">
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                             </div>
@@ -179,6 +180,7 @@
                 });
         });
 
+        // DataTable 
         $(document).ready(function() {
             var table = $('#myTable').DataTable({
                 "dom": '<"top">rt<"bottom"><"clear">',
@@ -195,14 +197,17 @@
                 }
             });
 
+            // Tìm kiếm
             $('#customSearchBox').on('keyup', function() {
                 table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
             });
 
         });
+
     </script>
 
-    <script>
+<script>
+        // change-status
         const notyf = new Notyf();
         $(document).ready(function() {
             $('body').on('click', '.change-status', function() {
@@ -212,6 +217,7 @@
 
 
                 $.ajax({
+                    // Thay route 
                     url: "{{ route('admin.product.change-status') }}",
                     method: 'PUT',
                     data: {

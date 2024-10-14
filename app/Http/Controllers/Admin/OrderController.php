@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-
+use Carbon\Carbon; 
 class OrderController extends Controller
 {
     // Hiển thị danh sách đơn hàng
     public function index(Request $request)
     {
         $query = Order::query();
-    
-        // Kiểm tra và lọc theo mã đơn hàng
-        if ($request->has('order_code') && !empty($request->order_code)) {
-            $query->where('order_code', 'like', '%' . $request->order_code . '%');
+
+        if ($request->filled('status_order')) {
+            $query->where('status_order', $request->status_order);
         }
     
+        
+        if ($request->has('order_code') && !empty($request->input('order_code'))) {
+            $query->where('order_code', 'like', '%' . $request->input('order_code') . '%');
+        }
         // Kiểm tra và lọc theo tên khách hàng
         if ($request->has('user_name') && !empty($request->user_name)) {
             $query->where('user_name', 'like', '%' . $request->user_name . '%');
         }
-    
+       if ($request->filled('month')) {
+        $query->whereMonth('created_at', Carbon::parse($request->month)->month)
+              ->whereYear('created_at', Carbon::parse($request->month)->year);
+    }
+
         // Kiểm tra và lọc theo tìm kiếm chung
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -58,7 +65,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         // Lấy các sản phẩm trong đơn hàng bằng quan hệ đã thiết lập
-        $orderItems = $order->orderItems;
+        $orderItems = $order->items;
 
         return view('admin.orders.show', compact('order', 'orderItems'));
     }
@@ -83,4 +90,3 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully');
     }
 }
-
