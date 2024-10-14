@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,7 @@ class UserController extends Controller
         return response()->json(['success' => false], 404);
     }
 
+    
 
     // user-----------------------------------------------------------------------------
     public function listUser(Request $request)
@@ -232,21 +234,7 @@ class UserController extends Controller
         $user->delete();
         return response()->json(['success' => true, 'message' => 'User and roles deleted successfully.']);
     }
-     //update status
-    //  public function updateStatusUser(Request $request, $id)
-    //  {
-    //      $customer = User::find($id);
- 
-    //      if ($customer) {
-    //          // Chuyển trạng thái dựa trên giá trị checkbox
-    //          $customer->status = $request->input('status') === 'active' ? 'active' : 'inactive';
-    //          $customer->save();
-    //          return response()->json(['success' => true, 'status' => $customer->status]);
-    //      }
-    //      return response()->json(['success' => false], 404);
-    //  }
- 
-
+    
     //role-------------------------------------------------------------------------------
     public function listRole(Request $request) // Thêm Request vào tham số
     {
@@ -371,4 +359,27 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Cập nhật quyền thành công!']);
     }
+
+    //address-------------------------------------------------------------------------------
+    public function listAddress() 
+    {
+        // Truyền cả roles và permissions đến view
+        return view('admin.user.listAddress');
+    }
+    
+    public function getAddresses($userId)
+    {
+        $user = User::findOrFail($userId);
+        $addresses = $user->addresses()->get();
+    
+        return response()->json([
+            'user' => [
+                'name' => $user->full_name,
+                'avatar' => $user->cover ?? asset('theme/admin/assets/images/users/user-dummy-img.jpg'),
+            ],
+            'address' => $addresses, // Kiểm tra xem có dữ liệu không
+        ]);
+    }
+    
+    
 }

@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
- 
-  
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,22 +29,27 @@ class User extends Authenticatable
         'password',
         'email',
         'gender',
-        'verification_token', 
+        'verification_token',
         'birthday',
-      
+
     ];
-    
-     // Một người dùng thuộc về một vai trò
-     public function roles()
-{
-    return $this->belongsToMany(Role::class,'user_roles', 'user_id', 'role_id');
-}
- 
-     // Một người dùng có nhiều quyền qua bảng role_permissions
-     public function permissions()
-     {
-         return $this->hasManyThrough(Permission::class, RolePermission::class);
-     }
+
+    // Một người dùng thuộc về một vai trò
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
+    }
+
+    // Một người dùng có nhiều quyền qua bảng role_permissions
+    public function permissions()
+    {
+        return $this->hasManyThrough(Permission::class, RolePermission::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -64,5 +69,4 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
 }

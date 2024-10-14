@@ -122,9 +122,6 @@
                             <li class="nav-item">
                                 <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý địa chỉ</a>
-                            </li>
                         </ul>
                     </div>
                 </li>

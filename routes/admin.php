@@ -74,9 +74,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('/user/{user}/edit', [AdminUserController::class, 'updateUser'])->name('updateUser');
         Route::delete('/users/{id}', [AdminUserController::class, 'destroyUser'])->name('destroyUser');
 
-
-
-
         //Role user
         route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
         route::post('/role', [AdminUserController::class, 'store'])->name('addRole');
@@ -85,6 +82,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('/roles/{id}/edit', [AdminUserController::class, 'edit'])->name('roles.edit');
         Route::put('/roles/{role}/edit', [AdminUserController::class, 'update'])->name('roles.update');
 
+        // address
+        route::get('/address', [AdminUserController::class, 'listAddress'])->name('listAddress');
+        Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);
