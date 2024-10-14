@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
 
     // Khai báo quan hệ với model UserAddress
     public function addresses()
@@ -24,16 +25,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_id',     // ID vai trò
-        'full_name',   // Họ và tên người dùng
-        'cover',       // Đường dẫn ảnh bìa người dùng
-        'phone',       // SĐT người dùng
-        'email',       // Email người dùng
-        'password',    // Mật khẩu người dùng
-        'gender',      // Giới tính
-        'status',      // Trạng thái tài khoản
-        'remember_token', // Token ghi nhớ đăng nhập
-        'email_verified_at', // Thời điểm email xác thực
+        'full_name',
+        'cover',
+        'phone',
+        'password',
+        'email',
+        'gender',
+        'verification_token', 
+        'birthday',
+      
     ];
     
     /**

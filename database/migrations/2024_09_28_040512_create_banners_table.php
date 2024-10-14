@@ -15,8 +15,9 @@ return new class extends Migration
             $table->increments('id');
             $table->text('banner');     
             $table->text('url');     
-            $table->tinyInteger('status'); 
+            $table->boolean('status')->default(1); // Using boolean with default value
             $table->timestamps();
+            $table->softDeletes(); // Add this line for soft deletes
         });
     }
 

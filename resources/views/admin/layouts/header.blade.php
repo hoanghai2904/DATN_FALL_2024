@@ -39,23 +39,36 @@
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            <img class="rounded-circle header-profile-user" src="{{asset('theme/admin/assets/images/users/avatar-1.jpg')}}" alt="Header Avatar">
+                            @if(auth()->check())
+                            {{-- Nếu người dùng đã đăng nhập --}}
+                            @if(auth()->user()->cover)
+                                {{-- Nếu người dùng có ảnh đại diện, hiển thị ảnh --}}
+                                <img class="rounded-circle header-profile-user" src="{{ asset('storage/' . auth()->user()->cover) }}" alt="Avatar">
+                            @else
+                                {{-- Nếu không có ảnh đại diện, hiển thị biểu tượng người dùng --}}
+                                <i class="icon-user"></i>
+                            @endif
+                        @else
+                            {{-- Nếu người dùng chưa đăng nhập, hiển thị biểu tượng người dùng --}}
+                            <i class="icon-user"></i>
+                        @endif
+                        
                             <span class="text-start ms-xl-2">
-                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Anna Adame</span>
-                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Founder</span>
+                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->full_name }}</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text badge bg-success-subtle text-success">Role user</span>
+                              
                             </span>
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Welcome Anna!</h6>
-                        <a class="dropdown-item" href="{{asset('theme/admin/pages-profile.html')}}"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+                        <h6 class="dropdown-header">Welcome{{ Auth::user()->full_name }}</h6>
+                        <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Tài Khoản</span></a>
                         <a class="dropdown-item" href="{{asset('theme/admin/apps-chat.html')}}"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" href="{{asset('theme/admin/apps-tasks-kanban.html')}}"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
                         <a class="dropdown-item" href="pages-faqs.html"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
                         <div class="dropdown-divider"></div>
-                   
-                        <a class="dropdown-item" href="{{asset('theme/admin/auth-logout-basic.html')}}"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+                        <a class="dropdown-item" href="{{route('admin.logout')}}"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Đăng xuất</span></a>
                     </div>
                 </div>
             </div>

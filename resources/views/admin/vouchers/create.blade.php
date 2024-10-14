@@ -8,6 +8,7 @@
     <form id="createproduct-form" method="POST" action="{{ route('admin.vouchers.store') }}" autocomplete="off"
         class="needs-validation" novalidate>
         @csrf
+        <a class="btn btn-info" href="{{route('admin.vouchers.index')}}">Trở về</a>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -51,7 +52,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="0">Hoạt động</option>
+                                        <option value="2">Hoạt động</option>
                                         <option value="1">Ngừng hoạt động</option>
                                     </select>
                                     @error('status')

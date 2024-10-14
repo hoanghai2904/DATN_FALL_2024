@@ -21,17 +21,23 @@ class VoucherRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'code'=>'required',
-            'name'=>'required',
-            'discount_type'=>'required',
-            'status'=>'required',
-            'discount'=>'required|min:1|numeric',
-            'qty'=>'required|min:1|numeric',
-            'start'=>'required|date|after_or_equal:today',
-            'end'=>'required|date|after_or_equal:start'
-        ];
+        $rules = [
+            'code' => 'required',
+            'name' => 'required',
+            'discount_type' => 'required',
+            'status' => 'required',
+            'discount' => 'required|numeric|min:1',
+            'qty' => 'required|numeric|min:1',
+            'start' => 'required|date|after_or_equal:today',
+            'end' => 'required|date|after_or_equal:start'
+        ];    
+        if ($this->input('discount_type') == 0) {
+            $rules['discount'] = 'required|numeric|min:1|max:100'; 
+        }
+    
+        return $rules;
     }
+    
     public function messages(){
         return[
             'code.required'=>'Mã giảm giá không được bỏ trống',
