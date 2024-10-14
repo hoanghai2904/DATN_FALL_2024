@@ -10,16 +10,16 @@ class ContactResponseMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public $contact;
 
-    public function __construct($data)
+    public function __construct($contact)
     {
-        $this->data = $data;
+        $this->contact = $contact;
     }
 
     public function build()
     {
-        return $this->subject('Phản hồi từ chúng tôi')
-                    ->view('Mail.contact_response'); // Đường dẫn tới view email
+        return $this->subject('Cảm ơn bạn đã liên hệ')
+                    ->view('Mail.contact_response'); // Đường dẫn đến view email
     }
 }

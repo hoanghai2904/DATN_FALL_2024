@@ -71,9 +71,24 @@ class ContactController extends Controller
         ]);
     
         $contact = Contact::findOrFail($id);
-        
-        // Gửi email phản hồi
-        Mail::to($contact->email)->send(new ContactResponseMail($contact, $request->response_message));
+    
+        $data = [
+            'name' => $contact->name,  // Lấy tên từ bản ghi liên hệ
+            'email' => $contact->email,  // Lấy email từ bản ghi liên hệ
+            'message' => $request->input('response_message'), // Nội dung phản hồi
+        ];
+    
+        // Kiểm tra nếu email tồn tại
+        if (!empty($data['email'])) {
+            // Gửi email phản hồi
+            Mail::send('Mail.contact_response', compact('data'), function ($message) use ($data) {
+                $message->to($data['email'])
+                        ->subject('Phản hồi liên hệ');
+            });
+        } else {
+            // Xử lý khi email không hợp lệ
+            return back()->with('error', 'Không thể gửi phản hồi vì email không tồn tại.');
+        }
     
         // Cập nhật trạng thái liên hệ thành "Đã liên hệ" sau khi gửi phản hồi
         $contact->update([

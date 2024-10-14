@@ -68,7 +68,7 @@
                 <td>{{ $contact->message }}</td>
                 <td>{{ $contact->status_contacts}}</td>
                 <td>
-                    <a href="{{ route('admin.contacts.edit', $contact->id) }}" class="btn btn-warning">Chỉnh sửa</a>
+                 
                     <a href="{{ route('admin.contacts.reply', $contact->id) }}" class="btn btn-info">Phản hồi</a>
                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST"
                         style="display:inline;">
