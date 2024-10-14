@@ -428,105 +428,91 @@ function updateStatus(customerId, checkbox) {
 
         // edit quyền 
         var editRoleUrl = "{{ route('admin.roles.edit', ':id') }}"; // Placeholder cho ID
-        $(document).on('click', '.edit-item-btn', function() {
-            var roleId = $(this).data('id');
-            var url = editRoleUrl.replace(':id', roleId); // Thay thế ID vào URL
 
-            // Gọi route để lấy thông tin vai trò và quyền
-            $.ajax({
-                url: url, // Sử dụng URL đã tạo
-                method: 'GET',
-                success: function(response) {
-                    // Xóa các lựa chọn trước đó
-                    $('#rolePermissions').empty();
+$(document).on('click', '.edit-item-btn', function() {
+    var roleId = $(this).data('id'); // Lấy ID từ nút sửa
+    var url = editRoleUrl.replace(':id', roleId); // Thay thế ID vào URL
 
-                    // Hiển thị tất cả quyền trong select box
-                    $.each(response.all_permissions, function(index, permission) {
-                        var selected = response.permissions.includes(permission.id) ?
-                            'selected' : '';
-                        $('#rolePermissions').append('<option value="' + permission.id + '" ' +
-                            selected + '>' + permission.name + '</option>');
-                    });
+    // Gọi route để lấy thông tin vai trò và quyền
+    $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(response) {
+            // Xóa các lựa chọn trước đó
+            $('#rolePermissions').empty();
 
-                    // Hiển thị modal
-                    $('#exampleModalgrid').modal('show');
-                },
-                error: function(xhr) {
-                    console.error('Error fetching role data:', xhr);
-                }
+            // Hiển thị tất cả quyền trong select box
+            $.each(response.all_permissions, function(index, permission) {
+                var selected = response.permissions.includes(permission.id) ? 'selected' : '';
+                $('#rolePermissions').append(
+                    `<option value="${permission.id}" ${selected}>${permission.name}</option>`
+                );
             });
-        });
+
+            // Gán ID vai trò vào form
+            $('#updateRoleForm').data('id', roleId);
+
+            // Hiển thị modal
+            $('#exampleModalgrid').modal('show');
+        },
+        error: function(xhr) {
+            console.error('Lỗi khi lấy dữ liệu vai trò:', xhr);
+        }
+    });
+});
+
 
         //update quyền vs thông báo bằng thư viện 
         // Kiểm tra khi người dùng thay đổi quyền
         var updateRoleUrl = "{{ route('admin.roles.update', ':id') }}"; // Placeholder cho ID
-        $(document).on('change', '#rolePermissions', function() {
-            var selectedPermissions = $(this).val(); // [id1, id2, ...]
 
-            // Kiểm tra xem có quyền nào được chọn không
-            if (selectedPermissions.length === 0) {
-                // Hiển thị thông báo cho người dùng bằng SweetAlert
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Cảnh báo',
-                    text: 'Vui lòng chọn ít nhất một quyền.',
-                    confirmButtonText: 'Đồng ý'
-                });
-                return; // Dừng lại nếu không có quyền nào được chọn
-            }
+$(document).on('submit', '#updateRoleForm', function(e) {
+    e.preventDefault(); // Ngăn chặn hành động gửi form mặc định
 
+    var roleId = $(this).data('id'); // Lấy ID vai trò từ form
+    var selectedPermissions = $('#rolePermissions').val(); // [id1, id2, ...]
+
+    // Kiểm tra xem có quyền nào được chọn không
+    if (selectedPermissions.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cảnh báo',
+            text: 'Vui lòng chọn ít nhất một quyền.',
+            confirmButtonText: 'Đồng ý'
         });
+        return;
+    }
 
-        // Kiểm tra khi gửi biểu mẫu
-        $(document).on('submit', '#updateRoleForm', function(e) {
-            e.preventDefault(); // Ngăn chặn hành động gửi form mặc định
-
-            var selectedPermissions = $('#rolePermissions').val(); // [id1, id2, ...]
-
-            // Kiểm tra xem có quyền nào được chọn không
-            if (selectedPermissions.length === 0) {
-                // Hiển thị thông báo cho người dùng bằng SweetAlert
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Cảnh báo',
-                    text: 'Vui lòng chọn ít nhất một quyền.',
-                    confirmButtonText: 'Đồng ý'
-                });
-                return; // Dừng lại nếu không có quyền nào được chọn
-            }
-
-            // Gọi route để cập nhật quyền cho vai trò
-            var roleId = $('.edit-item-btn').data('id'); // Lấy ID từ nút sửa
-
-            $.ajax({
-                url: updateRoleUrl.replace(':id', roleId), // Sử dụng URL đã tạo
-                method: 'PUT',
-                data: {
-                    permissions: selectedPermissions,
-                    _token: '{{ csrf_token() }}' // Đảm bảo gửi token CSRF
-                },
-                success: function(response) {
-                    console.log('Cập nhật quyền thành công!', response);
-                    // Hiển thị thông báo thành công
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công',
-                        text: 'Vai trò đã được cập nhật.',
-                        confirmButtonText: 'Đồng ý'
-                    }).then(() => {
-                        location.reload(); // Tải lại trang sau khi cập nhật
-                    });
-                },
-                error: function(xhr) {
-                    console.error('Lỗi khi cập nhật quyền:', xhr);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Lỗi',
-                        text: 'Có lỗi xảy ra. Vui lòng thử lại.',
-                        confirmButtonText: 'Đồng ý'
-                    });
-                }
+    // Gọi route để cập nhật quyền cho vai trò
+    $.ajax({
+        url: updateRoleUrl.replace(':id', roleId), // Sử dụng URL đã tạo
+        method: 'PUT',
+        data: {
+            permissions: selectedPermissions,
+            _token: '{{ csrf_token() }}' // Đảm bảo gửi token CSRF
+        },
+        success: function(response) {
+            console.log('Cập nhật quyền thành công!', response);
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: 'Vai trò đã được cập nhật.',
+                confirmButtonText: 'Đồng ý'
+            }).then(() => {
+                location.reload(); // Tải lại trang sau khi cập nhật
             });
-        });
+        },
+        error: function(xhr) {
+            console.error('Lỗi khi cập nhật quyền:', xhr);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra. Vui lòng thử lại.',
+                confirmButtonText: 'Đồng ý'
+            });
+        }
+    });
+});
+
     </script>
 @endsection
