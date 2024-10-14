@@ -16,39 +16,43 @@ class AdminAccountController extends Controller
    }
 
    public function Check_login(Request $request) 
-   {
-       $data = $request->validate([
-           'email' => 'required|exists:users,email',
-           'password' => 'required',
-       ], [
-           'email.required' => 'Vui lòng nhập email.',
-           'email.exists' => 'Email không tồn tại trong hệ thống.',
-           'password.required' => 'Vui lòng nhập mật khẩu.',
-       ]);
-      
-       $user = User::where('email', $data['email'])->first();
-       
-       // Kiểm tra thông tin đăng nhập
-       if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-           // Kiểm tra xem người dùng có ít nhất một vai trò hay không
-           if ($user->roles->isEmpty()) {
-               Auth::logout(); // Đăng xuất nếu không có vai trò
-               return back()->withErrors([
-                   'email' => 'Bạn không có quyền truy cập vào trang quản trị.',
-               ])->withInput();
-           }
-           
-           // Đăng nhập thành công
-           $request->session()->regenerate();
-           return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
-       }
-   
-       // Đăng nhập thất bại
-       return back()->withErrors([
-           'password' => 'Mật khẩu không chính xác.',
-       ])->withInput();
-   }
-   
+    {
+        $data = $request->validate([
+            'email' => 'required|exists:users,email',
+            'password' => 'required',
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'email.exists' => 'Email không tồn tại trong hệ thống.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+        ]);
+        
+        // Lấy người dùng dựa trên email
+        $user = User::where('email', $data['email'])->first();
+    
+        // Kiểm tra thông tin đăng nhập
+        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+            // Kiểm tra xem người dùng có ít nhất một vai trò hay không
+            if ($user->roles->isEmpty()) {
+                Auth::logout(); // Đăng xuất nếu không có vai trò
+                return back()->withErrors([
+                    'email' => 'Bạn không có quyền truy cập vào trang quản trị.',
+                ])->withInput();
+            }
+    
+            // Lấy quyền của người dùng và lưu vào session
+            $permissions = $user->roles()->with('permissions')->get()->pluck('permissions.*.name')->flatten()->unique();
+            session(['user_permissions' => $permissions]);
+    
+            // Đăng nhập thành công
+            $request->session()->regenerate();
+            return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
+        }
+    
+        // Đăng nhập thất bại
+        return back()->withErrors([
+            'password' => 'Mật khẩu không chính xác.',
+        ])->withInput();
+    }
 
    // log out
  public function logout(Request $request)
@@ -106,6 +110,47 @@ class AdminAccountController extends Controller
      // Chuyển hướng về trang tài khoản với thông báo thành công
      return redirect()->route('admin.profile')->with('success', 'Cập nhật thông tin thành công!');
  }
+
+ 
+ //còn chức năng change password
+
+ public function Check_changePass(Request $request) 
+{
+    $auth = auth()->user(); 
+
+    // Validate dữ liệu đầu vào
+    $data = $request->validate([
+        'oldPassword' => 'required',
+        'newPassword' => 'required|min:4|max:20',
+        'confirmPassword' => 'required|same:newPassword',
+    ], [
+        'oldPassword.required' => 'Vui lòng nhập mật khẩu hiện tại.',
+        'newPassword.required' => 'Vui lòng nhập mật khẩu mới.',
+        'newPassword.min' => 'Mật khẩu phải có ít nhất 4 ký tự.',
+        'newPassword.max' => 'Mật khẩu không được vượt quá 20 ký tự.',
+        'confirmPassword.required' => 'Vui lòng xác nhận lại mật khẩu.',
+        'confirmPassword.same' => 'Mật khẩu không đúng với mật khẩu mới.',
+    ]);
+
+    // Kiểm tra mật khẩu cũ có khớp không
+    if (!Hash::check($request->oldPassword, $auth->password)) {
+        return back()->withErrors(['oldPassword' => 'Mật khẩu hiện tại không chính xác.']);
+    }
+
+    // Kiểm tra xem mật khẩu mới có trùng mật khẩu cũ không
+    if (Hash::check($request->newPassword, $auth->password)) {
+        return back()->withErrors(['newPassword' => 'Mật khẩu mới không được trùng với mật khẩu hiện tại.']);
+    }
+
+    // Mã hóa mật khẩu mới và lưu vào database
+    $auth->password = Hash::make($request->newPassword);
+
+    if ($auth->save()) {
+        return redirect()->route('admin.profile')->with('success', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+    }
+    // Trường hợp lưu thất bại
+    return back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại sau.');
+}
 
  
  //còn chức năng forgot password

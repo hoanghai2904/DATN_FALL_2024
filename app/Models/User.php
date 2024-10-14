@@ -2,20 +2,17 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
+
 
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
-
-
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +28,6 @@ class User extends Authenticatable
         'gender',
         'verification_token',
         'birthday',
-
     ];
 
     // Một người dùng thuộc về một vai trò
@@ -43,13 +39,21 @@ class User extends Authenticatable
     // Một người dùng có nhiều quyền qua bảng role_permissions
     public function permissions()
     {
-        return $this->hasManyThrough(Permission::class, RolePermission::class);
+        return $this->hasManyThrough(
+            Permission::class,  // Model mà bạn muốn lấy
+            RolePermission::class, // Bảng trung gian
+            'role_id',          // Foreign key trên bảng trung gian
+            'id',               // Foreign key trên bảng permissions
+            'id',               // Local key trên bảng users
+            'permission_id'     // Local key trên bảng role_permissions
+        );
     }
 
     public function addresses()
     {
         return $this->hasMany(UserAddress::class);
     }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -70,3 +74,5 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 }
+
+?>

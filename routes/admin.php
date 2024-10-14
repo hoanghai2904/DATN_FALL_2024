@@ -52,7 +52,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
 
         //Change password
-        route::get('/change_pass', [AdminAccountController::class, 'change_pass'])->name('change_pass');
         route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
 
         //Forgot password
@@ -83,7 +82,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('/roles/{role}/edit', [AdminUserController::class, 'update'])->name('roles.update');
 
         // address
-        route::get('/address', [AdminUserController::class, 'listAddress'])->name('listAddress');
         Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
 
         //Ai làm cái gì thì ghi cmt lên trên này  
