@@ -122,6 +122,34 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
 <script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
 
+<script>
+    const notyf = new Notyf();
+    $(document).ready(function() {
+        $('body').on('click', '.change-status', function() {
+            let isChecked = $(this).is(':checked');
+            let id = $(this).data('id');
+            console.log(isChecked, id);
 
+
+            $.ajax({
+                url: "{{ route('admin.vouchers.updateStatus') }}",
+                method: 'PUT',
+                data: {
+                    status: isChecked,
+                    id: id
+                },
+                success: function(data) {
+                    // toastr.success(data.message)
+                    notyf.success(data.message);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            })
+
+        })
+    })
+
+</script>
 
 @endsection
