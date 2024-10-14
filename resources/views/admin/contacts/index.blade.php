@@ -5,16 +5,9 @@
 @endsection
 
 @section('style-libs')
-    <!-- Custom styles for this page -->
-    <link href="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-@endsection
+  
 
-@section('script-libs')
-    <!-- Page level plugins -->
-    <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/js/demo/datatables-demo.js') }}"></script>
+
     
     <script>
         $(document).ready(function() {
@@ -82,7 +75,7 @@ td.message-column {
                             <div class="col-lg-3 mb-3">
                                 <h6 class="fw-semibold">Tìm kiếm chung</h6>
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                                    <input type="text" name="search" class="form-control" id="customSearchBox" placeholder="Search..." value="{{ request('search') }}">
                                     <span class="input-group-text">
                                         <i class="ri-search-line search-icon"></i>
                                     </span>
@@ -115,7 +108,7 @@ td.message-column {
 
                     <!-- Bảng danh sách liên hệ -->
                     <div class="table-responsive table-card mb-1">
-                        <table class="table table-nowrap align-middle" id="contactTable">
+                        <table class="table table-nowrap align-middle"  id="myTable">
                             <thead class="text-muted table-light">
                                 <tr class="text-uppercase">
                                     <th scope="col" style="width: 25px;">
@@ -125,7 +118,7 @@ td.message-column {
                                     </th>
                                     <th class="sort" data-sort="id">ID</th>
                                     <th class="sort" data-sort="name">Tên</th>
-                                    <th class="sort" data-sort="email">Email</th>
+                                    <th class="sort" data-sort="email" style="width:180px;">Email</th>
                                     <th class="sort" data-sort="phone">Điện thoại</th>
                                     <th class="sort" data-sort="message">Thông điệp</th>
                                     <th class="sort" data-sort="status">Trạng thái</th>
@@ -209,11 +202,7 @@ td.message-column {
 @endsection
 @push('script')
 <!-- Bootstrap JS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rater-js/1.1.0/rater.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/rater-js/1.1.0/rater.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -236,4 +225,29 @@ td.message-column {
         });
     </script>
 
+    <script>
+       
+
+        // DataTable 
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable({
+                "dom": '<"top">rt<"bottom"><"clear">',
+                // "searching": false,
+               
+                "language": {
+                    "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+                    "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+                }
+            });
+
+            // Tìm kiếm
+            $('#customSearchBox').on('keyup', function() {
+                table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
+            });
+
+        });
+
+    </script>
 @endpush
+
