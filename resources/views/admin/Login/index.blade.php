@@ -123,7 +123,7 @@
             <!-- end container -->
         </div>
         <!-- end auth page content -->
-
+ 
         <!-- footer -->
         <footer class="footer">
             <div class="container">
