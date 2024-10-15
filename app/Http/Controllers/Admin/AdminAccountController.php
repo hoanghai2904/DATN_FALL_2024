@@ -20,44 +20,56 @@ class AdminAccountController extends Controller
    }
 
    public function Check_login(Request $request) 
-    {
-        $data = $request->validate([
-            'email' => 'required|exists:users,email',
-            'password' => 'required',
-        ], [
-            'email.required' => 'Vui lòng nhập email.',
-            'email.exists' => 'Email không tồn tại trong hệ thống.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-        ]);
-        
-        // Lấy người dùng dựa trên email
-        $user = User::where('email', $data['email'])->first();
-    
-        // Kiểm tra thông tin đăng nhập
-        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-            // Kiểm tra xem người dùng có ít nhất một vai trò hay không
-            if ($user->roles->isEmpty()) {
-                Auth::logout(); // Đăng xuất nếu không có vai trò
-                return back()->withErrors([
-                    'email' => 'Bạn không có quyền truy cập vào trang quản trị.',
-                ])->withInput();
-            }
-    
-            // Lấy quyền của người dùng và lưu vào session
-            $permissions = $user->roles()->with('permissions')->get()->pluck('permissions.*.name')->flatten()->unique();
-            session(['user_permissions' => $permissions]);
-    
-            // Đăng nhập thành công
-            $request->session()->regenerate();
-            return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
-        }
-    
-        // Đăng nhập thất bại
-        return back()->withErrors([
-            'password' => 'Mật khẩu không chính xác.',
-        ])->withInput();
-    }
-
+   {
+       $data = $request->validate([
+           'email' => 'required|exists:users,email',
+           'password' => 'required',
+       ], [
+           'email.required' => 'Vui lòng nhập email.',
+           'email.exists' => 'Email không tồn tại trong hệ thống.',
+           'password.required' => 'Vui lòng nhập mật khẩu.',
+       ]);
+   
+       // Lấy người dùng dựa trên email
+       $user = User::where('email', $data['email'])->first();
+   
+       // Kiểm tra trạng thái tài khoản
+       if ($user->status === 'inactive') {
+           return back()->withErrors([
+               'email' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.',
+           ])->withInput();
+       }
+   
+       // Kiểm tra thông tin đăng nhập
+       if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
+           // Kiểm tra xem người dùng có ít nhất một vai trò hay không
+           if ($user->roles->isEmpty()) {
+               Auth::logout(); // Đăng xuất nếu không có vai trò
+               return back()->withErrors([
+                   'email' => 'Bạn không có quyền truy cập vào trang quản trị.',
+               ])->withInput();
+           }
+   
+           // Lấy quyền của người dùng và lưu vào session
+           $permissions = $user->roles()
+               ->with('permissions')
+               ->get()
+               ->pluck('permissions.*.name')
+               ->flatten()
+               ->unique();
+           session(['user_permissions' => $permissions]);
+   
+           // Đăng nhập thành công
+           $request->session()->regenerate();
+           return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
+       }
+   
+       // Đăng nhập thất bại
+       return back()->withErrors([
+           'password' => 'Mật khẩu không chính xác.',
+       ])->withInput();
+   }
+   
    // log out
  public function logout(Request $request)
  {
