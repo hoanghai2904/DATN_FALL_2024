@@ -365,25 +365,27 @@ class UserController extends Controller
     }
 
     //address-------------------------------------------------------------------------------
-    public function listAddress() 
-    {
-        // Truyền cả roles và permissions đến view
-        return view('admin.user.listAddress');
-    }
+   
     
     public function getAddresses($userId)
     {
         $user = User::findOrFail($userId);
         $addresses = $user->addresses()->get();
     
+        // Xử lý đường dẫn avatar
+        $avatar = $user->cover 
+            ? asset("storage/{$user->cover}")  // Sửa cú pháp chuỗi
+            : asset('theme/admin/assets/images/users/user-dummy-img.jpg');
+    
         return response()->json([
             'user' => [
                 'name' => $user->full_name,
-                'avatar' => $user->cover ?? asset('theme/admin/assets/images/users/user-dummy-img.jpg'),
+                'avatar' => $avatar,
             ],
             'address' => $addresses, // Kiểm tra xem có dữ liệu không
         ]);
     }
+    
     
     
 }

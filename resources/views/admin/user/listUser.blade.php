@@ -1,5 +1,43 @@
 @extends('admin.layouts.master')
 @push('style')
+<style>
+    #contact-view-detail {
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .address-list {
+        max-height: 200px;
+        /* Giới hạn chiều cao */
+        overflow-y: auto;
+        /* Cho phép cuộn dọc */
+        padding-right: 10px;
+    }
+
+    .address-list li {
+        border-bottom: 1px dashed #e3e6ef;
+        padding-bottom: 8px;
+    }
+
+    .address-list li:last-child {
+        border-bottom: none;
+    }
+
+    input[type="radio"] {
+        accent-color: #198754;
+        /* Màu của radio button */
+    }
+
+    label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    p {
+        margin-top: 0;
+        color: #6c757d;
+    }
+</style>
 @endpush
 @section('title')
     Nhân viên
@@ -7,7 +45,7 @@
 
 @section('content')
     <div class="row" >
-        <div class="col-lg-12">
+        <div  id="user-list" class="col-lg-12">
             <div class="card" id="leadsList">
                 <div class="card-header border-0">
                     <form action="{{ route('admin.listUser') }}" method="GET">
@@ -116,8 +154,10 @@
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                        <a href="javascript:void(0);"><i
-                                                                class="ri-eye-fill align-bottom text-muted"></i></a>
+                                                        <a href="javascript:void(0);" class="view-item-btn"
+                                                            data-user-id="{{ $employee->id }}">
+                                                            <i class="ri-eye-fill align-bottom text-muted"></i>
+                                                        </a>
                                                     </li>
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                     data-bs-trigger="hover" data-bs-placement="top" title="View">
@@ -449,8 +489,41 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
+{{-- adress --}}
 
 
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3">
+            <div class="card d-none" id="contact-view-detail">
+                <div class="card-body text-center">
+                    <div class="position-relative d-inline-block">
+                        <img src="http://127.0.0.1:8000/theme/admin/assets/images/users/avatar-7.jpg" alt=""
+                            class="avatar-lg rounded-circle img-thumbnail object-fit-cover">
+                        <span class="contact-active position-absolute rounded-circle bg-success">
+                            <span class="visually-hidden"></span>
+                        </span>
+                    </div>
+                    <h5 class="mt-4 mb-1">Hà Thế Bảo</h5>
+                </div>
+        
+                <div class="card-body">
+                    <h6 class="text-muted text-uppercase fw-semibold mb-3">Địa chỉ khách hàng</h6>
+                    <div class="address-list">
+                        <ul class="list-unstyled">
+                            <li class="text-muted mb-3">
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" name="is_default" id="address1" class="me-2">
+                                    <label for="address1" class="fw-semibold">Địa chỉ 1:</label>
+                                </div>
+                                <p>Tổ 5 khu 10, Bãi Cháy, Hạ Long, Quảng Ninh</p>
+                            </li>
+        
+                       
+                            <!-- Thêm các địa chỉ khác tại đây -->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -623,7 +696,6 @@
 
         //Delete user with role
         let deleteCustomerId;
-
         function showDeleteModal(customerId) {
             deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
             $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
@@ -734,5 +806,69 @@ function confirmStatusChange(customerId, checkbox) {
             checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
         });
     }
+    //view address
+    const userAddressesRoute = "{{ route('admin.getAddresses', ':userId') }}";
+document.addEventListener('click', function (event) {
+    if (event.target.closest('.view-item-btn')) {
+        const btn = event.target.closest('.view-item-btn');
+        const userId = btn.dataset.userId; // Lấy ID người dùng
+        const url = userAddressesRoute.replace(':userId', userId); // Thay thế :userId trong route
+        console.log("Fetching data for user ID:", userId);
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Dữ liệu nhận được:', data); // Kiểm tra cấu trúc của dữ liệu
+                if (!data.address) {
+                    console.error('Dữ liệu địa chỉ không hợp lệ:', data.address);
+                    return;
+                }
+                // Gọi hàm cập nhật danh sách địa chỉ và hiển thị card
+                updateAddressList(data);
+                
+                // Xóa lớp d-none để hiển thị card địa chỉ
+                document.getElementById('contact-view-detail').classList.remove('d-none');
+                // Thay đổi kích thước của danh sách user
+                document.getElementById('user-list').classList.remove('col-xxl-12');
+                document.getElementById('user-list').classList.add('col-xxl-9');
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+
+// Hàm cập nhật thông tin người dùng và danh sách địa chỉ
+function updateAddressList(data) {
+    const { user, address } = data;
+
+    // Kiểm tra nếu addresses là mảng
+    if (!Array.isArray(address)) {
+        console.error('Dữ liệu địa chỉ không hợp lệ:', address);
+        return;
+    }
+
+    // Cập nhật thông tin người dùng
+    document.querySelector('#contact-view-detail h5').innerText = user.name;
+    document.querySelector('#contact-view-detail img').src = user.avatar;
+
+    const addressList = document.querySelector('.address-list ul');
+    addressList.innerHTML = ''; // Xóa nội dung cũ
+
+    // Lặp qua các địa chỉ và thêm vào danh sách
+    address.forEach((address, index) => {
+        const li = document.createElement('li');
+        li.className = 'text-muted mb-3';
+        li.innerHTML = `
+            <div class="d-flex align-items-center">
+                <input type="radio" name="is_default" id="address${index}" class="me-2"
+                    ${address.is_default ? 'checked' : ''}>
+                <label for="address${index}" class="fw-semibold">Địa chỉ ${index + 1}:</label>
+            </div>
+            <p>${address.address}</p>
+        `;
+        addressList.appendChild(li);
+    });
+}
+
+
     </script>
 @endsection
