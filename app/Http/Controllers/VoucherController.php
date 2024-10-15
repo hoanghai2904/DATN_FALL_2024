@@ -51,7 +51,6 @@ class VoucherController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
-        notyf()->success('Thêm mới sản phẩm thành công.');
         return redirect()->route('admin.vouchers.index');
     }
     // public function show($id){
@@ -73,7 +72,7 @@ class VoucherController extends Controller
             return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
         }
         $find->delete();
-        return redirect()->route('admin.vouchers.index')->with('msg',"Xóa thành công");
+        return response(['status' => 'success', 'Xóa thành công!']);
     }
     public function edit($id)
     {
