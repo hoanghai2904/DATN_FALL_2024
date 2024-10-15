@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "jquery-toast-plugin": "^1.3.2",
+        "notyf": "^3.10.0",
         "toastr": "^2.1.4"
     }
 }

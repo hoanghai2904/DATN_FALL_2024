@@ -37,26 +37,28 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example"
-                                        name="discount_type">
-                                        <option value="0">%</option>
-                                        <option value="1">Đ</option>
+                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
+                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
+                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
+                                        <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
                                     </select>
                                     @error('discount_type')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                        <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
+                                
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="2">Hoạt động</option>
-                                        <option value="1">Ngừng hoạt động</option>
+                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Hoạt Động</option>
+                                        <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Ngưng</option>
                                     </select>
                                     @error('status')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                    <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
                                 </div>
                             </div>
@@ -64,7 +66,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
                                     <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
-                                        id="meta-title-input" name="discount" min="1000" value="{{old('discount')}}">
+                                         id="numberInput" name="discount" min="1000" oninput="formatNumber(this)" value="{{old('discount')}}">
                                         @error('discount')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
@@ -74,7 +76,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Số lượng</label>
                                     <input type="text" class="form-control" placeholder="Nhập số lượng..."
-                                        id="meta-title-input" name="qty" min="1" value="{{old('qty')}}">
+                                    id="numberInput" name="qty" min="1" oninput="formatNumber(this)" value="{{old('qty')}}">
                                         @error('qty')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
@@ -111,4 +113,10 @@
         <!-- end row -->
 
     </form>
+    <script>
+        function formatNumber(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+    </script>
 @endsection

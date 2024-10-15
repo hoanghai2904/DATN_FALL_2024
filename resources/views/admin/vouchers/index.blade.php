@@ -25,9 +25,9 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="">Trạng thái</option>
-                                            <option value="2">Hoạt động</option>
-                                            <option value="1">Ngừng hoạt động</option>
+                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
+                                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
+                                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
                                         </select>
                                         <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
@@ -64,18 +64,23 @@
                                                 <td>{{ $item->name }}</td>
                                                 <td>
                                                     @if ($item->discount_type != '0')
-                                                        {{ number_format($item->discount, 0, '', '.') }}Đ
+                                                        {{ number_format($item->discount, 0, '', '.') }}₫
                                                     @else
                                                         {{ number_format($item->discount, 0, '', '.') }}%
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <div class="form-check form-switch form-switch-info">
-                                                        <input class="form-check-input" type="checkbox" role="switch"
-                                                            id="SwitchCheck{{ $item->id }}"
-                                                            {{ $item->status == 2 ? 'checked' : '' }}
-                                                            onchange="updateStatus({{ $item->id }}, this.checked)">
+                                                    @if ($item->status == 2)
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" checked data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
                                                     </div>
+                                                @else
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @endif
                                                 </td>
                                                 <td>{{ $item->qty }}</td>
                                                 <td>{{ $item->start }}</td>
@@ -112,26 +117,39 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    <script>
-        function updateStatus(voucherId, isChecked) {
-            var status = isChecked ? 2 : 1;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+
+<script>
+    const notyf = new Notyf();
+    $(document).ready(function() {
+        $('body').on('click', '.change-status', function() {
+            let isChecked = $(this).is(':checked');
+            let id = $(this).data('id');
+            console.log(isChecked, id);
+
 
             $.ajax({
-                url: '{{ route('admin.vouchers.updateStatus') }}', // Corrected route with 'admin.' prefix
-                method: 'POST',
+                url: "{{ route('admin.vouchers.updateStatus') }}",
+                method: 'PUT',
                 data: {
-                    _token: '{{ csrf_token() }}', // Laravel's CSRF token
-                    id: voucherId,
-                    status: status
+                    status: isChecked,
+                    id: id
                 },
-                success: function() {
-                    location.reload(); // Reload the page after success
+                success: function(data) {
+                    // toastr.success(data.message)
+                    notyf.success(data.message);
                 },
                 error: function(xhr, status, error) {
-                    alert('An error occurred while updating the status.');
+                    console.log(error);
                 }
-            });
-        }
-    </script>
+            })
+
+        })
+    })
+
+</script>
 
 @endsection

@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
@@ -90,7 +91,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
             Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
             Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
-            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+            Route::put('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
+        Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+            Route::get('/', [PostController::class, 'index'])->name('index');
+            Route::get('create', [PostController::class, 'create'])->name('create');
+            Route::post('store', [PostController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [PostController::class, 'destroy'])->name('destroy');
+            Route::get('{id}', [PostController::class, 'show'])->name('show');
+            Route::get('edit/{id}', [PostController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [PostController::class, 'update'])->name('update');
+            Route::put('update-status', [PostController::class, 'updateStatus'])->name('updateStatus');
         });
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
