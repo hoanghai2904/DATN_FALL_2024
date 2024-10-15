@@ -44,6 +44,7 @@ class OrderController extends Controller
     // Tạo đơn hàng mới
     public function create()
     {
+       
         return view('admin.orders.create');
     }
 
