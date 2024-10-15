@@ -125,16 +125,13 @@
                     <div class="collapse menu-dropdown" id="user">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý phân quyền</a>
+                                <a href="{{route('admin.listRole')}}" class="nav-link">Quản lý phân quyền</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.listCusstomer') }}" class="nav-link">Quản lý người dùng</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý nhân viên</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý địa chỉ</a>
+                                <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
                             </li>
                         </ul>
                     </div>
