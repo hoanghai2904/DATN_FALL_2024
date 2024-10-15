@@ -16,6 +16,8 @@
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('theme/admin/js/demo/datatables-demo.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+@flasher_render
 @endsection
 
 @section('content')
