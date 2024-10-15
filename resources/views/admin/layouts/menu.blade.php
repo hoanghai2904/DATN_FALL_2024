@@ -50,13 +50,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
+                        <i class=" ri-stack-fill"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#product" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Sản phẩm</span>
+                        <i class=" ri-fridge-fill"></i> <span data-key="t-dashboards">Sản phẩm</span>
                     </a>
 
                     <div class="collapse menu-dropdown" id="product">
@@ -74,13 +74,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý banner</span>
+                        <i class=" ri-image-fill"></i> <span data-key="t-dashboards">Quản lý banner</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
+                        <i class=" ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sale">
                         <ul class="nav nav-sm flex-column">
@@ -93,7 +93,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#news" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Bài viết</span>
+                        <i class=" ri-book-mark-fill"></i> <span data-key="t-dashboards">Bài viết</span>
                     </a>
                     <div class="collapse menu-dropdown" id="news">
                         <ul class="nav nav-sm flex-column">
@@ -109,7 +109,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#user" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">User</span>
+                        <i class=" ri-group-fill"></i> <span data-key="t-dashboards">User</span>
                     </a>
                     <div class="collapse menu-dropdown" id="user">
                         <ul class="nav nav-sm flex-column">
@@ -128,7 +128,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
+                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
 
                     <div class="collapse menu-dropdown" id="contact">
@@ -143,7 +143,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#coment" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý bình luận</span>
+                        <i class="ri-discuss-fill"></i> <span data-key="t-dashboards">Quản lý bình luận</span>
                     </a>
                     <div class="collapse menu-dropdown" id="coment">
                         <ul class="nav nav-sm flex-column">
@@ -157,7 +157,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
+                        <i class=" ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
                     </a>
                     <div class="collapse menu-dropdown" id="review">
                         <ul class="nav nav-sm flex-column">
