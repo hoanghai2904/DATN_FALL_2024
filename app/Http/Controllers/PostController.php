@@ -57,8 +57,7 @@ class PostController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Posts::create($data);
-        notyf()->success('Thêm mới sản phẩm thành công.');
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with('success', 'Thêm mới bài viết thành công.');
     }
     public function destroy($id){
         $find = Posts::findOrFail($id);

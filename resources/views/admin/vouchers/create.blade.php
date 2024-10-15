@@ -31,18 +31,16 @@
                                        
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
-                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
-                                        <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
-                                        <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
-                                    </select>
-                                   
-                                </div>
-                                
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="meta-title-input">Loại giảm giá</label>
+                                <select class="form-select mb-3" aria-label="Default select example" name="discount_type" id="discount_type">
+                                    <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                    <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
+                                    <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
+                                </select>
                             </div>
+                        </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>

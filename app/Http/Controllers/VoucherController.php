@@ -51,7 +51,7 @@ class VoucherController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
-        return redirect()->route('admin.vouchers.index');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mới mã giảm giá thành công.');
     }
     // public function show($id){
     //     $find = Vouchers::find($id);
