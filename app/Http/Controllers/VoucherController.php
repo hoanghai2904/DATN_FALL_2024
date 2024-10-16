@@ -67,7 +67,7 @@ class VoucherController extends Controller
     //     return back();
     // }
     public function destroy($id){
-        $find=Vouchers::find($id);
+        $find=Vouchers::findOrFail($id);
         if (!$find) {
             return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
         }

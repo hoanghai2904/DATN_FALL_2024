@@ -42,11 +42,11 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
-                                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="2">Hoạt động</option>
+                                            <option value="1">Ngừng hoạt động</option>
                                         </select>
-                                        <input type="search" name="keywords" id="customSearchBox"  class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
+                                        <input type="search" name="keywords" id="customSearchBox1"  class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
                                     </form>
                                     <div>
@@ -54,15 +54,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <table id="myTable2" class="table align-middle table-nowrap table-striped-columns mb-0">
+                            <div class="card-body">
+                            <table id="myTable" class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Tác giả</th>
                                         <th scope="col">Tiêu đề</th>
+                                        <th scope="col">Tác giả</th>
                                         <th scope="col">Danh mục</th>
-                                        <th scope="col">Trạng thái</th>
                                         <th scope="col">Ngày viết</th>
+                                        <th scope="col">Trạng thái</th>
                                         <th scope="col" style="">Hành động</th>
                                     </tr>
                                 </thead>
@@ -71,9 +72,10 @@
                                         <tbody>
                                             <tr id="tr_{{ $item->id }}">
                                                 <td><a href="#" class="fw-medium">{{ $key + 1 }}</a></td>
-                                                <td>{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</td>
                                                 <td> <a href="{{ route('admin.posts.edit', [$item->id]) }}">{{ $item->title }}</a></td>
+                                                <td>{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</td>
                                                 <td>{{ $item->Category ? $item->Category->name : 'Không có danh mục' }}</td>
+                                                <td>{{$item->created_at}}</td>
                                                 <td>
                                                     @if ($item->status == 2)
                                                     <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
@@ -87,12 +89,12 @@
                                                     </div>
                                                 @endif
                                                 </td>
-                                                <td>{{$item->created_at}}</td>
                                                 <td>
                                                     <a href="{{ route('admin.posts.edit', [$item->id]) }}"
-                                                        class="btn btn-sm btn-warning sm-2">Sửa</a>
+                                                        class="btn btn-sm btn-info"><i
+                                                        class=" ri-edit-box-line"></i></a>
                                                         <a href="{{ route('admin.posts.destroy', $item->id) }}"
-                                                            class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                                            class="btn btn-sm btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                                 </td>
 
                                             </tr>
@@ -115,27 +117,25 @@
     </div>
 @endsection
 @push('script')
-
 <script>
-    $(document).ready(function() {
+        $(document).ready(function() {
     
-     var table = $('#myTable2').DataTable({
-            "dom": '<"top">rt<"bottom"><"clear">',
-            // "searching": false,
-            "columnDefs": [{
-                "orderable": false,
-            }],
-            "language": {
-                "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
-                "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
-                "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
-            }
-        });
-
-        $('#customSearchBox').on('keyup', function() {
-            table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
-        });
-    })
+    var table = $('#myTable').DataTable({
+           "dom": '<"top">rt<"bottom"><"clear">',
+        //    "searching": false,
+        "columnDefs": [{
+               "orderable": false,
+               "targets": [1]
+           }],
+           "language": {
+               "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+               "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+               "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+           }
+       });
+   })
+</script>
+<script>
     const notyf = new Notyf();
     $(document).ready(function() {
         $('body').on('click', '.change-status', function() {

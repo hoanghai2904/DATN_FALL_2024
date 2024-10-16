@@ -19,7 +19,17 @@ class PostController extends Controller
         $allCate = Category::all();
         $search = null;
         $search = $request->input('keywords');
-          
+        if ($request->has('status') && is_numeric($request->status)) {
+            $status = (int) $request->status; // Convert to integer
+            $query->where('status', '=', $status);
+            if ($query->count() == 0) {
+                return redirect()->back()->with('msg', 'Không tìm thấy mã giảm giá với trạng thái này.');
+            }
+        } else {
+            $query->where('status', '!=', 0); 
+            if (!$request->has('status')) {
+            }
+        } 
         if ($search) {
             // Nếu có từ khóa tìm kiếm, thêm điều kiện join và where để lọc bình luận theo fullname trong bảng users
             $query->whereHas('user', function($q) use ($search){
@@ -66,7 +76,7 @@ class PostController extends Controller
     }
     public function edit($id)
     {
-        $title = "Cập nhật giảm giá";
+        $title = "Cập nhật bài viết";
         $find=Posts::find($id);
         $allCate = Category::all();
         if (!$find) {

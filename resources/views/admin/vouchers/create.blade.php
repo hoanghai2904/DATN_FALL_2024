@@ -31,21 +31,21 @@
                                        
                                 </div>
                             </div>
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="meta-title-input">Loại giảm giá</label>
-                                <select class="form-select mb-3" aria-label="Default select example" name="discount_type" id="discount_type">
-                                    <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
-                                    <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
-                                    <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
-                                </select>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
+                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
+                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
+                                        <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn loại trạng thái</option>
                                         <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Hoạt Động</option>
                                         <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Ngưng</option>
                                     </select>
@@ -55,9 +55,10 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
-                                    <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
-                                         id="numberInput" name="discount" min="1000" oninput="formatNumber(this)" value="{{old('discount')}}">
-                                       
+                                    <input type="number" class="form-control" id="numberInput" name="discount" 
+                                           placeholder="Nhập giá trị giảm giá" 
+                                           value="{{ old('discount') }}" 
+                                           min="1000" oninput="formatNumber(this)">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -95,10 +96,4 @@
         <!-- end row -->
 
     </form>
-    <script>
-        function formatNumber(input) {
-            let value = input.value.replace(/[^0-9]/g, '');
-            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-        }
-    </script>
 @endsection

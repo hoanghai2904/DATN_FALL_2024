@@ -25,9 +25,9 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
-                                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="2" >Hoạt động</option>
+                                            <option value="1" >Ngừng hoạt động</option>
                                         </select>
                                         <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
@@ -40,8 +40,6 @@
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col" style="width: 46px;"><input type="checkbox" id="checkboxesMain">
-                                        </th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Mã số</th>
                                         <th scope="col">Tên mã giảm giá</th>
@@ -57,11 +55,10 @@
                                     @foreach ($list as $key => $item)
                                         <tbody>
                                             <tr id="tr_{{ $item->id }}">
-                                                <td><input type="checkbox" class="checkbox" data-id="{{ $item->id }}">
-                                                </td>
                                                 <td><a href="#" class="fw-medium">{{ $key + 1 }}</a></td>
                                                 <td>{{ $item->code }}</td>
-                                                <td>{{ $item->name }}</td>
+                                                <td><a href="{{ route('admin.vouchers.edit', [$item->id]) }}"
+                                                    >{{ $item->name }}</a></td>
                                                 <td>
                                                     @if ($item->discount_type != '0')
                                                         {{ number_format($item->discount, 0, '', '.') }}₫
