@@ -104,7 +104,7 @@ class VoucherController extends Controller
     
         $find->update($data);
     
-        return redirect()->route('admin.vouchers.index')->with('msg', "Sửa mã giảm giá thành công");
+        return redirect()->route('admin.vouchers.index')->with('success', "Sửa mã giảm giá thành công");
     }
     
     public function updateStatus(Request $request)

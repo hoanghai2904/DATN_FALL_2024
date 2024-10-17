@@ -84,19 +84,32 @@ class PostController extends Controller
         }
         return view('admin.posts.edit',compact('find','title','allCate'));
     }
-    public function update(PostRequest $req,$id){
+    public function update(Request $req,$id){
         $find = Posts::find($id);
+        $vali= $req->validate([
+            'title' => 'required',
+            'user_id' => 'required',
+            'status' => 'required',
+            'category_id' => 'required',
+            'body' => 'required',
+        ],[
+            'title.required'=>'Tiêu đề không được bỏ trống',
+            'user_id.required'=>'Tác giả không được bỏ trống',
+            'status.required'=>'Trạng thái không được bỏ trống',
+            'category_id.required'=>'Danh mục không được bỏ trống',
+            'body.required'=>'Nội dung không được bỏ trống',
+        ]);
         $data = [
-            'title' => $req->title,
-            'user_id' => $req->user_id,
-            'status' => $req->status,
-            'category_id' => $req->category_id,
-            'body' => $req->body,
+            'title' => $vali['title'],
+            'user_id' => $vali['user_id'],
+            'status' =>  $vali['status'],
+            'category_id' => $vali['category_id'],
+            'body' => $vali['body'],
             'created_at' => date('Y-m-d H:i:s'),
         ];
         $find->update($data);
     
-        return redirect()->route('admin.posts.index')->with('msg', "Sửa bài viết thành công");
+        return redirect()->route('admin.posts.index')->with('success', "Sửa bài viết thành công");
     }
     public function updateStatus(Request $request)
     {

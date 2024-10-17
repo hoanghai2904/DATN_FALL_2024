@@ -25,9 +25,6 @@
 
     <div class="row">
         <div class="col-xl-12">
-            @if (session('msg'))
-                <div class="alert alert-success">{{ session('msg') }}</div>
-            @endif
             @if (session('msg_warning'))
                 <div class="alert alert-danger">{{ session('msg_warning') }}</div>
             @endif
