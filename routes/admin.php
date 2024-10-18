@@ -16,8 +16,10 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
+use App\Http\Controllers\ContactController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -97,6 +99,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
+         Route::resource('contacts', ContactController::class);
+         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+
         Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
@@ -106,7 +113,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
             Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
             Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
-            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+            Route::put('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
+        Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+            Route::get('/', [PostController::class, 'index'])->name('index');
+            Route::get('create', [PostController::class, 'create'])->name('create');
+            Route::post('store', [PostController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [PostController::class, 'destroy'])->name('destroy');
+            Route::get('{id}', [PostController::class, 'show'])->name('show');
+            Route::get('edit/{id}', [PostController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [PostController::class, 'update'])->name('update');
+            Route::put('update-status', [PostController::class, 'updateStatus'])->name('updateStatus');
         });
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
@@ -123,6 +140,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('list-comment', [CommentController::class, 'listComment'])->name('listComment');
             Route::delete('delete-comment/{id}', [CommentController::class, 'deleteComment'])->name('deleteComment');
             Route::put('change-status', [CommentController::class, 'changeStatus'])->name('change-status');
+        });
+
+        // Categories
+        Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+            Route::get('/category', [CategoryController::class, 'show'])->name('listCategory');
+            Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+            Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+            Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+            Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');

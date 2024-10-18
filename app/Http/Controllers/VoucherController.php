@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\VoucherRequest;
 use App\Models\admin\Vouchers;
+use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
-
 class VoucherController extends Controller
 {
     public function index(Request $request)
@@ -13,10 +13,17 @@ class VoucherController extends Controller
         $query = Vouchers::query();
         $search = null;
         $search = $request->input('keywords');
-        if (!empty($request->status)) {
-            $status = $request->status;
+        if ($request->has('status') && is_numeric($request->status)) {
+            $status = (int) $request->status; // Convert to integer
             $query->where('status', '=', $status);
-        }   
+            if ($query->count() == 0) {
+                return redirect()->back()->with('msg', 'Không tìm thấy mã giảm giá với trạng thái này.');
+            }
+        } else {
+            $query->where('status', '!=', 0); 
+            if (!$request->has('status')) {
+            }
+        }
         if ($search) {
             $query->where('name', 'like', '%'.$search.'%');
         }
@@ -30,19 +37,21 @@ class VoucherController extends Controller
     }
     public function store(VoucherRequest $req)
     {
+        $discount = (int) str_replace('.', '', $req->discount);
+        $qty = (int) str_replace('.', '', $req->qty);
         $data = [
             'code' => $req->code,
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
-            'discount' => $req->discount,
-            'qty' => $req->qty,
+            'discount' => $discount,
+            'qty' => $qty,
             'start' => $req->start,
             'end' => $req->end,
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
-        return redirect()->route('admin.vouchers.index')->with('msg',"Thêm mã giảm giá thành công");
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mới mã giảm giá thành công.');
     }
     // public function show($id){
     //     $find = Vouchers::find($id);
@@ -58,12 +67,12 @@ class VoucherController extends Controller
     //     return back();
     // }
     public function destroy($id){
-        $find=Vouchers::find($id);
+        $find=Vouchers::findOrFail($id);
         if (!$find) {
             return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
         }
         $find->delete();
-        return redirect()->route('admin.vouchers.index')->with('msg',"Xóa thành công");
+        return response(['status' => 'success', 'Xóa thành công!']);
     }
     public function edit($id)
     {
@@ -74,34 +83,39 @@ class VoucherController extends Controller
         }
         return view('admin.vouchers.edit',compact('find','title'));
     }
-    public function update(VoucherRequest $req,$id){
-        $find=Vouchers::find($id);
+    public function update(VoucherRequest $req, $id) {
+        $find = Vouchers::find($id);
+        
+        // Chuyển đổi giá trị discount và qty thành số nguyên bằng cách loại bỏ dấu chấm
+        $discount = (int) str_replace('.', '', $req->discount);
+        $qty = (int) str_replace('.', '', $req->qty);
+    
         $data = [
             'code' => $req->code,
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
-            'discount' => $req->discount,
-            'qty' => $req->qty,
+            'discount' => $discount, // Sử dụng giá trị đã được xử lý
+            'qty' => $qty, // Sử dụng giá trị đã được xử lý
             'start' => $req->start,
             'end' => $req->end,
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]; 
+            'updated_at' => now(), // Thay vì sử dụng date('Y-m-d H:i:s'), dùng now() cho dễ đọc hơn
+        ];
+    
         $find->update($data);
-        return redirect()->route('admin.vouchers.index')->with('msg', "Sửa mã giảm giá thành công");
+    
+        return redirect()->route('admin.vouchers.index')->with('success', "Sửa mã giảm giá thành công");
     }
+    
     public function updateStatus(Request $request)
 {
     $voucher = Vouchers::find($request->id);
     
-    if ($voucher) {
-        $voucher->status = $request->status;
-        $voucher->save();
-        
-        return response()->json(null,204 );
-    }
+    $voucher->status = $request->status == 'true' ? 2:1;
+    $voucher->save();
 
-    return response()->json(['message' => 'Không tìm thấy voucher.'], 404);
+    return response(['message' => 'Cập nhật trạng thái thành công!']);
+        
 }
 
 }

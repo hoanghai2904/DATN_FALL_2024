@@ -4,24 +4,8 @@
   đơn hàng
 @endsection
 
-@section('style-libs')
-    <!-- Custom styles for this page -->
-    <link href="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-@endsection
-
 @section('script-libs')
-    <!-- Page level plugins -->
-    <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-    <!-- Page level custom scripts -->
-
-
-      <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('theme/admin/js/demo/datatables-demo.js') }}"></script>
-    
+  
     <script>
         $(document).ready(function() {
             $('.js-example-basic-multiple').select2();
@@ -43,13 +27,13 @@
             <div class="card-body">
                 <div class="live-preview">
               <!-- Form tìm kiếm -->
-                     <form action="{{ route('admin.orders.index') }}" method="GET">
+                     <form action="{{ route('admin.orders.index') }}" method="GET" >
                         <div class="row mb-5">
                             <!-- Tìm kiếm chung -->
-                            <div class="col-lg-3 mb-3">
+                            <div class="col-lg-3 mb-3" >
                                 <h6 class="fw-semibold">Tìm kiếm chung</h6>
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                                    <input type="text" name="search" class="form-control" id="customSearchBox" placeholder="Search..." value="{{ request('search') }}">
                                     <span class="input-group-text">
                                         <i class="ri-search-line search-icon"></i>
                                     </span>
@@ -90,14 +74,9 @@
                             </div>
                         </div>
                     </form>
-
-
-
-
-
                     <!-- Bảng danh sách đơn hàng -->
                     <div class="table-responsive table-card mb-1">
-                        <table class="table table-nowrap align-middle" id="orderTable">
+                        <table class="table table-nowrap align-middle" id="myTable" >
                             <thead class="text-muted table-light">
                                 <tr class="text-uppercase">
                                     <th scope="col" style="width: 25px;">
@@ -105,14 +84,15 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th class="sort" data-sort="order_code">Mã đơn hàng</th>
-                                    <th class="sort" data-sort="user_name">Tên khách hàng</th>
-                                    <th class="sort" data-sort="user_email">Email</th>
-                                    <th class="sort" data-sort="created_at">Ngày đặt hàng</th>
-                                    <th class="sort" data-sort="total_price">Tổng tiền</th>
-                                    <th class="sort" data-sort="payment_method">Phương thức </th>
-                                    <th class="sort" data-sort="status_order">Trạng thái </th>
-                                    <th class="sort" data-sort="city">Hành động</th>
+                                    <th class="sort" >Id</th>
+                                    <th class="sort" >Mã đơn hàng</th>
+                                    <th class="sort" >Tên khách hàng</th>
+                                    <th class="sort">Email</th>
+                                    <th class="sort" >Ngày đặt hàng</th>
+                                    <th class="sort" >Tổng tiền</th>
+                                    <th class="sort" >Phương thức </th>
+                                    <th class="sort" >Trạng thái </th>
+                                    <th class="sort">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody class="list form-check-all">
@@ -123,6 +103,7 @@
                                                 <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
                                             </div>
                                         </th>
+                                        <td class="id">{{ $order->id }}</td>
                                         <td class="id">
                                             <a href="{{ route('admin.orders.show', $order->order_code) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
                                         </td>
@@ -150,10 +131,10 @@
                                                 </li>
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
                                                 @if ($order->status_order == 'Đã hủy')
-                                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                                                    <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;" >
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn" style="border: none; background: none;">
+                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn " style="border: none; background: none;">
                                                             <i class="ri-delete-bin-5-fill fs-16"></i>
                                                         </button>
                                                     </form>
@@ -175,3 +156,34 @@
 </div>
 <!-- end row -->
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function() {
+            $(".js-example-basic-single").select2(),
+                $(".js-example-basic-multiple").select2({
+                    // placeholder: "Chọn danh mục",
+                });
+        });
+
+        // DataTable 
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable({
+                "dom": '<"top">rt<"bottom"><"clear">',
+                // "searching": false,
+               
+                "language": {
+                    "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+                    "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+                }
+            });
+
+            // Tìm kiếm
+            $('#customSearchBox').on('keyup', function() {
+                table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
+            });
+
+        });
+
+    </script>
+@endpush
