@@ -42,7 +42,7 @@ class Review extends Model
     //sử lý thêm sản phẩm
     public function createReview($data) 
     {
-        DB::table('reviews')->insert($data); 
+        DB::table('reviews')->insert($data);    
     }
 
     public function updateReview($data, $id) 

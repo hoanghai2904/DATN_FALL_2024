@@ -59,7 +59,7 @@ class ReviewController extends Controller
         // dd($request);
         $dataInsert = [
             'user_id' => $request->user_id,
-            'order_id' => $request->order_id,
+            'order_status_id' => $request->order_status_id,
             'product_id' => $request->product_id,
             'rating' => $request->rating,
             'comment' => $request->comment,

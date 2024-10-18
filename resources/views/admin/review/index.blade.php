@@ -39,29 +39,7 @@
             
         @endif
             <div class="card-body">
-                {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
-                {{-- <div class="row mb-5 ">
-                    <div class="col-lg-3">
-                        <h6 class="fw-semibold">Danh mục</h6>
-                        <select class="js-example-basic-multiple select2-hidden-accessible" name="categories[]"
-                            multiple="">
-                            <option value="" disabled>Chọn danh mục </option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <h6 class="fw-semibold">Thương hiệu</h6>
-                        <select class="js-example-basic-single select2-hidden-accessible" name="brands">
-                            <option value="" disabled selected>Chọn thương hiệu </option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
+                <div class="row mb-5 ">
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-start mt-4">
                             <div class="search-box ms-2 w-100">
@@ -74,7 +52,7 @@
                     <div class="col-lg-2 mt-4">
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                     </div>
-                </div> --}}
+                </div>
                 <div class="live-preview">
                     <div class="table-responsive table-card">
                         <table id="myTable" class="table align-middle table-nowrap table-striped-columns mb-0">
@@ -109,7 +87,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $item->user->full_name }}</td>
                                 {{-- <td>{{ $item->order_statuses->status }}</td> --}}
-                                {{-- <td>{{ $item->product->product_id }}</td> --}}
+                                <td>{{ $item->product->product_id }}</td>
                                 <td>{{ $item->rating }}</td>
                                 <td>{{ $item->comment }}</td>
                                 <td>
@@ -140,4 +118,59 @@
     
         
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function() {
+            $(".js-example-basic-single").select2(),
+                $(".js-example-basic-multiple").select2({
+                    // placeholder: "Chọn danh mục",
+                });
+        });
 
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable({
+                "dom": '<"top">rt<"bottom"><"clear">',
+                // "searching": false,
+                "language": {
+                    "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+                    "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+                }
+            });
+
+            $('#customSearchBox').on('keyup', function() {
+                table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
+            });
+
+        });
+    </script>
+
+    <script>
+        const notyf = new Notyf();
+        $(document).ready(function() {
+            $('body').on('click', '.change-status', function() {
+                let isChecked = $(this).is(':checked');
+                let id = $(this).data('id');
+                console.log(isChecked, id);
+
+
+                $.ajax({
+                    url: "{{ route('admin.product.change-status') }}",
+                    method: 'PUT',
+                    data: {
+                        status: isChecked,
+                        id: id
+                    },
+                    success: function(data) {
+                        // toastr.success(data.message)
+                        notyf.success(data.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                })
+
+            })
+        })
+    </script>
+@endpush

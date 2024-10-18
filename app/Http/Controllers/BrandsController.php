@@ -20,7 +20,9 @@ class BrandsController extends Controller
      */
     public function index()
     {
+        $query = Brands::query();
         $listBrands = Brands::all();
+        $brands = $query->paginate(8);
         return view('admin.brands.index', ['brands' => $listBrands]);
     }
     // public function trash()

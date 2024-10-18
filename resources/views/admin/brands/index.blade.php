@@ -264,27 +264,6 @@
             <div class="card-body">
                 {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
                 <div class="row mb-5 ">
-                    <div class="col-lg-3">
-                        <h6 class="fw-semibold">Danh mục</h6>
-                        <select class="js-example-basic-multiple select2-hidden-accessible" name="categories[]"
-                            multiple="">
-                            <option value="" disabled>Chọn danh mục </option>
-                            {{-- @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach --}}
-                        </select>
-                    </div>
-
-                    <div class="col-lg-3">
-                        <h6 class="fw-semibold">Thương hiệu</h6>
-                        <select class="js-example-basic-single select2-hidden-accessible" name="brands">
-                            <option value="" disabled selected>Chọn thương hiệu </option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-start mt-4">
                             <div class="search-box ms-2 w-100">
@@ -364,6 +343,9 @@
                     </div>
                 </div>
             </div><!-- end card-body -->
+            {{-- <div class="p-3">
+                {{ $brands->links() }}
+            </div> --}}
         </div><!-- end card -->
     </div><!-- end col -->
 </div>
@@ -383,11 +365,6 @@
             var table = $('#myTable').DataTable({
                 "dom": '<"top">rt<"bottom"><"clear">',
                 // "searching": false,
-                "columnDefs": [{
-                    "orderable": false,
-                    "targets": [0, 2, 8,
-                        9] // Ko hiển thị sắp xếp cột checkbox , hình ảnh , trạng thái , hđộng
-                }],
                 "language": {
                     "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
                     "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
