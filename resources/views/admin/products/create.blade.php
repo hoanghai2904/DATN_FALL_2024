@@ -156,7 +156,7 @@
                     </div>
                 </div>
 
-                {{-- <div class="card">
+                <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
                         data-bs-target="#galleries" aria-expanded="true" aria-controls="galleries">
                         <h5 class="card-title mb-0">Album hình ảnh sản phẩm</h5>
@@ -172,7 +172,7 @@
                             <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button>
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 
                 <!-- end card -->
                 <div class="text-end mb-3">

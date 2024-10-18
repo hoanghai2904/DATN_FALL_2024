@@ -151,9 +151,9 @@
                                             </td>
                                             <td>
                                                 {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
-                                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-icon btn-info"><i class="ri-edit-box-line"></i></a>
                                                 <a href="{{ route('admin.products.destroy', $product->id) }}"
-                                                    class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                                    class="btn btn-sm btn-icon btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

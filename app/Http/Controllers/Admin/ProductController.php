@@ -203,7 +203,23 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        echo '123';
+        $product = Product::with('variants', 'tags', 'galleries', 'category', 'brand')
+            ->findOrFail($id);
+        $categories = Category::select('id', 'name')->get();
+        $brands = Brands::select('id', 'name')->get();
+        $tags = Tag::all();
+        $types = ProductTypes::all();
+        $weights = ProductWeights::all();
+        // dd($categories);
+        // dd($product->variants);
+        return view('admin.products.edit', compact(
+            'product',
+            'categories',
+            'brands',
+            'types',
+            'weights',
+            'tags'
+        ));
     }
 
     /**
