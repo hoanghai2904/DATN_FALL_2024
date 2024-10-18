@@ -4,13 +4,27 @@
     bài viết
 @endsection
 
+@section('style-libs')
+    <style>
+        td.break-word {
+            width: 250px;
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        th.no-sort::after,
+        th.no-sort::before {
+            display: none !important;
+            /* Ẩn icon sắp xếp cột checkbox */
+        }
+    </style>
+@endsection
+
 @section('content')
 
     <div class="row">
         <div class="col-xl-12">
-            @if (session('msg'))
-                <div class="alert alert-success">{{ session('msg') }}</div>
-            @endif
             @if (session('msg_warning'))
                 <div class="alert alert-danger">{{ session('msg_warning') }}</div>
             @endif
@@ -24,12 +38,12 @@
                             <div class="row mb-2">
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
-                                        {{-- <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="" {{ request('status') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                            <option value="2" {{ request('status') == '2' ? 'selected' : '' }}>Hoạt động</option>
-                                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
-                                        </select> --}}
-                                        <input type="search" name="keywords" id="" class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
+                                        <select name="status" id="" class="form-control me-3" style="width: 200px;">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="2">Hoạt động</option>
+                                            <option value="1">Ngừng hoạt động</option>
+                                        </select>
+                                        <input type="search" name="keywords" id="customSearchBox1"  class="form-control me-3" placeholder="Nhập từ khóa tìm kiếm..." value="{{ request()->keywords }}" style="width: 300px;">
                                         <button type="submit" class="btn btn-outline-primary" style="width: 120px;">Tìm kiếm</button>
                                     </form>
                                     <div>
@@ -37,15 +51,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table align-middle table-nowrap table-striped-columns mb-0">
+                            <div class="card-body">
+                            <table id="myTable" class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Tác giả</th>
                                         <th scope="col">Tiêu đề</th>
+                                        <th scope="col">Tác giả</th>
                                         <th scope="col">Danh mục</th>
-                                        <th scope="col">Trạng thái</th>
                                         <th scope="col">Ngày viết</th>
+                                        <th scope="col">Trạng thái</th>
                                         <th scope="col" style="">Hành động</th>
                                     </tr>
                                 </thead>
@@ -54,31 +69,29 @@
                                         <tbody>
                                             <tr id="tr_{{ $item->id }}">
                                                 <td><a href="#" class="fw-medium">{{ $key + 1 }}</a></td>
+                                                <td> <a href="{{ route('admin.posts.edit', [$item->id]) }}">{{ $item->title }}</a></td>
                                                 <td>{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</td>
-                                                <td>{{ $item->title }}</td>
                                                 <td>{{ $item->Category ? $item->Category->name : 'Không có danh mục' }}</td>
-                                                <td>
-                                                    <div class="form-check form-switch form-switch-info">
-                                                        <input class="form-check-input" type="checkbox" role="switch"
-                                                            id="SwitchCheck{{ $item->id }}"
-                                                            {{ $item->status == 2 ? 'checked' : '' }}
-                                                            onchange="updateStatus({{ $item->id }}, this.checked)">
-                                                    </div>
-                                                </td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>
+                                                    @if ($item->status == 2)
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" checked data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @else
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" data-id="{{ $item->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @endif
+                                                </td>
+                                                <td>
                                                     <a href="{{ route('admin.posts.edit', [$item->id]) }}"
-                                                        class="btn btn-warning sm-2">Sửa</a>
-
-                                                    <form action="{{ route('admin.posts.destroy', $item->id) }}"
-                                                        method="post" style="display:inline;">
-                                                        @method('DELETE')
-                                                        @csrf
-                                                        <button href="" type="submit"
-                                                            onclick="return confirm('Có chắc muốn xóa?')"
-                                                            class="btn btn-danger">Xóa</button>
-                                                    </form>
-                                                    <a href="{{ route('admin.posts.show', [$item->id]) }}" class="btn btn-info">Xem chi tiết</a>
+                                                        class="btn btn-sm btn-info"><i
+                                                        class=" ri-edit-box-line"></i></a>
+                                                        <a href="{{ route('admin.posts.destroy', $item->id) }}"
+                                                            class="btn btn-sm btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                                 </td>
 
                                             </tr>
@@ -99,27 +112,49 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    <script>
-function updateStatus(voucherId, isChecked) {
-    var status = isChecked ? 2 : 1;
-
-    $.ajax({
-        url: '{{ route('admin.posts.updateStatus') }}',
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            id: voucherId,
-            status: status
-        },
-        success: function(response) {
-            console.log(response.message); 
-            $('#tr_' + voucherId).addClass('updated');
-        },
-        error: function(xhr, status, error) {
-            alert('An error occurred while updating the status.');
-        }
-    });
-}
-
-    </script>
 @endsection
+@push('script')
+<script>
+        $(document).ready(function() {
+    
+    var table = $('#myTable').DataTable({
+           "dom": '<"top">rt<"bottom"><"clear">',
+        //    "searching": false,
+        "columnDefs": [{
+               "orderable": false,
+               "targets": [1]
+           }],
+           "language": {
+               "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+               "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+               "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+           }
+       });
+   })
+</script>
+<script>
+    const notyf = new Notyf();
+    $(document).ready(function() {
+        $('body').on('click', '.change-status', function() {
+            let isChecked = $(this).is(':checked');
+            let id = $(this).data('id');
+            console.log(isChecked, id);
+            $.ajax({
+                url: "{{ route('admin.posts.updateStatus') }}",
+                method: 'PUT',
+                data: {
+                    status: isChecked,
+                    id: id
+                },
+                success: function(data) {
+                    // toastr.success(data.message)
+                    notyf.success(data.message);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            })
+        })
+    })
+</script>
+@endpush

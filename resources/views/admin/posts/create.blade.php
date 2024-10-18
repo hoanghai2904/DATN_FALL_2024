@@ -19,9 +19,6 @@
                                     <label class="form-label" for="meta-title-input">Tiêu đề</label>
                                     <input type="text" class="form-control" placeholder="Tiêu đề..."
                                         id="meta-title-input" name="title" value="{{old('title')}}">
-                                        @error('title')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
                                 </div>
                             </div>
                             <!-- end col -->
@@ -30,9 +27,6 @@
                                     <label class="form-label" for="meta-keywords-input">Tên tác giả</label>
                                     <input type="text" class="form-control" placeholder="Tên tác giả..." 
                                            id="meta-keywords-input" value="{{ Auth::user()->full_name }}" disabled>
-                                    @error('user_id')
-                                    <h5 style="color: red">{{ $message }}</h5>
-                                    @enderror
                                 </div>
                             </div>
                             
@@ -46,9 +40,6 @@
                                         <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Public</option>
                                         <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Private</option>
                                     </select>
-                                    @error('status')
-                                    <h5 style="color: red">{{ $message }}</h5>
-                                    @enderror
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -60,9 +51,6 @@
                                         <option value="{{ $item->id }}"{{old('product_category')==$item->id?'selected':false}}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
-                                    @error('status')
-                                    <h5 style="color: red">{{ $message }}</h5>
-                                    @enderror
                                 </div>
                             </div>
 
