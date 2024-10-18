@@ -44,7 +44,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
 
-        //Create account by User
+        //Create account to User
         route::get('/rigester', [AdminAccountController::class, 'rigester'])->name('rigester');
         route::post('/rigester', [AdminAccountController::class, 'Check_rigester'])->name('Check_rigester');
         Route::get('/verify-account/{token}', [AdminAccountController::class, 'verifyAccount'])->name('.verify');
@@ -134,4 +134,5 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
         Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
     });
+    
 });
