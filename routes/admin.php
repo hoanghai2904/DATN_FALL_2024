@@ -53,7 +53,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
 
         //Change password
-        route::get('/change_pass', [AdminAccountController::class, 'change_pass'])->name('change_pass');
         route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
 
         //Forgot password
@@ -68,6 +67,23 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
         Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
 
+        //user
+        route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
+        Route::post('/user', [AdminUserController::class, 'addUser'])->name('addUser');
+        Route::get('/user/{id}', [AdminUserController::class, 'showUser'])->name('showUser');
+        Route::put('/user/{user}/edit', [AdminUserController::class, 'updateUser'])->name('updateUser');
+        Route::delete('/users/{id}', [AdminUserController::class, 'destroyUser'])->name('destroyUser');
+
+        //Role user
+        route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
+        route::post('/role', [AdminUserController::class, 'store'])->name('addRole');
+        route::delete('/role/{id}', [AdminUserController::class, 'deleteRole'])->name('deleteRole');
+        Route::post('/role/{id}', [AdminUserController::class, 'updateStatusRole'])->name('updateStatusRole');
+        Route::get('/roles/{id}/edit', [AdminUserController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{role}/edit', [AdminUserController::class, 'update'])->name('roles.update');
+
+        // address
+        Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);

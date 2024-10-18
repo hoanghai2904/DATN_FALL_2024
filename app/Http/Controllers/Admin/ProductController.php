@@ -14,6 +14,8 @@ use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
+use Flasher\Notyf\Prime\NotyfInterface;
+
 
 use Str;
 
@@ -184,7 +186,8 @@ class ProductController extends Controller
         }
 
         // return '123';
-        return redirect()->route('admin.products.index');
+        // notyf()->success('Thêm mới sản phẩm thành công.');
+        return redirect()->route('admin.products.index')->with('success', 'Thêm mới sản phẩm thành công.');
     }
 
     /**
