@@ -15,6 +15,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 /*
@@ -115,6 +116,13 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+            Route::post('update-status/{id}', [BannerController::class, 'updateStatusBanner'])->name('updateStatusBanner');
+            Route::put('change-status', [BannerController::class, 'changeStatus'])->name('change-status');
+        });
+        Route::group(['prefix' => 'comments', 'as' => 'comments.'], function () {
+            Route::get('list-comment', [CommentController::class, 'listComment'])->name('listComment');
+            Route::delete('delete-comment/{id}', [CommentController::class, 'deleteComment'])->name('deleteComment');
+            Route::put('change-status', [CommentController::class, 'changeStatus'])->name('change-status');
         });
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');

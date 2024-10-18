@@ -14,9 +14,14 @@ class Order extends Model
     ];
 
     // Quan hệ 1-nhiều với OrderItem
-    public function orderItems()
+    public function items() 
     {
-        return $this->hasMany(OrderItem::class, 'order_id');
+        return $this->hasMany(OrderItem::class);
     }
-    
+    use HasFactory;
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
 }

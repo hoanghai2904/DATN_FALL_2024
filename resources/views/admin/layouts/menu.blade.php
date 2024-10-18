@@ -73,8 +73,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#" aria-controls="sidebarDashboards">
-                        <i class=" ri-image-fill"></i> <span data-key="t-dashboards">Quản lý banner</span>
+                    <a class="nav-link menu-link" href="{{ route('admin.banners.listBanner') }}" aria-controls="sidebarDashboards">
+                        <i class=" las la-photo-video"></i> <span data-key="t-dashboards">Quản lý banner</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" aria-controls="sidebarDashboards">
+                        <i class=" las la-shipping-fast"></i> <span data-key="t-dashboards">Quản lý đơn hàng</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -141,18 +146,9 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#coment" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-discuss-fill"></i> <span data-key="t-dashboards">Quản lý bình luận</span>
+                    <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}" aria-controls="sidebarDashboards">
+                        <i class="bx bx-message-detail"></i> <span data-key="t-dashboards">Quản lý Bình Luận</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="coment">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">abcd</a>
-                            </li>
-
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
