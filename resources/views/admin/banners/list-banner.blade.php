@@ -50,7 +50,7 @@
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
-                                        <th scope="col">ID</th>
+                                        {{-- <th scope="col">ID</th> --}}
                                         <th scope="col">Hình ảnh</th>
                                         <th scope="col">Liên Kết</th>
                                         <th scope="col">Trạng thái</th>
@@ -67,7 +67,7 @@
                                                     <label class="form-check-label" for="itemCheck{{ $item }}"></label>
                                                 </div>
                                             </td>
-                                            <td>{{ $item + 1 }}</td>
+                                            {{-- <td>{{ $item + 1 }}</td> --}}
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
                                                 <img src="{{ asset('storage/' . $value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
@@ -111,7 +111,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Hiệu ứng </h4>
+                <h4 class="card-title mb-0">Effect Coverflow Swiper</h4>
             </div><!-- end card header -->
             <div class="card-body">
                 <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
