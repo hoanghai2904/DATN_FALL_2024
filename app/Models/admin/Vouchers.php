@@ -4,10 +4,11 @@ namespace App\Models\admin;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vouchers extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = "vouchers";
     protected $primaryKey = "id";
     public $timestamps = true;
