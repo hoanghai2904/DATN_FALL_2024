@@ -163,17 +163,9 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.review.index') }}" aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="review">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">abcd</a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
             </ul>
         </div>

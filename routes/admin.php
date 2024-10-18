@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminAccountController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\CancelledOrderController;
+use App\Models\Category;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\UserAddressController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\BannerController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\VoucherController;
-use App\Models\Category;
+use App\Http\Controllers\CancelledOrderController;
+use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,7 +75,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-        Route::resource('brands', BrandsController::class);
+        Route::resource('brands', BrandsController::class);//Thương hiệu
+        Route::resource('review', ReviewController::class);//Đánh giá
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
             Route::get('/', [VoucherController::class, 'index'])->name('index');
