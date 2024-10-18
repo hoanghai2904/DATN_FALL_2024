@@ -20,6 +20,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 use App\Http\Controllers\ContactController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -99,12 +100,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-         Route::resource('contacts', ContactController::class);
-         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
-         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
-
         Route::resource('brands', BrandsController::class);
+        Route::resource('contacts', ContactController::class);
+        Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+        Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+        Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
             Route::get('/', [VoucherController::class, 'index'])->name('index');

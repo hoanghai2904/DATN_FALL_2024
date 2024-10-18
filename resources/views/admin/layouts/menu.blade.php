@@ -25,16 +25,16 @@
         </button>
     </div>
     <div id="scrollbar">
-        <div class="container-fluid">
-            <div id="two-column-menu">
-            </div>
-            <ul class="navbar-nav" id="navbar-nav">
-                <li class="menu-title"><span data-key="t-menu">Tổng quát</span></li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Bảng thống kê</span>
-                    </a>
+    <div class="container-fluid">
+        <div id="two-column-menu">
+        </div>
+        <ul class="navbar-nav" id="navbar-nav">
+            <li class="menu-title"><span data-key="t-menu">Tổng quát</span></li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
+                    aria-expanded="false" aria-controls="sidebarDashboards">
+                    <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Bảng thống kê</span>
+                </a>
 
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
@@ -142,11 +142,11 @@
                         <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
 
-                    <div class="collapse menu-dropdown" id="contact">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">ádfsdfsf</a>
-                            </li>
+                <div class="collapse menu-dropdown" id="contact">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">ádfsdfsf</a>
+                        </li>
 
                         </ul>
                     </div>
