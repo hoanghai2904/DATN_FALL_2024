@@ -34,7 +34,7 @@
                         <li> <a href="#orders" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Đơn hàng</a></li>
                         <li><a href="#downloads" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Downloads</a></li>
                         <li><a href="#address" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>
-                        <li><a href="#account-password" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">Đổi mật khẩu</a></li>
+                        <li><a href="#account-details" data-bs-toggle="tab" class="nav-link btn btn-block btn-md btn-black-default-hover">abc</a></li>
                         <li><a href="{{route('account.logout')}}" class="nav-link btn btn-block btn-md btn-black-default-hover">Đăng xuât</a></li>
                     </ul>
                 </div>
@@ -53,10 +53,6 @@
                                         <div class="default-form-box mb-20">
                                             <label>Họ và tên</label>
                                             <input type="text" value="{{ $auth->full_name }}" name="full_name" required>
-                                            @error('full_name')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
                                         </div>
                                         
                                         <div class="default-form-box mb-20">
@@ -71,10 +67,6 @@
                                             <label>Số điện thoại</label>
                                             <div style="display: flex; align-items: center;">
                                                 <input type="text" name="phone" value="{{ $auth->phone }}" placeholder="Số điện thoại" required>
-                                                @error('phone')
-                                                <small
-                                                    style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                            @enderror
                                             </div>
                                         </div>
                                     
@@ -86,10 +78,6 @@
                                         <div class="default-form-box mb-20">
                                             <label>Email</label>
                                             <input type="email" name="email" value="{{ $auth->email }}" required>
-                                            @error('email')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
                                         </div>
                                     
                                         <div class="default-form-box mb-20">
@@ -105,6 +93,7 @@
                                             <button class="btn btn-md btn-black-default-hover" type="submit">Cập nhật</button>
                                         </div>
                                     </form>
+                                    
                            
                                     
                                 </div>
@@ -203,45 +192,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="account-password">
-                        <h3>Đổi mật khẩu</h3>
-                        <div class="login">
-                            <div class="login_form_container">
-                                <div class="account_login_form">
-                                    <form action="{{route('account.Check_changePass')}}" method="POST">
-                                        @csrf
-                                        <div class="default-form-box mb-20">
-                                            <label>Mật Khẩu cũ</label>
-                                            <input type="password" name="password" placeholder="Nhập mật khẩu cũ ">
-                                            @error('password')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
-                                        </div>
-                                        <div class="default-form-box mb-20">
-                                            <label>Mật Khẩu mới</label>
-                                            <input type="password" name="password_new" placeholder="Nhập mật khẩu mới ">
-                                            @error('password_new')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
-                                        </div>
-                                        <div class="default-form-box mb-20">
-                                            <label>Xác nhận lại mật khẩu mới</label>
-                                            <input type="password" name="password_confirm" placeholder="xác nhận mật khẩu mới ">
-                                            @error('password_confirm')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
-                                        </div>
-                                    
-                                        <div class="save_button mt-3">
-                                            <button class="btn btn-md btn-black-default-hover" type="submit">Cập nhật</button>
-                                        </div>
-                                    </form>   
-                                </div>
-                            </div>
-                        </div>
+                    <div class="tab-pane fade" id="account-details">
+                      
                     </div>
                   
                 </div>

@@ -90,6 +90,7 @@
                                                            onchange="confirmStatusChange({{ $customer->id }}, this)">
                                                 </div>
                                             </td>
+                                            
                                             {{-- <td>
                                                 <button type="button" class="btn btn-sm btn-info">Chi tiết</button>
                                                 <button type="button" class="btn btn-sm btn-danger">Xóa</button>
