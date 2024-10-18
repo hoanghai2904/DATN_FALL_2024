@@ -144,7 +144,41 @@
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+      // Lấy thông báo từ session và kiểm tra xem có giá trị không
+      const successMessage = @json(session('success', '')); // Trả về chuỗi rỗng nếu không có giá trị
+      const errorMessage = @json(session('error', ''));
+  
+      if (successMessage) {
+          Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: successMessage,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK'
+          }).then(() => {
+              console.log('Thông báo thành công đã được hiển thị.');
+              // Thực hiện logic khác nếu cần thiết
+          });
+      }
+  
+      if (errorMessage) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Lỗi!',
+              text: errorMessage,
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Thử lại'
+          }).then(() => {
+              console.log('Thông báo lỗi đã được hiển thị.');
+              // Thực hiện thêm logic nếu cần thiết
+          });
+      }
+  });
+  
+  
+      </script>
     <!-- JAVASCRIPT -->
     <script src="{{ asset('theme/admin/assets') }}/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('theme/admin/assets') }}/libs/simplebar/simplebar.min.js"></script>

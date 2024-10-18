@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->enum('payment_method', ['Thanh toán khi nhận hàng','Chuyển Khoản','Đã thanh toán']);
             $table->timestamps();
+         
     
             // Thêm khóa ngoại cho voucher_id
             $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('set null');
