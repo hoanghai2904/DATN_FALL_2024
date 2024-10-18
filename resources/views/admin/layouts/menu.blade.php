@@ -49,8 +49,9 @@
 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#" aria-controls="sidebarDashboards">
-                        <i class=" ri-stack-fill"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
+                    <a href="{{ route('admin.categories.listCategory') }}" class="nav-link menu-link" href="#"
+                        aria-controls="sidebarDashboards">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -127,7 +128,7 @@
                                 <a href="{{route('admin.listRole')}}" class="nav-link">Quản lý phân quyền</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.listCusstomer')}}" class="nav-link">Quản lý người dùng</a>
+                                <a href="{{ route('admin.listCusstomer') }}" class="nav-link">Quản lý người dùng</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
