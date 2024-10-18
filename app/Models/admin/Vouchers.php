@@ -21,4 +21,9 @@ class Vouchers extends Model
     'start',
     'end'
     ];
+    
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

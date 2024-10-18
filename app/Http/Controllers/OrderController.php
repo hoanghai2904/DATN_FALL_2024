@@ -82,7 +82,15 @@ class OrderController extends Controller
         $order->update($request->all());
         return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
     }
-
+    public function showInvoice($id)
+    {
+        $order = Order::findOrFail($id);
+        // Lấy thông tin các sản phẩm liên quan
+        $orderItems = $order->items; // Đảm bảo rằng bạn đã thiết lập quan hệ items
+    
+        return view('admin.orders.invoice', compact('order', 'orderItems'));
+    }
+    
     // Xóa đơn hàng
     public function destroy(Order $order)
     {
