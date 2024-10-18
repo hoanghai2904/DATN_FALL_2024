@@ -42,12 +42,12 @@
                                 </div>
                             </div>
                             <h5 class="fs-16 mb-1">{{ auth()->user()->full_name }}</h5>
-                            @if(Auth::user()->roles->isNotEmpty())
-                            <span class="badge bg-success-subtle text-success">
-                                {{ Auth::user()->roles->first()->name }} <!-- Lấy vai trò đầu tiên -->
-                            </span>
-                        @endif
-                           
+                            @if (Auth::user()->roles->isNotEmpty())
+                                <span class="badge bg-success-subtle text-success">
+                                    {{ Auth::user()->roles->first()->name }} <!-- Lấy vai trò đầu tiên -->
+                                </span>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -104,24 +104,30 @@
                                     <i class="far fa-user"></i> Đổi mật khẩu
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#changeAddresses" role="tab">
+                                    <i class="far fa-user"></i> Địa chỉ
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <div class="card-body p-4">
                         <div class="tab-content">
                             <div class="tab-pane active" id="personalDetails">
-                                <form action="{{route('admin.Check_profile')}}" method="POST">
+                                <form action="{{ route('admin.Check_profile') }}" method="POST">
                                     @csrf
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="mb-3">
                                                 <label for="firstnameInput" class="form-label">Họ và tên</label>
-                                                <input type="text" class="form-control" id="firstnameInput" name="full_name"
-                                                    placeholder="Enter your firstname" value="{{$auth->full_name}}">
+                                                <input type="text" class="form-control" id="firstnameInput"
+                                                    name="full_name" placeholder="Enter your firstname"
+                                                    value="{{ $auth->full_name }}">
                                             </div>
                                             @error('full_name')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
+                                                <small
+                                                    style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <!--end col-->
 
@@ -129,26 +135,27 @@
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label for="phonenumberInput" class="form-label">Số điện thoại</label>
-                                                <input type="text" class="form-control" id="phonenumberInput" name="phone"
-                                                    placeholder="Enter your phone number" value="{{$auth->phone}}">
+                                                <input type="text" class="form-control" id="phonenumberInput"
+                                                    name="phone" placeholder="Enter your phone number"
+                                                    value="{{ $auth->phone }}">
                                             </div>
                                             @error('phone')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
+                                                <small
+                                                    style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <!--end col-->
                                         <div class="col-lg-6">
                                             <div class="mb-3">
                                                 <label for="emailInput" class="form-label">Email</label>
-                                                <input type="email" class="form-control" id="emailInput" name="email"
-                                                    placeholder="Enter your email" value="{{$auth->email}}"
-                                                    >
+                                                <input type="email" class="form-control" id="emailInput"
+                                                    name="email" placeholder="Enter your email"
+                                                    value="{{ $auth->email }}">
                                             </div>
                                             @error('email')
-                                            <small
-                                                style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                        @enderror
+                                                <small
+                                                    style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
+                                            @enderror
                                         </div>
                                         <!--end col-->
                                         <div class="col-lg-12">
@@ -156,8 +163,8 @@
                                                 <label for="JoiningdatInput" class="form-label">Ngày sinh</label>
                                                 <input type="date" class="form-control" data-provider="flatpickr"
                                                     id="JoiningdatInput" data-date-format="d M, Y"
-                                                    data-deafult-date="24 Nov, 2021" placeholder="Select date" 
-                                                    value="{{$auth->birthday}}"  name="birthday"/>
+                                                    data-deafult-date="24 Nov, 2021" placeholder="Select date"
+                                                    value="{{ $auth->birthday }}" name="birthday" />
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -165,9 +172,12 @@
                                             <div class="mb-3">
                                                 <label for="skillsInput" class="form-label">Giới tính</label>
                                                 <select class="form-control" name="gender">
-                                                    <option value="Nam" {{ $auth->gender == '1' ? 'selected' : '' }}>Nam</option>
-                                                    <option value="Nữ" {{ $auth->gender == '2' ? 'selected' : '' }}>Nữ</option>
-                                                    <option value="Khác" {{ $auth->gender == '3' ? 'selected' : '' }}>Khác</option>
+                                                    <option value="Nam" {{ $auth->gender == '1' ? 'selected' : '' }}>
+                                                        Nam</option>
+                                                    <option value="Nữ" {{ $auth->gender == '2' ? 'selected' : '' }}>Nữ
+                                                    </option>
+                                                    <option value="Khác" {{ $auth->gender == '3' ? 'selected' : '' }}>
+                                                        Khác</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -195,68 +205,105 @@
                                 </form>
                             </div>
                             <!--end tab-pane-->
+                            {{-- tab pane changePassword --}}
                             <div class="tab-pane" id="changePassword" role="tabpanel">
-                                <form action="{{route('admin.Check_changePass')}}" method="POST" >
+                                <form id="changePasswordForm" action="{{ route('admin.Check_changePass') }}" method="POST">
                                     @csrf
                                     <div class="row g-2">
                                         <div class="col-lg-4">
-                                            <div>
-                                                <label for="oldpasswordInput" class="form-label">Mật khẩu cũ*</label>
-                                                <input type="password" class="form-control" id="oldpasswordInput "
-                                                    placeholder="Nhập mật khẩu cũ..." name="oldPassword" required>
-                                                    @error('oldPassword')
-                                                    <small
-                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                                @enderror
-                                            </div>
+                                            <label for="oldpasswordInput" class="form-label">Mật khẩu cũ*</label>
+                                            <input type="password" class="form-control" id="oldpasswordInput" 
+                                                   placeholder="Nhập mật khẩu cũ..." name="oldPassword" >
+                                            @error('oldPassword')
+                                                <small style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">
+                                                    {{ $message }}
+                                                </small>
+                                            @enderror
                                         </div>
-                                        <!--end col-->
+                            
                                         <div class="col-lg-4">
-                                            <div>
-                                                <label for="newpasswordInput" class="form-label">Mật khẩu mới*</label>
-                                                <input type="password" class="form-control" id="newpasswordInput"
-                                                    placeholder="Nhập mật khẩu mới..." name="newPassword" required>
-                                                    @error('newPassword')
-                                                    <small
-                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                                @enderror
-                                            </div>
+                                            <label for="newpasswordInput" class="form-label">Mật khẩu mới*</label>
+                                            <input type="password" class="form-control" id="newpasswordInput"
+                                                   placeholder="Nhập mật khẩu mới..." name="newPassword" >
+                                            @error('newPassword')
+                                                <small style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">
+                                                    {{ $message }}
+                                                </small>
+                                            @enderror
                                         </div>
-                                        <!--end col-->
+                            
                                         <div class="col-lg-4">
-                                            <div>
-                                                <label for="confirmpasswordInput" class="form-label">Xác nhận mật khẩu
-                                                    mới*</label>
-                                                <input type="password" class="form-control" id="confirmpasswordInput"
-                                                    placeholder="Xác nhận lại mật khẩu..." name="confirmPassword" required>
-                                                    @error('confirmPassword')
-                                                    <small
-                                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                                @enderror
-                                            </div>
+                                            <label for="confirmpasswordInput" class="form-label">Xác nhận mật khẩu mới*</label>
+                                            <input type="password" class="form-control" id="confirmpasswordInput"
+                                                   placeholder="Xác nhận lại mật khẩu..." name="confirmPassword" >
+                                            @error('confirmPassword')
+                                                <small style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">
+                                                    {{ $message }}
+                                                </small>
+                                            @enderror
                                         </div>
-                                        <!--end col-->
+                            
                                         <div class="col-lg-12">
                                             <div class="mb-3">
-                                                <a href="javascript:void(0);"
-                                                    class="link-primary text-decoration-underline">Quên mật khẩu ?</a>
+                                                <a href="javascript:void(0);" class="link-primary text-decoration-underline">Quên mật khẩu?</a>
                                             </div>
                                         </div>
-                                        <!--end col-->
-                                        <div class="col-lg-12">
-                                            <div class="text-end">
-                                                <button type="submit" class="btn btn-success">Thay đổi mật khẩu </button>
-  
-                                            </div>
+                            
+                                        <div class="col-lg-12 text-end">
+                                            <button type="submit" class="btn btn-success">Thay đổi mật khẩu</button>
                                         </div>
-                                        <!--end col-->
                                     </div>
-                                    <!--end row-->
                                 </form>
+                            </div>
+                            
+                            <!--end tab-pane-->
+                            {{-- tab pane changeAddresses --}}
+                            <div class="tab-pane" id="changeAddresses" role="tabpanel">
+                                <form id="userAddressForm" action="" method="POST">
+                                    @csrf
+                                    <div class="row g-3">
+                                        <!-- Tỉnh / Thành phố -->
+                                        <div class="col-lg-4">
+                                            <select class="form-select" id="province" name="province_id" aria-label="Chọn Tỉnh/Thành phố">
+                                                <option selected disabled>Tỉnh/Thành phố</option>
+                                                @foreach($provinces as $province)
+                                                <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                            @endforeach
+                                            </select>
+                                        </div>
+                                
+                                        <!-- Quận / Huyện -->
+                                        <div class="col-lg-4">
+                                            <select class="form-select" id="district" name="district_id" aria-label="Chọn Quận/Huyện">
+                                                <option selected disabled>Quận/Huyện</option>
+                                            </select>
+                                        </div>
+                                
+                                        <!-- Phường / Xã -->
+                                        <div class="col-lg-4">
+                                            <select class="form-select" id="ward" name="ward_id"aria-label="Chọn Phường/Xã">
+                                                <option selected disabled>Phường/Xã</option>
+                                            </select>
+                                        </div>
+                                
+                                        <!-- Địa chỉ chi tiết -->
+                                        <div class="col-lg-12">
+                                            <div class="form-floating">
+                                                <input type="text" name="address_detail" class="form-control" id="addressDetail" 
+                                                       placeholder="Nhập địa chỉ chi tiết">
+                                                <label for="addressDetail" class="fw-normal">Địa chỉ chi tiết</label>
+                                            </div>
+                                        </div>
 
+                                        <!-- Nút Submit -->
+                                        <div class="col-lg-12 text-end">
+                                            <button type="submit" class="btn btn-success">Cập nhật</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                
                             </div>
                             <!--end tab-pane-->
-
 
                         </div>
                     </div>
@@ -270,38 +317,152 @@
     <!-- container-fluid -->
     </div><!-- End Page-content -->
 
-   
+
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        // Lấy thông báo từ session và kiểm tra xem có giá trị không
-        const successMessage = @json(session('success', ''));  // Trả về chuỗi rỗng nếu không có giá trị
-        const errorMessage = @json(session('error', ''));
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy thông báo từ session và kiểm tra xem có giá trị không
+            const successMessage = @json(session('success', '')); // Trả về chuỗi rỗng nếu không có giá trị
+            const errorMessage = @json(session('error', ''));
     
-        if (successMessage) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: successMessage,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{{ route('admin.login') }}";
+            if (successMessage) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: successMessage,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            }
+    
+            if (errorMessage) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: errorMessage,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Thử lại'
+                });
+            }
+        });
+
+        //change pasword
+    $(document).ready(function () {
+        $('#changePasswordForm').on('submit', function (e) {
+            e.preventDefault(); // Ngăn form reload lại trang
+
+            $.ajax({
+                url: $(this).attr('action'), // URL của route
+                type: 'POST',
+                data: $(this).serialize(), // Lấy dữ liệu form
+                success: function (response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: response.message,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = "{{ route('admin.login') }}"; // Chuyển hướng nếu cần
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: xhr.responseJSON.message || 'Có lỗi xảy ra, vui lòng thử lại!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Thử lại'
+                    });
                 }
             });
+        });
+    });
+
+// AJAX addresses
+// Load Quận/Huyện khi chọn Tỉnh
+ 
+// Load Quận/Huyện khi chọn Tỉnh/Thành phố
+$('#province').on('change', function() {
+    let provinceId = $(this).val();
+    console.log('Selected Province ID:', provinceId); // Kiểm tra giá trị provinceId
+
+    $.ajax({
+        url: `{{ route('admin.getDistricts', ['provinceId' => '__provinceId__']) }}`.replace('__provinceId__', provinceId), 
+        method: 'GET',
+        success: function(response) {
+            $('#district').empty().append('<option selected disabled>Quận/Huyện</option>');
+
+            if (response.length) {
+                response.forEach(function(district) {
+                    $('#district').append(`<option value="${district.id}">${district.name}</option>`);
+                });
+            } else {
+                $('#district').append('<option disabled>Không có quận/huyện nào</option>');
+            }
+        },
+        error: function(xhr) {
+            console.error('Error fetching districts:', xhr);
         }
-    
-        if (errorMessage) {
+    });
+});
+// Load Phường/Xã khi chọn Quận/Huyện
+$('#district').on('change', function() {
+    let districtId = $(this).val();
+    console.log('Selected District ID:', districtId); // Kiểm tra giá trị districtId
+
+    $.ajax({
+        url: `{{ route('admin.wards', ['districtId' => '__districtId__']) }}`.replace('__districtId__', districtId),
+        method: 'GET',
+        success: function(response) {
+            console.log('Response from server:', response); // Log phản hồi từ server
+            $('#ward').empty().append('<option selected disabled>Phường/Xã</option>');
+
+            if (response.length) {
+                response.forEach(function(ward) {
+                    $('#ward').append(`<option value="${ward.id}">${ward.name}</option>`);
+                });
+            } else {
+                $('#ward').append('<option disabled>Không có phường/xã nào</option>');
+            }
+        },
+        error: function(xhr) {
+            console.error('Error fetching wards:', xhr);
+        }
+    });
+});
+
+//ajax add addresses
+$('#userAddressForm').on('submit', function(e) {
+    e.preventDefault();
+
+    let formData = $(this).serialize(); // Serialize form data
+
+    $.ajax({
+        url: `{{ route('admin.addAddress') }}`, // Route xử lý lưu địa chỉ
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: 'Địa chỉ đã được thêm!',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                location.reload(); // Tải lại trang hoặc cập nhật giao diện
+            });
+        },
+        error: function(xhr) {
             Swal.fire({
                 icon: 'error',
-                title: 'Lỗi!',
-                text: errorMessage,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Thử lại'
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra. Vui lòng thử lại!',
+                confirmButtonText: 'OK'
             });
         }
     });
-    
+});
+
     </script>
+    
 @endsection

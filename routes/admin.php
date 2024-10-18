@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
@@ -36,9 +37,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
     Route::middleware('auth')->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        
+       //Dashboard
+        route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
@@ -51,6 +53,9 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //Proffile
         route::get('/profile', [AdminAccountController::class, 'profile'])->name('profile');
         route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
+        Route::get('/profile/{provinceId}', [AdminAccountController::class, 'getDistricts'])->name('getDistricts');
+        Route::get('/wards/{districtId}', [AdminAccountController::class, 'getWards'])->name('wards');
+        Route::post('/profile/store', [AdminAccountController::class, 'store'])->name('addAddress');
 
         //Change password
         route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
@@ -84,6 +89,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         // address
         Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
+       
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);
