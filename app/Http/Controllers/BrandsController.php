@@ -19,8 +19,13 @@ class BrandsController extends Controller
      */
     public function index()
     {
-        $listBrands = Brands::all();
+        $listBrands = Brands::all()->where('deleted',0);
         return view('admin.brands.index', ['brands' => $listBrands]);
+    }
+    public function trash()
+    {
+        $listBrands = Brands::all()->where('deleted',1);
+        return view('admin.brands.trash', ['brands' => $listBrands]);
     }
 
     /**
@@ -98,11 +103,27 @@ class BrandsController extends Controller
         return redirect()->route('admin.brands.index');
     }
 
+    public function delete(Request $request){
+        //$brands = Brands::findOrfail($request->id);
+        $brands = $this->brands->find($request);
+        // if (!$brands) {
+        //     return redirect()->route('admin.brands.index');
+        // }
+        // if ($brands->logo) {
+        //     Storage::disk('public')->delete($brands->logo);
+        // }
+        $brands->deleted=true;
+        $brands->save();
+        return redirect()->route('admin.brands.index');
+
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
+        
         $brands = $this->brands->find($id);
         if (!$brands) {
             return redirect()->route('admin.brands.index');
