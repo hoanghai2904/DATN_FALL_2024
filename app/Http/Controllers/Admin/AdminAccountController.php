@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\District;
+use App\Models\Order;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\UserAddress;
@@ -216,5 +217,4 @@ public function store(Request $request)
 }
 
  //còn chức năng forgot password
-
 }

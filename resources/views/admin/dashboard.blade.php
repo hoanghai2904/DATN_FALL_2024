@@ -70,7 +70,6 @@
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
-
                             <div class="col-xl-3 col-md-6">
                                 <!-- card -->
                                 <div class="card card-animate">
@@ -80,14 +79,18 @@
                                                 <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Khách hàng</p>
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <h5 class="text-success fs-14 mb-0">
-                                                    <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 %
+                                                <h5 class="{{ $customerChange >= 0 ? 'text-success' : 'text-danger' }} fs-14 mb-0">
+                                                    <i class="ri-arrow-{{ $customerChange >= 0 ? 'right-up' : 'right-down' }}-line fs-13 align-middle"></i> 
+                                                    {{ number_format($customerChange, 2) }} %
                                                 </h5>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-end justify-content-between mt-4">
                                             <div>
-                                                <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">0</span>M </h4>
+                                                <!-- Thêm thuộc tính 'data-target' để JS lấy và tạo hiệu ứng -->
+                                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">
+                                                    <span class="counter-value" data-target="{{ $totalCustomers }}">0</span>
+                                                </h4>
                                                 <a href="" class="text-decoration-underline">See details</a>
                                             </div>
                                             <div class="avatar-sm flex-shrink-0">
@@ -99,7 +102,7 @@
                                     </div><!-- end card body -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
-
+                            
                             <div class="col-xl-3 col-md-6">
                                 <!-- card -->
                                 <div class="card card-animate">
@@ -195,7 +198,7 @@
                             <div class="col-xl-4">
                                 <div class="card card-height-100">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Store Visits by Source</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Sản phẩm theo danh mục</h4>
                                         <div class="flex-shrink-0">
                                             <div class="dropdown card-header-dropdown">
                                                 <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -223,7 +226,7 @@
                             <div class="col-xl-5">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Best Selling Products</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Sản Phẩm bán chạy nhất</h4>
                                         <div class="flex-shrink-0">
                                             <div class="dropdown card-header-dropdown">
                                                 <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -428,7 +431,7 @@
                             <div class="col-xl-7">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Recent Orders</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Đơn hàng gần đây</h4>
                                         <div class="flex-shrink-0">
                                             <button type="button" class="btn btn-soft-info btn-sm">
                                                 <i class="ri-file-list-3-line align-middle"></i> Generate Report
@@ -1039,4 +1042,28 @@
         </div>
     </footer>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const counters = document.querySelectorAll('.counter-value');
+
+    counters.forEach(counter => {
+        const updateCount = () => {
+            const target = +counter.getAttribute('data-target'); // Lấy giá trị target
+            const count = +counter.innerText; // Giá trị hiện tại
+
+            const increment = target / 200; // Tốc độ tăng (có thể điều chỉnh)
+
+            if (count < target) {
+                counter.innerText = Math.ceil(count + increment); // Cập nhật số
+                setTimeout(updateCount, 10); // Lặp lại sau 10ms
+            } else {
+                counter.innerText = target; // Đảm bảo dừng đúng target
+            }
+        };
+
+        updateCount();
+    });
+});
+
+</script>
 @endsection

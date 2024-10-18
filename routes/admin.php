@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 /*
@@ -34,9 +35,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
     Route::middleware('auth')->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        
+       //Dashboard
+        route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
