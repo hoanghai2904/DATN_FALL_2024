@@ -18,8 +18,9 @@ use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
-use App\Models\Category;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\PostCategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,8 +39,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
     Route::middleware('auth')->group(function () {
-        
-       //Dashboard
+
+        //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         //Account to Admin
@@ -90,7 +91,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         // address
         Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
-       
+
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('orders', OrderController::class);
@@ -98,10 +99,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-         Route::resource('contacts', ContactController::class);
-         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
-         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+        Route::resource('contacts', ContactController::class);
+        Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+        Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+        Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);
@@ -151,6 +152,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
             Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
+        // Post Categories
+        Route::group(['prefix' => 'postcategories', 'as' => 'postcategories.'], function () {
+            Route::get('/post-category', [PostCategoryController::class, 'show'])->name('listPostCategory');
+            // Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+            // Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
+            Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
+            // Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+            // Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+        });
+
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
