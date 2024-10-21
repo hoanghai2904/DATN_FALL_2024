@@ -114,7 +114,7 @@
                                                     <small class="text-muted">{{ \Carbon\Carbon::parse($order->created_at)->format('H:i') }}</small>
                                                 </td>
 
-                                        <td class="total_price">${{ $order->total_price }}</td>
+                                        <td class="total_price">{{ number_format($order->total_price) }}₫</td>
                                         <td class="payment_method">{{ $order->payment_method }}</td>
                                         <td>{{ $order->status_order }}</td>
                                         <td>

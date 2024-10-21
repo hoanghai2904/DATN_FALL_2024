@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-lg-3 col-6">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">Tổng số tiền</p>
-                                <h5 class="fs-14 mb-0"><span id="total-amount">{{ number_format($order->total_price, ) }}</span>VND</h5>
+                                <h5 class="fs-14 mb-0"><span id="total-amount">{{ number_format($order->total_price, ) }}</span>₫</h5>
                             </div>
                         </div>
                     </div>
@@ -100,8 +100,8 @@
                                         <th scope="col">Chi tiết sản phẩm</th>
                                         <th scope="col">Giá</th>
                                         <th scope="col">Giá giảm</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col" class="text-end">Amount</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col" class="text-end">Tổng tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody id="order-items-list">
@@ -109,26 +109,19 @@
                                         <tr>
                                             <th scope="row">{{ $index + 1 }}</th>
                                             <td>{{ $item->product_name}}</td>
-                                            <td>{{ number_format($item->product_price) }}VND</td>
-                                            <td>{{ number_format($item->product_price_sale) }}VND</td>
+                                            <td>{{ number_format($item->product_price) }}₫</td>
+                                            <td>{{ number_format($item->product_price_sale) }}₫</td>
                                             <td>{{ $item->qty }}</td>
-                                            <td class="text-end">${{ number_format($item->product_price * $item->qty) }}VND</td>
+                                            <td class="text-end">{{ number_format($item->product_price * $item->qty) }}₫</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4" class="text-end">Total:</th>
-                                        <td class="text-end">{{ number_format($order->total_price) }}VND</td>
+                                        <th colspan="4" class="text-end">Tổng tiền:</th>
+                                        <td class="text-end">{{ number_format($order->total_price) }}₫</td>
                                     </tr>
-                                    <tr>
-                                        <th colspan="4" class="text-end">Tax:</th>
-                                        <td class="text-end">{{ number_format($order->tax) }}VND</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="4" class="text-end">Grand Total:</th>
-                                        <td class="text-end fw-medium">{{ number_format($order->grand_total) }}VND</td>
-                                    </tr>
+                                 
                                 </tfoot>
                             </table>
                         </div>
