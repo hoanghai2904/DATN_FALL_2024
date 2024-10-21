@@ -12,18 +12,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Review extends Model
 {
     use HasFactory,SoftDeletes;
-
+    protected $table = 'reviews'; 
     protected $fillable = [
 
         'user_id',
-        'order_id',
+        'order_status_id',
         'product_id',
         'rating',
         'comment',
 
     ];
-    public $table = 'reviews';
-
     public $timestamp = false;
 
     public function User()
@@ -37,19 +35,6 @@ class Review extends Model
     public function Product()
     {
         return $this->belongsTo(Product::class, 'product_id');
-    }
-
-    //sử lý thêm sản phẩm
-    public function createReview($data) 
-    {
-        DB::table('reviews')->insert($data);    
-    }
-
-    public function updateReview($data, $id) 
-    {
-        DB::table('reviews')
-        ->where('id', $id)
-        ->update($data);  
-    }
+    }   
     
 }

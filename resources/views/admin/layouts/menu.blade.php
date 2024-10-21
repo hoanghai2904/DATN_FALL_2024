@@ -39,7 +39,7 @@
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link"> Thống kê theo A</a>
+                                <a href="{{route('admin.dashboard')}}" class="nav-link"> Thống kê theo A</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link"> Thống kê theo B</a>
@@ -49,14 +49,15 @@
 
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#" aria-controls="sidebarDashboards">
+                    <a href="{{ route('admin.categories.listCategory') }}" class="nav-link menu-link" href="#"
+                        aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#product" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Sản phẩm</span>
+                        <i class=" ri-fridge-fill"></i> <span data-key="t-dashboards">Sản phẩm</span>
                     </a>
 
                     <div class="collapse menu-dropdown" id="product">
@@ -85,7 +86,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
+                        <i class=" ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sale">
                         <ul class="nav nav-sm flex-column">
@@ -98,7 +99,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#news" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Bài viết</span>
+                        <i class=" ri-book-mark-fill"></i> <span data-key="t-dashboards">Bài viết</span>
                     </a>
                     <div class="collapse menu-dropdown" id="news">
                         <ul class="nav nav-sm flex-column">
@@ -114,21 +115,18 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#user" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">User</span>
+                        <i class=" ri-group-fill"></i> <span data-key="t-dashboards">User</span>
                     </a>
                     <div class="collapse menu-dropdown" id="user">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý phân quyền</a>
+                                <a href="{{route('admin.listRole')}}" class="nav-link">Quản lý phân quyền</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.listCusstomer')}}" class="nav-link">Quản lý người dùng</a>
+                                <a href="{{ route('admin.listCusstomer') }}" class="nav-link">Quản lý người dùng</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý nhân viên</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý địa chỉ</a>
+                                <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
                             </li>
                         </ul>
                     </div>
@@ -136,7 +134,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
+                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
 
                     <div class="collapse menu-dropdown" id="contact">
@@ -149,21 +147,12 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#coment" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý bình luận</span>
+                    <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}" aria-controls="sidebarDashboards">
+                        <i class="bx bx-message-detail"></i> <span data-key="t-dashboards">Quản lý Bình Luận</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="coment">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">abcd</a>
-                            </li>
-
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.review.index') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.review.listReview') }}" aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
                     </a>
                 </li>

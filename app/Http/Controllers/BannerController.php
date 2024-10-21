@@ -7,13 +7,14 @@ use App\Http\Requests\UpdateBannerRequest;
 use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Flasher\Notyf\Prime\NotyfInterface;
 use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
     public function listBanner()
     {
-        $listBanner = Banner::all(); // Lấy danh sách banner và phân trang
+        $listBanner = Banner::paginate(5); // Lấy 10 banner mỗi trang
         return view('admin.banners.list-banner')->with(['listBanner' => $listBanner]);
     }
     public function addBanner()
@@ -80,10 +81,21 @@ class BannerController extends Controller
         return redirect()->route('admin.banners.listBanner')->with(['message' => 'Sửa Thành Công']);
     }
 
-    public function deleteBanner($id){
-        $banner = Banner::find($id);
+    public function deleteBanner($id)
+    {
+        $banner = Banner::findOrFail($id);
         $banner->delete();
-        return redirect()->route('admin.banners.listBanner');
+        return response(['status' => 'success', 'Xóa thành công!']);
+    }
+    public function changeStatus(Request $request)
+    {
+        // dd($request->id);
+        $product = Banner::findOrFail($request->id);
+        // dd($product);
+        $product->status = $request->status == 'true' ? 1 : 0;
+        $product->save();
+
+        return response(['message' => 'Cập nhật trạng thái thành công!']);
     }
     
 }

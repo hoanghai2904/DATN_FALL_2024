@@ -20,9 +20,9 @@ class BrandsController extends Controller
      */
     public function index()
     {
-        $query = Brands::query();
+        // $query = Brands::query();
         $listBrands = Brands::all();
-        $brands = $query->paginate(8);
+        // $brands = $query->paginate(8);
         return view('admin.brands.index', ['brands' => $listBrands]);
     }
     // public function trash()
@@ -113,6 +113,7 @@ class BrandsController extends Controller
      */
     public function destroy(string $id)
     {
+        
         
         $brands = $this->brands->find($id);
         if (!$brands) {

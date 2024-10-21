@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\admin\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,9 +14,14 @@ class Order extends Model
     ];
 
     // Quan hệ 1-nhiều với OrderItem
-    public function orderItems()
+    public function items() 
     {
-        return $this->hasMany(OrderItem::class, 'order_id');
+        return $this->hasMany(OrderItem::class);
     }
-    
+    use HasFactory;
+
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
 }

@@ -4,22 +4,40 @@
 @section('title')
     Review
 @endsection
-@section('style-libs')
+@push('style')
     <style>
-        td.break-word {
-            width: 250px;
-            word-wrap: break-word;
-            word-break: break-all;
-            white-space: normal;
+        .comment-text {
+            max-width: 200px;
+            /* Điều chỉnh chiều rộng tối đa */
+            overflow: hidden;
+            white-space: nowrap;
+            /* Ngăn văn bản xuống dòng */
+            text-overflow: ellipsis;
+            /* Hiển thị ... khi văn bản quá dài */
+            cursor: pointer;
+            /* Thay đổi con trỏ để biểu thị có thể nhấp */
         }
 
-        th.no-sort::after,
-        th.no-sort::before {
-            display: none !important;
-            /* Ẩn icon sắp xếp cột checkbox */
+        i.fas.fa-eye {
+            color: #007bff;
+            /* Màu cho biểu tượng mắt */
+            font-size: 20px;
+            /* Kích thước biểu tượng */
+
         }
+        table {
+    table-layout: fixed; /* Giữ độ rộng cố định */
+    width: 100%; /* Đặt bảng chiếm toàn bộ chiều rộng */
+}
+
+td.comment-column {
+    width: 40%; /* Đặt độ rộng cột bình luận */
+    white-space: normal; /* Cho phép xuống dòng */
+    word-wrap: break-word; /* Chia nhỏ từ khi cần */
+}
+
     </style>
-@endsection
+@endpush
 {{-- section: định nghĩa nội dung của section --}}
 @section('content')
 
@@ -28,8 +46,6 @@
         <div class="card">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                
-                <a href="{{ route('admin.review.create') }}"><button type="button" class="btn btn-success add-btn" ><i class="ri-add-line align-bottom me-1"></i> Thêm mới</button></a>
             </div>
             <!-- end card header -->
             @if (session('message'))
@@ -75,7 +91,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($reviews as $index => $item)
+                                @foreach ($listReview as $review)
                             <tr>
                                 <td>
                                     <div class="form-check">
@@ -84,22 +100,52 @@
                                         <label class="form-check-label" for="cardtableCheck01"></label>
                                     </div>
                                 </td>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $item->user->full_name }}</td>
-                                {{-- <td>{{ $item->order_statuses->status }}</td> --}}
-                                <td>{{ $item->product->product_id }}</td>
-                                <td>{{ $item->rating }}</td>
-                                <td>{{ $item->comment }}</td>
+                                <td>{{ $review->id }}</td>
+                                <td>{{ $review->user->full_name }}</td>
+                                <td>{{ $review->order_statuses->status }}</td>
+                                {{-- <td>{{ $review->product->name 'Sản phẩm không tồn tại' }}</td> --}}
+                                {{-- <td>{{ $review->rating }}</td> --}}
                                 <td>
-                                    {{-- <a href="{{ route('admin.review.edit', $item->id) }}">
-                                        <button class="btn btn-sm btn-warning">Sửa</button>
-                                    </a> --}}
-                                    <form action="{{ route('admin.review.destroy', $item->id) }}" method="post" class="d-inline">
-                                        @method('DELETE')
-                                        @csrf
-                                        <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button>
-                                    </form>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $review->rating)
+                                            <i class="fas fa-star"></i> <!-- Sao đầy đủ -->
+                                        @else
+                                            <i class="far fa-star"></i> <!-- Sao rỗng -->
+                                        @endif
+                                    @endfor
+                                </td> <!-- Đánh giá -->
+
+                                {{-- <td>{{ $review->comment }}</td> --}}
+                                <td class="comment-column">
+                                    <div class="d-flex align-items-center">
+                                        <div class="comment-text me-2" id="review-{{ $review->id }}" title="{{ $review->comment }}">
+                                            {{ $review->comment }}
+                                        </div>
+                                        <i class="fas fa-eye comment-icon" data-id="{{ $review->id }}" style="cursor: pointer;"></i>
+                                    </div>
+                                    <div class="modal fade" id="reviewModal{{ $review->id }}" tabindex="-1"
+                                        aria-labelledby="reviewModalLabel{{ $review->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="reviewModalLabel{{ $review->id }}">Bình luận</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ $review->comment }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
+                                <td>
+                                    <td>
+                                        <a href="{{ route('admin.review.deleteReview', $review->id) }}"
+                                            class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                    </td>
                             </tr>
                         @endforeach
 
@@ -108,9 +154,9 @@
                     </div>
                 </div>
             </div><!-- end card-body -->
-            {{-- <div class="p-3">
-                {{ $review->links() }}
-            </div> --}}
+            <div class="p-3">
+                {{ $listReview->links() }}
+            </div>
         </div>
         <!-- end card -->
     </div><!-- end col -->
@@ -119,58 +165,41 @@
         
 @endsection
 @push('script')
+<!-- Bootstrap JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rater-js/1.1.0/rater.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rater-js/1.1.0/rater.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ 
     <script>
         $(document).ready(function() {
-            $(".js-example-basic-single").select2(),
-                $(".js-example-basic-multiple").select2({
-                    // placeholder: "Chọn danh mục",
-                });
-        });
-
-        $(document).ready(function() {
-            var table = $('#myTable').DataTable({
-                "dom": '<"top">rt<"bottom"><"clear">',
-                // "searching": false,
-                "language": {
-                    "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
-                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
-                    "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
-                }
+            // Khi nhấn vào biểu tượng mắt
+            $('.review-icon').on('click', function() {
+                // Lấy ID bình luận từ thuộc tính data-id
+                var reviewId = $(this).data('id');
+                console.log('ID của bình luận: ' + reviewId);
+                
+                // Lấy nội dung bình luận tương ứng
+                var reviewText = $('#review-' + reviewId).text();
+                console.log('Nội dung bình luận: ' + reviewText);
+                
+                // Mở modal với ID tương ứng
+                $('#reviewModal' + reviewId).modal('show');
             });
-
-            $('#customSearchBox').on('keyup', function() {
-                table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
-            });
-
         });
     </script>
-
-    <script>
-        const notyf = new Notyf();
-        $(document).ready(function() {
-            $('body').on('click', '.change-status', function() {
-                let isChecked = $(this).is(':checked');
-                let id = $(this).data('id');
-                console.log(isChecked, id);
-
-
-                $.ajax({
-                    url: "{{ route('admin.product.change-status') }}",
-                    method: 'PUT',
-                    data: {
-                        status: isChecked,
-                        id: id
-                    },
-                    success: function(data) {
-                        // toastr.success(data.message)
-                        notyf.success(data.message);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(error);
-                    }
-                })
-
-            })
-        })
+       <script>
+        // rating
+        var basicRater = raterJs({
+            element: document.querySelector("#basic-rater"),
+            rateCallback: function(rating, done) {
+                this.setRating(rating); // Gán xếp hạng người dùng chọn
+                done(); // Xác nhận hoàn thành xếp hạng
+            }
+        });
     </script>
 @endpush

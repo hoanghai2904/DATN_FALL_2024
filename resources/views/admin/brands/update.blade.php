@@ -3,6 +3,7 @@
 
 @section('title')
     Chỉnh sửa thương hiệu
+    Chỉnh sửa thương hiệu
 @endsection
 
 {{-- section: định nghĩa nội dung của section --}}
@@ -39,6 +40,8 @@
                         </div>
                     </div>
                 </div>
+                <div class="text-end mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                 <div class="text-end mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                 </div>

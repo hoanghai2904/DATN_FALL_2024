@@ -3,6 +3,7 @@
 
 @section('title')
     Tạo mới thương hiệu
+    Tạo mới thương hiệu
 @endsection
 
 {{-- section: định nghĩa nội dung của section --}}

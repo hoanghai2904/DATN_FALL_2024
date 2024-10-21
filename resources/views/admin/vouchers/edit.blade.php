@@ -38,44 +38,42 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
-                                    <label class="form-label" for="meta-title-input">loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example"
-                                        name="discount_type">
-                                        <option value="0">%</option>
-                                        <option value="1">Đ</option>
+                                    <label class="form-label" for="meta-title-input">Loại giảm giá</label>
+                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
+                                        <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
+                                        <option value="0" {{ old('discount_type', $find->discount_type) == '0' ? 'selected' : '' }}>%</option>
+                                        <option value="1" {{ old('discount_type', $find->discount_type) == '1' ? 'selected' : '' }}>Đ</option>
                                     </select>
                                     @error('discount_type')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                        <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
-                                </div>
+                                </div>                                
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="0">Hoạt động</option>
-                                        <option value="1">Ngừng hoạt động</option>
+                                        <option value="" disabled {{ old('status', $find->status) == '' ? 'selected' : '' }}>Chọn trạng thái</option>
+                                        <option value="2" {{ old('status', $find->status) == '2' ? 'selected' : '' }}>Hoạt động</option>
+                                        <option value="1" {{ old('status', $find->status) == '1' ? 'selected' : '' }}>Ngừng hoạt động</option>
                                     </select>
                                     @error('status')
-                                    <h5 style="color: red">{{$message}}</h5>
+                                        <h5 style="color: red">{{ $message }}</h5>
                                     @enderror
-                                </div>
-                            </div>
+                                </div>                                 
+                            </div>                                                     
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
                                     <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
-                                        id="meta-title-input" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
-                                        @error('discount')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
+                                    id="numberInput" oninput="formatNumber(this)" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Số lượng</label>
                                     <input type="text" class="form-control" placeholder="Nhập số lượng..."
-                                        id="meta-title-input" name="qty" min="1" value="{{old('qty') ?? $find->qty}}">
+                                    id="numberInput" oninput="formatNumber(this)" name="qty" min="1" value="{{old('qty') ?? $find->qty}}">
                                         @error('qty')
                                         <h5 style="color: red">{{$message}}</h5>
                                         @enderror
@@ -112,4 +110,13 @@
         <!-- end row -->
 
     </form>
+    <script>
+        function formatNumber(input) {
+            // Remove non-numeric characters (but keep commas)
+            let value = input.value.replace(/[^0-9]/g, '');
+
+            // Add commas for every 3 digits
+            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+    </script>
 @endsection

@@ -20,6 +20,18 @@
         }
     </style>
 @endsection
+{{-- @push('style')
+<style>
+    #bannerCarousel {
+        max-width: 400px; /* Adjust the width to your preference */
+        margin: 0 auto; /* Centers the carousel horizontally */
+    }
+    #bannerCarousel img {
+        max-height: 500px; /* Adjust the height to your preference */
+        object-fit: cover; /* Ensures the images fit within the container without distortion */
+    }
+</style>
+@endpush --}}
 {{-- section: định nghĩa nội dung của section --}}
 @section('content')
 {{-- <div class="row">

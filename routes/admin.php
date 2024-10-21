@@ -14,9 +14,10 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\CancelledOrderController;
-use App\Http\Controllers\Admin\AdminAccountController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ContactController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,9 +36,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
     // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
     Route::middleware('auth')->group(function () {
-        Route::get('/', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        
+       //Dashboard
+        route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
@@ -50,9 +52,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //Proffile
         route::get('/profile', [AdminAccountController::class, 'profile'])->name('profile');
         route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
+        Route::get('/profile/{provinceId}', [AdminAccountController::class, 'getDistricts'])->name('getDistricts');
+        Route::get('/wards/{districtId}', [AdminAccountController::class, 'getWards'])->name('wards');
+        Route::post('/profile/store', [AdminAccountController::class, 'store'])->name('addAddress');
 
         //Change password
-        route::get('/change_pass', [AdminAccountController::class, 'change_pass'])->name('change_pass');
         route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
 
         //Forgot password
@@ -67,6 +71,24 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/customer/{id}', [AdminUserController::class, 'deleteCustomer'])->name('deleteCustomer');
         Route::post('/customer/{id}', [AdminUserController::class, 'updateStatus'])->name('updateStatus');
 
+        //user
+        route::get('/user', [AdminUserController::class, 'listUser'])->name('listUser');
+        Route::post('/user', [AdminUserController::class, 'addUser'])->name('addUser');
+        Route::get('/user/{id}', [AdminUserController::class, 'showUser'])->name('showUser');
+        Route::put('/user/{user}/edit', [AdminUserController::class, 'updateUser'])->name('updateUser');
+        Route::delete('/users/{id}', [AdminUserController::class, 'destroyUser'])->name('destroyUser');
+
+        //Role user
+        route::get('/role', [AdminUserController::class, 'listRole'])->name('listRole');
+        route::post('/role', [AdminUserController::class, 'store'])->name('addRole');
+        route::delete('/role/{id}', [AdminUserController::class, 'deleteRole'])->name('deleteRole');
+        Route::post('/role/{id}', [AdminUserController::class, 'updateStatusRole'])->name('updateStatusRole');
+        Route::get('/roles/{id}/edit', [AdminUserController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{role}/edit', [AdminUserController::class, 'update'])->name('roles.update');
+
+        // address
+        Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
+       
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);
@@ -75,8 +97,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-        Route::resource('brands', BrandsController::class);//Thương hiệu
-        Route::resource('review', ReviewController::class);//Đánh giá
+         Route::resource('contacts', ContactController::class);
+         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+
+        Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
             Route::get('/', [VoucherController::class, 'index'])->name('index');
@@ -85,7 +111,17 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
             Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
             Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
-            Route::post('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+            Route::put('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+        });
+        Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+            Route::get('/', [PostController::class, 'index'])->name('index');
+            Route::get('create', [PostController::class, 'create'])->name('create');
+            Route::post('store', [PostController::class, 'store'])->name('store');
+            Route::delete('destroy/{id}', [PostController::class, 'destroy'])->name('destroy');
+            Route::get('{id}', [PostController::class, 'show'])->name('show');
+            Route::get('edit/{id}', [PostController::class, 'edit'])->name('edit');
+            Route::put('updater/{id}', [PostController::class, 'update'])->name('update');
+            Route::put('update-status', [PostController::class, 'updateStatus'])->name('updateStatus');
         });
         Route::group(['prefix' => 'banners', 'as' => 'banners.'], function () {
             Route::get('list-banner', [BannerController::class, 'listBanner'])->name('listBanner');
@@ -95,6 +131,24 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::delete('delete-banner/{id}', [BannerController::class, 'deleteBanner'])->name('deleteBanner');
             Route::get('update-banner/{id}', [BannerController::class, 'updateBanner'])->name('updateBanner');
             Route::put('update-banner/{id}', [BannerController::class, 'updatePutBanner'])->name('updatePutBanner');
+            Route::post('update-status/{id}', [BannerController::class, 'updateStatusBanner'])->name('updateStatusBanner');
+            Route::put('change-status', [BannerController::class, 'changeStatus'])->name('change-status');
+        });
+        Route::group(['prefix' => 'comments', 'as' => 'comments.'], function () {
+            Route::get('list-comment', [CommentController::class, 'listComment'])->name('listComment');
+            Route::delete('delete-comment/{id}', [CommentController::class, 'deleteComment'])->name('deleteComment');
+            Route::put('change-status', [CommentController::class, 'changeStatus'])->name('change-status');
+        });
+
+        // Categories
+        Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
+            Route::get('/category', [CategoryController::class, 'show'])->name('listCategory');
+            Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
+            Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+            Route::post('/restore-catgegory/{id}', [CategoryController::class, 'restoreCategory'])->name('restoreCategory');
+            Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
@@ -105,5 +159,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
         Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
         Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
+        Route::group(['prefix' => 'review', 'as' => 'review.'], function () {
+            Route::get('list-review', [ReviewController::class, 'listReview'])->name('listReview');
+            Route::delete('delete-review/{id}', [ReviewController::class, 'deleteReview'])->name('deleteReview');
+            // Route::put('change-status', [ReviewController::class, 'changeStatus'])->name('change-status');
+        });
     });
 });
