@@ -67,7 +67,15 @@ class OrderController extends Controller
         // Lấy các sản phẩm trong đơn hàng bằng quan hệ đã thiết lập
         $orderItems = $order->items;
 
-        return view('admin.orders.show', compact('order', 'orderItems'));
+        $totalAmount = $orderItems->sum(function ($item) {
+            return $item->product_price_sale ? $item->product_price_sale * $item->qty : $item->product_price * $item->qty;
+        });
+    
+        // Cập nhật tổng tiền vào bảng orders (nếu cần)
+        $order->total_price = $totalAmount; // Giả sử bạn đã có trường total_price trong bảng orders
+        $order->save(); // Lưu thay đổi vào cơ sở dữ liệu
+    
+        return view('admin.orders.show', compact('order', 'orderItems', 'totalAmount'));
     }
 
     // Chỉnh sửa đơn hàng
