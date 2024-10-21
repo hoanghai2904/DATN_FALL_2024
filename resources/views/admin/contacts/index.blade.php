@@ -175,7 +175,7 @@ td.message-column {
                                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn " style="border: none; background: none;">
+                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn delete-item" style="border: none; background: none;">
                                                             <i class="ri-delete-bin-5-fill fs-16"></i>
                                                         </button>
                                                     </form>
