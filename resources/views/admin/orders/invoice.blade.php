@@ -9,6 +9,22 @@
 @endsection
 
 @section('script-libs')
+<style>
+    .card-body {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px; /* Điều chỉnh khoảng cách giữa các nút */
+    }
+
+    .btn {
+        padding: 10px 20px; /* Tăng khoảng cách bên trong nút nếu cần */
+    }
+
+    .text-end {
+        text-align: right; /* Căn chỉnh văn bản bên phải */
+    }
+</style>
     <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
@@ -49,7 +65,7 @@
                             </div>
                             <div class="col-lg-3 col-6">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">Tổng số tiền</p>
-                                <h5 class="fs-14 mb-0">$<span id="total-amount">{{ number_format($order->total_price, 2) }}</span></h5>
+                                <h5 class="fs-14 mb-0"><span id="total-amount">{{ number_format($order->total_price, ) }}</span>VND</h5>
                             </div>
                         </div>
                     </div>
@@ -93,25 +109,25 @@
                                         <tr>
                                             <th scope="row">{{ $index + 1 }}</th>
                                             <td>{{ $item->product_name}}</td>
-                                            <td>${{ number_format($item->product_price, 2) }}</td>
-                                            <td>${{ number_format($item->product_price_sale, 2) }}</td>
+                                            <td>{{ number_format($item->product_price) }}VND</td>
+                                            <td>{{ number_format($item->product_price_sale) }}VND</td>
                                             <td>{{ $item->qty }}</td>
-                                            <td class="text-end">${{ number_format($item->product_price * $item->qty, 2) }}</td>
+                                            <td class="text-end">${{ number_format($item->product_price * $item->qty) }}VND</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <th colspan="4" class="text-end">Total:</th>
-                                        <td class="text-end">${{ number_format($order->total_price, 2) }}</td>
+                                        <td class="text-end">{{ number_format($order->total_price) }}VND</td>
                                     </tr>
                                     <tr>
                                         <th colspan="4" class="text-end">Tax:</th>
-                                        <td class="text-end">${{ number_format($order->tax, 2) }}</td>
+                                        <td class="text-end">{{ number_format($order->tax) }}VND</td>
                                     </tr>
                                     <tr>
                                         <th colspan="4" class="text-end">Grand Total:</th>
-                                        <td class="text-end fw-medium">${{ number_format($order->grand_total, 2) }}</td>
+                                        <td class="text-end fw-medium">{{ number_format($order->grand_total) }}VND</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -119,13 +135,14 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card-body p-4 text-end border-top border-top-dashed">
-
-                        <a href="javascript:window.print()" class="btn btn-success"><i class="ri-printer-line align-bottom me-1"></i> In</a>
-               
-                      
+                    <div class="card-body p-4 text-end border-top border-top-dashed d-flex justify-content-end align-items-center gap-3">
+                        <a href="javascript:window.print()" class="btn btn-success">
+                            <i class="ri-printer-line align-bottom me-1"></i> In
+                        </a>
+                        <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Quay lại </a>
                     </div>
-                </div>            
+                </div>
+        
             </div>
         </div>
     </div>
