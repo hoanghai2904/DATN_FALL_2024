@@ -155,8 +155,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
         // Post Categories
         Route::group(['prefix' => 'postcategories', 'as' => 'postcategories.'], function () {
             Route::get('/post-category', [PostCategoryController::class, 'show'])->name('listPostCategory');
-            // Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
-            // Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::get('/post-category-add', [PostCategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::post('/post-category-add', [PostCategoryController::class, 'addPostPostCategory'])->name('addPostPostCategory');
             Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
             Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
             // Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');

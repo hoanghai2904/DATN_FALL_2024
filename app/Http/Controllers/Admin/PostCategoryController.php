@@ -21,4 +21,28 @@ class PostCategoryController extends Controller
             'inactivePostCategories' => $inactivePostCategories
         ]);
     }
+    public function addPostCategory()
+    {
+
+        $postcategory = PostCategory::all();
+        // dd($category);
+        return view('admin.postcategory.create')->with((['postcategory' => $postcategory]));
+        // return view(self::PATH_VIEW . __FUNCTION__);
+    }
+    public function addPostPostCategory(Request $req)
+    {
+        $req->validate([
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+        ], [
+            'name.required' => 'Tên danh mục không được để trống',
+            'name.string' => 'Tên danh mục phải là chuỗi ký tự',
+            'name.max' => 'Tên danh mục quá dài',
+            'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
+        ]);
+        $data = [
+            'name' => $req->name,
+        ];
+        PostCategory::create($data);
+        return redirect()->route('admin.postcategories.listPostCategory');
+    }
 }

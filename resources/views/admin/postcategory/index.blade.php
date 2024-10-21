@@ -6,16 +6,12 @@
 
 @section('content')
     <div class="d-flex justify-content-between mb-3">
-        <a href="" class="btn btn-primary">Thêm Mới</a>
+        <a href="{{ route('admin.postcategories.addPostCategory') }}" class="btn btn-primary">Thêm Mới</a>
         <input type="text" id="categorySearchBox" class="form-control w-50" placeholder="Tìm kiếm danh mục...">
     </div>
 
     <div class="row">
-        {{-- @if (Session::has('message'))
-            <script>
-                toastr.success("{{ Session::get('message') }}");
-            </script>
-        @endif --}}
+
 
         <div class="col-xl-12">
             <div class="card">
