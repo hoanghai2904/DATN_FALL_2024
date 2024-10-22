@@ -24,6 +24,7 @@
     .text-end {
         text-align: right; /* Căn chỉnh văn bản bên phải */
     }
+    
 </style>
     <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
@@ -65,7 +66,7 @@
                             </div>
                             <div class="col-lg-3 col-6">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">Tổng số tiền</p>
-                                <h5 class="fs-14 mb-0"><span id="total-amount">{{ number_format($order->total_price, ) }}</span>₫</h5>
+                                <h5 class="fs-14 mb-0"><span id="total-amount">   {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}</span>₫</h5>
                             </div>
                         </div>
                     </div>
@@ -118,33 +119,28 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4" class="text-end">Tổng tiền:</th>
+                                        <th colspan="5" class="text-end">Tổng tiền:</th>
                                         <td class="text-end">{{ number_format($order->total_price) }}₫</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5">
-                                            <div class="row text-end">
-                                                <div class="col-md-12">
-                                                    <p class="mb-3">
-                                                        <strong>Tổng số lượng:</strong> 
-                                                        <span id="total-quantity">{{ $orderItems->sum('qty') }}</span>
-                                                    </p>
-                                                    <p class="mb-3">
-                                                        <strong>Giảm giá:</strong> 
-                                                        <span id="discount">{{ number_format($order->discount_price ?? 0, 0, ',', '.') }}₫</span>
-                                                    </p>
-                                                    <p class="mb-3">
-                                                        <strong>Phí vận chuyển:</strong> 
-                                                        <span id="shipping-fee">{{ number_format($order->shipping_fee, 0, ',', '.') }}₫</span>
-                                                    </p>
-                                                    <h5 class="mb-3">Tổng tiền (sau khi áp dụng giảm giá và phí vận chuyển):</h5>
-                                                    <h5 class="text-danger" id="total-amount-with-shipping">
-                                                        {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫
-                                                    </h5>
-                                                </div>
-                                            </div>
+                                        <th colspan="5" class="text-end">Tổng số lượng:</th>
+                                        <td class="text-end">{{ $orderItems->sum('qty') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-end">Giảm giá:</th>
+                                        <td class="text-end">{{ number_format($order->discount_price ?? 0, 0, ',', '.') }}₫</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-end">Phí vận chuyển:</th>
+                                        <td class="text-end">{{ number_format($order->shipping_fee, 0, ',', '.') }}₫</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-end">Tổng tiền (sau khi áp dụng giảm giá và phí vận chuyển):</th>
+                                        <td class="text-end text-danger">
+                                            {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫
                                         </td>
                                     </tr>
+
                                 </tfoot>
 
                             </table>

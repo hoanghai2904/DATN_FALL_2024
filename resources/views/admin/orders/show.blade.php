@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <h1 class="my-4">Chi tiết đơn hàng #{{ $order->order_code }}</h1>
+   
 
         <!-- Phần danh sách sản phẩm -->
         <div class="row">
@@ -12,14 +12,14 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h5 class="card-title flex-grow-1 mb-0">Danh sách đơn hàng</h5>
+                        <h5 class="card-title flex-grow-1 mb-0">Danh sách đơn hàng #{{ $order->order_code }}</h5>
                         <div class="flex-shrink-0">
                             <a href="{{ route('admin.orders.invoice', $order->id) }}" class="btn btn-success btn-sm"><i class="ri-download-2-fill align-middle me-1"></i> In hóa đơn</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered ">
                         <thead>
                             <tr>
                                 <th>Sản phẩm</th>
@@ -98,31 +98,73 @@
             <!-- Phần thông tin khách hàng và giao hàng -->
             <div class="col-md-4">
             <!-- Thông tin khách hàng -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-primary text-white" style="padding: 10px 15px;">
-                    <h5 class="mb-0" style="color:black">Thông tin khách hàng</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Tên khách hàng:</strong> {{ $order->user_name }}</p>
-                    <p><strong>Email:</strong> {{ $order->user_email }}</p>
-                    <p><strong>Số điện thoại:</strong> {{ $order->user_phone }}</p>
-                    <p><strong>Địa chỉ:</strong> {{ $order->user_address }}</p>
-                </div>
+<div class="card">
+    <div class="card-header" style="padding: 10px 15px;">
+        <div class="d-flex">
+            <h5 class="card-title flex-grow-1 mb-0">Thông tin khách hàng</h5>
+            <div class="flex-shrink-0">
+                <a href="javascript:void(0);" class="link-secondary">Thông tin</a>
             </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mb-0 vstack gap-3">
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ asset('storage/' . auth()->user()->cover) }}" alt="" class="avatar-sm rounded me-3">
+                    <div>
+                        <h6 class="fs-14 mb-1">{{ $order->user_name }}</h6>
+                        <p class="text-muted mb-0">Khách hàng</p>
+                    </div>
+                </div>
+            </li>
+            <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>{{ $order->user_email }}</li>
+            <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>{{ $order->user_phone }}</li>
+        </ul>
+    </div>
+</div>
 
-            <!-- Thông tin giao hàng -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Thông tin giao hàng</h5>
+<!-- Thông tin giao hàng -->
+<div class="card mb-4">
+    <div class="card-header" style="padding: 10px 15px;">
+        <h5 class="mb-0">Thông tin giao hàng</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mb-0 vstack gap-3">
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="ri-user-line me-2 align-middle text-muted fs-16"></i>
+                    <strong>Tên người nhận:</strong> {{ $order->user_name }}
                 </div>
-                <div class="card-body">
-                    <p><strong>Tên người nhận:</strong> {{ $order->user_name }}</p>
-                    <p><strong>Số điện thoại người nhận:</strong> {{ $order->user_phone }}</p>
-                    <p><strong>Địa chỉ:</strong> {{ $order->user_address }}</p>
-                    <p><strong>Phương thức:</strong> {{ $order->payment_method }}</p>
-                    <p><strong>Ghi chú:</strong> {{ $order->shipping_note ?? 'Không có ghi chú' }}</p> <!-- Nếu có ghi chú -->
+            </li>
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>
+                    <strong>Số điện thoại người nhận:</strong> {{ $order->user_phone }}
                 </div>
-            </div>
+            </li>
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="ri-map-pin-line me-2 align-middle text-muted fs-16"></i>
+                    <strong>Địa chỉ:</strong> {{ $order->user_address }}
+                </div>
+            </li>
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="ri-money-dollar-circle-line me-2 align-middle text-muted fs-16"></i>
+                    <strong>Phương thức:</strong> {{ $order->payment_method }}
+                </div>
+            </li>
+            <li>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="ri-notes-line me-2 align-middle text-muted fs-16"></i>
+                    <strong>Ghi chú:</strong> {{ $order->shipping_note ?? 'Không có ghi chú' }}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
 
     <!-- Nút quay lại -->
     <div class="text-end">

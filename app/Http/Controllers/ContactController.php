@@ -29,7 +29,16 @@ class ContactController extends Controller
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
-    
+    // Khoảng thời gian
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        // Chuyển đổi định dạng ngày để phù hợp
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+
+        // Lọc theo khoảng thời gian
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+    }
+
         // Lọc theo tìm kiếm chung
         if ($request->filled('search')) {
             $search = $request->search;

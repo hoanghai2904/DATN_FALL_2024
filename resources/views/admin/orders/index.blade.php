@@ -26,54 +26,55 @@
             <!-- end card header -->
             <div class="card-body">
                 <div class="live-preview">
-              <!-- Form tìm kiếm -->
-                     <form action="{{ route('admin.orders.index') }}" method="GET" >
-                        <div class="row mb-5">
-                            <!-- Tìm kiếm chung -->
-                            <div class="col-lg-3 mb-3" >
-                                <h6 class="fw-semibold">Tìm kiếm chung</h6>
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control" id="customSearchBox" placeholder="Search..." value="{{ request('search') }}">
-                                    <span class="input-group-text">
-                                        <i class="ri-search-line search-icon"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Tìm kiếm theo mã đơn hàng -->
-                            <div class="col-lg-2 mb-3">
-                                <h6 class="fw-semibold">Mã đơn hàng</h6>
-                                <div class="input-group">
-                                    <input type="text" name="order_code" class="form-control" placeholder="Nhập mã đơn hàng" value="{{ request('order_code') }}">
-                                </div>
-                            </div>
-                                                        <!-- Tìm kiếm theo tên khách hàng -->
-                            <div class="col-lg-2 mb-3">
-                                <h6 class="fw-semibold">Tên khách hàng</h6>
-                                <div class="input-group">
-                                    <input type="text" name="user_name" class="form-control" placeholder="Nhập tên khách hàng" value="{{ request('user_name') }}">
-                                </div>
-                            </div>
+           <!-- Form tìm kiếm -->
+<form action="{{ route('admin.orders.index') }}" method="GET">
+    <div class="row mb-4">
+        <!-- Tìm kiếm chung -->
+        <div class="col-lg-4 mb-3">
+            <h6 class="fw-semibold">Tìm kiếm chung</h6>
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                <span class="input-group-text">
+                    <i class="ri-search-line search-icon"></i>
+                </span>
+            </div>
+        </div>
+     
+        <!-- Ngày bắt đầu -->
+        <div class="col-lg-2 mb-3">
+            <h6 class="fw-semibold">Ngày bắt đầu</h6>
+            <div class="input-group">
+                <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+            </div>
+        </div>
+        <!-- Ngày kết thúc -->
+        <div class="col-lg-2 mb-3">
+            <h6 class="fw-semibold">Ngày kết thúc</h6>
+            <div class="input-group">
+                <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
+            </div>
+        </div>
+        <!-- Trạng thái đơn hàng -->
+        <div class="col-lg-2 mb-3">
+            <h6 class="fw-semibold">Trạng thái đơn hàng</h6>
+            <div class="input-group">
+                <select name="status_order" class="form-control">
+                    <option value="">Tất cả</option>
+                    <option value="Chưa giải quyết" {{ request('status_order') == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
+                    <option value="Đang xử lý" {{ request('status_order') == 'Đang xử lý' ? 'selected' : '' }}>Đang xử lý</option>
+                    <option value="Hoàn thành" {{ request('status_order') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
+                    <option value="Đã hủy" {{ request('status_order') == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
+                </select>
+            </div>
+        </div>
+        <!-- Nút tìm kiếm -->
+        <div class="col-lg-2 mb-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </div>
+</form>
 
-              
-                            <!-- Lọc theo trạng thái đơn hàng -->
-                            <div class="col-lg-2 mb-3">
-                                <h6 class="fw-semibold">Trạng thái đơn hàng</h6>
-                                <div class="input-group">
-                                    <select name="status_order" class="form-control">
-                                        <option value="">Tất cả</option> <!-- Tùy chọn này hiển thị tất cả các đơn hàng -->
-                                        <option value="Chưa giải quyết" {{ request('status_order') == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
-                                        <option value="Đang xử lý" {{ request('status_order') == 'Đang xử lý' ? 'selected' : '' }}>Đang xử lý</option>
-                                        <option value="Hoàn thành" {{ request('status_order') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
-                                        <option value="Đã hủy" {{ request('status_order') == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- Nút tìm kiếm -->
-                            <div class="col-lg-2 mb-3 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                            </div>
-                        </div>
-                    </form>
+
                     <!-- Bảng danh sách đơn hàng -->
                     <div class="table-responsive table-card mb-1">
                         <table class="table table-nowrap align-middle" id="myTable" >
@@ -85,9 +86,7 @@
                                         </div>
                                     </th>
                                     <th class="sort" >Id</th>
-                                    <th class="sort" >Mã đơn hàng</th>
-                                    <th class="sort" >Tên khách hàng</th>
-                                    <th class="sort">Email</th>
+                                    <th class="sort" >Mã đơn hàng</th>                     
                                     <th class="sort" >Ngày đặt hàng</th>
                                     <th class="sort" >Tổng tiền</th>
                                     <th class="sort" >Phương thức </th>
@@ -107,13 +106,10 @@
                                         <td class="id">
                                             <a href="{{ route('admin.orders.show', $order->order_code) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
                                         </td>
-                                        <td class="user_name">{{ $order->user_name }}</td>
-                                        <td class="user_email">{{ $order->user_email }}</td>
+                                       
                                         <td class="created_at">
-                                                    {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }},
-                                                    <small class="text-muted">{{ \Carbon\Carbon::parse($order->created_at)->format('H:i') }}</small>
-                                                </td>
-
+                                            {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}
+                                        </td>
                                         <td class="total_price"> {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫</td>
                                         <td class="payment_method">{{ $order->payment_method }}</td>
                                         <td>{{ $order->status_order }}</td>

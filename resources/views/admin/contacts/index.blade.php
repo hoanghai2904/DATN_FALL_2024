@@ -72,7 +72,7 @@ td.message-column {
                     <form action="{{ route('admin.contacts.index') }}" method="GET">
                         <div class="row mb-5">
                             <!-- Tìm kiếm chung -->
-                            <div class="col-lg-3 mb-3">
+                            <div class="col-lg-4 mb-3">
                                 <h6 class="fw-semibold">Tìm kiếm chung</h6>
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" id="customSearchBox" placeholder="Search..." value="{{ request('search') }}">
@@ -81,11 +81,19 @@ td.message-column {
                                     </span>
                                 </div>
                             </div>
-                            <!-- Tìm kiếm theo email -->
+                         
+                               <!-- Ngày bắt đầu -->
                             <div class="col-lg-2 mb-3">
-                                <h6 class="fw-semibold">Email</h6>
+                                <h6 class="fw-semibold">Ngày bắt đầu</h6>
                                 <div class="input-group">
-                                    <input type="text" name="email" class="form-control" placeholder="Nhập email" value="{{ request('email') }}">
+                                    <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
+                                </div>
+                            </div>
+                            <!-- Ngày kết thúc -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Ngày kết thúc</h6>
+                                <div class="input-group">
+                                    <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                                 </div>
                             </div>
                             <!-- Lọc theo trạng thái liên hệ -->
@@ -120,6 +128,7 @@ td.message-column {
                                     <th class="sort" data-sort="name">Tên</th>
                                     <th class="sort" data-sort="email" style="width:180px;">Email</th>
                                     <th class="sort" data-sort="phone">Điện thoại</th>
+                                    <th class="sort" >Ngày đặt hàng</th>
                                     <th class="sort" data-sort="message">Thông điệp</th>
                                     <th class="sort" data-sort="status">Trạng thái</th>
                                     <th class="sort" data-sort="actions">Hành động</th>
@@ -136,8 +145,10 @@ td.message-column {
                                         <td class="id">{{ $contact->id }}</td>
                                         <td class="name">{{ $contact->name }}</td>
                                         <td class="email">{{ $contact->email }}</td>
-                                        <td class="phone">{{ $contact->phone }}</td>
-                                        
+                                        <td class="phone">{{ $contact->phone }}</td> 
+                                        <td class="created_at">
+                                            {{ \Carbon\Carbon::parse($contact->created_at)->format('d/m/Y') }}
+                                        </td>                    
                                         <td class="message-column">
                                                 <div class="d-flex align-items-center">
                                                     <div class="message-text me-2" id="message-{{ $contact->id }}" title="{{  $contact->message}}">
