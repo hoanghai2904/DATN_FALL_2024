@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Product as AdminProduct;
-use App\Models\Product;
+use App\Models\admin\Product;
 use App\Models\admin\ProductGallery;
-use App\Models\admin\ProductTag;
 use App\Models\admin\ProductTypes;
 use App\Models\admin\ProductVariants;
 use App\Models\admin\ProductWeights;
@@ -30,7 +28,7 @@ class ProductController extends Controller
     {
         // dd($request->all());
 
-        $query = ProductTag::query();
+        $query = Product::query();
         $categories = Category::all();
         $brands = Brands::all();
 
@@ -109,7 +107,7 @@ class ProductController extends Controller
         }
         $price_sale = $request->has('price_sale') ? $request->price_sale : null;
 
-        $product = ProductTag::create([
+        $product = Product::create([
             'name' => $productValidate['name'],
             'slug' => slug($productValidate['name']),
             'sku' => $productValidate['sku'],
@@ -221,7 +219,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $product = AdminProduct::findOrFail($id);
+        $product = Product::findOrFail($id);
         $product->delete();
         return response(['status' => 'success', 'Xóa thành công!']);
     }
@@ -229,7 +227,7 @@ class ProductController extends Controller
     public function changeStatus(Request $request)
     {
         // dd($request->id);
-        $product = ProductTag::findOrFail($request->id);
+        $product = Product::findOrFail($request->id);
         // dd($product);
         $product->status = $request->status == 'true' ? 1 : 0;
         $product->save();
