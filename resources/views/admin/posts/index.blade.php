@@ -48,7 +48,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <select class="form-control js-example-basic-single select2-hidden-accessible" name="category_id" style="width: 100%;">
-                                            <option value="" disabled selected>Chọn thương hiệu</option>
+                                            <option value="" disabled selected>Chọn danh mục</option>
                                             @foreach ($allCate as $item)
                                                 <option value="{{ $item->id }}">
                                                     {{ $item->name }}
