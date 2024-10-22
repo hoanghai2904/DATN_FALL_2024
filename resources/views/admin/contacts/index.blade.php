@@ -154,7 +154,7 @@ td.message-column {
                                                     <div class="message-text me-2" id="message-{{ $contact->id }}" title="{{  $contact->message}}">
                                                         {{  $contact->message}}
                                                     </div>
-                                                    <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}" style="cursor: pointer;"></i>
+                                                    <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}" style="cursor: pointer; font-size: 12px;"></i>
                                                 </div>
                                                 <div class="modal fade" id="messageModal{{ $contact->id }}" tabindex="-1"
                                                     aria-labelledby="messageModalLabel{{ $contact->id }}" aria-hidden="true">
@@ -174,7 +174,13 @@ td.message-column {
                                                     </div>
                                                 </div>
                                             </td>
-                                        <td class="status_contacts">{{ $contact->status_contacts}}</td>
+                                        <td class="status_contacts">  
+                                        @if($contact->status_contacts === 'Đã phản hồi')
+                                            <span class="badge bg-success">Đã phản hồi</span>
+                                        @else
+                                            <span class="badge bg-warning">Chưa giải quyết</span>   
+                                        @endif
+                                        </td>
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Reply">
@@ -182,7 +188,9 @@ td.message-column {
                                                         <i class="ri-mail-send-line fs-16"></i>
                                                     </a>
                                                 </li>
+                                               
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                                @if ($contact->status_contacts == 'Đã phản hồi')
                                                     <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
@@ -190,6 +198,7 @@ td.message-column {
                                                             <i class="ri-delete-bin-5-fill fs-16"></i>
                                                         </button>
                                                     </form>
+                                                    @endif
                                                 </li>
                                             </ul>
                                         </td>

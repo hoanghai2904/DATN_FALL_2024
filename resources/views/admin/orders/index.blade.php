@@ -60,10 +60,10 @@
             <div class="input-group">
                 <select name="status_order" class="form-control">
                     <option value="">Tất cả</option>
-                    <option value="Chưa giải quyết" {{ request('status_order') == 'Chưa giải quyết' ? 'selected' : '' }}>Chưa giải quyết</option>
+                    <option value="Hoàn thành" {{ request('status_order') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
                     <option value="Đang xử lý" {{ request('status_order') == 'Đang xử lý' ? 'selected' : '' }}>Đang xử lý</option>
                     <option value="Hoàn thành" {{ request('status_order') == 'Hoàn thành' ? 'selected' : '' }}>Hoàn thành</option>
-                    <option value="Đã hủy" {{ request('status_order') == 'Đã hủy' ? 'selected' : '' }}>Đã hủy</option>
+                    <option value="Hoàn thànhhủy" {{ request('status_order') == 'Hoàn thànhhủy' ? 'selected' : '' }}>Hoàn thànhhủy</option>
                 </select>
             </div>
         </div>
@@ -85,7 +85,7 @@
                                             <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-                                    <th class="sort" >Id</th>
+                               
                                     <th class="sort" >Mã đơn hàng</th>                     
                                     <th class="sort" >Ngày đặt hàng</th>
                                     <th class="sort" >Tổng tiền</th>
@@ -102,7 +102,7 @@
                                                 <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
                                             </div>
                                         </th>
-                                        <td class="id">{{ $order->id }}</td>
+                      
                                         <td class="id">
                                             <a href="{{ route('admin.orders.show', $order->order_code) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
                                         </td>
@@ -112,7 +112,17 @@
                                         </td>
                                         <td class="total_price"> {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫</td>
                                         <td class="payment_method">{{ $order->payment_method }}</td>
-                                        <td>{{ $order->status_order }}</td>
+                                        <td>
+                                            @if($order->status_order === 'Hoàn thành')
+                                                <span class="badge bg-success">Hoàn thành</span>
+                                            @elseif($order->status_order === 'Chưa giải quyết')
+                                                <span class="badge bg-warning">Chưa giải quyết</span>   
+                                            @elseif($order->status_order === 'Đã hủy')
+                                                <span class="badge bg-danger">Đã hủy</span>
+                                            @else
+                                                <span class="badge bg-secondary">{{ $order->status_order }}</span> <!-- Trạng thái khác -->
+                                            @endif
+                                        </td>
                                         <td>
                                             <ul class="list-inline hstack gap-2 mb-0">
                                                 <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">

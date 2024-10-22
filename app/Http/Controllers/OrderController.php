@@ -99,7 +99,20 @@ class OrderController extends Controller
     // Cập nhật đơn hàng
     public function update(Request $request, Order $order)
     {
-        $order->update($request->all());
+        // Validate the incoming request
+        $request->validate([
+            'status_order' => 'required|string', // Thêm xác thực cho trạng thái
+            // Các xác thực khác nếu cần
+        ]);
+    
+        // Kiểm tra nếu trạng thái mới là "Hoàn thành"
+        if ($request->input('status_order') === 'Hoàn thành') {
+            $order->payment_method = 'Đã thanh toán'; // Cập nhật phương thức thanh toán
+        }
+    
+        // Cập nhật các trường khác của đơn hàng
+        $order->update($request->except('payment_method')); // Bỏ qua payment_method nếu nó được cập nhật trong điều kiện trên
+    
         return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
     }
     public function showInvoice($id)
@@ -110,7 +123,6 @@ class OrderController extends Controller
     
         return view('admin.orders.invoice', compact('order', 'orderItems'));
     }
-    
     // Xóa đơn hàng
     public function destroy(Order $order)
     {

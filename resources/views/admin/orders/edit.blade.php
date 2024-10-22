@@ -24,14 +24,14 @@
                                                 </ul>
                                             </div>
                                         @endif                    
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="payment_method">Phương thức thanh toán</label>
                             <select name="payment_method" class="form-control" required>
                                 <option value="Thanh toán khi nhận hàng" {{ $order->payment_method == 'Thanh toán khi nhận hàng' ? 'selected' : '' }}>Thanh toán khi nhận hàng</option>
                                 <option value="Chuyển Khoản" {{ $order->payment_method == 'Chuyển Khoản' ? 'selected' : '' }}>Chuyển Khoản</option>
                                 <option value="Đã thanh toán" {{ $order->payment_method == 'Đã thanh toán' ? 'selected' : '' }}>Đã thanh toán</option>
                             </select>
-                        </div>  
+                        </div>   -->
                         <div class="form-group">
                             <label for="status_order">Trạng thái đơn hàng</label>
                             <select name="status_order" class="form-control" required>

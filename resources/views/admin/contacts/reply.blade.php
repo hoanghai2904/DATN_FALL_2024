@@ -24,7 +24,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Phản hồi liên hệ</h4>
+                <h4 class="card-title mb-0 flex-grow-1">Phản hồi khách hàng</h4>
             </div>
 
             <div class="card-body">
