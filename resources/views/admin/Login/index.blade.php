@@ -57,7 +57,7 @@
                                         height="20">
                                 </a>
                             </div>
-                            <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard</p>
+                            <p class="mt-3 fs-15 fw-medium">Admin & Dashboard</p>
                         </div>
                     </div>
                 </div>
@@ -69,8 +69,8 @@
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">
-                                    <h5 class="text-primary">Welcome Back !</h5>
-                                    <p class="text-muted">Sign in to continue</p>
+                                    <h5 class="text-primary">Đăng Nhập</h5>
+                                  
                                 </div>
                                 <div class="p-2 mt-4">
                                     <form action="{{ route('admin.Check_login') }}" method="POST">
@@ -79,14 +79,15 @@
                                             <label for="username" class="form-label">Email</label>
                                             <input type="text" class="form-control" id="username" name="email"
                                                 placeholder="Enter username">
+                                                @if (
+                                                    $errors->has('email') &&
+                                                        $errors->first('email') !==
+                                                            'Tài khoản của bạn chưa được xác minh email. Vui lòng kiểm tra email để xác minh tài khoản.')
+                                                    <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}
+                                                    </div>
+                                                @endif
                                         </div>
-                                        @if (
-                                            $errors->has('email') &&
-                                                $errors->first('email') !==
-                                                    'Tài khoản của bạn chưa được xác minh email. Vui lòng kiểm tra email để xác minh tài khoản.')
-                                            <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}
-                                            </div>
-                                        @endif
+                                       
                                         <div class="mb-3">
 
                                             <label class="form-label" for="password-input">Mật khẩu</label>
@@ -97,19 +98,21 @@
                                                     class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                     type="button" id="password-addon"><i
                                                         class="ri-eye-fill align-middle"></i></button>
+                                                        @if ($errors->has('password'))
+                                                        <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}
+                                                        </div>
+                                                    @endif
                                             </div>
                                         </div>
-                                        @if ($errors->has('password'))
-                                            <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}
-                                            </div>
-                                        @endif
+                                      
                                         <div class="mt-4">
                                             <button class="btn btn-success w-100" type="submit">Đăng nhập</button>
                                         </div>
-                                        <div class="float-end pt-2">
-                                            <a href="auth-pass-reset-basic.html" class="text-muted">Quên mật khẩu?</a>
-                                        </div>
+                                       
                                     </form>
+                                    <div class="float-end pt-2">
+                                        <a href="{{route('admin.forgotPass')}}" class="text-muted">Quên mật khẩu?</a>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end card body -->
@@ -130,11 +133,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-center">
-                            <p class="mb-0 text-muted">&copy;
-                                <script>
-                                    document.write(new Date().getFullYear())
-                                </script> Velzon. Crafted with <i class="mdi mdi-heart text-danger"></i>
-                                by Themesbrand
+                            <p class="mb-0 text-muted">
+                        Tạo bởi <i class="mdi mdi-heart text-danger"></i> Pet Shop &copy; <script>document.write(new Date().getFullYear())</script>
                             </p>
                         </div>
                     </div>

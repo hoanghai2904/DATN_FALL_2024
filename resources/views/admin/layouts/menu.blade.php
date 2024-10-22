@@ -85,7 +85,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.contacts.index') }}" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
+                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -133,21 +133,6 @@
                             <li class="nav-item">
                                 <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
                             </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
-                    </a>
-
-                    <div class="collapse menu-dropdown" id="contact">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">ádfsdfsf</a>
-                            </li>
-
                         </ul>
                     </div>
                 </li>
