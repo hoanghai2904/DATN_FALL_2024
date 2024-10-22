@@ -187,7 +187,7 @@ class AccountController extends Controller
             Storage::delete($auth->cover);
         }
         // Lưu hình ảnh mới vào thư mục 'images' và lấy đường dẫn
-        $path_cover_art = $request->file('cover')->store('images');
+        $path_cover_art = $request->file('cover')->store('images','public');
         $data['cover'] = $path_cover_art;
     }
 
