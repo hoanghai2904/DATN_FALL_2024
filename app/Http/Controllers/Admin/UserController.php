@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\Ward;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -387,5 +389,49 @@ class UserController extends Controller
     }
     
     
+ 
+
+ public function getDistricts($provinceId)
+ {
+     $districts = District::where('province_id', $provinceId)->get();
+     return response()->json($districts);
+ }
+
+ public function getWards($districtId)
+{
+    $wards = Ward::where('district_id', $districtId)->get(); // Lấy phường/xã theo district_id
+    return response()->json($wards);
+}
+
+
+public function storeadd(Request $request)
+{
+    $request->validate([
+        'province_id' => 'required|exists:provinces,id',
+        'district_id' => 'required|exists:districts,id',
+        'ward_id' => 'required|exists:wards,id',
+        'address_detail' => 'required|string|max:255',
+    ], [
+        'province_id.required' => 'Vui lòng chọn tỉnh/thành phố.',
+        'province_id.exists' => 'Tỉnh/thành phố không tồn tại.',
+        'district_id.required' => 'Vui lòng chọn quận/huyện.',
+        'district_id.exists' => 'Quận/huyện không tồn tại.',
+        'ward_id.required' => 'Vui lòng chọn phường/xã.',
+        'ward_id.exists' => 'Phường/xã không tồn tại.',
+        'address_detail.required' => 'Vui lòng nhập địa chỉ chi tiết.',
+        'address_detail.string' => 'Địa chỉ chi tiết phải là một chuỗi ký tự.',
+        'address_detail.max' => 'Địa chỉ chi tiết không được vượt quá 255 ký tự.',
+    ]);
+
+    UserAddress::create([
+        'user_id' => auth()->id(),  // Lấy ID của user đã đăng nhập
+        'province_id' => $request->province_id,
+        'district_id' => $request->district_id,
+        'ward_id' => $request->ward_id,
+        'address' => $request->address_detail,
+    ]);
+
+    return response()->json(['message' => 'Địa chỉ đã được thêm thành công']);
+}
     
 }

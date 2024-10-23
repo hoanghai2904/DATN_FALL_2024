@@ -46,10 +46,7 @@
     <div class="row">
         <div id="user-list" class="col-xl-12">
             <div class="card">
-
-                <!-- end card header -->
-
-                <div class="card-body">
+                <div class="card-header border-0">
                     <form action="{{ route('admin.listCusstomer') }}" method="GET">
                         @csrf
                         <div class="row mb-2 ">
@@ -71,12 +68,19 @@
                                 </select>
                             </div>
                             <div class="col-lg-2 d-flex justify-content-start">
-                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                <button type="submit" class="btn btn-info" data-bs-toggle="offcanvas"
+                                href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i>Tìm
+                                kiếm</button>
+
                             </div>
                         </div>
                     </form>
 
-                    <div class="live-preview mt-4">
+                </div>
+                <!-- end card header -->
+
+                <div class="card-body">
+                    <div>
                         <div class="table-responsive table-card">
                             <table class="table align-middle small" id="customerTable">
                                 <thead class="table-light">
@@ -88,7 +92,6 @@
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
-                                        <th Class="">ID</th>
                                         <th class="sor" style="padding-left: 50px" data-sort="name">Họ và Tên</th>
 
                                         <th>Email</th>
@@ -110,7 +113,6 @@
                                                         for="cardtableCheck{{ $customer->id }}"></label>
                                                 </div>
                                             </td>
-                                            <td>{{ $customer->id }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0">
@@ -118,7 +120,11 @@
                                                             alt=""
                                                             class="avatar-xxs rounded-circle image_src object-fit-cover">
                                                     </div>
-                                                    <div class="flex-grow-1 ms-2 name text-start">{{ $customer->full_name }}
+                                                    <div class="flex-grow-1 ms-2 name text-start fw-semibold">
+                                                        {{ $customer->full_name }}
+                                                    </div>
+                                                    
+                                                    
                                                     </div>
                                                 </div>
                                             </td>
@@ -138,29 +144,25 @@
                                                 </div>
                                             </td>
                                             <td>
+                                    
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="View">
-
-                                                    </li>
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                        <a href="javascript:void(0);" class="view-item-btn"
-                                                            data-user-id="{{ $customer->id }}">
-                                                            <i class="ri-eye-fill align-bottom text-muted"></i>
+                                                    data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                   
+                                                </li>
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                        <a href="javascript:void(0);" class="view-item-btn" data-user-id="{{ $customer->id }}">
+                                                            <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
                                                         </a>
                                                     </li>
-
-
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                        <a class="remove-item-btn" data-bs-toggle="modal"
-                                                            href="#deleteRecordModal"
+                                                    <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+                                                        <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal"
                                                             onclick="showDeleteModal({{ $customer->id }})">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
                                                         </a>
                                                     </li>
                                                 </ul>
+                                                
                                             </td>
                                         </tr>
                                     @endforeach

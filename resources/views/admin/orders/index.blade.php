@@ -105,7 +105,7 @@
                                         </th>
                                         <td class="id">{{ $order->id }}</td>
                                         <td class="id">
-                                            <a href="{{ route('admin.orders.show', $order->order_code) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
+                                            <a href="{{ route('admin.orders.show', $order->id) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
                                         </td>
                                         <td class="user_name">{{ $order->user_name }}</td>
                                         <td class="user_email">{{ $order->user_email }}</td>
