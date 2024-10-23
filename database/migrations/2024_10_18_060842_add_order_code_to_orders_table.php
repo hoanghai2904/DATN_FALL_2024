@@ -1,25 +1,31 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
+class AddOrderCodeToOrdersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('order_code')->unique(); // Thêm trường order_code với NOT NULL
-        });
+        // Kiểm tra xem cột 'order_code' đã tồn tại chưa
+        if (!Schema::hasColumn('orders', 'order_code')) {
+            Schema::table('orders', function (Blueprint $table) {
+                $table->string('order_code')->notNull();
+            });
+        }
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
+        // Xóa cột 'order_code' nếu tồn tại
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('order_code'); // Xóa trường order_code
+            if (Schema::hasColumn('orders', 'order_code')) {
+                $table->dropColumn('order_code');
+            }
         });
     }
-};
+}

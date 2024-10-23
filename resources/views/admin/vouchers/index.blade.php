@@ -22,7 +22,7 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="">Chọn trạng thái</option>
+                                            <option value="" disabled selected>Chọn trạng thái</option>
                                             <option value="2" >Hoạt động</option>
                                             <option value="1" >Ngừng hoạt động</option>
                                         </select>

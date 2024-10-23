@@ -16,6 +16,7 @@ class CreateContactsTable extends Migration
             $table->text('message')->nullable(); // Thông điệp
             $table->string('status_contacts')->default('Chưa giải quyết');
             $table->timestamps(); // Được tạo ra tại
+            $table->softDeletes();
         });
     }
 

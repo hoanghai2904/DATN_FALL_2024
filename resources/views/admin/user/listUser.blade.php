@@ -101,13 +101,13 @@
                                                     value="option">
                                             </div>
                                         </th>
-                                        <th>#ID</th>
+                                       
                                         <th style="padding-left: 50px">Họ và tên</th>
                                         <th style="padding-left: 50px">Email</th>
                                         <th>Điện thoại</th>
                                         <th>Vai trò</th>
                                         <th>Trạng thái</th>
-                                        <th>Create Date</th>
+                                        <th>Ngày tạo</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -121,7 +121,7 @@
                                                         onchange="previewImage(event, 'avatar-img')">
                                                 </div>
                                             </th>
-                                            <td>{{ $employee->id }}</td>
+                                           
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0">
@@ -129,7 +129,7 @@
                                                             alt=""
                                                             class="avatar-xxs rounded-circle image_src object-fit-cover">
                                                     </div>
-                                                    <div class="flex-grow-1 ms-2 name text-start">{{ $employee->full_name }}
+                                                    <div class="flex-grow-1 ms-2 name text-start fw-semibold">{{ $employee->full_name }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -142,36 +142,37 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                <div class="form-check form-switch form-switch-success form-switch-md text-center" dir="ltr">
-                                                    <input type="checkbox" class="form-check-input"
+                                                <div class="form-check form-switch form-switch-success form-switch-md" dir="ltr">
+                                                    <input type="checkbox" class="form-check-input" style="margin-left: 20px"
                                                            {{ $employee->status === 'active' ? 'checked' : '' }}
                                                            id="statusCheckbox{{ $employee->id }}"
                                                            onchange="confirmStatusChange({{ $employee->id }}, this)">
                                                 </div>
                                             </td>
-                                            <td>{{ $employee->created_at->format('d M, Y') }}</td>
+                                            <td>{{ $employee->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="View">
                                                         <a href="javascript:void(0);" class="view-item-btn"
                                                             data-user-id="{{ $employee->id }}">
-                                                            <i class="ri-eye-fill align-bottom text-muted"></i>
+                                                            <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
                                                         </a>
                                                     </li>
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                     data-bs-trigger="hover" data-bs-placement="top" title="View">
                                                         <a href="javascript:void(0);" class="btn-info view-details-btn"
                                                             data-id="{{ $employee->id }}"> <i
-                                                                class="ri-pencil-fill align-bottom text-muted"></i></a>
+                                                                class="ri-pencil-fill align-bottom text-muted fs-5"></i></a>
                                                     </li>
 
-                                                    <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                    <li class="list-inline-item " data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-                                                        <a class="remove-item-btn" data-bs-toggle="modal"
+                                                        <a class="remove-item-btn " data-bs-toggle="modal"
                                                             href="#deleteRecordModal"
                                                             onclick="showDeleteModal({{ $employee->id }})">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
+
                                                         </a>
                                                     </li>
                                                 </ul>

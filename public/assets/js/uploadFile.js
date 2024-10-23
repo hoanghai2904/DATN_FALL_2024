@@ -1,10 +1,10 @@
-// Them ảnh
+// Thêm ảnh mới
 const imageInput = document.getElementById('imageInput');
 const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 const addImageButton = document.getElementById('addImageButton');
 
 addImageButton.addEventListener('click', () => {
-    imageInput.click(); // Trigger the file input when the div is clicked
+    imageInput.click(); // Kích hoạt file input khi div được click
 });
 
 imageInput.addEventListener('change', handleImageUpload);
@@ -12,7 +12,7 @@ imageInput.addEventListener('change', handleImageUpload);
 function handleImageUpload(event) {
     const files = event.target.files;
     if (files.length > 0) {
-        addImageButton.classList.add('d-none');
+        addImageButton.classList.add('d-none'); // Ẩn nút khi có ảnh được chọn
     }
 
     for (let i = 0; i < files.length; i++) {
@@ -35,7 +35,7 @@ function removeImage(button) {
     const colDiv = button.parentElement;
     colDiv.remove();
     
-    // Show the add image button again if no images are left
+    // Hiển thị nút thêm ảnh nếu không còn ảnh nào
     if (imagePreviewContainer.children.length === 0) {
         addImageButton.classList.remove('d-none');
     }

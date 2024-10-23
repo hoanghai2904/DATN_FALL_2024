@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductWeights extends Model
+class VariantType extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = ['name'];
 
-    public function variants()
+    public function variantValues()
     {
-        return $this->hasMany(ProductVariants::class, 'product_weight_id');
+        return $this->hasMany(VariantValue::class);
     }
 }

@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_types', function (Blueprint $table) {
+        Schema::create('post_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Tên loại 
+            $table->string('name', 255);
+            $table->boolean('status')->default(1);
+            $table->softDeletes();
             $table->timestamps();
-            $table->softDeletes(); // Xóa mềm
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_types');
+        Schema::dropIfExists('post_categories');
     }
 };

@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\Category;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\BannerController;
-use App\Http\Controllers\BrandsController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\ProductController_;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
@@ -15,9 +12,12 @@ use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\PostCategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,17 +34,24 @@ Route::prefix('admin')->as('admin.')->group(function () {
     Route::get('login', [AdminAccountController::class, 'login'])->name('login');
     Route::post('login', [AdminAccountController::class, 'Check_login'])->name('Check_login');
 
+    //Forgot password
+    route::get('/forgot_pass', [AdminAccountController::class, 'forgot_pass'])->name('forgotPass');
+    route::post('/forgot_pass', [AdminAccountController::class, 'Check_forgotPass'])->name('CheckForgotPass');
+
+    route::get('/reset_pass/{token}', [AdminAccountController::class, 'reset_pass'])->name('reset_pass');
+    route::post('/reset_pass/{token}', [AdminAccountController::class, 'Check_resetPass'])->name('Check_resetPass');
+
     // Route cho dashboard và các resource chỉ sau khi đã đăng nhập
     Route::middleware('auth')->group(function () {
-        
-       //Dashboard
+
+        //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
 
-        //Create account by User
+        //Create account to User
         route::get('/rigester', [AdminAccountController::class, 'rigester'])->name('rigester');
         route::post('/rigester', [AdminAccountController::class, 'Check_rigester'])->name('Check_rigester');
         Route::get('/verify-account/{token}', [AdminAccountController::class, 'verifyAccount'])->name('.verify');
@@ -52,19 +59,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //Proffile
         route::get('/profile', [AdminAccountController::class, 'profile'])->name('profile');
         route::post('/profile', [AdminAccountController::class, 'Check_profile'])->name('Check_profile');
-        Route::get('/profile/{provinceId}', [AdminAccountController::class, 'getDistricts'])->name('getDistricts');
-        Route::get('/wards/{districtId}', [AdminAccountController::class, 'getWards'])->name('wards');
-        Route::post('/profile/store', [AdminAccountController::class, 'store'])->name('addAddress');
+
 
         //Change password
         route::post('/change_pass', [AdminAccountController::class, 'Check_changePass'])->name('Check_changePass');
 
-        //Forgot password
-        route::get('/forgot_pass', [AdminAccountController::class, 'forgot_pass'])->name('forgot_pass');
-        route::post('/forgot_pass', [AdminAccountController::class, 'Check_forgotPass']);
 
-        route::get('/reset_pass', [AdminAccountController::class, 'reset_pass'])->name('reset_pass');
-        route::post('/reset_pass', [AdminAccountController::class, 'Check_resetPass']);
 
         //Khách hàng (cusstomer)
         route::get('/cusstomer', [AdminUserController::class, 'listCusstomer'])->name('listCusstomer');
@@ -88,19 +88,23 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         // address
         Route::get('/cusstomer/{userId}', [AdminUserController::class, 'getAddresses'])->name('getAddresses');
-       
+        Route::get('/Districts/{provinceId}', [AdminUserController::class, 'getDistricts'])->name('getDistricts');
+        Route::get('/wards/{districtId}', [AdminUserController::class, 'getWards'])->name('wards');
+        Route::post('/profile/store', [AdminUserController::class, 'storeadd'])->name('addAddress');
 
         //Ai làm cái gì thì ghi cmt lên trên này  
-        Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::resource('transactions', TransactionController::class);
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-         Route::resource('contacts', ContactController::class);
-         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
-         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+        // Route::resource('contacts', ContactController::class);
+        // Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+        // Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+        // Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+        Route::resource('contacts', ContactController::class);
+        Route::post('contacts/{contact}/sendResponse', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+        Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);
@@ -150,19 +154,20 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
             Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
-        // Sản phẩm
+        // Post Categories
+        Route::group(['prefix' => 'postcategories', 'as' => 'postcategories.'], function () {
+            Route::get('/post-category', [PostCategoryController::class, 'show'])->name('listPostCategory');
+            Route::get('/post-category-add', [PostCategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::post('/post-category-add', [PostCategoryController::class, 'addPostPostCategory'])->name('addPostPostCategory');
+            Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
+            Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
+            // Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+            // Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+        });
+        // Sản phẩm mới
+        // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
+        Route::get('products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);
-        Route::get('/test-variant', function () {
-            return view('admin.products.test');
-        });
-        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
-        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
-        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
-        Route::group(['prefix' => 'review', 'as' => 'review.'], function () {
-            Route::get('list-review', [ReviewController::class, 'listReview'])->name('listReview');
-            Route::delete('delete-review/{id}', [ReviewController::class, 'deleteReview'])->name('deleteReview');
-            // Route::put('change-status', [ReviewController::class, 'changeStatus'])->name('change-status');
-        });
     });
 });
