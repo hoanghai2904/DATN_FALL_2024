@@ -1,22 +1,23 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminAccountController;
-use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\admin\ProductController_;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\CancelledOrderController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\admin\ProductController_;
+use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\admin\DashboardController;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\VoucherController;
-use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\Admin\PostCategoryController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -169,5 +170,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::get('products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);
+        //review
+        Route::group(['prefix' => 'review', 'as' => 'review.'], function () {
+            Route::get('list-review', [ReviewController::class, 'listReview'])->name('listReview');
+            Route::delete('delete-review/{id}', [ReviewController::class, 'deleteReview'])->name('deleteReview');
+            Route::put('change-status', [ReviewController::class, 'changeStatus'])->name('change-status');
+        });
     });
 });

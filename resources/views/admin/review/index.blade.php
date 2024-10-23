@@ -145,6 +145,7 @@ td.comment-column {
                                     <td>
                                         <a href="{{ route('admin.review.deleteReview', $review->id) }}"
                                             class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
                                     </td>
                             </tr>
                         @endforeach

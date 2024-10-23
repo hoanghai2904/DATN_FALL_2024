@@ -90,7 +90,8 @@
                                 <td>{{ $item->slug }}</td>
                                 <td>
                                     <a href="{{ route('admin.brands.edit', $item->id) }}">
-                                        <button class="btn btn-sm btn-warning">Sửa</button>
+                                        {{-- <button class="btn btn-sm btn-warning">Sửa</button> --}}
+                                        <i class="ri-pencil-fill align-bottom text-muted fs-5"></i>
                                     </a>
                                     {{-- <ul class="list-inline hstack gap-2 mb-0">
                                         <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
@@ -108,7 +109,8 @@
                                     <form action="{{ route('admin.brands.destroy', $item->id) }}" method="post" class="d-inline">
                                         @method('DELETE')
                                         @csrf
-                                        <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button>
+                                        {{-- <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button> --}}
+                                        <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
                                     </form>
                                 </td>
                             </tr>
