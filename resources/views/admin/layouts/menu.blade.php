@@ -156,7 +156,7 @@
                 </li>
             </ul>
         </div>
-        <ul class="navbar-nav" id="navbar-nav">
+        {{-- <ul class="navbar-nav" id="navbar-nav">
             <li class="menu-title"><span data-key="t-menu">Tổng quát</span></li>
             <li class="nav-item">
                 <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button"
@@ -305,7 +305,7 @@
                     </ul>
                 </div>
             </li>
-        </ul>
+        </ul> --}}
     </div>
     <!-- Sidebar -->
 </div>
