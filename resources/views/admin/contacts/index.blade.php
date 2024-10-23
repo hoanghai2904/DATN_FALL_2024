@@ -204,10 +204,11 @@ liên hệ
                                                 data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                 <a href="#showModal" data-bs-toggle="modal"
                                                     class="text-primary d-inline-block edit-item-btn"
-                                                    data-id="{{ $contact->id }}" data-name="{{ $contact->name }}"
+                                                    data-id="{{ $contact->id }}"
+                                                    data-name="{{ $contact->name }}"
                                                     data-email="{{ $contact->email }}">
                                                     <i class="ri-mail-fill fs-16"></i>
-                                                </a>
+                                                    </a>
                                             </li>
 
                                             <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}"
@@ -242,32 +243,28 @@ liên hệ
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-modal"></button>
                                 </div>
-                                <form action="{{ route('admin.contacts.sendResponse', $contact->id) }}" method="POST">
+                                <form action="{{ route('admin.contacts.sendResponse', $contact->id) }}" method="POST" id="responseForm">
                                     @csrf
                                     <div class="modal-body">
-                                        <!-- Hiển thị tên và email của liên hệ -->
-                                            <div class="mb-3 row">
-                                                 <div class="col-md-6">
-                                                    <label class="form-label fw-bold fs-5">Tên liên hệ:{{ $contact->name }}</label>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="form-label fw-bold fs-5">Email:{{ $contact->email }}</label>
-                                                </div>
-                                            </div>
-
-                                        <!-- Form phản hồi -->
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label class="form-label mb-0 me-2">Name:</label>
+                                        <p class="contact-name mb-0">{{ $contact->name }}</p>
+                                    </div>
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label class="form-label mb-0 me-2">Email:</label>
+                                        <p class="contact-email mb-0">{{ $contact->email }}</p>
+                                    </div>
                                         <div class="mb-3">
                                             <label for="response_message" class="form-label">Nội dung phản hồi</label>
-                                            <textarea class="form-control" name="response_message" rows="4"
-                                                required>{{ old('response_message') }}</textarea>
+                                            <textarea class="form-control" name="response_message" rows="4" required>{{ old('response_message') }}</textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-light"
-                                            data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
                                         <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -332,18 +329,20 @@ liên hệ
         });
 
     });
-    // edit 
     $(document).on('click', '.edit-item-btn', function () {
-        var contactId = $(this).data('id');
-        var contactName = $(this).data('name');
-        var contactEmail = $(this).data('email');
+    var contactId = $(this).data('id');
+    var contactName = $(this).data('name');
+    var contactEmail = $(this).data('email');
 
-        // Cập nhật thông tin vào modal
-        $('#contactName').text(contactName);
-        $('#contactEmail').text(contactEmail);
+    // Cập nhật thông tin vào modal
+    $('#showModal form').attr('action', '/admin/contacts/' + contactId + '/sendResponse');
+    $('#showModal .modal-body p.contact-name').text(contactName);
+    $('#showModal .modal-body p.contact-email').text(contactEmail);
 
-        // Mở modal
-        $('#showModal').modal('show');
-    });
+    // Mở modal
+    $('#showModal').modal('show');
+});
+
+
 </script>
 @endpush

@@ -100,8 +100,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
          Route::resource('contacts', ContactController::class);
-         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+         Route::post('contacts/{contact}/sendResponse', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
          Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::resource('brands', BrandsController::class);
