@@ -12,11 +12,32 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
-    public function listBanner()
+    public function listBanner(Request $request)
     {
-        $listBanner = Banner::paginate(5); // Lấy 10 banner mỗi trang
+        // Lấy các tham số tìm kiếm từ request
+        $query = $request->input('query');
+        $status = $request->input('status');
+
+        // Tạo truy vấn cho bảng banners
+        $listBanner = Banner::query();
+
+        // Nếu có từ khóa tìm kiếm
+        if ($query) {
+            $listBanner->where('url', 'LIKE', "%{$query}%"); // Tìm kiếm theo trường URL
+        }
+
+        // Nếu có trạng thái tìm kiếm
+        if ($status) {
+            $listBanner->where('status', $status === 'active' ? 1 : 0);
+        }
+
+        // Lấy danh sách banner với phân trang
+        $listBanner = $listBanner->paginate(5); // Lấy 5 banner mỗi trang
+
+        // Trả về view với dữ liệu
         return view('admin.banners.list-banner')->with(['listBanner' => $listBanner]);
     }
+    
     public function addBanner()
     {
         return view('admin.banners.add-banner');
@@ -71,7 +92,7 @@ class BannerController extends Controller
         $data = [
             'banner' => $path,
             'url' => $request->url,
-            'status' => $request->status,
+            // 'status' => $request->status,
         ];
 
         // Update the banner with the new data

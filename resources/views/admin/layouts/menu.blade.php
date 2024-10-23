@@ -25,7 +25,6 @@
         </button>
     </div>
     <div id="scrollbar">
-<<<<<<< HEAD
         <div class="container-fluid">
             <div id="two-column-menu">
             </div>
@@ -171,10 +170,6 @@
                     </div>
                 </li>
             </ul>
-=======
-    <div class="container-fluid">
-        <div id="two-column-menu">
->>>>>>> 00a3a90 (update)
         </div>
         <ul class="navbar-nav" id="navbar-nav">
             <li class="menu-title"><span data-key="t-menu">Tổng quát</span></li>

@@ -21,11 +21,15 @@
 @section('content')
     <div class="row">
         <div class="col-xl-12">
-            <a href="{{ route('admin.banners.addBanner') }}">
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{{ route('admin.banners.addBanner') }}">
+                    <button class="btn btn-success">Thêm mới</button>
+                </a>
+            </div>
+            {{-- <a href="{{ route('admin.banners.addBanner') }}">
                 <button class="btn btn-success">Thêm mới</button>
-            </a>
-            <br>
-            <br>
+            </a> --}}
+    
             <div class="card">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
@@ -34,10 +38,39 @@
                 <div class="alert alert-info" role="alert">
                     {{ session('message') }}
                 </div>
+                
             @endif
                 <!-- end card header -->
 
                 <div class="card-body">
+                    <form action="{{ route('admin.banners.listBanner') }}" method="GET">
+                        @csrf
+                        <div class="row mb-2 ">
+                            {{-- <div class="col-lg-4">
+                                <div class="d-flex justify-content-start">
+                                    <div class="search-box ms-2 w-100">
+                                        <input type="text" name="query" class="form-control search"
+                                            placeholder="Search...">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <div class="col-lg-3" data-select2-id="select2-data-2">
+                                <select class="js-example-basic-single select2-hidden-accessible" name="status"
+                                    aria-hidden="true">
+                                    <option value="" disabled selected>Tìm theo trạng thái</option>
+                                    <option value="active" data-select2-id="select2-data-75-jxz2">active</option>
+                                    <option value="inactive" data-select2-id="select2-data-76-uypr">inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-info" data-bs-toggle="offcanvas"
+                                        href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i>Tìm
+                                        kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
                     <div class="live-preview">
                         <div class="table-responsive table-card">
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
@@ -86,11 +119,14 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                
-                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
-                                                <a href="{{ route('admin.banners.deleteBanner', $value->id) }}"
-                                                    class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" style="margin-right: 10px;">
+                                                    <i class="ri-edit-fill align-bottom text-muted"></i> 
+                                                </a>
+                                                <a href="{{ route('admin.banners.deleteBanner', $value->id) }}" class="delete-item">
+                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i> 
+                                                </a>
                                             </td>
+                                            
                                         </tr>
                                     @endforeach
                                 </tbody>
