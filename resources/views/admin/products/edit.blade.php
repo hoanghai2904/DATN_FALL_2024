@@ -54,7 +54,8 @@
                                         <label class="form-label" for="price">Giá bán thường</label>
                                         <div class="input-group has-validation mb-3">
                                             <input type="text" class="form-control" id="price numberInput" name="price"
-                                                placeholder="Nhập giá" value="{{ number_format($product->price) }}">
+                                                placeholder="Nhập giá"
+                                                value="{{ number_format((float) $product->price, 0, ',', '.') }}">
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
 
@@ -104,54 +105,36 @@
                 </div>
                 <!-- end card -->
 
-                {{-- Biến thể sản phẩm --}}
-                <!-- Hiển thị div nếu không có biến thể -->
                 @if ($product->variants->count() > 0)
-                    <!-- Hiển thị bảng nếu có biến thể -->
-                    <div class="card mt-4">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <h5 class="card-title mb-0">Biến thể sản phẩm</h5>
-                            <button class="btn btn-primary">Thêm mới</button>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Danh sách phiên bản : {{ $product->name }}</h5>
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Hình ảnh</th>
-                                        @if ($product->variants->contains('product_type_id', null) === false)
-                                            <th>Loại</th>
-                                        @endif
-                                        @if ($product->variants->contains('product_weight_id', null) === false)
-                                            <th>Trọng lượng</th>
-                                        @endif
-                                        <th>Giá</th>
+                                        <th>Loại</th>
                                         <th>Số lượng</th>
-                                        {{-- <th>Is Default</th> --}}
-                                        <th>Hành động</th>
+                                        <th>Giá tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($product->variants as $variant)
                                         <tr>
-                                            <td>{{ $variant->id }}</td>
-                                            <td><img src="{{ asset('storage/' . $product->thumbnail) }}" alt="Image"
-                                                    width="50"></td>
-                                            @if ($product->variants->contains('product_type_id', null) === false)
-                                                <td>{{ $variant->type ? $variant->type->name : 'N/A' }}</td>
-                                            @endif
-                                            @if ($product->variants->contains('product_weight_id', null) === false)
-                                                <td>{{ $variant->weight ? $variant->weight->name : 'N/A' }}</td>
-                                            @endif
-                                            <td>{{ number_format($variant->price_variant) }} ₫</td>
-                                            <td>{{ $variant->qty }}</td>
-                                            {{-- <td>
-                                                <input type="radio" name="is_default" value="{{ $variant->id }}"
-                                                    {{ $variant->is_default ? 'checked' : '' }}>
-                                            </td> --}}
                                             <td>
-                                                <button class="btn btn-primary btn-sm">Edit</button>
-                                                <button class="btn btn-danger btn-sm">Delete</button>
+                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="Thumbnail"
+                                                    style="width: 50px; height: 50px;">
+                                            </td>
+                                            <td>{{ $variant->variantValue->value }}</td>
+                                            <td>
+                                                <input class="form-control" type="number" name="quantities[]"
+                                                    value="{{ $variant->qty }}" min="0">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text" name="prices[]"
+                                                    value="{{ number_format($variant->price) }}" min="0">
                                             </td>
                                         </tr>
                                     @endforeach
@@ -159,33 +142,9 @@
                             </table>
                         </div>
                     </div>
-                @else
-                    <div class="card mt-4">
-                        <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
-                            data-bs-target="#variantsSection" aria-expanded="true" aria-controls="variantsSection">
-                            <h5 class="card-title mb-0">Biến thể sản phẩm</h5>
-                        </div>
-
-                        <div class="collapse show" id="variantsSection">
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <button type="button" class="col-md-3 btn btn-primary mb-3 mx-3"
-                                        id="addVariant">Thêm
-                                        biến thể</button>
-                                    <div class="col-md-7">
-                                        <select class="js-example-basic-multiple select2-hidden-accessible"
-                                            name="states[]" multiple="" id="attributeSelect">
-                                            <option value="type">Loại</option>
-                                            <option value="weight">Trọng lượng</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="variants"></div> <!-- Khởi tạo là rỗng, sẽ thêm vào khi người dùng nhấn nút -->
-                            </div>
-                        </div>
-                    </div>
                 @endif
-                {{-- End biến thể sản phẩm --}}
+
+
                 <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
                         aria-expanded="true" aria-controls="content">
@@ -230,7 +189,7 @@
                                 class="d-none">
                             <div class="row" id="galleryPreviewContainer">
                                 @foreach ($product->galleries as $gallery)
-                                    <div class="col-6 col-md-4 col-lg-3 image-preview">
+                                    <div class="col-6 col-md-4 col-lg-3 image-preview" data-id="{{ $gallery->id }}">
                                         <img src="{{ asset('storage/' . $gallery->image) }}" alt="Album Image"
                                             class="img-thumbnail">
                                         <button class="remove-image" onclick="removeGallery(this)">X</button>
@@ -361,129 +320,6 @@
     <script src="{{ asset('assets/js/uploadFile.js') }}"></script>
     {{-- end upload File  --}}
 
-    {{-- Biến thể sản phẩm --}}
-    <script>
-        $(document).ready(function() {
-            let variantIndex = 0;
-            let variantCombinations = []; // Danh sách chứa các tổ hợp type - weight đã chọn cho từng biến thể
-
-            // Sự kiện khi bấm nút Thêm Biến Thể
-            $('#addVariant').on('click', function() {
-                const selectedOptions = $('#attributeSelect').val(); // Lấy giá trị các thuộc tính đã chọn
-                if (selectedOptions.length > 0) {
-                    variantIndex++; // Tăng chỉ số biến thể mỗi khi nhấn nút "Thêm biến thể"
-
-                    let variantHTML = `<div class="variant-group card mb-3" id="variant-${variantIndex}">
-                                        <div class="card-body">
-                                            <div class="row">`;
-
-                    // Nếu chọn 'type', thêm trường Loại sản phẩm
-                    if (selectedOptions.includes('type')) {
-                        variantHTML += `
-                            <div class="form-group col-md-4 mt-2">
-                                <label for="type">Loại sản phẩm:</label>
-                                <select id="typeSelect-${variantIndex}" name="variants[${variantIndex}][product_type_id]" class="form-control">
-                                    <option value="">Chọn loại sản phẩm</option>`;
-                        @foreach ($types as $type)
-                            variantHTML +=
-                                `<option value="{{ $type->id }}">{{ $type->name }}</option>`;
-                        @endforeach
-                        variantHTML += `</select>
-                            </div>`;
-                    }
-
-                    // Nếu chọn 'weight', thêm trường Trọng lượng
-                    if (selectedOptions.includes('weight')) {
-                        variantHTML += `
-                            <div class="form-group col-md-4 mt-2">
-                                <label for="weight">Trọng lượng:</label>
-                                <select id="weightSelect-${variantIndex}" name="variants[${variantIndex}][product_weight_id]" class="form-control">
-                                    <option value="">Chọn trọng lượng</option>`;
-                        @foreach ($weights as $weight)
-                            variantHTML +=
-                                `<option value="{{ $weight->id }}">{{ $weight->name }}</option>`;
-                        @endforeach
-                        variantHTML += `</select>
-                            </div>`;
-                    }
-
-                    // Các trường khác: Số lượng, Giá biến thể, Hình ảnh biến thể
-                    variantHTML += `
-                                    <div class="form-group col-md-4 mt-2">
-                                        <label for="qty">Số lượng:</label>
-                                        <input type="number" name="variants[${variantIndex}][qty]" class="form-control" required>
-                                    </div>
-                                    <div class="form-group col-md-4 mt-2">
-                                        <label class="form-label" for="price_variant">Giá biến thể:</label>
-                                        <div class="input-group">
-                                            <input type="text" name="variants[${variantIndex}][price_variant]" class="form-control" required>
-                                            <span class="input-group-text">VNĐ</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="form-group col-md-10 d-flex align-items-end">
-                                        <button type="button" class="btn btn-danger remove-variant" data-variant-id="variant-${variantIndex}">Xóa biến thể</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-
-                    // Chèn nội dung mới vào div #variants
-                    $('#variants').append(variantHTML);
-
-                    // Gán sự kiện xóa cho nút "Xóa biến thể"
-                    $('.remove-variant').off('click').on('click', function() {
-                        let variantId = $(this).data('variant-id');
-                        $('#' + variantId).remove();
-
-                        // Xóa tổ hợp khỏi danh sách variantCombinations
-                        let combinationToRemove = $(this).data('combination');
-                        variantCombinations = variantCombinations.filter(combination =>
-                            combination !== combinationToRemove);
-                    });
-
-                    // Khai báo biến selectedType và selectedWeight trong scope của mỗi biến thể
-                    let selectedType = '';
-                    let selectedWeight = '';
-
-                    // Khi các select box (type và weight) thay đổi, kiểm tra và lưu tổ hợp
-                    $(`#typeSelect-${variantIndex}`).on('change', function() {
-                        selectedType = $(this).val();
-                        checkCombination(variantIndex);
-                    });
-
-                    $(`#weightSelect-${variantIndex}`).on('change', function() {
-                        selectedWeight = $(this).val();
-                        checkCombination(variantIndex);
-                    });
-
-                    // Kiểm tra tổ hợp type - weight có hợp lệ không
-                    function checkCombination(index) {
-                        if (selectedType && selectedWeight) {
-                            let combination = `${selectedType}-${selectedWeight}`;
-
-                            if (variantCombinations.includes(combination)) {
-                                alert(
-                                    'Giá trị đã tồn tại! Vui lòng chọn loại hoặc trọng lượng khác.');
-
-                                // Xóa biến thể bị trùng lặp
-                                $(`#variant-${index}`).remove();
-                            } else {
-                                // Thêm tổ hợp mới vào danh sách variantCombinations
-                                variantCombinations.push(combination);
-                                // Gán tổ hợp vào nút xóa để xử lý khi xóa biến thể
-                                $(`#variant-${index} .remove-variant`).data('combination', combination);
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-    {{-- End biến thể sản phẩm  --}}
-
     {{-- <script>
         // Khi người dùng nhập tên sản phẩm, tự động tạo SKU
         $('#product-title-input').on('input', function() {
@@ -502,6 +338,39 @@
                 $('#sku').val(''); // Xóa SKU nếu không có tên sản phẩm
             }
         });
+    </script> --}}
+
+    {{-- <script>
+        function removeGallery(button) {
+            if (confirm('Bạn có chắc chắn muốn xóa ảnh này?')) {
+                // Lấy ID của gallery từ phần tử liên quan
+                const galleryElement = button.closest('.image-preview');
+                const galleryId = galleryElement.getAttribute('data-id');
+                console.log('ID:', galleryId);
+
+                // Gửi yêu cầu xóa qua AJAX
+                $.ajax({
+                    url: `/galleries/${galleryId}`,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}', // Gửi token bảo mật CSRF
+                    },
+                    success: function(response) {
+                        console.log('Server response:', response); // Log phản hồi từ server
+                        if (response.success) {
+                            // Xóa phần tử ảnh khỏi giao diện
+                            galleryElement.remove();
+                        } else {
+                            alert('Xóa ảnh không thành công.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error details:', xhr.responseText); // Log chi tiết lỗi
+                        alert('Đã xảy ra lỗi khi xóa ảnh.');
+                    }
+                });
+            }
+        }
     </script> --}}
 
     <script>

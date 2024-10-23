@@ -51,8 +51,7 @@ class VoucherController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
         ];
         Vouchers::create($data);
-        notyf()->success('Thêm mới sản phẩm thành công.');
-        return redirect()->route('admin.vouchers.index');
+        return redirect()->route('admin.vouchers.index')->with('success', 'Thêm mới mã giảm giá thành công.');
     }
     // public function show($id){
     //     $find = Vouchers::find($id);
@@ -68,12 +67,12 @@ class VoucherController extends Controller
     //     return back();
     // }
     public function destroy($id){
-        $find=Vouchers::find($id);
+        $find=Vouchers::findOrFail($id);
         if (!$find) {
             return redirect()->route('admin.vouchers.index')->with('msg_warning', 'Giảm giá không tồn tại');
         }
         $find->delete();
-        return redirect()->route('admin.vouchers.index')->with('msg',"Xóa thành công");
+        return response(['status' => 'success', 'Xóa thành công!']);
     }
     public function edit($id)
     {
@@ -105,7 +104,7 @@ class VoucherController extends Controller
     
         $find->update($data);
     
-        return redirect()->route('admin.vouchers.index')->with('msg', "Sửa mã giảm giá thành công");
+        return redirect()->route('admin.vouchers.index')->with('success', "Sửa mã giảm giá thành công");
     }
     
     public function updateStatus(Request $request)

@@ -67,9 +67,6 @@
                                     <label class="form-label" for="meta-title-input">Giá trị giảm giá</label>
                                     <input type="text" class="form-control" placeholder="Nhập giá trị giảm giá"
                                     id="numberInput" oninput="formatNumber(this)" name="discount" min="1000" value="{{old('discount') ?? $find->discount}}"> 
-                                        @error('discount')
-                                        <h5 style="color: red">{{$message}}</h5>
-                                        @enderror
                                 </div>
                             </div>
                             <div class="col-lg-6">

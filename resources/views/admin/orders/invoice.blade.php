@@ -9,6 +9,22 @@
 @endsection
 
 @section('script-libs')
+<style>
+    .card-body {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px; /* Điều chỉnh khoảng cách giữa các nút */
+    }
+
+    .btn {
+        padding: 10px 20px; /* Tăng khoảng cách bên trong nút nếu cần */
+    }
+
+    .text-end {
+        text-align: right; /* Căn chỉnh văn bản bên phải */
+    }
+</style>
     <script src="{{ asset('theme/admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('theme/admin/vendor/select2/select2.min.js') }}"></script>
@@ -49,7 +65,7 @@
                             </div>
                             <div class="col-lg-3 col-6">
                                 <p class="text-muted mb-2 text-uppercase fw-semibold">Tổng số tiền</p>
-                                <h5 class="fs-14 mb-0">$<span id="total-amount">{{ number_format($order->total_price, 2) }}</span></h5>
+                                <h5 class="fs-14 mb-0"><span id="total-amount">{{ number_format($order->total_price, ) }}</span>₫</h5>
                             </div>
                         </div>
                     </div>
@@ -84,8 +100,8 @@
                                         <th scope="col">Chi tiết sản phẩm</th>
                                         <th scope="col">Giá</th>
                                         <th scope="col">Giá giảm</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col" class="text-end">Amount</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col" class="text-end">Tổng tiền</th>
                                     </tr>
                                 </thead>
                                 <tbody id="order-items-list">
@@ -93,39 +109,57 @@
                                         <tr>
                                             <th scope="row">{{ $index + 1 }}</th>
                                             <td>{{ $item->product_name}}</td>
-                                            <td>${{ number_format($item->product_price, 2) }}</td>
-                                            <td>${{ number_format($item->product_price_sale, 2) }}</td>
+                                            <td>{{ number_format($item->product_price) }}₫</td>
+                                            <td>{{ number_format($item->product_price_sale) }}₫</td>
                                             <td>{{ $item->qty }}</td>
-                                            <td class="text-end">${{ number_format($item->product_price * $item->qty, 2) }}</td>
+                                            <td class="text-end">{{ number_format($item->product_price_sale * $item->qty) }}₫</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="4" class="text-end">Total:</th>
-                                        <td class="text-end">${{ number_format($order->total_price, 2) }}</td>
+                                        <th colspan="4" class="text-end">Tổng tiền:</th>
+                                        <td class="text-end">{{ number_format($order->total_price) }}₫</td>
                                     </tr>
                                     <tr>
-                                        <th colspan="4" class="text-end">Tax:</th>
-                                        <td class="text-end">${{ number_format($order->tax, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="4" class="text-end">Grand Total:</th>
-                                        <td class="text-end fw-medium">${{ number_format($order->grand_total, 2) }}</td>
+                                        <td colspan="5">
+                                            <div class="row text-end">
+                                                <div class="col-md-12">
+                                                    <p class="mb-3">
+                                                        <strong>Tổng số lượng:</strong> 
+                                                        <span id="total-quantity">{{ $orderItems->sum('qty') }}</span>
+                                                    </p>
+                                                    <p class="mb-3">
+                                                        <strong>Giảm giá:</strong> 
+                                                        <span id="discount">{{ number_format($order->discount_price ?? 0, 0, ',', '.') }}₫</span>
+                                                    </p>
+                                                    <p class="mb-3">
+                                                        <strong>Phí vận chuyển:</strong> 
+                                                        <span id="shipping-fee">{{ number_format($order->shipping_fee, 0, ',', '.') }}₫</span>
+                                                    </p>
+                                                    <h5 class="mb-3">Tổng tiền (sau khi áp dụng giảm giá và phí vận chuyển):</h5>
+                                                    <h5 class="text-danger" id="total-amount-with-shipping">
+                                                        {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tfoot>
+
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card-body p-4 text-end border-top border-top-dashed">
-
-                        <a href="javascript:window.print()" class="btn btn-success"><i class="ri-printer-line align-bottom me-1"></i> In</a>
-               
-                      
+                    <div class="card-body p-4 text-end border-top border-top-dashed d-flex justify-content-end align-items-center gap-3">
+                        <a href="javascript:window.print()" class="btn btn-success">
+                            <i class="ri-printer-line align-bottom me-1"></i> In
+                        </a>
+                        <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Quay lại </a>
                     </div>
-                </div>            
+                </div>
+        
             </div>
         </div>
     </div>

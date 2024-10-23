@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id'); // Khóa ngoại đến bảng users
             $table->unsignedBigInteger('voucher_id')->nullable(); // Chấp nhận null nếu không có voucher
             $table->string('order_code');
             $table->string('user_name');
@@ -27,18 +27,25 @@ return new class extends Migration
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->enum('payment_method', ['Thanh toán khi nhận hàng','Chuyển Khoản','Đã thanh toán']);
             $table->timestamps();
-    
-            // Thêm khóa ngoại cho voucher_id
+            $table->softDeletes();
+
+            // Thiết lập khóa ngoại cho user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // Thiết lập khóa ngoại cho voucher_id
             $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('set null');
         });
     }
-    
-    
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign(['user_id']); // Xóa khóa ngoại nếu rollback
+            $table->dropForeign(['voucher_id']); // Xóa khóa ngoại nếu rollback
+        });
+
+        Schema::dropIfExists('orders'); // Xóa bảng nếu rollback
     }
 };

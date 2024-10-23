@@ -31,7 +31,7 @@ class VoucherRequest extends FormRequest
             'start' => 'required|date|after_or_equal:today',
             'end' => 'required|date|after_or_equal:start'
         ];    
-        if ($this->input('discount_type') == 0) {
+        if ($this->input('discount_type') == '0') {
             $rules['discount'] = 'required|numeric|min:1|max:100'; 
         }
     

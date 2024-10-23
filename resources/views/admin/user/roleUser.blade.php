@@ -66,7 +66,8 @@
                         <div class="row g-4 align-items-center">
                             <div class="col-sm-3">
                                 <div class="search-box">
-                                    <input type="text" class="form-control search" name="query" placeholder="tìm kiếm theo vai trò ...">
+                                    <input type="text" class="form-control search" name="query"
+                                        placeholder="tìm kiếm theo vai trò ...">
                                     <i class="ri-search-line search-icon"></i>
                                 </div>
                             </div>
@@ -147,7 +148,7 @@
                                                 <ul class="list-inline hstack gap-2 mb-0">
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
                                                         data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                        
+
                                                     </li>
 
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
@@ -291,89 +292,90 @@
         <!--end col-->
     </div>
     <script>
-  function confirmStatusChange(customerId, checkbox) {
-    const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
-    console.log("Trạng thái ban đầu:", originalChecked);
+        function confirmStatusChange(customerId, checkbox) {
+            const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
+            console.log("Trạng thái ban đầu:", originalChecked);
 
-    // Hiển thị modal
-    $('#removeNotificationModal').modal('show');
+            // Hiển thị modal
+            $('#removeNotificationModal').modal('show');
 
-    // Khi người dùng xác nhận cập nhật
-    $('#updateStatus').off('click').on('click', function() {
-        updateStatus(customerId, checkbox); // Truyền checkbox để xử lý
-        $('#removeNotificationModal').modal('hide');
+            // Khi người dùng xác nhận cập nhật
+            $('#updateStatus').off('click').on('click', function() {
+                updateStatus(customerId, checkbox); // Truyền checkbox để xử lý
+                $('#removeNotificationModal').modal('hide');
 
-        // Loại bỏ sự kiện hủy khi đã xác nhận
-        $('#removeNotificationModal').off('hidden.bs.modal');
-    });
-
-    // Khi người dùng hủy modal
-    $('#removeNotificationModal').on('hidden.bs.modal', function() {
-        checkbox.checked = !originalChecked; // Khôi phục trạng thái nếu người dùng hủy
-        console.log("Trạng thái sau khi hủy:", checkbox.checked);
-    });
-}
-
-function updateStatus(customerId, checkbox) {
-    const isChecked = checkbox.checked;
-    const status = isChecked ? 'active' : 'inactive'; // Cập nhật theo giá trị mong muốn
-
-    fetch('{{ route('admin.updateStatusRole', ':id') }}'.replace(':id', customerId), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            status: status
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Response:', data); // Kiểm tra phản hồi
-        if (data.success) {
-            console.log("Cập nhật thành công");
-            checkbox.checked = isChecked; // Giữ nguyên trạng thái sau khi thành công
-
-            // Hiển thị thông báo thành công bằng SweetAlert
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công',
-                text: 'Cập nhật trạng thái thành công!',
-                confirmButtonText: 'Đồng ý'
+                // Loại bỏ sự kiện hủy khi đã xác nhận
+                $('#removeNotificationModal').off('hidden.bs.modal');
             });
-        } else {
-            // Hiển thị thông báo lỗi bằng SweetAlert
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Cập nhật trạng thái không thành công!',
-                confirmButtonText: 'Đồng ý'
+
+            // Khi người dùng hủy modal
+            $('#removeNotificationModal').on('hidden.bs.modal', function() {
+                checkbox.checked = !originalChecked; // Khôi phục trạng thái nếu người dùng hủy
+                console.log("Trạng thái sau khi hủy:", checkbox.checked);
             });
-            checkbox.checked = !isChecked; // Khôi phục trạng thái nếu không thành công
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        // Hiển thị thông báo lỗi bằng SweetAlert
-        Swal.fire({
-            icon: 'error',
-            title: 'Có lỗi xảy ra',
-            text: 'Đã xảy ra lỗi trong quá trình cập nhật trạng thái.',
-            confirmButtonText: 'Đồng ý'
-        });
-        checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
-    });
-}
+
+        function updateStatus(customerId, checkbox) {
+            const isChecked = checkbox.checked;
+            const status = isChecked ? 'active' : 'inactive'; // Cập nhật theo giá trị mong muốn
+
+            fetch('{{ route('admin.updateStatusRole', ':id') }}'.replace(':id', customerId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        status: status
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response:', data); // Kiểm tra phản hồi
+                    if (data.success) {
+                        console.log("Cập nhật thành công");
+                        checkbox.checked = isChecked; // Giữ nguyên trạng thái sau khi thành công
+
+                        // Hiển thị thông báo thành công bằng SweetAlert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Cập nhật trạng thái thành công!',
+                            confirmButtonText: 'Đồng ý'
+                        });
+                    } else {
+                        // Hiển thị thông báo lỗi bằng SweetAlert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Cập nhật trạng thái không thành công!',
+                            confirmButtonText: 'Đồng ý'
+                        });
+                        checkbox.checked = !isChecked; // Khôi phục trạng thái nếu không thành công
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Hiển thị thông báo lỗi bằng SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật trạng thái.',
+                        confirmButtonText: 'Đồng ý'
+                    });
+                    checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
+                });
+        }
 
 
         // Hàm hiển thị modal xác nhận xóa
         let deleteCustomerId;
+
         function showDeleteModal(customerId) {
             deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
             $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
@@ -429,90 +431,90 @@ function updateStatus(customerId, checkbox) {
         // edit quyền 
         var editRoleUrl = "{{ route('admin.roles.edit', ':id') }}"; // Placeholder cho ID
 
-$(document).on('click', '.edit-item-btn', function() {
-    var roleId = $(this).data('id'); // Lấy ID từ nút sửa
-    var url = editRoleUrl.replace(':id', roleId); // Thay thế ID vào URL
+        $(document).on('click', '.edit-item-btn', function() {
+            var roleId = $(this).data('id'); // Lấy ID từ nút sửa
+            var url = editRoleUrl.replace(':id', roleId); // Thay thế ID vào URL
 
-    // Gọi route để lấy thông tin vai trò và quyền
-    $.ajax({
-        url: url,
-        method: 'GET',
-        success: function(response) {
-            // Xóa các lựa chọn trước đó
-            $('#rolePermissions').empty();
+            // Gọi route để lấy thông tin vai trò và quyền
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Xóa các lựa chọn trước đó
+                    $('#rolePermissions').empty();
 
-            // Hiển thị tất cả quyền trong select box
-            $.each(response.all_permissions, function(index, permission) {
-                var selected = response.permissions.includes(permission.id) ? 'selected' : '';
-                $('#rolePermissions').append(
-                    `<option value="${permission.id}" ${selected}>${permission.name}</option>`
-                );
+                    // Hiển thị tất cả quyền trong select box
+                    $.each(response.all_permissions, function(index, permission) {
+                        var selected = response.permissions.includes(permission.id) ?
+                            'selected' : '';
+                        $('#rolePermissions').append(
+                            `<option value="${permission.id}" ${selected}>${permission.name}</option>`
+                        );
+                    });
+
+                    // Gán ID vai trò vào form
+                    $('#updateRoleForm').data('id', roleId);
+
+                    // Hiển thị modal
+                    $('#exampleModalgrid').modal('show');
+                },
+                error: function(xhr) {
+                    console.error('Lỗi khi lấy dữ liệu vai trò:', xhr);
+                }
             });
-
-            // Gán ID vai trò vào form
-            $('#updateRoleForm').data('id', roleId);
-
-            // Hiển thị modal
-            $('#exampleModalgrid').modal('show');
-        },
-        error: function(xhr) {
-            console.error('Lỗi khi lấy dữ liệu vai trò:', xhr);
-        }
-    });
-});
+        });
 
 
         //update quyền vs thông báo bằng thư viện 
         // Kiểm tra khi người dùng thay đổi quyền
         var updateRoleUrl = "{{ route('admin.roles.update', ':id') }}"; // Placeholder cho ID
 
-$(document).on('submit', '#updateRoleForm', function(e) {
-    e.preventDefault(); // Ngăn chặn hành động gửi form mặc định
+        $(document).on('submit', '#updateRoleForm', function(e) {
+            e.preventDefault(); // Ngăn chặn hành động gửi form mặc định
 
-    var roleId = $(this).data('id'); // Lấy ID vai trò từ form
-    var selectedPermissions = $('#rolePermissions').val(); // [id1, id2, ...]
+            var roleId = $(this).data('id'); // Lấy ID vai trò từ form
+            var selectedPermissions = $('#rolePermissions').val(); // [id1, id2, ...]
 
-    // Kiểm tra xem có quyền nào được chọn không
-    if (selectedPermissions.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Cảnh báo',
-            text: 'Vui lòng chọn ít nhất một quyền.',
-            confirmButtonText: 'Đồng ý'
+            // Kiểm tra xem có quyền nào được chọn không
+            if (selectedPermissions.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo',
+                    text: 'Vui lòng chọn ít nhất một quyền.',
+                    confirmButtonText: 'Đồng ý'
+                });
+                return;
+            }
+
+            // Gọi route để cập nhật quyền cho vai trò
+            $.ajax({
+                url: updateRoleUrl.replace(':id', roleId), // Sử dụng URL đã tạo
+                method: 'PUT',
+                data: {
+                    permissions: selectedPermissions,
+                    _token: '{{ csrf_token() }}' // Đảm bảo gửi token CSRF
+                },
+                success: function(response) {
+                    console.log('Cập nhật quyền thành công!', response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Vai trò đã được cập nhật.',
+                        confirmButtonText: 'Đồng ý'
+                    }).then(() => {
+                        location.reload(); // Tải lại trang sau khi cập nhật
+                    });
+                },
+                error: function(xhr) {
+                    console.error('Lỗi khi cập nhật quyền:', xhr);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Có lỗi xảy ra. Vui lòng thử lại.',
+                        confirmButtonText: 'Đồng ý'
+                    });
+                }
+            });
         });
-        return;
-    }
-
-    // Gọi route để cập nhật quyền cho vai trò
-    $.ajax({
-        url: updateRoleUrl.replace(':id', roleId), // Sử dụng URL đã tạo
-        method: 'PUT',
-        data: {
-            permissions: selectedPermissions,
-            _token: '{{ csrf_token() }}' // Đảm bảo gửi token CSRF
-        },
-        success: function(response) {
-            console.log('Cập nhật quyền thành công!', response);
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công',
-                text: 'Vai trò đã được cập nhật.',
-                confirmButtonText: 'Đồng ý'
-            }).then(() => {
-                location.reload(); // Tải lại trang sau khi cập nhật
-            });
-        },
-        error: function(xhr) {
-            console.error('Lỗi khi cập nhật quyền:', xhr);
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Có lỗi xảy ra. Vui lòng thử lại.',
-                confirmButtonText: 'Đồng ý'
-            });
-        }
-    });
-});
-
     </script>
 @endsection

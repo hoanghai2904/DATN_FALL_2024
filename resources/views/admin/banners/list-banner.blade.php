@@ -69,7 +69,7 @@
                                             </td>
                                             <td>{{ $item + 1 }}</td>
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
-                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
+                                                <img src="{{ asset('storage/' . $value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
                                             <td><a href="{{ $value->url }}" target="_blank">Đường Link</a></td>
                                             <td>
@@ -111,7 +111,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Effect Coverflow Swiper</h4>
+                <h4 class="card-title mb-0">Hiệu ứng </h4>
             </div><!-- end card header -->
             <div class="card-body">
                 <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
@@ -121,7 +121,7 @@
                     <div class="swiper-wrapper">
                         @foreach ($listBanner as $banner)
                         <div class="swiper-slide" id="bannerSlide{{ $banner->id }}" data-status="{{ $banner->status }}">
-                            <img src="{{ Storage::url($banner->banner) }}" alt="Banner {{ $banner->id }}" class="img-fluid" />
+                            <img src="{{ asset('storage/' . $banner->banner) }}" alt="Banner {{ $banner->id }}" class="img-fluid" />
                         </div>
                     @endforeach
                     

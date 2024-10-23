@@ -39,7 +39,6 @@ class BannerController extends Controller
         ];
 
         Banner::create($data);
-        notyf()->info('Your account has been deactivated and a confirmation email has been sent.');
         return redirect()->route('admin.banners.listBanner')->with(['message' => 'Thêm Mới Thành Công']);
     }
 

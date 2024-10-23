@@ -114,7 +114,7 @@
                                                     <small class="text-muted">{{ \Carbon\Carbon::parse($order->created_at)->format('H:i') }}</small>
                                                 </td>
 
-                                        <td class="total_price">${{ $order->total_price }}</td>
+                                        <td class="total_price"> {{ number_format($order->total_price - ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫</td>
                                         <td class="payment_method">{{ $order->payment_method }}</td>
                                         <td>{{ $order->status_order }}</td>
                                         <td>
@@ -134,7 +134,7 @@
                                                     <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" style="display:inline;" >
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn delete-item" style="border: none; background: none;">
+                                                        <button type="submit" class="text-danger d-inline-block remove-item-btn " style="border: none; background: none;">
                                                             <i class="ri-delete-bin-5-fill fs-16"></i>
                                                         </button>
                                                     </form>
