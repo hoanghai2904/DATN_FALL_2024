@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\admin\PostRequest;
 use App\Models\admin\Posts;
 use App\Models\Category;
+use App\Models\PostCategory;
 use Illuminate\Http\Request;
 use Flasher\Notyf\Prime\NotyfInterface;
 use Flasher\Laravel\Facade\Flasher;
@@ -16,14 +17,14 @@ class PostController extends Controller
     //
     public function index(Request $request){
         $query = Posts::query();
-        $allCate = Category::all();
+        $allCate = PostCategory::all();
         $search = null;
         $search = $request->input('keywords');
         if ($request->has('status') && is_numeric($request->status)) {
             $status = (int) $request->status; // Convert to integer
             $query->where('status', '=', $status);
             if ($query->count() == 0) {
-                return redirect()->back()->with('msg', 'Không tìm thấy mã giảm giá với trạng thái này.');
+                return redirect()->back()->with('msg', 'Không tìm thấy bài viết với trạng thái này.');
             }
         } else {
             $query->where('status', '!=', 0); 
@@ -35,7 +36,7 @@ class PostController extends Controller
             $category_id = (int) $request->category_id; // Convert to integer
             $query->where('category_id', '=', $category_id);
             if ($query->count() == 0) {
-                return redirect()->back()->with('msg', 'Không tìm thấy mã giảm giá với trạng thái này.');
+                return redirect()->back()->with('msg', 'Không tìm thấy bài viết với trạng thái này.');
             }
         } else {
             $query->where('category_id', '!=', 0); 
@@ -54,11 +55,19 @@ class PostController extends Controller
     }
     public function create(){
         $title = "Tạo mới bài viết";
-        $allCate = Category::all();
+        $allCate = PostCategory::all();
         return view('admin.posts.create',compact('title','allCate'));
     }
     public function store(Request $req){
+        $path = null;
+        if ($req->hasFile('thumbnail')) {
+            $rename = slug($req->name);
+            $image = $req->file('thumbnail');
+            $newImage = $rename . '_' . time() . '_' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('uploads/products', $newImage, 'public');
+        }
         $vali= $req->validate([
+            'thumbnail' => ['image', 'nullable', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
             'title' => 'required',
             'user_id' => 'required',
             'status' => 'required',
@@ -74,6 +83,7 @@ class PostController extends Controller
         $data = [
             'title' => $vali['title'],
             'user_id' => $vali['user_id'],
+            'thumbnail' => $path,
             'status' =>  $vali['status'],
             'category_id' => $vali['category_id'],
             'body' => $vali['body'],
@@ -91,7 +101,7 @@ class PostController extends Controller
     {
         $title = "Cập nhật bài viết";
         $find=Posts::find($id);
-        $allCate = Category::all();
+        $allCate = PostCategory::all();
         if (!$find) {
             return redirect()->route('admin.posts.index')->with('msg_warning', 'Giảm giá không tồn tại');
         }

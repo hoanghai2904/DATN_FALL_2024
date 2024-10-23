@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="createproduct-form" method="POST" action="{{ route('admin.posts.store') }}" autocomplete="off"
-        class="needs-validation" novalidate>
+        class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         <a class="btn btn-info" href="{{route('admin.posts.index')}}">Trở về</a>
         <div class="row">
@@ -29,7 +29,15 @@
                                            id="meta-keywords-input" value="{{ Auth::user()->full_name }}" disabled>
                                 </div>
                             </div>
-                            
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="image-input">Ảnh Bìa bài viết </label>
+                                    <input type="file" class="form-control" name="thumbnail">
+                                    @error('thumbnail')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                             <!-- Hidden field to store user_id -->
                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">                            
                             <div class="col-lg-6">
