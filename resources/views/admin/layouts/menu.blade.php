@@ -96,7 +96,7 @@
                     <div class="collapse menu-dropdown" id="sale">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Nếu có thì làm dropdow</a>
+                                <a href="{{route('admin.vouchers.index')}}" class="nav-link">Nếu có thì làm dropdow</a>
                             </li>
                         </ul>
                     </div>
@@ -112,7 +112,7 @@
                                 <a href="#" class="nav-link">Quản lý danh mục</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý bài viết</a>
+                                <a href="{{route('admin.posts.index')}}" class="nav-link">Quản lý bài viết</a>
                             </li>
                         </ul>
                     </div>

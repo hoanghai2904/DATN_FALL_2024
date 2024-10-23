@@ -29,7 +29,20 @@ class PostController extends Controller
             $query->where('status', '!=', 0); 
             if (!$request->has('status')) {
             }
+        }
+
+        if ($request->has('category_id') && is_numeric($request->category_id)) {
+            $category_id = (int) $request->category_id; // Convert to integer
+            $query->where('category_id', '=', $category_id);
+            if ($query->count() == 0) {
+                return redirect()->back()->with('msg', 'Không tìm thấy mã giảm giá với trạng thái này.');
+            }
+        } else {
+            $query->where('category_id', '!=', 0); 
+            if (!$request->has('category_id')) {
+            }
         } 
+        
         if ($search) {
             // Nếu có từ khóa tìm kiếm, thêm điều kiện join và where để lọc bình luận theo fullname trong bảng users
             $query->whereHas('user', function($q) use ($search){

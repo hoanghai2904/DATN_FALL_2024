@@ -36,22 +36,22 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                        <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Public</option>
-                                        <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Private</option>
+                                        <option value="" disabled {{ old('status', isset($post) ? $post->status : '') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
+                                        <option value="2" {{ old('status', isset($post) ? $post->status : '') == '2' ? 'selected' : '' }}>Public</option>
+                                        <option value="1" {{ old('status', isset($post) ? $post->status : '') == '1' ? 'selected' : '' }}>Private</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Danh mục</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="category_id">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Danh mục</option>
+                                    <select class="form-control js-example-basic-single select2-hidden-accessible" aria-label="Default select example" name="category_id">
+                                        <option value="" disabled {{ old('category_id', isset($post) ? $post->category_id : '') == '' ? 'selected' : '' }}>Danh mục</option>
                                         @foreach ($allCate as $key => $item)
-                                        <option value="{{ $item->id }}"{{old('product_category')==$item->id?'selected':false}}>{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}" {{ old('category_id', isset($post) ? $post->category_id : '') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div>                                
                             </div>
 
                             <div class="card">
@@ -62,7 +62,7 @@
                                 <div class="collapse show" id="content">
                                     <div class="card-body">
                                         <div class="mb-3">
-                                            <textarea id="ckeditor-classic" name="body"></textarea>
+                                            <textarea id="ckeditor-classic" name="body" >{{old('body')}}</textarea>
                                         </div>
                                     </div>
                                 </div>
