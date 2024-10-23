@@ -180,7 +180,7 @@
                     <li>
                         <div class="d-flex align-items-center mb-3">
                             <i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>
-                            <strong>Số điện thoại người nhận:</strong> {{ $order->user_phone }}
+                            <strong>Số điện thoại:</strong> {{ $order->user_phone }}
                         </div>
                     </li>
                     <li>
@@ -196,10 +196,12 @@
                         </div>
                     </li>
                     <li>
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="ri-notes-line me-2 align-middle text-muted fs-16"></i>
-                            <strong>Ghi chú:</strong> {{ $order->shipping_note ?? 'Không có ghi chú' }}
-                        </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="ri-notes-line me-2 align-middle text-muted fs-16"></i>
+                        <strong class="text-primary">Ghi chú:</strong>
+                        <span class="ms-2 text-secondary">{{ $order->user_note ?? 'Không có ghi chú' }}</span>
+                    </div>
+
                     </li>
                 </ul>
             </div>

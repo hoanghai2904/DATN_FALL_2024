@@ -136,7 +136,7 @@ liên hệ
                                         </div>
                                     </th>
                                     <th class="sort" data-sort="id">ID</th>
-                                    <th class="sort" data-sort="name">Tên</th>
+                                    <th class="sort" data-sort="name">Tên khách hàng</th>
                                     <th class="sort" data-sort="email" style="width:180px;">Email</th>
                                     <th class="sort" data-sort="phone">Điện thoại</th>
                                     <th class="sort">Ngày đặt hàng</th>
@@ -246,14 +246,14 @@ liên hệ
                                     @csrf
                                     <div class="modal-body">
                                         <!-- Hiển thị tên và email của liên hệ -->
-                                        <div class="mb-3">
-                                            <label class="form-label">Tên liên hệ:</label>
-                                            <p id="contactName">{{ $contact->name }}</p>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Email:</label>
-                                            <p id="contactEmail">{{ $contact->email }}</p>
-                                        </div>
+                                            <div class="mb-3 row">
+                                                 <div class="col-md-6">
+                                                    <label class="form-label fw-bold fs-5">Tên liên hệ:{{ $contact->name }}</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold fs-5">Email:{{ $contact->email }}</label>
+                                                </div>
+                                            </div>
 
                                         <!-- Form phản hồi -->
                                         <div class="mb-3">
