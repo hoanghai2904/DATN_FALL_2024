@@ -243,6 +243,7 @@ liên hệ
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         id="close-modal"></button>
                                 </div>
+                                @foreach ($contacts as $contact)
                                 <form action="{{ route('admin.contacts.sendResponse', $contact->id) }}" method="POST" id="responseForm">
                                     @csrf
                                     <div class="modal-body">
@@ -264,7 +265,7 @@ liên hệ
                                         <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
                                     </div>
                                 </form>
-
+                                @endforeach
                             </div>
                         </div>
                     </div>

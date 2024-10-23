@@ -114,11 +114,11 @@ class ContactController extends Controller
             'response_message' => 'required|string|max:500',
         ]);
     
-        $contact = Contact::findOrFail($id);
+        $contacts = Contact::findOrFail($id);
     
         $data = [
-            'name' => $contact->name,  // Lấy tên từ bản ghi liên hệ
-            'email' => $contact->email,  // Lấy email từ bản ghi liên hệ
+            'name' => $contacts->name,  // Lấy tên từ bản ghi liên hệ
+            'email' => $contacts->email,  // Lấy email từ bản ghi liên hệ
             'message' => $request->input('response_message'), // Nội dung phản hồi
         ];
     
