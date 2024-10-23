@@ -42,7 +42,7 @@
                     </div>
                     <!-- end row -->
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="inputState">Trạng thái</label>
                         <select id="inputState" class="form-control" name="status" required>
                             <option value="" disabled selected>Select status</option>
@@ -53,7 +53,7 @@
                         @enderror
                         </select>
                         <div class="invalid-feedback">Vui lòng chọn trạng thái.</div>
-                    </div>
+                    </div> --}}
                     <!-- end row -->
                 </div>
             </div>
