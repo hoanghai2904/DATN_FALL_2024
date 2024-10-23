@@ -17,14 +17,12 @@ return new class extends Migration
             $table->unsignedBigInteger('product_variant_id');
             $table->integer('qty');
             $table->string('product_name');
-            $table->string('product_sku');
             $table->string('product_thumbnail');
             $table->decimal('product_price', 10, 2);
             $table->decimal('product_price_sale', 10, 2)->nullable();
             $table->string('variant_size_name')->nullable();
             $table->string('variant_color_name')->nullable();
             $table->timestamps();
-    
             // Thiết lập khóa ngoại cho order_id
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
