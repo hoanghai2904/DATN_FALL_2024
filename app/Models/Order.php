@@ -4,7 +4,7 @@ namespace App\Models;
 use App\Models\admin\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Order extends Model
 {
     protected $fillable = [
@@ -18,10 +18,16 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     public function voucher()
     {
         return $this->belongsTo(Voucher::class);
+    }
+    public function calculateTotalAmount()
+    {
+        return $this->items->sum(function ($item) {
+            return $item->product_price_sale ? $item->product_price_sale * $item->qty : $item->product_price * $item->qty;
+        });
     }
 }

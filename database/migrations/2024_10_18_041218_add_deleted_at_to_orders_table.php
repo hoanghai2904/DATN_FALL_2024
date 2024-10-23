@@ -9,17 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->softDeletes(); // Thêm cột deleted_at
+            if (!Schema::hasColumn('orders', 'deleted_at')) {
+                $table->softDeletes(); // Thêm cột deleted_at
+            }
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropSoftDeletes(); // Xóa cột deleted_at
+            if (Schema::hasColumn('orders', 'deleted_at')) {
+                $table->dropSoftDeletes(); // Xóa cột deleted_at
+            }
         });
     }
 };

@@ -16,26 +16,29 @@ class Product extends Model
         'category_id', 'brand_id', 'thumbnail', 'name', 'slug', 'sku','qty',
         'description', 'content', 'price', 'price_sale', 'status'
     ];
-    // public function categories(){
-    //     return $this->belongsToMany(Category::class, 'category_id');
-    // }
+
+    // Thiết lập quan hệ với bảng ProductVariant
     public function variants()
     {
-        return $this->hasMany(ProductVariants::class);
+        return $this->hasMany(ProductVariant::class, 'product_id');
     }
-    public function category(){
+
+    // Quan hệ với bảng Category 
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
-    public function brand(){
+
+    // Quan hệ với bảng Brand 
+    public function brand()
+    {
         return $this->belongsTo(Brands::class);
     }
-    // belongsToMany : thiết lập mối quan hệ nhiều-nhiều giữa hai model.
-    // Tag::class là tham chiếu đến class Tag. Nó chỉ ra rằng Product có quan hệ với Tag
-    // 'product_tags' : bảng trung gian (pivot table) kết nối hai bảng products và tags.
     public function tags(){
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
     public function galleries(){
         return $this->hasMany(ProductGallery::class);
     }
+  
 }

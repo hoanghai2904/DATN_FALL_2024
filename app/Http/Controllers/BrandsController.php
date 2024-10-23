@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brands;
 use Illuminate\Http\Request;
+use Flasher\Notyf\Prime\NotyfInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,9 +20,16 @@ class BrandsController extends Controller
      */
     public function index()
     {
+        // $query = Brands::query();
         $listBrands = Brands::all();
+        // $brands = $query->paginate(8);
         return view('admin.brands.index', ['brands' => $listBrands]);
     }
+    // public function trash()
+    // {
+    //     $listBrands = Brands::all()->where('deleted',1);
+    //     return view('admin.brands.trash', ['brands' => $listBrands]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -48,7 +56,9 @@ class BrandsController extends Controller
             'slug' => $request->slug,
         ];
         $this->brands->createBrands($dataInsert);
-        return redirect()->route('admin.brands.index');
+
+        //notyf()->info('Your account has been deactivated and a confirmation email has been sent.');
+        return redirect()->route('admin.brands.index')->with(['message' => 'Thêm Thành Công']);
     }
 
     /**
@@ -95,7 +105,7 @@ class BrandsController extends Controller
         ];
 
         $brands->updateBrands($dataUpdate, $id);
-        return redirect()->route('admin.brands.index');
+        return redirect()->route('admin.brands.index')->with(['message' => 'Sửa Thành Công']);
     }
 
     /**
@@ -103,6 +113,8 @@ class BrandsController extends Controller
      */
     public function destroy(string $id)
     {
+        
+        
         $brands = $this->brands->find($id);
         if (!$brands) {
             return redirect()->route('admin.brands.index');
@@ -111,6 +123,7 @@ class BrandsController extends Controller
             Storage::disk('public')->delete($brands->logo);
         }
         $brands->delete();
-        return redirect()->route('admin.brands.index');
+        //return response(['status' => 'success', 'Xóa thành công!']);
+        return redirect()->route('admin.brands.index')->with(['message' => 'Xóa Thành Công']);
     }
 }

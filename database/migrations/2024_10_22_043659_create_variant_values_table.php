@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_weights', function (Blueprint $table) {
+        Schema::create('variant_values', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Tên trọng lượng 
+            $table->foreignId('variant_type_id')->constrained('variant_types')->onDelete('cascade'); // Liên kết với bảng variant_types
+            $table->string('value'); // Ví dụ: "Xanh", "Đỏ", "Nhỏ", "Lớn"
             $table->timestamps();
-            $table->softDeletes(); // Xóa mềm
+            $table->softDeletes();
         });
     }
 
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_weights');
+        Schema::dropIfExists('variant_values');
     }
 };

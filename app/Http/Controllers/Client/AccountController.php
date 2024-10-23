@@ -102,7 +102,7 @@ class AccountController extends Controller
       // Kiểm tra xem có file cover hay không
       if ($request->hasFile('cover')) {
           // Lưu hình ảnh vào thư mục 'images' và lấy đường dẫn
-          $path_cover_art = $request->file('cover')->store('images');
+          $path_cover_art = $request->file('cover')->storeAs('images');
           $data['cover'] = $path_cover_art; // Cập nhật đường dẫn hình ảnh vào dữ liệu
       }
   
@@ -187,7 +187,7 @@ class AccountController extends Controller
             Storage::delete($auth->cover);
         }
         // Lưu hình ảnh mới vào thư mục 'images' và lấy đường dẫn
-        $path_cover_art = $request->file('cover')->store('images');
+        $path_cover_art = $request->file('cover')->store('images','public');
         $data['cover'] = $path_cover_art;
     }
 
