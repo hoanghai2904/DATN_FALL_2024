@@ -47,7 +47,7 @@
                                         <div class="position-relative h-100 d-flex flex-column">
                                             <div class="mb-4">
                                                 <a href="index.html" class="d-block">
-                                                    <img src="assets/images/logo-light.png" alt="" height="18">
+                                                    <img src="" alt="" height="18">
                                                 </a>
                                             </div>
                                             <div class="mt-auto">
@@ -63,13 +63,13 @@
                                                     </div>
                                                     <div class="carousel-inner text-center text-white-50 pb-5">
                                                         <div class="carousel-item active">
-                                                            <p class="fs-15 fst-italic">" Great! Clean code, clean design, easy for customization. Thanks very much! "</p>
+                                                            <p class="fs-15 fst-italic">"Khi bạn yêu một con vật, bạn không chỉ trở thành chủ nhân mà còn là người bạn tốt nhất của nó."</p>
                                                         </div>
                                                         <div class="carousel-item">
-                                                            <p class="fs-15 fst-italic">" The theme is really great with an amazing customer support."</p>
+                                                            <p class="fs-15 fst-italic">"Chúng ta có thể sống mà không có nhiều thứ, nhưng không thể thiếu tình yêu từ thú cưng."</p>
                                                         </div>
                                                         <div class="carousel-item">
-                                                            <p class="fs-15 fst-italic">" Great! Clean code, clean design, easy for customization. Thanks very much! "</p>
+                                                            <p class="fs-15 fst-italic">"Thú cưng là món quà tuyệt vời nhất mà cuộc đời có thể mang đến cho chúng ta."</p>
                                                         </div>
                                                     </div>
                                                 </div>
