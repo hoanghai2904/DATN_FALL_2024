@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_variant_', function (Blueprint $table) {
+        Schema::create('product_variant', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('product_')->onDelete('cascade')->nullable(); // Liên kết với bảng products
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade')->nullable(); // Liên kết với bảng products
             $table->foreignId('variant_type_id')->constrained('variant_types')->onDelete('cascade')->nullable(); // Liên kết với bảng variant_types
             $table->foreignId('variant_value_id')->constrained('variant_values')->onDelete('cascade')->nullable(); // Liên kết với bảng variant_values
             $table->integer('qty'); // Số lượng sản phẩm cho mỗi biến thể

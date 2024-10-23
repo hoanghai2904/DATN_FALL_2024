@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class ProductVariant_ extends Model
+class ProductVariant extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'product_variant_';
+    protected $table = 'product_variant';
 
     protected $fillable = ['product_id', 'variant_type_id', 'variant_value_id', 'qty', 'price', 'image'];
 
     public function product()
     {
-        return $this->belongsTo(Product_::class,'product_id');
+        return $this->belongsTo(Product::class,'product_id');
     }
 
     // Trong model ProductVariant_

@@ -153,12 +153,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
             Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
-        // Sản phẩm
-        Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
-        Route::resource('products', ProductController::class);
-
         // Sản phẩm mới
-        Route::get('products_/get-variant-value',[ProductController_::class, 'getVariantValue'])->name('products_.value');
-        Route::resource('products_', ProductController_::class);
+        // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');
+        Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
+        Route::get('products/get-variant-value',[ProductController::class, 'getVariantValue'])->name('products.value');
+        Route::resource('products', ProductController::class);
     });
 });

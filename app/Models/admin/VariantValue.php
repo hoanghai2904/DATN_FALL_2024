@@ -19,6 +19,6 @@ class VariantValue extends Model
 
     public function productVariants()
     {
-        return $this->hasMany(ProductVariant_::class);
+        return $this->hasMany(ProductVariant::class);
     }
 }

@@ -6,6 +6,9 @@
 
 @section('style-libs')
     <link rel="stylesheet" href="{{ asset('assets/css/uploadFile.css') }}">
+    <style>
+
+    </style>
 @endsection
 
 @section('content')
@@ -103,29 +106,75 @@
 
                 {{-- Biến thể sản phẩm --}}
                 <div class="card mt-4">
-                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
-                        data-bs-target="#variantsSection" aria-expanded="true" aria-controls="variantsSection">
-                        <h5 class="card-title mb-0">Biến thể sản phẩm</h5>
+                    <div class="card-header d-flex align-items-center justify-content-between" style="cursor:pointer">
+                        <h5 class="card-title mb-0">Sản phẩm có nhiều phiên bản</h5>
+                        <!-- Thêm id để dễ dàng xử lý -->
+                        <a class="btn btn-info addVariant" id="toggleVariant">Thêm thuộc tính mới</a>
                     </div>
 
-                    <div class="collapse show" id="variantsSection">
+                    <div class="collapse show">
                         <div class="card-body">
-                            <div class="form-group row">
-                                <button type="button" class="col-md-3 btn btn-primary mb-3 mx-3" id="addVariant">Thêm
-                                    biến thể</button>
-                                <div class="col-md-7">
-                                    <select class="js-example-basic-multiple select2-hidden-accessible" name="states[]"
-                                        multiple="" id="attributeSelect">
-                                        <option value="type">Loại</option>
-                                        <option value="weight">Trọng lượng</option>
-                                    </select>
+                            <p class="card-text">Sản phẩm này có nhiều biến thể. Ví dụ như khác nhau về màu sắc, kích thước
+                            </p>
+
+                            <div class="variant-wrapper d-none" id="variantWrapper">
+
+
+                                <div class="variant-body mt-3">
+                                    <!-- Nội dung khác có thể thêm vào đây -->
+                                </div>
+
+                                <div class="mt-3">
+                                    <button type="button" id="addNewVariant" class="btn btn-primary">Thêm phiên bản
+                                        mới</button>
                                 </div>
                             </div>
-
-                            <div id="variants"></div> <!-- Khởi tạo là rỗng, sẽ thêm vào khi người dùng nhấn nút -->
                         </div>
                     </div>
                 </div>
+
+                <div class="card mt-4 d-none" id="variantContainer">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Danh sách phiên bản</h5>
+                    </div>
+
+                    <div class="collapse show">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped variantTable">
+                                    <thead>
+                                    </thead>
+                                    <tbody id="variantBody">
+                                        <!-- Danh sách phiên bản sẽ được thêm vào đây -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- <div id="editCard" class="card d-none">
+                    <div class="card-body ">
+                        <h5 class="card-title">Chỉnh Sửa Phiên Bản</h5>
+                        <div class="form-group">
+                            <label for="editImage">Hình Ảnh</label>
+                            <input type="file" id="editImage" accept="image/*" onchange="previewImage(event)">
+                            <img id="previewEditImage" src="" alt="Thumbnail"
+                                style="width: 50px; height: 50px; display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="editPrice">Giá:</label>
+                            <input type="text" id="editPrice" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantity">Số Lượng:</label>
+                            <input type="number" id="editQuantity" min="0" class="form-control">
+                        </div>
+                        <a id="saveChanges" class="btn btn-primary">Lưu Thay Đổi</a>
+                        <a id="cancelEdit" class="btn btn-secondary">Hủy</a>
+                    </div>
+                </div> --}}
+
 
                 <div class="card">
                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
@@ -167,13 +216,14 @@
                                 style="cursor: pointer; border: 2px dashed #007bff; padding: 20px; border-radius: 5px;">
                                 <span class="text-primary">Nhấn vào đây để thêm album hình ảnh</span>
                             </div>
-                            <input type="file" id="galleryInput" name="galleries[]" multiple accept="image/*" class="d-none">
+                            <input type="file" id="galleryInput" name="galleries[]" multiple accept="image/*"
+                                class="d-none">
                             <div class="row" id="galleryPreviewContainer"></div>
                             <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- end card -->
                 <div class="text-end mb-3">
                     <button type="submit" class="btn btn-success w-sm">Lưu</button>
@@ -184,8 +234,8 @@
             <div class="col-lg-4">
 
                 <div class="card">
-                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#thumbnails"
-                        aria-expanded="true" aria-controls="thumbnails">
+                    <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
+                        data-bs-target="#thumbnails" aria-expanded="true" aria-controls="thumbnails">
                         <h5 class="card-title mb-0">Ảnh sản phẩm</h5>
                     </div>
                     <div class="collapse show" id="thumbnails">
@@ -198,7 +248,7 @@
                             <div class="row" id="imagePreviewContainer"></div>
                             {{-- <button id="addGallery" class="btn btn-danger mt-3 d-none">Thêm ảnh</button> --}}
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -297,129 +347,197 @@
     {{-- upload File  --}}
     <script src="{{ asset('assets/js/uploadFile.js') }}"></script>
     {{-- end upload File  --}}
-
-    {{-- Biến thể sản phẩm --}}
     <script>
-        $(document).ready(function() {
-            let variantIndex = 0;
-            let variantCombinations = []; // Danh sách chứa các tổ hợp type - weight đã chọn cho từng biến thể
+        document.getElementById('toggleVariant').addEventListener('click', function() {
+            var variantWrapper = document.getElementById('variantWrapper');
+            var toggleButton = document.getElementById('toggleVariant');
 
-            // Sự kiện khi bấm nút Thêm Biến Thể
-            $('#addVariant').on('click', function() {
-                const selectedOptions = $('#attributeSelect').val(); // Lấy giá trị các thuộc tính đã chọn
-                if (selectedOptions.length > 0) {
-                    variantIndex++; // Tăng chỉ số biến thể mỗi khi nhấn nút "Thêm biến thể"
+            // Toggle the visibility of the variant wrapper
+            variantWrapper.classList.toggle('d-none');
 
-                    let variantHTML = `<div class="variant-group card mb-3" id="variant-${variantIndex}">
-                                        <div class="card-body">
-                                            <div class="row">`;
-
-                    // Nếu chọn 'type', thêm trường Loại sản phẩm
-                    if (selectedOptions.includes('type')) {
-                        variantHTML += `
-                            <div class="form-group col-md-4 mt-2">
-                                <label for="type">Loại sản phẩm:</label>
-                                <select id="typeSelect-${variantIndex}" name="variants[${variantIndex}][product_type_id]" class="form-control">
-                                    <option value="">Chọn loại sản phẩm</option>`;
-                        @foreach ($types as $type)
-                            variantHTML +=
-                                `<option value="{{ $type->id }}">{{ $type->name }}</option>`;
-                        @endforeach
-                        variantHTML += `</select>
-                            </div>`;
-                    }
-
-                    // Nếu chọn 'weight', thêm trường Trọng lượng
-                    if (selectedOptions.includes('weight')) {
-                        variantHTML += `
-                            <div class="form-group col-md-4 mt-2">
-                                <label for="weight">Trọng lượng:</label>
-                                <select id="weightSelect-${variantIndex}" name="variants[${variantIndex}][product_weight_id]" class="form-control">
-                                    <option value="">Chọn trọng lượng</option>`;
-                        @foreach ($weights as $weight)
-                            variantHTML +=
-                                `<option value="{{ $weight->id }}">{{ $weight->name }}</option>`;
-                        @endforeach
-                        variantHTML += `</select>
-                            </div>`;
-                    }
-
-                    // Các trường khác: Số lượng, Giá biến thể, Hình ảnh biến thể
-                    variantHTML += `
-                                    <div class="form-group col-md-4 mt-2">
-                                        <label for="qty">Số lượng:</label>
-                                        <input type="number" name="variants[${variantIndex}][qty]" class="form-control" required>
-                                    </div>
-                                    <div class="form-group col-md-4 mt-2">
-                                        <label class="form-label" for="price_variant">Giá biến thể:</label>
-                                        <div class="input-group">
-                                            <input type="text" name="variants[${variantIndex}][price_variant]" class="form-control" required>
-                                            <span class="input-group-text">VNĐ</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3">
-                                    <div class="form-group col-md-10 d-flex align-items-end">
-                                        <button type="button" class="btn btn-danger remove-variant" data-variant-id="variant-${variantIndex}">Xóa biến thể</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-
-                    // Chèn nội dung mới vào div #variants
-                    $('#variants').append(variantHTML);
-
-                    // Gán sự kiện xóa cho nút "Xóa biến thể"
-                    $('.remove-variant').off('click').on('click', function() {
-                        let variantId = $(this).data('variant-id');
-                        $('#' + variantId).remove();
-
-                        // Xóa tổ hợp khỏi danh sách variantCombinations
-                        let combinationToRemove = $(this).data('combination');
-                        variantCombinations = variantCombinations.filter(combination =>
-                            combination !== combinationToRemove);
-                    });
-
-                    // Khai báo biến selectedType và selectedWeight trong scope của mỗi biến thể
-                    let selectedType = '';
-                    let selectedWeight = '';
-
-                    // Khi các select box (type và weight) thay đổi, kiểm tra và lưu tổ hợp
-                    $(`#typeSelect-${variantIndex}`).on('change', function() {
-                        selectedType = $(this).val();
-                        checkCombination(variantIndex);
-                    });
-
-                    $(`#weightSelect-${variantIndex}`).on('change', function() {
-                        selectedWeight = $(this).val();
-                        checkCombination(variantIndex);
-                    });
-
-                    // Kiểm tra tổ hợp type - weight có hợp lệ không
-                    function checkCombination(index) {
-                        if (selectedType && selectedWeight) {
-                            let combination = `${selectedType}-${selectedWeight}`;
-
-                            if (variantCombinations.includes(combination)) {
-                                alert(
-                                    'Giá trị đã tồn tại! Vui lòng chọn loại hoặc trọng lượng khác.');
-
-                                // Xóa biến thể bị trùng lặp
-                                $(`#variant-${index}`).remove();
-                            } else {
-                                // Thêm tổ hợp mới vào danh sách variantCombinations
-                                variantCombinations.push(combination);
-                                // Gán tổ hợp vào nút xóa để xử lý khi xóa biến thể
-                                $(`#variant-${index} .remove-variant`).data('combination', combination);
-                            }
-                        }
-                    }
-                }
-            });
+            // Change the button text
+            if (variantWrapper.classList.contains('d-none')) {
+                toggleButton.textContent = 'Thêm thuộc tính mới'; // Khi ẩn đi
+                toggleButton.classList.add('btn-info');
+                toggleButton.classList.remove('btn-danger');
+            } else {
+                toggleButton.textContent = 'Hủy'; // Khi hiện lên
+                toggleButton.classList.remove('btn-info');
+                toggleButton.classList.add('btn-danger');
+            }
         });
     </script>
-    {{-- End biến thể sản phẩm  --}}
+
+<script>
+    $(document).ready(function() {
+        // Khởi tạo Select2 cho các phần tử có sẵn
+        $(".js-example-basic-multiple").select2();
+
+        // Xử lý thay đổi nhóm thuộc tính
+        $(document).on('change', '.select-variant-type', function() {
+            var $this = $(this);
+            var variantTypeId = $this.val(); // Lấy giá trị của nhóm thuộc tính
+
+            var $attributeValueSelect = $this.closest('.row').find('.select-variant-value');
+
+            if (variantTypeId == "0") {
+                $attributeValueSelect.prop('disabled', true).empty(); // Xóa giá trị và disable
+            } else {
+                $attributeValueSelect.prop('disabled', false);
+
+                // AJAX lấy giá trị của thuộc tính dựa trên nhóm thuộc tính đã chọn
+                $.ajax({
+                    url: "/admin/products/get-variant-value", // Đường dẫn tới route
+                    type: "GET",
+                    data: {
+                        id: variantTypeId
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $attributeValueSelect.empty(); // Xóa option cũ
+
+                        // Thêm các giá trị mới vào select
+                        $.each(response, function(index, value) {
+                            $attributeValueSelect.append('<option value="' + value.id + '">' + value.value + '</option>');
+                        });
+
+                        // Khởi tạo lại Select2 cho ô select giá trị thuộc tính
+                        $attributeValueSelect.select2();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText); // Hiển thị lỗi nếu có
+                    }
+                });
+            }
+        });
+
+        // Thêm phiên bản mới khi nhấn vào nút
+        $('#addNewVariant').click(function() {
+            // Tạo phần tử dòng mới chứa thuộc tính và giá trị đã chọn
+            var imageUrl = $('#imagePreviewContainer').find('img').first().attr('src'); // Lấy URL của hình ảnh đầu tiên
+            var newRow = `
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <select class="js-example-basic-multiple select-variant-type" name="variant_types[]">
+                        <option value="0">Chọn Nhóm thuộc tính</option>
+                        @foreach ($variantTypes as $variantType)
+                            <option value="{{ $variantType->id }}">{{ $variantType->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-7">
+                    <select class="js-example-basic-multiple form-select select-variant-value" name="variant_values[]" multiple disabled>
+                        <!-- Giá trị sẽ được thêm thông qua Ajax -->
+                    </select>
+                </div>
+
+                <div class="col-md-1">
+                    <a class="btn btn-danger removeVariant"><i class="las la-trash-alt"></i></a>
+                </div>
+            </div>`;
+
+            // Thêm dòng mới vào .variant-body
+            $('.variant-body').append(newRow);
+
+            // Khởi tạo Select2 chỉ cho các phần tử mới
+            $('.variant-body .row:last .select-variant-type').select2();
+            $('.variant-body .row:last .select-variant-value').select2();
+
+            // Sự kiện xóa dòng
+            $('.removeVariant').last().click(function() {
+                $(this).closest('.row').remove();
+                updateVariantList(); // Cập nhật danh sách phiên bản khi xóa
+            });
+        });
+
+        // Cập nhật danh sách phiên bản
+        function updateVariantList() {
+            let $variantBody = $('#variantBody');
+            $variantBody.empty(); // Xóa dữ liệu cũ
+
+            // Khởi tạo biến lưu trữ các thuộc tính
+            let variantGroups = {};
+
+            // Lặp qua tất cả các dòng trong variant-body
+            $('.variant-body .row').each(function() {
+                const $row = $(this);
+                const variantType = $row.find('.select-variant-type').find(':selected').text(); // Lấy tên nhóm thuộc tính
+                const variantValue = $row.find('.select-variant-value').find(':selected').map(function() {
+                    return $(this).text(); // Lấy giá trị đã chọn
+                }).get(); // Lấy mảng giá trị
+
+                // Nếu có giá trị cho thuộc tính, thêm vào mảng
+                if (variantType && variantValue.length > 0) {
+                    if (!variantGroups[variantType]) {
+                        variantGroups[variantType] = [];
+                    }
+                    variantGroups[variantType] = variantGroups[variantType].concat(variantValue);
+                }
+            });
+
+            const variantKeys = Object.keys(variantGroups);
+            if (variantKeys.length > 0) {
+                $('#variantContainer').removeClass('d-none'); // Hiện phần tử danh sách phiên bản
+
+                let headerRow = '<tr><th>Hình ảnh</th>';
+                variantKeys.forEach(key => {
+                    headerRow += `<th>${key}</th>`;
+                });
+                headerRow += '<th>Số lượng</th><th>Giá tiền</th></tr>';
+                $variantBody.append(headerRow);
+
+                let allCombinations = [];
+                const createCombinations = (index, currentCombination) => {
+                    if (index === variantKeys.length) {
+                        allCombinations.push(currentCombination);
+                        return;
+                    }
+
+                    const key = variantKeys[index];
+                    variantGroups[key].forEach(value => {
+                        createCombinations(index + 1, {
+                            ...currentCombination,
+                            [key]: value
+                        });
+                    });
+                };
+                createCombinations(0, {});
+
+                var imageUrl = $('#imagePreviewContainer').find('img').first().attr('src');
+
+                allCombinations.forEach((combination, index) => {
+                    let row = `<tr class="variant-row">`;
+                    row += `<td><img src="${imageUrl}" alt="Thumbnail" style="width: 50px; height: 50px;" class="thumbnail"></td>`;
+
+                    variantKeys.forEach(key => {
+                        row += `<td class="variant-value">${combination[key]}</td>`;
+                    });
+
+                    // Thêm tên cho các trường input để xử lý trong controller
+                    row += `<td><input class="form-control" type="number" name="quantities[${index}]" value="10" class="quantity-input" min="0"></td>`; // Số lượng
+                    row += `<td><input class="form-control" type="number" name="prices[${index}]" value="10000" class="price-input"></td>`; // Giá
+                    row += '</tr>';
+
+                    $variantBody.append(row);
+                });
+
+            } else {
+                $('#variantContainer').addClass('d-none'); // Ẩn container nếu không có giá trị
+            }
+        }
+
+        // Cập nhật danh sách khi thay đổi thuộc tính hoặc giá trị
+        $(document).on('change', '.select-variant-type, .select-variant-value', function() {
+            updateVariantList();
+        });
+    });
+</script>
+
+
+
+
+
 
     <script>
         // Khi người dùng nhập tên sản phẩm, tự động tạo SKU
