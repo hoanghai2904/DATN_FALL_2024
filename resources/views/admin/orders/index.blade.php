@@ -104,58 +104,39 @@
                             </thead>
                             <tbody class="list form-check-all">
                                 @foreach ($orders as $order)
-                                <tr>
-                                    <th scope="row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="checkAll"
-                                                value="option1">
-                                        </div>
-                                    </th>
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
+                                            </div>
+                                        </th>
+                                        <td class="id">{{ $order->id }}</td>
+                                        <td class="id">
+                                            <a href="{{ route('admin.orders.show', $order->id) }}" class="fw-medium link-primary">#{{ $order->order_code }}</a>
+                                        </td>
+                                        <td class="user_name">{{ $order->user_name }}</td>
+                                        <td class="user_email">{{ $order->user_email }}</td>
+                                        <td class="created_at">
+                                                    {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }},
+                                                    <small class="text-muted">{{ \Carbon\Carbon::parse($order->created_at)->format('H:i') }}</small>
+                                                </td>
 
-                                    <td class="id">
-                                        <a href="{{ route('admin.orders.show', $order->order_code) }}"
-                                            class="fw-medium link-primary">#{{ $order->order_code }}</a>
-                                    </td>
-
-                                    <td class="created_at">
-                                        {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}
-                                    </td>
-                                    <td class="total_price"> {{ number_format($order->total_price -
-                                        ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫</td>
-                                    <td class="payment_method">{{ $order->payment_method }}</td>
-                                    <td>
-                                        @if($order->status_order === 'Hoàn thành')
-                                        <span class="badge bg-success">Hoàn thành</span>
-                                        @elseif($order->status_order === 'Chưa giải quyết')
-                                        <span class="badge bg-warning">Chưa giải quyết</span>
-                                        @elseif($order->status_order === 'Đã hủy')
-                                        <span class="badge bg-danger">Đã hủy</span>
-                                        @else
-                                        <span class="badge bg-secondary">{{ $order->status_order }}</span>
-                                        <!-- Trạng thái khác -->
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <ul class="list-inline hstack gap-2 mb-0">
-                                            <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                <a href="{{ route('admin.orders.show', $order->id) }}"
-                                                    class="text-primary d-inline-block">
-                                                    <i class="ri-eye-fill fs-16"></i>
-                                                </a>
-                                            </li>
-
-                                            <li class="list-inline-item edit" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                <a href="#showModal" data-bs-toggle="modal"
-                                                    class="text-primary d-inline-block edit-item-btn"
-                                                    data-id="{{ $order->id }}" data-status="{{ $order->status_order }}">
-                                                    <i class="ri-pencil-fill fs-16"></i>
-                                                </a>
-
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="Remove">
+                                        <td class="total_price">${{ $order->total_price }}</td>
+                                        <td class="payment_method">{{ $order->payment_method }}</td>
+                                        <td>{{ $order->status_order }}</td>
+                                        <td>
+                                            <ul class="list-inline hstack gap-2 mb-0">
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                    <a href="{{ route('admin.orders.show', $order->id) }}" class="text-primary d-inline-block">
+                                                        <i class="ri-eye-fill fs-16"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
+                                                    <a href="{{ route('admin.orders.edit', $order->id) }}" class="text-primary d-inline-block edit-item-btn">
+                                                        <i class="ri-pencil-fill fs-16"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
                                                 @if ($order->status_order == 'Đã hủy')
                                                 <form action="{{ route('admin.orders.destroy', $order->id) }}"
                                                     method="POST" style="display:inline;">

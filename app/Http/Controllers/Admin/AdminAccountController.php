@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ForgotPassword;
 use App\Models\District;
 use App\Models\Order;
+use App\Models\PasswordResetToken;
 use App\Models\Province;
 use App\Models\User;
 use App\Models\UserAddress;
 use App\Models\Ward;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Termwind\Components\Dd;
 
 class AdminAccountController extends Controller
 {
@@ -171,50 +177,73 @@ class AdminAccountController extends Controller
     // Trả về JSON nếu lưu thất bại
     return response()->json(['message' => 'Có lỗi xảy ra, vui lòng thử lại sau.'], 500);
 }
- //addresses
 
- public function getDistricts($provinceId)
- {
-     $districts = District::where('province_id', $provinceId)->get();
-     return response()->json($districts);
- }
-
- public function getWards($districtId)
-{
-    $wards = Ward::where('district_id', $districtId)->get(); // Lấy phường/xã theo district_id
-    return response()->json($wards);
-}
-
-
-public function store(Request $request)
-{
-    $request->validate([
-        'province_id' => 'required|exists:provinces,id',
-        'district_id' => 'required|exists:districts,id',
-        'ward_id' => 'required|exists:wards,id',
-        'address_detail' => 'required|string|max:255',
-    ], [
-        'province_id.required' => 'Vui lòng chọn tỉnh/thành phố.',
-        'province_id.exists' => 'Tỉnh/thành phố không tồn tại.',
-        'district_id.required' => 'Vui lòng chọn quận/huyện.',
-        'district_id.exists' => 'Quận/huyện không tồn tại.',
-        'ward_id.required' => 'Vui lòng chọn phường/xã.',
-        'ward_id.exists' => 'Phường/xã không tồn tại.',
-        'address_detail.required' => 'Vui lòng nhập địa chỉ chi tiết.',
-        'address_detail.string' => 'Địa chỉ chi tiết phải là một chuỗi ký tự.',
-        'address_detail.max' => 'Địa chỉ chi tiết không được vượt quá 255 ký tự.',
-    ]);
-
-    UserAddress::create([
-        'user_id' => auth()->id(),  // Lấy ID của user đã đăng nhập
-        'province_id' => $request->province_id,
-        'district_id' => $request->district_id,
-        'ward_id' => $request->ward_id,
-        'address' => $request->address_detail,
-    ]);
-
-    return response()->json(['message' => 'Địa chỉ đã được thêm thành công']);
-}
 
  //còn chức năng forgot password
+    public function forgot_pass(){
+        return view('admin.Login.forgotPassword');
+    }
+
+    public function Check_forgotPass(Request $request){
+        $data = $request->validate([
+            'email' => 'required|exists:users,email',
+           
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'email.exists' => 'Email không tồn tại trong hệ thống.',
+        ]);
+
+
+        $user = User::where('email', $request->email )->first();
+        $token = Hash::make(Str::random(60));
+        PasswordResetToken::updateOrCreate(
+            ['email' => $request->email], // Tìm theo email
+            ['token' => $token, 'created_at' => Carbon::now()]
+        );
+     
+        Mail::to( $request->email )->send(new ForgotPassword( $user,$token));
+        return redirect()->back()->with('success', 'Email khôi phục mật khẩu đã được gửi.');
+    }
+
+    public function reset_pass($token)
+    {
+      $tokenData = PasswordResetToken::where('token', $token)->first();
+      return view('admin.Login.resetPassword', compact('tokenData'));
+    }
+
+    public function Check_resetPass(Request $request, $token) {
+        $data = $request->validate([
+            'newPassword' => 'required|min:4',
+            'confirmPass' => 'required|same:newPassword',
+        ], [
+            'newPassword.required' => 'Vui lòng nhập mật khẩu mới.',
+            'newPassword.min' => 'Mật khẩu mới phải có ít nhất 4 ký tự.',
+            'confirmPass.required' => 'Vui lòng xác nhận mật khẩu.',
+            'confirmPass.same' => 'Mật khẩu xác nhận không khớp với mật khẩu mới.',
+        ]);
+    
+        // Kiểm tra token trong cơ sở dữ liệu
+        $tokenData = PasswordResetToken::where('token', $token)->first();
+    
+        // Kiểm tra xem token có hợp lệ không
+        if (!$tokenData) {
+            return redirect()->route('admin.forgotPass')->with('error', 'Token không hợp lệ hoặc đã hết hạn.');
+        }
+    
+        // Tìm người dùng dựa trên email
+        $user = User::where('email', $tokenData->email)->first();
+    
+        // Mã hóa mật khẩu mới
+        $user->password = Hash::make($data['newPassword']);
+        
+        // Lưu người dùng với mật khẩu mới
+        $user->save();
+    
+        // Xóa token để không sử dụng lại
+        $tokenData->delete();
+    
+        // Trả về thông báo thành công
+        return redirect()->route('admin.login')->with('success', 'Mật khẩu đã được thay đổi thành công.');
+    }
+    
 }

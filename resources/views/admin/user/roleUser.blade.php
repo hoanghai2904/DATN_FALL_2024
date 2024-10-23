@@ -106,7 +106,7 @@
                                                     value="option">
                                             </div>
                                         </th>
-                                        <th>ID</th>
+                                 
                                         <th class="text-center">Vai trò</th>
                                         <th class="text-center">Quyền hạn</th>
                                         <th>Ngày tạo</th>
@@ -123,17 +123,16 @@
                                                         value="option{{ $role->id }}">
                                                 </div>
                                             </th>
-                                            <td class="id"><a href="javascript:void(0);"
-                                                    class="fw-medium link-primary">#{{ $role->id }}</a></td>
+                                       
                                             <td class="leads_score text-center ms-auto">{{ $role->name }}</td>
-                                            <td class="tags text-center" style="width: 200px;">
+                                            <td class="tags " style="width: 220px;">
                                                 @foreach ($role->permissions as $permission)
                                                     <span
                                                         class="badge bg-primary-subtle text-primary">{{ $permission->name }}
                                                     </span>
                                                 @endforeach
                                             </td>
-                                            <td class="date">{{ $role->created_at->format('d M, Y') }}</td>
+                                            <td class="date">{{ $role->created_at->format('d/m/Y') }}</td>
                                             <td>
                                                 <div class="form-check form-switch form-switch-success form-switch-md text-center"
                                                     dir="ltr">
@@ -156,7 +155,7 @@
                                                         <a class="edit-item-btn" href="javascript:void(0);"
                                                             data-id="{{ $role->id }}" data-bs-toggle="modal"
                                                             data-bs-target="#exampleModalgrid">
-                                                            <i class="ri-pencil-fill align-bottom text-muted"></i>
+                                                            <i class="ri-pencil-fill align-bottom text-muted fs-5"></i>
                                                         </a>
                                                     </li>
 
@@ -165,7 +164,7 @@
                                                         <a class="remove-item-btn" data-bs-toggle="modal"
                                                             href="#deleteRecordModal"
                                                             onclick="showDeleteModal({{ $role->id }})">
-                                                            <i class="ri-delete-bin-fill align-bottom text-muted"></i>
+                                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
                                                         </a>
                                                     </li>
 
