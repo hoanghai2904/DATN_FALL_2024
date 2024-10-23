@@ -32,6 +32,7 @@ class CategoryController extends Controller
     {
 
         $category = Category::all();
+        // dd($category);
         return view('admin.list.create')->with((['category' => $category]));
         // return view(self::PATH_VIEW . __FUNCTION__);
     }
@@ -41,55 +42,43 @@ class CategoryController extends Controller
      */
     public function addPostCategory(Request $req)
     {
-        // Xác thực đầu vào
         $req->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
         ], [
             'name.required' => 'Tên danh mục không được để trống',
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
             'name.max' => 'Tên danh mục quá dài',
-        ]);
+            'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
 
+        ]);
         $data = [
             'name' => $req->name,
             'slug' => $req->slug,
             'parent_id' => $req->parent_id
         ];
-
-        // Tạo danh mục mới
         Category::create($data);
-
-
-        flash('Thêm mới danh mục thành công.')->success();
-
-
         return redirect()->route('admin.categories.listCategory');
     }
 
 
 
+
     public function deleteCategory($id)
     {
-
         $category = Category::find($id);
 
         if ($category) {
-
+            // Cập nhật trạng thái
             $category->status = 0;
             $category->save();
 
-
+            // Xóa danh mục sau khi cập nhật trạng thái
             $category->delete();
-
-
-            notyf()->success('Cập nhật danh mục thành công.');
-        } else {
-
-            notyf()->success('Cập nhật danh mục thành công.');
         }
 
+
         // Chuyển hướng về trang danh sách danh mục
-        return redirect()->route('admin.categories.listCategory');
+        return redirect()->route('admin.categories.listCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
     }
 
     public function restoreCategory($id)
@@ -119,11 +108,13 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $req->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
         ], [
             'name.required' => 'Tên danh mục không được để trống',
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
             'name.max' => 'Tên danh mục quá dài',
+            'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
+
         ]);
 
         $data = [
@@ -135,8 +126,8 @@ class CategoryController extends Controller
         $category->update($data);
 
         // Thông báo thành công khi cập nhật
-        notyf()->success('Cập nhật danh mục thành công.');
 
-        return redirect()->route('admin.listCategory');
+
+        return redirect()->route('admin.categories.listCategory');
     }
 }

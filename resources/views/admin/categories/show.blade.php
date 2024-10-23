@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+{{-- @extends('admin.layouts.master')
 
 @section('title', 'Chi tiết danh mục')
 
@@ -11,4 +11,4 @@
             {!! $category->status ? '<span class="badge bg-success">Hoạt động</span>' : '<span class="badge bg-danger">Không hoạt động</span>' !!}
         </li>
     </ul>
-@endsection
+@endsection --}}
