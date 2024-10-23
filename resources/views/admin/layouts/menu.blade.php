@@ -80,7 +80,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" aria-controls="sidebarDashboards">
-                        <i class=" las la-shipping-fast"></i> <span data-key="t-dashboards">Quản lý đơn hàng</span>
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý đơn hàng</span>
                     </a>
                 </li>
                 <li class="nav-item">

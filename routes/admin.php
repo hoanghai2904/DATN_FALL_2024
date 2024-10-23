@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\ProductController_;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
@@ -15,8 +16,8 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 use App\Http\Controllers\ContactController;
@@ -93,7 +94,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
        
 
         //Ai làm cái gì thì ghi cmt lên trên này  
-        Route::resource('categories', CategoryController::class);
+        // Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::resource('transactions', TransactionController::class);
         Route::resource('order-items', OrderItemController::class);
@@ -151,14 +152,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
             Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
-        // Sản phẩm
+        // Sản phẩm mới
+        // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
+        Route::get('products/get-variant-value',[ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);
-        Route::get('/test-variant', function () {
-            return view('admin.products.test');
-        });
-        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
-        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
-        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
     });
 });
