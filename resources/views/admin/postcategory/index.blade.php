@@ -6,16 +6,12 @@
 
 @section('content')
     <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('admin.categories.addCategory') }}" class="btn btn-primary">Thêm Mới</a>
+        <a href="{{ route('admin.postcategories.addPostCategory') }}" class="btn btn-primary">Thêm Mới</a>
         <input type="text" id="categorySearchBox" class="form-control w-50" placeholder="Tìm kiếm danh mục...">
     </div>
 
     <div class="row">
-        {{-- @if (Session::has('message'))
-            <script>
-                toastr.success("{{ Session::get('message') }}");
-            </script>
-        @endif --}}
+
 
         <div class="col-xl-12">
             <div class="card">
@@ -34,18 +30,16 @@
                                         <th scope="col">STT</th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Tên Danh Mục</th>
-                                        <th scope="col">Danh Mục Cha</th>
                                         <th scope="col">Trạng Thái</th>
                                         <th scope="col" style="width: 150px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($activeCategories as $key => $value)
+                                    @foreach ($activePostCategories as $key => $value)
                                         <tr>
-                                            <td>{{ $activeCategories->firstItem() + $key }}</td>
+                                            <td>{{ $activePostCategories->firstItem() + $key }}</td>
                                             <td>{{ $value->id }}</td>
                                             <td>{{ $value->name }}</td>
-                                            <td>{{ $value->parent ? $value->parent->name : 'Không có' }}</td>
                                             <td>
                                                 @if ($value->status == 1)
                                                     <span class="badge bg-success">Đang Hoạt Động</span>
@@ -53,7 +47,7 @@
                                                     <span class="badge bg-danger">Tạm Dừng</span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
                                                     type="button" class="btn btn-sm btn-warning">Chỉnh sửa</a>
                                                 <form action="{{ route('admin.categories.deleteCategory', $value->id) }}"
@@ -64,7 +58,7 @@
                                                         onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
                                                         class="btn btn-sm btn-danger">Tạm dừng</button>
                                                 </form>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -75,7 +69,7 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    {{ $activeCategories->links('pagination::bootstrap-5') }}
+    {{ $activePostCategories->links('pagination::bootstrap-5') }}
 
     <div class="row">
         <div class="col-xl-12">
@@ -95,18 +89,16 @@
                                         <th scope="col">STT</th>
                                         <th scope="col">ID</th>
                                         <th scope="col">Tên Danh Mục</th>
-                                        <th scope="col">Danh Mục Cha</th>
                                         <th scope="col">Trạng Thái</th>
                                         <th scope="col" style="width: 150px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($inactiveCategories as $key => $value)
+                                    @foreach ($inactivePostCategories as $key => $value)
                                         <tr>
-                                            <td>{{ $inactiveCategories->firstItem() + $key }}</td>
+                                            <td>{{ $inactivePostCategories->firstItem() + $key }}</td>
                                             <td>{{ $value->id }}</td>
                                             <td>{{ $value->name }}</td>
-                                            <td>{{ $value->parent ? $value->parent->name : 'Không có' }}</td>
                                             <td>
                                                 @if ($value->status == 1)
                                                     <span class="badge bg-success">Đang Hoạt Động</span>
@@ -114,7 +106,7 @@
                                                     <span class="badge bg-danger">Tạm Dừng</span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <form action="{{ route('admin.categories.restoreCategory', $value->id) }}"
                                                     method="post">
                                                     @csrf
@@ -122,7 +114,7 @@
                                                         onclick="return confirm('Bạn có muốn khôi phục danh mục không?')"
                                                         class="btn btn-sm btn-danger">Khôi phục</button>
                                                 </form>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -133,7 +125,7 @@
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    {{ $inactiveCategories->links('pagination::bootstrap-5') }}
+    {{ $inactivePostCategories->links('pagination::bootstrap-5') }}
 
     <!-- end row -->
 @endsection
