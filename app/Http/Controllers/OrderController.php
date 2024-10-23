@@ -51,7 +51,7 @@ class OrderController extends Controller
     }
 
     // Lấy danh sách đơn hàng sau khi lọc
-    $orders = $query->get();
+    $orders = $query->paginate(10);
 
     // Trả về view với danh sách đơn hàng
     return view('admin.orders.index', compact('orders'));
@@ -124,9 +124,13 @@ class OrderController extends Controller
         return view('admin.orders.invoice', compact('order', 'orderItems'));
     }
     // Xóa đơn hàng
-    public function destroy(Order $order)
-    {
+    public function destroy($id)
+{
+    $order = Order::find($id);
+    if ($order) {
         $order->delete();
-        return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully');
+        return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
     }
+    return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
+}
 }

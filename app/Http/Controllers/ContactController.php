@@ -144,8 +144,12 @@ class ContactController extends Controller
 
     public function destroy($id)
     {
-        $contact = Contact::findOrFail($id); // Tìm thông tin liên hệ
-        $contact->delete(); // Xóa thông tin liên hệ
-        return redirect()->route('admin.contacts.index')->with('success', 'Liên hệ đã được xóa thành công!');
+
+        $contact = Contact::find($id);
+        if ($contact) {
+            $contact->delete();
+            return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
     }
 }

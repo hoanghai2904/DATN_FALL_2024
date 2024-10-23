@@ -50,7 +50,28 @@
     <div class="col-xxl-9">
         <div class="card" id="demo">
             <div class="row">
-
+                                    <div class="col-lg-12">
+                                        <div class="card-header border-bottom-dashed p-4">
+                                            <div class="d-flex">
+                                                <div class="flex-grow-1">
+                                                    <img src="assets/images/logo-dark.png" class="card-logo card-logo-dark" alt="logo dark" height="17">
+                                                    <img src="assets/images/logo-light.png" class="card-logo card-logo-light" alt="logo light" height="17">
+                                                    <div class="mt-sm-5 mt-4">
+                                                        <h6 class="text-muted text-uppercase fw-semibold">Địa chỉ:</h6>
+                                                        <p class="text-muted mb-1" id="address-details">Hà Nội</p>
+                                                        <p class="text-muted mb-0" id="zip-code"><span>Zip-code:</span> 90201</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-shrink-0 mt-sm-0 mt-3">
+        
+                                                    <h6><span class="text-muted fw-normal">Email:</span><span id="email">Huybqph36479@fpt.edu.vn</span></h6>
+                                                    <h6><span class="text-muted fw-normal">Website:</span> <a href="https://themesbrand.com/" class="link-primary" target="_blank" id="website">huybui.com</a></h6>
+                                                    <h6 class="mb-0"><span class="text-muted fw-normal">Liên hệ: </span><span id="contact-no"> +(85)333109261</span></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end card-header-->
+                                    </div><!--end col-->
                 <div class="col-lg-12">
                     <div class="card-body p-4">
                         <div class="row g-3">
@@ -92,18 +113,18 @@
                         <div class="row g-3">
                             <div class="col-6">
                                 <h6 class="text-muted text-uppercase fw-semibold mb-3">Địa chỉ thanh toán</h6>
-                                <p class="fw-medium mb-2" id="billing-name">{{ $order->name }}</p>
+                                <p class="fw-medium mb-2" id="billing-name">{{ $order->user_name }}</p>
                                 <p class="text-muted mb-1" id="billing-address-line-1">{{ $order->user_address }}</p>
-                                <p class="text-muted mb-1"><span>Số điện thoại: +</span><span id="billing-phone-no">{{
+                                <p class="text-muted mb-1"><span>Số điện thoại: </span><span id="billing-phone-no">{{
                                         $order-> user_phone }}</span></p>
                                 <p class="text-muted mb-0"><span>Chi tiết: </span><span id="billing-tax-no">{{
                                         $order->user_note }}</span></p>
                             </div>
                             <div class="col-6">
                                 <h6 class="text-muted text-uppercase fw-semibold mb-3">Địa chỉ giao hàng</h6>
-                                <p class="fw-medium mb-2" id="billing-name">{{ $order->name }}</p>
+                                <p class="fw-medium mb-2" id="billing-name">{{ $order->user_name}}</p>
                                 <p class="text-muted mb-1" id="billing-address-line-1">{{ $order->user_address }}</p>
-                                <p class="text-muted mb-1"><span>Số điện thoại: +</span><span id="billing-phone-no">{{
+                                <p class="text-muted mb-1"><span>Số điện thoại: </span><span id="billing-phone-no">{{
                                         $order-> user_phone }}</span></p>
                                 <p class="text-muted mb-0"><span>Chi tiết: </span><span id="billing-tax-no">{{
                                         $order->user_note }}</span></p>
