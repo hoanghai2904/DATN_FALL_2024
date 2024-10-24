@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Flasher\Notyf\Prime\NotyfInterface;
 use Flasher\Laravel\Facade\Flasher;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -109,7 +109,16 @@ class PostController extends Controller
     }
     public function update(Request $req,$id){
         $find = Posts::find($id);
+        $path = $find->thumbnail; // Save the current image path
+        if ($req->hasFile('thumbnail')) {
+        Storage::disk('public')->delete($find->thumbnail);
+            $rename = slug($req->name);
+            $image = $req->file('thumbnail');
+            $newImage = $rename . '_' . time() . '_' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('uploads/products', $newImage, 'public');
+        }
         $vali= $req->validate([
+            'thumbnail' => ['image', 'nullable', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
             'title' => 'required',
             'user_id' => 'required',
             'status' => 'required',
@@ -127,6 +136,7 @@ class PostController extends Controller
             'user_id' => $vali['user_id'],
             'status' =>  $vali['status'],
             'category_id' => $vali['category_id'],
+            'thumbnail' => $path,
             'body' => $vali['body'],
             'created_at' => date('Y-m-d H:i:s'),
         ];
