@@ -56,14 +56,18 @@
                         
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->full_name }}</span>
-                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text badge bg-success-subtle text-success">Role user</span>
+                                @if (Auth::user()->roles->isNotEmpty())
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text badge bg-success-subtle text-success">
+                                    {{ Auth::user()->roles->first()->name }} <!-- Lấy vai trò đầu tiên -->
+                                </span>
+                            @endif
+                               
                               
                             </span>
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <h6 class="dropdown-header">Welcome{{ Auth::user()->full_name }}</h6>
                         <a class="dropdown-item" href="{{route('admin.profile')}}"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Tài Khoản</span></a>
                         <a class="dropdown-item" href="{{asset('theme/admin/apps-chat.html')}}"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
                         <a class="dropdown-item" href="{{asset('theme/admin/apps-tasks-kanban.html')}}"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>

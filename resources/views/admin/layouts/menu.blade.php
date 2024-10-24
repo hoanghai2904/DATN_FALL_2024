@@ -2,19 +2,10 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="#" class="logo logo-dark">
-            <span class="logo-sm">
-                <img src="{{ asset('theme/admin/assets/images/logo-sm.png') }}" alt="" height="22">
-            </span>
-            <span class="logo-lg">
-                <img src="{{ asset('theme/admin/assets/images/logo-dark.png') }}" alt="" height="17">
-            </span>
-        </a>
+     
         <!-- Light Logo-->
         <a href="#" class="logo logo-light">
-            <span class="logo-sm">
-                <img src="{{ asset('theme/admin/assets/images/logo-sm.png') }}" alt="" height="22">
-            </span>
+           
             <span class="logo-lg">
                 <img src="{{ asset('theme/admin/assets/images/logo-light.png') }}" alt="" height="17">
             </span>
@@ -85,7 +76,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.contacts.index') }}" aria-controls="sidebarDashboards">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
+                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -133,21 +124,6 @@
                             <li class="nav-item">
                                 <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
                             </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
-                    </a>
-
-                    <div class="collapse menu-dropdown" id="contact">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">ádfsdfsf</a>
-                            </li>
-
                         </ul>
                     </div>
                 </li>

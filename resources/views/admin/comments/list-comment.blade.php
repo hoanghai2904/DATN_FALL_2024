@@ -72,7 +72,7 @@ td.comment-column {
                                     @foreach ($listComment as $comment)
                                         <tr>
                                             <td>{{ $comment->id }}</td>
-                                            <td>{{ $comment->user->full_name}}</td>
+                                            <td>{{ $comment->user->full_name ?? 'user không tồn tại'}}</td>
                                             <!-- Tên người dùng -->
                                             <td>{{ $comment->product->name ?? 'Sản phẩm không tồn tại' }}</td>
                                             <!-- Tên sản phẩm -->

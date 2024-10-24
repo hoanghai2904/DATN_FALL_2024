@@ -1,24 +1,19 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model
+class Payment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'order_id',
-        'product_id',
-        'product_name',
-        'variant_size',
-        'variant_color',
-        'variant_weight',
-        'qty',
-        'price',
-        'total_price',
+        'payment_method',
+        'transaction_id',
+        'payment_status',
+        'paid_at',
     ];
 
     public function order()
