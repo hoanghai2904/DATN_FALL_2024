@@ -88,6 +88,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
+        Route::put('/orders/{id}', [OrderController::class, 'update'])->name('updateOrder');
+
         Route::resource('transactions', TransactionController::class);
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);

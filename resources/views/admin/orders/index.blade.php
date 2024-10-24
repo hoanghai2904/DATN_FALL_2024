@@ -195,14 +195,16 @@
                         
                                             <!-- Chỉnh sửa đơn hàng -->
                                             <li class="list-inline-item" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                                <a href="#showModal" 
-                                                   data-bs-toggle="modal" 
-                                                   class="text-primary d-inline-block edit-item-btn"
-                                                   data-id="{{ $order->id }}" 
-                                                   data-order-status="{{ $order->order_status }}" 
-                                                   data-payment-status="{{ $order->payment_status }}">
-                                                    <i class="ri-pencil-fill fs-16"></i>
-                                                </a>
+                                                @if ($order->order_status !== 'Đã hủy')
+                                                    <a href="#showModal" 
+                                                       data-bs-toggle="modal" 
+                                                       class="text-primary d-inline-block edit-item-btn"
+                                                       data-id="{{ $order->id }}" 
+                                                       data-order-status="{{ $order->order_status }}" 
+                                                       data-payment-status="{{ $order->payment_status }}">
+                                                        <i class="ri-pencil-fill fs-16"></i>
+                                                    </a>
+                                                @endif
                                             </li>
                                             
                         
@@ -336,45 +338,74 @@
     });
     // edit from 
   // Lắng nghe sự kiện click cho tất cả các nút chỉnh sửa
-
   const modalElement = document.getElementById('showModal');
 const modal = new bootstrap.Modal(modalElement);
+const updateStatusForm = document.getElementById('updateStatusForm');
+const updateOrderRoute = "{{ route('admin.updateOrder', ['id' => ':id']) }}";
 
-// Sự kiện khi modal đóng
-modalElement.addEventListener('hidden.bs.modal', function () {
-    // Xóa giá trị các dropdown khi modal đóng
-    document.getElementById('order-status').value = '';
-    document.getElementById('payment-status').value = '';
+// Reset giá trị khi đóng modal
+modalElement.addEventListener('hidden.bs.modal', () => {
+    ['order-status', 'payment-status'].forEach(id => document.getElementById(id).value = '');
 });
 
-// Mở modal khi nhấn nút
+// Mở modal và gán giá trị
 document.querySelectorAll('.edit-item-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const orderId = this.getAttribute('data-id');
-        const orderStatus = this.getAttribute('data-order-status');
-        const paymentStatus = this.getAttribute('data-payment-status');
-
-        // Kiểm tra giá trị
-        console.log("Order ID:", orderId);
-        console.log("Order Status:", orderStatus);
-        console.log("Payment Status:", paymentStatus);
-
-        // Gán giá trị vào các dropdown trong modal
+    button.addEventListener('click', () => {
+        const { id: orderId, orderStatus, paymentStatus } = button.dataset;
         document.getElementById('order-status').value = orderStatus;
         document.getElementById('payment-status').value = paymentStatus;
-
-        // Kiểm tra lại giá trị sau khi gán
-        console.log("Selected Order Status:", document.getElementById('order-status').value);
-        console.log("Selected Payment Status:", document.getElementById('payment-status').value);
-
-        // Lưu id đơn hàng để sử dụng khi cập nhật
-        document.getElementById('updateStatusForm').action = `/orders/${orderId}`;
-
-        // Mở modal
+        updateStatusForm.setAttribute('data-id', orderId);
         modal.show();
     });
 });
 
+// Cập nhật trạng thái đơn hàng
+updateStatusForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const orderId = updateStatusForm.getAttribute('data-id');
+    const url = updateOrderRoute.replace(':id', orderId);
+
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({
+            order_status: document.getElementById('order-status').value,
+            payment_status: document.getElementById('payment-status').value,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                modal.hide();
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+                text: data.message,
+            });
+        }
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Có lỗi xảy ra. Vui lòng thử lại!',
+        });
+        console.error('Có lỗi xảy ra:', error);
+    });
+});
 
      // Hàm hiển thị modal xác nhận xóa
      let deleteCustomerId;

@@ -198,7 +198,9 @@
                         <p class="text-muted mb-0">Mã giao dịch :</p>
                     </div>
                     <div class="flex-grow-1 ms-2">
-                        <h6 class="mb-0">{{ $order->payment->transaction_id }}</h6>
+                        <h6 class="mb-0">
+                            {{ $order->payment && $order->payment->transaction_id ? $order->payment->transaction_id : 'Không có mã' }}
+                        </h6>
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-2">

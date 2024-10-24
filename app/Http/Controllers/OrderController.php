@@ -95,24 +95,25 @@ if ($request->filled('search')) {
     }
 
     // Cập nhật đơn hàng
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        // Validate the incoming request
+        // Validate dữ liệu
         $request->validate([
-            'status_order' => 'required|string', // Thêm xác thực cho trạng thái
-            // Các xác thực khác nếu cần
+            'order_status' => 'required|string',
+            'payment_status' => 'required|string',
         ]);
     
-        // Kiểm tra nếu trạng thái mới là "Hoàn thành"
-        if ($request->input('status_order') === 'Hoàn thành') {
-            $order->payment_method = 'Đã thanh toán'; // Cập nhật phương thức thanh toán
-        }
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
     
-        // Cập nhật các trường khác của đơn hàng
-        $order->update($request->except('payment_method')); // Bỏ qua payment_method nếu nó được cập nhật trong điều kiện trên
+        // Cập nhật trạng thái
+        $order->order_status = $request->order_status;
+        $order->payment_status = $request->payment_status;
+        $order->save();
     
-        return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
+        return response()->json(['success' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công!']);
     }
+    
     public function showInvoice($id)
     {
         $order = Order::findOrFail($id);
