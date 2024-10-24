@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\Order_statuses;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Flasher\Notyf\Prime\NotyfInterface;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class ReviewController extends Controller
 {
     public function listReview()
     {
-        $listReview = Review::with('user', 'order_statuses','product')->paginate(5); // Lấy 10 bình luận mỗi trang
+        $listReview = Review::with('user', 'order','product')->paginate(5); // Lấy 10 bình luận mỗi trang
         return view('admin.review.index')->with(['listReview' => $listReview]);
     }
     

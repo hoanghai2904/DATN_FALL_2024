@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // ID trang thái đơn hàng
             $table->string('rating'); // Điểm đánh giá
             $table->text('comment')->nullable(); // Nội dung đánh giá
+            
             $table->timestamps();
             $table->softDeletes(); // Xóa mềm
         });
