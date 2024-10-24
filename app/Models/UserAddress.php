@@ -28,4 +28,10 @@ class UserAddress extends Model
     {
         return $this->belongsTo(Ward::class);
     }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
 }

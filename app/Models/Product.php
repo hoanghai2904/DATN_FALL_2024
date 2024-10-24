@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
+use App\Models\admin\ProductGallery;
+use App\Models\admin\ProductVariants;
+use App\Models\admin\Tag;
 use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

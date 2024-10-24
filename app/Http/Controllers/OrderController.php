@@ -4,48 +4,57 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\User;
 use Carbon\Carbon; 
 class OrderController extends Controller
 {
     // Hiển thị danh sách đơn hàng
     public function index(Request $request)
     {
-        $query = Order::query();
-
-        if ($request->filled('status_order')) {
-            $query->where('status_order', $request->status_order);
-        }
+        // Bắt đầu truy vấn với quan hệ users và user_addresses
+        $query = Order::with(['user', 'user.addresses']);
     
-        
-        if ($request->has('order_code') && !empty($request->input('order_code'))) {
-            $query->where('order_code', 'like', '%' . $request->input('order_code') . '%');
-        }
-        // Kiểm tra và lọc theo tên khách hàng
-        if ($request->has('user_name') && !empty($request->user_name)) {
-            $query->where('user_name', 'like', '%' . $request->user_name . '%');
-        }
-       if ($request->filled('month')) {
-        $query->whereMonth('created_at', Carbon::parse($request->month)->month)
-              ->whereYear('created_at', Carbon::parse($request->month)->year);
-    }
+      // Lọc theo trạng thái đơn hàng
+if ($request->filled('order_status')) {
+    $query->where('order_status', $request->order_status);
+}
 
-        // Kiểm tra và lọc theo tìm kiếm chung
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function ($query) use ($search) {
-                $query->where('order_code', 'like', '%' . $search . '%')
-                    ->orWhere('user_name', 'like', '%' . $search . '%')
-                    ->orWhere('user_email', 'like', '%' . $search . '%')
-                    ->orWhere('status_order', 'like', '%' . $search . '%');
-            });
-        }
-    
+// Lọc theo trạng thái thanh toán
+if ($request->filled('payment_status')) {
+    $query->where('payment_status', $request->payment_status);
+}
+
+// Lọc theo khoảng thời gian
+if ($request->filled('start_date') && $request->filled('end_date')) {
+    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+
+    $query->whereBetween('created_at', [$startDate, $endDate]);
+} elseif ($request->filled('start_date')) {
+    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+    $query->where('created_at', '>=', $startDate);
+} elseif ($request->filled('end_date')) {
+    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+    $query->where('created_at', '<=', $endDate);
+}
+
+// Lọc theo tìm kiếm chung
+if ($request->filled('search')) {
+    $search = $request->search;
+    $query->where(function ($query) use ($search) {
+        $query->where('order_code', 'like', '%' . $search . '%');
+              
+    });
+}
         // Lấy danh sách đơn hàng sau khi lọc
-        $orders = $query->get();
+        $orders = $query->paginate(7)->appends($request->except('page'));
     
         // Trả về view với danh sách đơn hàng
         return view('admin.orders.index', compact('orders'));
     }
+    
+    
+    
     
 
     // Tạo đơn hàng mới
@@ -54,21 +63,30 @@ class OrderController extends Controller
         return view('admin.orders.create');
     }
 
-    // Lưu đơn hàng mới
-    public function store(Request $request)
-    {
-        $order = Order::create($request->all());
-        return redirect()->route('admin.orders.index')->with('success', 'Order created successfully');
-    }
-
     // Hiển thị chi tiết đơn hàng
-    public function show(Order $order)
-    {
-        // Lấy các sản phẩm trong đơn hàng bằng quan hệ đã thiết lập
-        $orderItems = $order->items;
+    public function show($id)
+{
+    $order = Order::with('items','payment')->findOrFail($id);
+    
+    // Kiểm tra nếu đơn hàng có liên kết với user
+    $customer = $order->user_id 
+        ? User::find($order->user_id) // Nếu có user_id, lấy thông tin từ User
+        : (object) [ // Nếu không, dùng thông tin trong đơn hàng
+            'name' => $order->user_name,
+            'email' => $order->user_email,
+            'phone' => $order->user_phone,
+            'address' => $order->user_address,
+        ];
+    
+    // Chỉ gọi addresses() nếu $customer là một đối tượng User
+    $addresses = isset($customer->addresses) 
+        ? $customer->addresses()->get() 
+        : collect(); // Trả về một collection rỗng nếu không có user_id
 
-        return view('admin.orders.show', compact('order', 'orderItems'));
-    }
+    return view('admin.orders.show', compact('order', 'customer', 'addresses'));
+}
+
+    
 
     // Chỉnh sửa đơn hàng
     public function edit(Order $order)
@@ -79,7 +97,20 @@ class OrderController extends Controller
     // Cập nhật đơn hàng
     public function update(Request $request, Order $order)
     {
-        $order->update($request->all());
+        // Validate the incoming request
+        $request->validate([
+            'status_order' => 'required|string', // Thêm xác thực cho trạng thái
+            // Các xác thực khác nếu cần
+        ]);
+    
+        // Kiểm tra nếu trạng thái mới là "Hoàn thành"
+        if ($request->input('status_order') === 'Hoàn thành') {
+            $order->payment_method = 'Đã thanh toán'; // Cập nhật phương thức thanh toán
+        }
+    
+        // Cập nhật các trường khác của đơn hàng
+        $order->update($request->except('payment_method')); // Bỏ qua payment_method nếu nó được cập nhật trong điều kiện trên
+    
         return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
     }
     public function showInvoice($id)
@@ -90,11 +121,14 @@ class OrderController extends Controller
     
         return view('admin.orders.invoice', compact('order', 'orderItems'));
     }
-    
     // Xóa đơn hàng
-    public function destroy(Order $order)
-    {
+    public function destroy($id)
+{
+    $order = Order::find($id);
+    if ($order) {
         $order->delete();
-        return redirect()->route('admin.orders.index')->with('success', 'Order deleted successfully');
+        return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
     }
+    return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
+}
 }

@@ -20,16 +20,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 use App\Http\Controllers\ContactController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::prefix('admin')->as('admin.')->group(function () {
     // Route cho trang login
@@ -101,9 +92,11 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
+        //contact
         Route::resource('contacts', ContactController::class);
         Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
+        Route::post('contacts/{contact}/sendResponse', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::resource('brands', BrandsController::class);
