@@ -17,19 +17,19 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
+                                    <label class="form-label" for="name-input">Tên mã giảm giá</label>
+                                    <input type="text" class="form-control" placeholder="Tên mã giảm giá..."
+                                        id="name-input" name="name" value="{{ old('name', $find->name) }}" oninput="generateCode()">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
                                     <label class="form-label" for="code-input">Code</label>
                                     <input type="text" class="form-control" placeholder="Mã giảm giá..."
                                         id="code-input" name="code" value="{{ old('code', $find->code) }}" readonly>
                                 </div>
                             </div>
                             <!-- end col -->
-                            <div class="col-lg-6">
-                                <div class="mb-3">
-                                    <label class="form-label" for="name-input">Tên mã giảm giá</label>
-                                    <input type="text" class="form-control" placeholder="Tên mã giảm giá..."
-                                        id="name-input" name="name" value="{{ old('name', $find->name) }}" oninput="generateCode()">
-                                </div>
-                            </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Loại giảm giá</label>
