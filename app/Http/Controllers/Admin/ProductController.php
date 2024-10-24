@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Product;
-use App\Models\admin\ProductGallery;
-use App\Models\admin\ProductTypes;
-use App\Models\admin\ProductVariants;
-use App\Models\admin\ProductWeights;
-use App\Models\admin\Tag;
+use App\Models\Product;
+use App\Models\ProductGallery;
+use App\Models\ProductTypes;
+use App\Models\ProductVariants;
+use App\Models\ProductWeights;
+use App\Models\Tag;
 use App\Models\Brands;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;

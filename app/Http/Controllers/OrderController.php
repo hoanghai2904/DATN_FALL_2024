@@ -43,7 +43,7 @@ class OrderController extends Controller
     
         // Lấy danh sách đơn hàng sau khi lọc
         $orders = $query->get();
-    
+        $orders = Order::paginate(10);
         // Trả về view với danh sách đơn hàng
         return view('admin.orders.index', compact('orders'));
     }
