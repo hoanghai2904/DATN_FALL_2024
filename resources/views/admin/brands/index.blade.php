@@ -82,7 +82,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <img src="{{ Storage::url($item->logo) }}" width="100" height="100" alt="">
+                                    <img  class="img-thumbnail" src="{{ Storage::url($item->logo) }}" width="100" height="100" alt="">
                                 </td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->slug }}</td>
