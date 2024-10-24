@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CommentController;

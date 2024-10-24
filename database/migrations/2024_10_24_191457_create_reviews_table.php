@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // ID người dùng
-            $table->foreignId('order_status_id')->constrained()->onDelete('cascade'); // ID trang thái đơn hàng
+            $table->foreignId('order_id')->constrained()->onDelete('cascade'); // ID trang thái đơn hàng
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // ID trang thái đơn hàng
             $table->string('rating'); // Điểm đánh giá
             $table->text('comment')->nullable(); // Nội dung đánh giá
