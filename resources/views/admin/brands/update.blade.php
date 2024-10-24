@@ -3,7 +3,6 @@
 
 @section('title')
     Chỉnh sửa thương hiệu
-    Chỉnh sửa thương hiệu
 @endsection
 
 {{-- section: định nghĩa nội dung của section --}}
@@ -42,10 +41,8 @@
                 </div>
                 <div class="text-end mb-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
-                <div class="text-end mb-3 d-flex justify-content-center">
-                    <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
-                </div>
-            </div>        
+                </div>        
+            </div>
         </div>
         <div class="col-lg-4">
 
@@ -71,44 +68,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
-                    data-bs-target="#categories" aria-expanded="true" aria-controls="categories">
-                    <h5 class="card-title mb-0">Danh mục</h5>
-                </div>
-                <div class="collapse show" id="categories">
-                    <div class="card-body">
-                        <p class="text-muted mb-2"> <a href="#"
-                                class="float-end text-decoration-underline">Thêm mới</a>Chọn danh mục </p>
-                        <select class="form-select" name="category_id">
-                            <option value="0">Appliances</option>
-                            <option value="1">Automotive Accessories</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#brands"
-                    aria-expanded="true" aria-controls="brands">
-                    <h5 class="card-title mb-0">Thương hiệu</h5>
-                </div>
-                <div class="collapse show" id="brands">
-                    <div class="card-body">
-                        <p class="text-muted mb-2"> <a href="#"
-                                class="float-end text-decoration-underline">Thêm mới</a>Chọn danh mục </p>
-                        <select class="form-select" name="brand_id">
-                            <option value="0">Appliances</option>
-                            <option value="1">Automotive Accessories</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-
-
-
         </div>
     </div>
         

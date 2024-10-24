@@ -65,7 +65,6 @@
                                             <label class="form-check-label" for="cardtableCheck"></label>
                                         </div>
                                     </th>
-                                    <th scope="col">ID</th>
                                     <th scope="col">Hình ảnh</th>
                                     <th scope="col">Tên thương hiệu</th>
                                     <th scope="col">Đại diện thương hiệu</th>
@@ -82,36 +81,37 @@
                                         <label class="form-check-label" for="cardtableCheck01"></label>
                                     </div>
                                 </td>
-                                <td>{{ $index + 1 }}</td>
                                 <td>
                                     <img src="{{ Storage::url($item->logo) }}" width="100" height="100" alt="">
                                 </td>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->slug }}</td>
                                 <td>
-                                    <a href="{{ route('admin.brands.edit', $item->id) }}">
-                                        {{-- <button class="btn btn-sm btn-warning">Sửa</button> --}}
-                                        <i class="ri-pencil-fill align-bottom text-muted fs-5"></i>
-                                    </a>
-                                    {{-- <ul class="list-inline hstack gap-2 mb-0">
-                                        <li class="list-inline-item edit" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                            <a href="{{ route('admin.brands.edit', $item->id) }}" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn">
-                                                <i class="ri-pencil-fill fs-16"></i>
+                                    <ul class="list-inline hstack gap-2 mb-0">
+                                        {{-- <li class="list-inline-item" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                            <a href="javascript:void(0);" class="view-item-btn"
+                                                data-comment-id="{{ $item->id }}">
+                                                <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
                                             </a>
-                                        </li>
-                                        <li class="list-inline-item" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="top" title="Remove">
-                                            <a class="text-danger d-inline-block remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal">
-                                                <i class="ri-delete-bin-5-fill fs-16"></i>
-                                            </a>
-                                        </li>
-                                    </ul> --}}
+                                        </li> --}}
+                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="View">
 
-                                    <form action="{{ route('admin.brands.destroy', $item->id) }}" method="post" class="d-inline">
-                                        @method('DELETE')
-                                        @csrf
-                                        {{-- <button type="submit" onclick="return confirm('Bạn có muốn xóa không ???')" class="btn btn-sm btn-danger">Xóa</button> --}}
-                                        <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
-                                    </form>
+                                            <a href="{{ route('admin.brands.edit', $item->id) }}">
+                                                <i class="ri-pencil-fill align-bottom text-muted fs-5"></i>
+                                            </a>
+                                        </li>
+                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+
+                                            <a href="{{ route('admin.brands.destroy', $item->id) }}"
+                                                class=" delete-item">
+                                                <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                   
                                 </td>
                             </tr>
                         @endforeach
@@ -126,11 +126,10 @@
             </div> --}}
         </div><!-- end card -->
     </div><!-- end col -->
-</div>
-    
-        
+</div>   
 @endsection
 @push('script')
+
     <script>
         $(document).ready(function() {
             $(".js-example-basic-single").select2(),

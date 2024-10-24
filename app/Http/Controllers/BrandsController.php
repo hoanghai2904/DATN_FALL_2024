@@ -123,7 +123,7 @@ class BrandsController extends Controller
             Storage::disk('public')->delete($brands->logo);
         }
         $brands->delete();
-        //return response(['status' => 'success', 'Xóa thành công!']);
-        return redirect()->route('admin.brands.index')->with(['message' => 'Xóa Thành Công']);
+        return response(['status' => 'success', 'Xóa thành công!']);
+        // return redirect()->route('admin.brands.index')->with(['message' => 'Xóa Thành Công']);
     }
 }
