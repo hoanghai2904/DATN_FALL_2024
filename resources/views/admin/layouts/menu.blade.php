@@ -30,10 +30,10 @@
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{route('admin.dashboard')}}" class="nav-link"> Thống kê theo A</a>
+                                <a href="{{route('admin.dashboard')}}" class="nav-link">Tổng quát</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link"> Thống kê theo B</a>
+                                <a href="#" class="nav-link"> Thống kê theo vv...</a>
                             </li>
                         </ul>
                     </div>

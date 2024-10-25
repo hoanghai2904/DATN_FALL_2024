@@ -154,40 +154,44 @@
             </div>
         </div>
         <!--end card-->
-        <div class="card mb-4">
-            <div class="card-header" style="padding: 10px 15px;">
-                <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i>Địa chỉ giao hàng</h5>
+     
+        {{-- adress --}}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0 "><i class="ri-map-pin-line align-middle me-1 text-muted"></i>Địa chỉ giao hàng</h5>
             </div>
             <div class="card-body">
-                <ul class="list-unstyled mb-0 vstack gap-3">
-                    <li>
-                        <div class="d-flex  mb-3">
-                            <i class="ri-map-pin-line me-2 align-middle text-muted fs-16"></i>
-                            <strong style="width: 100px">Địa chỉ:</strong> 
-                            <span class="ms-2 text-secondary">
-                                @if($order->user_id)
-                                    {{-- Lấy địa chỉ mặc định từ bảng user_addresses nếu có user_id --}}
-                                    @php
-                                        $defaultAddress = $customer->addresses->firstWhere('is_default', 1);
-                                    @endphp
-                                    {{ $defaultAddress->address ?? 'Không có địa chỉ mặc định' }}
-                                @else
-                                    {{-- Lấy địa chỉ từ bảng orders nếu không có user_id --}}
-                                    {{ $order->user_address ?? 'Không có địa chỉ' }}
-                                @endif
-                            </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="ri-book-open-line me-2"></i>
-                            <strong class="text-primary">Ghi chú:</strong>
-                            <span class="ms-2 text-secondary">{{ $order->user_note ?? 'Không có ghi chú' }}</span>
-                        </div>
-                    </li>
-                </ul>
+                <div class="d-flex mb-2">
+                    <div class="flex-shrink-0">
+                        <h6 class="text-muted mb-1"><i class="ri-map-pin-line me-2 align-middle text-muted fs-16"></i>Địa chỉ :</h6>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                        <p class="mb-0 text-muted">
+                            @if($order->user_id)
+                            {{-- Lấy địa chỉ mặc định từ bảng user_addresses nếu có user_id --}}
+                            @php
+                                $defaultAddress = $customer->addresses->firstWhere('is_default', 1);
+                            @endphp
+                            {{ $defaultAddress->address ?? 'Không có địa chỉ mặc định' }}
+                        @else
+                            {{-- Lấy địa chỉ từ bảng orders nếu không có user_id --}}
+                            {{ $order->user_address ?? 'Không có địa chỉ' }}
+                        @endif
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0">
+                        <h6 class="text-muted mb-0"><i class="ri-book-open-line me-2"></i>Ghi chú :</h6>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                        <p class="mb-0 text-secondary">{{ $order->user_note ?? 'Không có ghi chú' }}</p>
+                    </div>
+                </div>
+              
             </div>
         </div>
+        {{-- end --}}
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0"><i class="ri-secure-payment-line align-bottom me-1 text-muted"></i>Chi tiết thanh toán</h5>
@@ -226,7 +230,7 @@
                     </div>
                 </div>
               
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center mb-2">
                     <div class="flex-shrink-0">
                         <p class="text-muted mb-0">Tổng tiền thanh toán:</p>
                     </div>

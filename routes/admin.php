@@ -39,6 +39,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/order-data', [DashboardController::class, 'dashboard'])->name('dashboard');
 
         //Account to Admin
         //logout
@@ -89,7 +90,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::put('/orders/{id}', [OrderController::class, 'update'])->name('updateOrder');
-
+        Route::delete('/order/{id}', [OrderController::class, 'destroyOrder'])->name('destroyOrder');
         Route::resource('transactions', TransactionController::class);
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
