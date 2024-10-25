@@ -2,18 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ProductSeeder extends Seeder
+class OrderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
-        // Tạo 50 sản phẩm giả lập
-        Product::factory()->count(10)->create();
+        Order::factory()->count(10)->create(); // Tạo 10 đơn hàng
     }
 }

@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\PostCategoryController;
 |
 */
 
+
 Route::prefix('admin')->as('admin.')->group(function () {
     // Route cho trang login
     Route::get('login', [AdminAccountController::class, 'login'])->name('login');
@@ -50,6 +51,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/order-data', [DashboardController::class, 'dashboard'])->name('dashboard');
 
         //Account to Admin
         //logout
@@ -98,15 +100,16 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Ai làm cái gì thì ghi cmt lên trên này  
         Route::resource('orders', OrderController::class);
+        Route::put('/orders/{id}', [OrderController::class, 'update'])->name('updateOrder');
+        Route::delete('/order/{id}', [OrderController::class, 'destroyOrder'])->name('destroyOrder');
         Route::resource('transactions', TransactionController::class);
         Route::resource('order-items', OrderItemController::class);
         Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
-        // Route::resource('contacts', ContactController::class);
-        // Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
-        // Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
-        // Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+        //contact
         Route::resource('contacts', ContactController::class);
+        Route::get('contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+        Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
         Route::post('contacts/{contact}/sendResponse', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
 
