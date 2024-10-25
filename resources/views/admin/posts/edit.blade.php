@@ -63,7 +63,6 @@
                                                     @if ($find->thumbnail)
                                                         <div class="image-wrapper">
                                                             <img src="{{ asset('storage/' . $find->thumbnail) }}" alt="Preview Image">
-                                                            <button class="delete-btn" onclick="this.parentElement.remove()">&times;</button>
                                                         </div>
                                                     @endif
                                                 </div>
@@ -121,18 +120,6 @@
             height: 100px; /* Đảm bảo hình vuông */
             border-radius: 10px; /* Bo góc cho ảnh */
             object-fit: cover; /* Đảm bảo ảnh không bị méo */
-        }
-        .delete-btn {
-            position: absolute;
-            top: 5px;   /* Đặt ở phía trên */
-            right: 5px; /* Đặt ở bên phải */
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            padding: 2px 5px;
-            font-size: 12px;
-            z-index: 1; /* Đảm bảo nút x nằm trên cùng */
         }
         #addImageButton {
             cursor: pointer;

@@ -113,18 +113,6 @@
             border-radius: 10px; /* Bo góc cho ảnh */
             object-fit: cover; /* Đảm bảo ảnh không bị méo */
         }
-        .delete-btn {
-            position: absolute;
-            top: 5px;   /* Đặt ở phía trên */
-            right: 5px; /* Đặt ở bên phải */
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 50%;
-            padding: 2px 5px;
-            font-size: 12px;
-            z-index: 1; /* Đảm bảo nút x nằm trên cùng */
-        }
         #addImageButton {
             cursor: pointer;
             border: 2px dashed #007bff; 
@@ -138,41 +126,34 @@
 
     <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
     <script>
-        document.getElementById('addImageButton').onclick = function () {
-            document.getElementById('imageInput').click();
+    document.getElementById('addImageButton').onclick = function () {
+    document.getElementById('imageInput').click();
+};
+
+document.getElementById('imageInput').onchange = function (event) {
+    const files = event.target.files;
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    imagePreviewContainer.innerHTML = ''; // Xóa các ảnh trước đó
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'image-wrapper'; // Thêm lớp cho khung ảnh
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+
+            imgWrapper.appendChild(img); // Chỉ hiển thị ảnh mà không có nút xóa
+            imagePreviewContainer.appendChild(imgWrapper);
         };
 
-        document.getElementById('imageInput').onchange = function (event) {
-            const files = event.target.files;
-            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-            imagePreviewContainer.innerHTML = ''; // Xóa các ảnh trước đó
+        reader.readAsDataURL(file);
+    }
+};
 
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.className = 'image-wrapper'; // Thêm lớp cho khung ảnh
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.innerHTML = '&times;'; // Dấu x (để xóa)
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.onclick = function () {
-                        imgWrapper.remove(); // Xóa ảnh và nút
-                    };
-
-                    imgWrapper.appendChild(img);
-                    imgWrapper.appendChild(deleteBtn); // Đặt nút xóa sau ảnh
-                    imagePreviewContainer.appendChild(imgWrapper);
-                };
-
-                reader.readAsDataURL(file);
-            }
-        };
     </script>
     
     @endpush
