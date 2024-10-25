@@ -35,6 +35,10 @@
                                         <option value="1" {{ old('status', isset($post) ? $post->status : '') == '1' ? 'selected' : '' }}>Private</option>
                                     </select>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="meta-title-input">Mô tả ngắn</label>
+                                    <textarea name="description" class="form-control" id="" rows="10"></textarea>
+                                </div>
                                 <div class="card">
                                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content"
                                         aria-expanded="true" aria-controls="content">
@@ -55,7 +59,7 @@
                                     <div class="card">
                                         <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
                                             data-bs-target="#thumbnails" aria-expanded="true" aria-controls="thumbnails">
-                                            <h5 class="card-title mb-0">Ảnh sản phẩm</h5>
+                                            <h5 class="card-title mb-0">Ảnh bìa bài viết</h5>
                                         </div>
                                         <div class="collapse show" id="thumbnails">
                                             <div class="card-body">

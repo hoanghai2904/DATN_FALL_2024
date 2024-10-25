@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('category_id')->nullable()->constrained('post_categories')->onDelete('set null');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
             $table->string('title', 255);
+            $table->text('description');
             $table->text('body');
             $table->text('thumbnail')->nullable();
             $table->boolean('status')->default(1);

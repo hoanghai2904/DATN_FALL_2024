@@ -30,6 +30,10 @@
                                     @enderror
                                 </div>
                                 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                <div class="mb-3">
+                                    <label class="form-label" for="meta-title-input">Mô tả ngắn</label>
+                                    <textarea name="description" class="form-control" id="" rows="10">{{ old('body') ?? $find->description }}</textarea>
+                                </div>
                                 <div class="card">
                                     <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer" data-bs-target="#content" aria-expanded="true" aria-controls="content">
                                         <h5 class="card-title mb-0">Nội dung</h5>
@@ -48,12 +52,20 @@
                                     <div class="card">
                                         <div class="card-header" data-bs-toggle="collapse" style="cursor:pointer"
                                             data-bs-target="#thumbnails" aria-expanded="true" aria-controls="thumbnails">
-                                            <h5 class="card-title mb-0">Ảnh sản phẩm</h5>
+                                            <h5 class="card-title mb-0">Ảnh bìa bài viết</h5>                                            
                                         </div>
                                         <div class="collapse show" id="thumbnails">
                                             <div class="card-body">
                                                 <div id="addImageButton" class="text-center mt-3">
                                                     <span class="text-primary">Nhấn vào đây để thêm hình ảnh</span>
+                                                </div>
+                                                <div id="imagePreviewContainer">
+                                                    @if ($find->thumbnail)
+                                                        <div class="image-wrapper">
+                                                            <img src="{{ asset('storage/' . $find->thumbnail) }}" alt="Preview Image">
+                                                            <button class="delete-btn" onclick="this.parentElement.remove()">&times;</button>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <input type="file" id="imageInput" name="thumbnail" accept="image/*" class="d-none" multiple>
                                                 <div id="imagePreviewContainer"></div>

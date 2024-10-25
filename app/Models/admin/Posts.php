@@ -20,6 +20,7 @@ class Posts extends Model
         'thumbnail',
         'category_id',
         'title',
+        'description',
         'body',
         'status',
         ];
