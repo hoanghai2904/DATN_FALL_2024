@@ -135,7 +135,7 @@ class ContactController extends Controller
         }
     
         // Cập nhật trạng thái liên hệ thành "Đã liên hệ" sau khi gửi phản hồi
-        $contact->update([
+        $contacts->update([
             'status_contacts' => 'Đã phản hồi',
         ]);
     

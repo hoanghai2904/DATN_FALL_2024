@@ -11,39 +11,44 @@ class OrderController extends Controller
     // Hiển thị danh sách đơn hàng
     public function index(Request $request)
     {
-        $query = Order::query();
-
-        if ($request->filled('status_order')) {
-            $query->where('status_order', $request->status_order);
-        }
+        // Bắt đầu truy vấn với quan hệ users và user_addresses
+        $query = Order::with(['user', 'user.addresses']);
     
-        
-        if ($request->has('order_code') && !empty($request->input('order_code'))) {
-            $query->where('order_code', 'like', '%' . $request->input('order_code') . '%');
-        }
-        // Kiểm tra và lọc theo tên khách hàng
-        if ($request->has('user_name') && !empty($request->user_name)) {
-            $query->where('user_name', 'like', '%' . $request->user_name . '%');
-        }
-       if ($request->filled('month')) {
-        $query->whereMonth('created_at', Carbon::parse($request->month)->month)
-              ->whereYear('created_at', Carbon::parse($request->month)->year);
-    }
+      // Lọc theo trạng thái đơn hàng
+if ($request->filled('order_status')) {
+    $query->where('order_status', $request->order_status);
+}
 
-        // Kiểm tra và lọc theo tìm kiếm chung
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function ($query) use ($search) {
-                $query->where('order_code', 'like', '%' . $search . '%')
-                    ->orWhere('user_name', 'like', '%' . $search . '%')
-                    ->orWhere('user_email', 'like', '%' . $search . '%')
-                    ->orWhere('status_order', 'like', '%' . $search . '%');
-            });
-        }
-    
+// Lọc theo trạng thái thanh toán
+if ($request->filled('payment_status')) {
+    $query->where('payment_status', $request->payment_status);
+}
+
+// Lọc theo khoảng thời gian
+if ($request->filled('start_date') && $request->filled('end_date')) {
+    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+
+    $query->whereBetween('created_at', [$startDate, $endDate]);
+} elseif ($request->filled('start_date')) {
+    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+    $query->where('created_at', '>=', $startDate);
+} elseif ($request->filled('end_date')) {
+    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+    $query->where('created_at', '<=', $endDate);
+}
+
+// Lọc theo tìm kiếm chung
+if ($request->filled('search')) {
+    $search = $request->search;
+    $query->where(function ($query) use ($search) {
+        $query->where('order_code', 'like', '%' . $search . '%');
+              
+    });
+}
         // Lấy danh sách đơn hàng sau khi lọc
-        $orders = $query->get();
-        $orders = Order::paginate(10);
+        $orders = $query->paginate(7)->appends($request->except('page'));
+    
         // Trả về view với danh sách đơn hàng
         return view('admin.orders.index', compact('orders'));
     }
@@ -90,10 +95,23 @@ class OrderController extends Controller
     }
 
     // Cập nhật đơn hàng
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        $order->update($request->all());
-        return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
+        // Validate dữ liệu
+        $request->validate([
+            'order_status' => 'required|string',
+            'payment_status' => 'required|string',
+        ]);
+    
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
+    
+        // Cập nhật trạng thái
+        $order->order_status = $request->order_status;
+        $order->payment_status = $request->payment_status;
+        $order->save();
+    
+        return response()->json(['success' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công!']);
     }
     
     public function showInvoice($id)
