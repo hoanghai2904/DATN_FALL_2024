@@ -25,4 +25,10 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+      // Quan hệ đến Product
+      public function product()
+      {
+          return $this->belongsTo(Product::class);
+      }
 }

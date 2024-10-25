@@ -201,7 +201,8 @@ liên hệ
                                     </td>
                                     <td>
                                         <ul class="list-inline hstack gap-2 mb-0">
-
+                                            <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}"
+                                            style="cursor: pointer; font-size: 12px;"></i>
                                             <li class="list-inline-item edit" data-bs-toggle="tooltip"
                                                 data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                 <a href="#showModal" data-bs-toggle="modal"
@@ -213,8 +214,7 @@ liên hệ
                                                     </a>
                                             </li>
 
-                                            <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}"
-                                                style="cursor: pointer; font-size: 12px;"></i>
+                                     
                                             <li class="list-inline-item" data-bs-toggle="tooltip"
                                                 data-bs-trigger="hover" data-bs-placement="top" title="Remove">
                                                 @if ($contact->status_contacts == 'Đã phản hồi')

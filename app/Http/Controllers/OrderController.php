@@ -43,6 +43,7 @@ if ($request->filled('search')) {
     $search = $request->search;
     $query->where(function ($query) use ($search) {
         $query->where('order_code', 'like', '%' . $search . '%');
+    
               
     });
 }
