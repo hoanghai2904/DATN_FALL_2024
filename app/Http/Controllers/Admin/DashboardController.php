@@ -105,10 +105,5 @@ class DashboardController extends Controller
         ));
     }
 
-    public function orders()
-    {
-       
-        return view('your_view_name', compact('orders'));
-    }
     
 }

@@ -39,8 +39,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard/order-data', [DashboardController::class, 'dashboard'])->name('dashboard');
-
+       
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
