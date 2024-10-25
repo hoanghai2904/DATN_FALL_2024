@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\admin\ProductGallery;
-use App\Models\admin\ProductVariants;
-use App\Models\admin\Tag;
+use App\Models\ProductGallery;
+use App\Models\ProductVariants;
+use App\Models\Tag;
 use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +24,7 @@ class Product extends Model
     // }
     public function variants()
     {
-        return $this->hasMany(ProductVariants::class);
+        return $this->hasMany(ProductVariant::class);
     }
     public function category(){
         return $this->belongsTo(Category::class);
