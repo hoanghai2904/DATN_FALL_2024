@@ -22,6 +22,7 @@ use App\Models\Category;
 use App\Http\Controllers\ContactController;
 
 
+
 Route::prefix('admin')->as('admin.')->group(function () {
     // Route cho trang login
     Route::get('login', [AdminAccountController::class, 'login'])->name('login');

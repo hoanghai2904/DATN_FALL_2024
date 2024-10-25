@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+{{-- @extends('admin.layouts.master')
 
 @section('title')
 Đơn hàng
@@ -229,4 +229,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}

@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
+use App\Models\ProductGallery;
+use App\Models\ProductVariants;
+use App\Models\Tag;
 use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,29 +19,30 @@ class Product extends Model
         'category_id', 'brand_id', 'thumbnail', 'name', 'slug', 'sku','qty',
         'description', 'content', 'price', 'price_sale', 'status'
     ];
-
-    // Thiết lập quan hệ với bảng ProductVariant
+    // public function categories(){
+    //     return $this->belongsToMany(Category::class, 'category_id');
+    // }
     public function variants()
     {
-        return $this->hasMany(ProductVariant::class, 'product_id');
+        return $this->hasMany(ProductVariant::class);
     }
-
-    // Quan hệ với bảng Category 
-    public function category()
-    {
+    public function category(){
         return $this->belongsTo(Category::class);
     }
-
-    // Quan hệ với bảng Brand 
-    public function brand()
-    {
+    public function brand(){
         return $this->belongsTo(Brands::class);
     }
+    // belongsToMany : thiết lập mối quan hệ nhiều-nhiều giữa hai model.
+    // Tag::class là tham chiếu đến class Tag. Nó chỉ ra rằng Product có quan hệ với Tag
+    // 'product_tags' : bảng trung gian (pivot table) kết nối hai bảng products và tags.
     public function tags(){
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
     public function galleries(){
         return $this->hasMany(ProductGallery::class);
     }
-  
+
+    public function OrderItem(){
+        return $this->hasMany(OrderItem::class);
+    }
 }
