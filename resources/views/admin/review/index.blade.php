@@ -81,12 +81,11 @@ td.comment-column {
                                             <label class="form-check-label" for="cardtableCheck"></label>
                                         </div>
                                     </th>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Id User</th>
-                                    <th scope="col">Id trạng thái đơn hàng</th>
-                                    <th scope="col">Id sản phấm </th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Trạng thái đơn hàng</th>
+                                    <th scope="col">Sản phấm </th>
                                     <th scope="col">Đánh giá  </th>
-                                    <th scope="col">Nội dung </th>
+                                    <th scope="col">Nội dung đánh giá</th>
                                     <th scope="col" style="width: 150px;">Hành động</th>
                                 </tr>
                             </thead>
@@ -100,28 +99,38 @@ td.comment-column {
                                         <label class="form-check-label" for="cardtableCheck01"></label>
                                     </div>
                                 </td>
-                                <td>{{ $review->id }}</td>
                                 <td>{{ $review->user->full_name }}</td>
-                                <td>{{ $review->order_statuses->status }}</td>
-                                {{-- <td>{{ $review->product->name 'Sản phẩm không tồn tại' }}</td> --}}
+                                <td>{{ $review->order->status_order }}</td>
+                                <td>
+                                    <img width="80px" class="img-thumbnail" src="{{ asset('storage/' . $review->product->thumbnail) }}" alt="">
+                                </td>
                                 {{-- <td>{{ $review->rating }}</td> --}}
                                 <td>
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $review->rating)
-                                            <i class="fas fa-star"></i> <!-- Sao đầy đủ -->
-                                        @else
-                                            <i class="far fa-star"></i> <!-- Sao rỗng -->
-                                        @endif
-                                    @endfor
-                                </td> <!-- Đánh giá -->
+                                    <div class="text-warning fs-15">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="ri-star{{ $i <= $review->rating ? '-fill' : '-line' }}"></i>
+                                        @endfor
+                                    </div>
+                                </td>
 
                                 {{-- <td>{{ $review->comment }}</td> --}}
                                 <td class="comment-column">
                                     <div class="d-flex align-items-center">
-                                        <div class="comment-text me-2" id="review-{{ $review->id }}" title="{{ $review->comment }}">
-                                            {{ $review->comment }}
-                                        </div>
-                                        <i class="fas fa-eye comment-icon" data-id="{{ $review->id }}" style="cursor: pointer;"></i>
+                                        @if($review->order->status_order === 'Hoàn thành')
+                                        <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                        data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                        <a href="javascript:void(0);" class="view-item-btn"
+                                                            data-comment-id="{{ $review->id }}">
+                                                            <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
+                                                        </a>
+                                                    </li>
+                                            {{-- <div class="comment-text me-2" id="review-{{ $review->id }}" title="{{ $review->comment }}">
+                                                {{ $review->comment }}
+                                            </div> --}}
+                                            <i class="fas fa-eye comment-icon" data-id="{{ $review->id }}" style="cursor: pointer;"></i>
+                                        @else
+                                            <span class="text-muted">Bình luận không khả dụng</span>
+                                        @endif
                                     </div>
                                     <div class="modal fade" id="reviewModal{{ $review->id }}" tabindex="-1"
                                         aria-labelledby="reviewModalLabel{{ $review->id }}" aria-hidden="true">
@@ -134,6 +143,7 @@ td.comment-column {
                                                 <div class="modal-body">
                                                     {{ $review->comment }}
                                                 </div>
+                                                
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                 </div>
@@ -141,9 +151,8 @@ td.comment-column {
                                         </div>
                                     </div>
                                 </td>
-                                <td>
                                     <td>
-                                        <ul class="list-inline hstack gap-2 mb-0">
+                                        <ul class="list-inline hstack gap-2 mb-0 justify-content-center">
                                             {{-- <li class="list-inline-item" data-bs-toggle="tooltip"
                                                 data-bs-trigger="hover" data-bs-placement="top" title="View">
                                                 <a href="javascript:void(0);" class="view-item-btn"
@@ -177,7 +186,24 @@ td.comment-column {
     </div><!-- end col -->
 </div>
     
-        
+<div class="modal fade" id="viewCommentModal" tabindex="-1" aria-labelledby="viewCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewCommentModalLabel">Chi tiết </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="reviewContent">
+                    <!-- Nội dung bình luận sẽ được cập nhật qua JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>   
 @endsection
 @push('script')
 <!-- Bootstrap JS -->
