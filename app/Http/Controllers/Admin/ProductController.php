@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Product;
-use App\Models\admin\ProductVariant;
-use App\Models\admin\Tag;
-use App\Models\admin\VariantType;
-use App\Models\admin\VariantValue;
-use App\Models\admin\ProductGallery;
+use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\Tag;
+use App\Models\VariantType;
+use App\Models\VariantValue;
+use App\Models\ProductGallery;
 use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -68,20 +68,20 @@ class ProductController extends Controller
         // dd($request->all());
         // Xác thực dữ liệu nếu cần
         $productValidate = $request->validate([
-            'thumbnail' => ['image', 'nullable', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
-            'name' => ['nullable'],
-            'categories' => ['nullable'],
-            'brands' => ['nullable'],
+            'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+            'name' => ['required'],
+            'categories' => ['required'],
+            'brands' => ['required'],
             'sku' => ['nullable', 'unique:products'],
-            'price' => ['nullable', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'price_sale' => ['nullable', 'numeric', 'min:0'],
-            'qty' => ['nullable'],
-            'description' => ['nullable', 'max:500'],
+            'qty' => ['required'],
+            'description' => ['required', 'max:500'],
             'content' => ['nullable'],
-            'status' => ['nullable'],
+            'status' => ['required'],
             'quantities.*' => 'nullable|integer|min:0', // Xác thực số lượng
             'prices.*' => 'nullable|numeric|min:0', // Xác thực giá
-            'tags' => ['nullable', 'array'],
+            'tags' => ['required', 'array'],
         ]);
 
         $path = null;

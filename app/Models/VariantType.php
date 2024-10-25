@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tag extends Model
+class VariantType extends Model
 {
     use HasFactory,SoftDeletes;
 
-    public function products()
+    protected $fillable = ['name'];
+
+    public function variantValues()
     {
-        return $this->belongsToMany(Product::class, 'product_tags');
+        return $this->hasMany(VariantValue::class);
     }
 }

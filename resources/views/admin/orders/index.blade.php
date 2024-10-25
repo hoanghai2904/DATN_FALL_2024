@@ -27,10 +27,11 @@
             <div class="card-body">
                 <div class="live-preview">
                     <!-- Form tìm kiếm -->
-                    <form action="{{ route('admin.orders.index') }}" method="GET">
-                        <div class="row mb-4">
+                    <form action="{{ route('admin.orders.index') }}" method="get">
+                        @csrf
+                        <div class="row mb-2">
                             <!-- Tìm kiếm chung -->
-                            <div class="col-lg-4 mb-3">
+                            <div class="col-lg-2 mb-3">
                                 <h6 class="fw-semibold">Tìm kiếm chung</h6>
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" placeholder="Search..."
@@ -40,7 +41,7 @@
                                     </span>
                                 </div>
                             </div>
-
+                    
                             <!-- Ngày bắt đầu -->
                             <div class="col-lg-2 mb-3">
                                 <h6 class="fw-semibold">Ngày bắt đầu</h6>
@@ -49,6 +50,7 @@
                                         value="{{ request('start_date') }}">
                                 </div>
                             </div>
+                    
                             <!-- Ngày kết thúc -->
                             <div class="col-lg-2 mb-3">
                                 <h6 class="fw-semibold">Ngày kết thúc</h6>
@@ -57,30 +59,54 @@
                                         value="{{ request('end_date') }}">
                                 </div>
                             </div>
+                    
                             <!-- Trạng thái đơn hàng -->
                             <div class="col-lg-2 mb-3">
                                 <h6 class="fw-semibold">Trạng thái đơn hàng</h6>
                                 <div class="input-group">
-                                    <select name="status_order" class="form-control">
+                                    <select name="order_status" class="form-control">
                                         <option value="">Tất cả</option>
-                                        <option value="Hoàn thành" {{ request('status_order')=='Hoàn thành' ? 'selected'
-                                            : '' }}>Hoàn thành</option>
-                                        <option value="Đang xử lý" {{ request('status_order')=='Đang xử lý' ? 'selected'
-                                            : '' }}>Đang xử lý</option>
-                                        <option value="Hoàn thành" {{ request('status_order')=='Hoàn thành' ? 'selected'
-                                            : '' }}>Hoàn thành</option>
-                                        <option value="Hoàn thànhhủy" {{ request('status_order')=='Hoàn thànhhủy'
-                                            ? 'selected' : '' }}>Hoàn thànhhủy</option>
+                                        <option value="Đang xử lí" {{ request('order_status') == 'Đang xử lí' ? 'selected' : '' }}>
+                                            Đang xử lý
+                                        </option>
+                                        <option value="Đang giao" {{ request('order_status') == 'Đang giao' ? 'selected' : '' }}>
+                                            Đang giao
+                                        </option>
+                                        <option value="Hoàn thành" {{ request('order_status') == 'Hoàn thành' ? 'selected' : '' }}>
+                                            Hoàn thành
+                                        </option>
+                                        <option value="Đã hủy" {{ request('order_status') == 'Đã hủy' ? 'selected' : '' }}>
+                                            Hủy đơn
+                                        </option>
                                     </select>
                                 </div>
                             </div>
+                    
+                            <!-- Trạng thái thanh toán -->
+                            <div class="col-lg-2 mb-3">
+                                <h6 class="fw-semibold">Trạng thái thanh toán</h6>
+                                <div class="input-group">
+                                    <select name="payment_status" class="form-control">
+                                        <option value="">Tất cả</option>
+                                        <option value="Đã thanh toán" {{ request('payment_status') == 'Đã thanh toán' ? 'selected' : '' }}>
+                                            Đã thanh toán
+                                        </option>
+                                        <option value="Chưa thanh toán" {{ request('payment_status') == 'Chưa thanh toán' ? 'selected' : '' }}>
+                                            Chưa thanh toán
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                    
                             <!-- Nút tìm kiếm -->
                             <div class="col-lg-2 mb-3 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                <button type="submit" class="btn btn-info">
+                                    <i class="ri-filter-3-line align-bottom me-1"></i> Tìm kiếm
+                                </button>
                             </div>
                         </div>
                     </form>
-
+                    
 
                     <!-- Bảng danh sách đơn hàng -->
                     <div class="table-responsive table-card mb-1">
@@ -89,16 +115,15 @@
                                 <tr class="text-uppercase">
                                     <th scope="col" style="width: 25px;">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="checkAll"
-                                                value="option">
+                                            <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                                         </div>
                                     </th>
-
                                     <th class="sort">Mã đơn hàng</th>
-                                    <th class="sort">Ngày đặt hàng</th>
                                     <th class="sort">Tổng tiền</th>
-                                    <th class="sort">Phương thức </th>
-                                    <th class="sort">Trạng thái </th>
+                                    <th class="sort">Phương thức</th>
+                                    <th class="sort">Trạng thái thanh toán</th>
+                                    <th class="sort">Trạng thái giao hàng</th>
+                                    <th class="sort">Ngày đặt hàng</th>
                                     <th class="sort">Hành động</th>
                                 </tr>
                             </thead>
@@ -107,122 +132,138 @@
                                 <tr>
                                     <th scope="row">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="checkAll"
-                                                value="option1">
+                                            <input class="form-check-input" type="checkbox" name="checkAll" value="option1">
                                         </div>
                                     </th>
-
+                        
+                                    <!-- Mã đơn hàng -->
                                     <td class="id">
-                                        <a href="{{ route('admin.orders.show', $order->order_code) }}"
-                                            class="fw-medium link-primary">#{{ $order->order_code }}</a>
+                                        <a href="{{ route('admin.orders.show', $order->id) }}" 
+                                           class="fw-medium link-primary">
+                                           #{{ $order->order_code }}
+                                        </a>
                                     </td>
-
-                                    <td class="created_at">
-                                        {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}
+                        
+                                    <!-- Tổng tiền -->
+                                    <td class="total_price">
+                                        {{ number_format($order->total_amount - ($order->discount ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫
                                     </td>
-                                    <td class="total_price"> {{ number_format($order->total_price -
-                                        ($order->discount_price ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫</td>
-                                    <td class="payment_method">{{ $order->payment_method }}</td>
-                                    <td>
-                                        @if($order->status_order === 'Hoàn thành')
-                                        <span class="badge bg-success">Hoàn thành</span>
-                                        @elseif($order->status_order === 'Chưa giải quyết')
-                                        <span class="badge bg-warning">Chưa giải quyết</span>
-                                        @elseif($order->status_order === 'Đã hủy')
-                                        <span class="badge bg-danger">Đã hủy</span>
+                        
+                                    <!-- Phương thức thanh toán -->
+                                    <td class="payment_method">
+                                        {{ $order->payment_method }}
+                                    </td>
+                        
+                                    <!-- Trạng thái thanh toán -->
+                                    <td class="payment_status">
+                                        @if ($order->payment_status === 'Chưa thanh toán')
+                                        <span class="badge bg-warning">Chưa thanh toán</span>
                                         @else
-                                        <span class="badge bg-secondary">{{ $order->status_order }}</span>
-                                        <!-- Trạng thái khác -->
+                                            <span class="badge bg-success">{{ $order->payment_status }}</span>
                                         @endif
                                     </td>
+                        
+                                    <!-- Trạng thái giao hàng -->
+                                    <td class="shipment_status">
+                                        @if ($order->order_status === 'Đã giao')
+                                            <span class="badge bg-success">Đã giao</span>
+                                        @elseif ($order->order_status === 'Đang giao')
+                                            <span class="badge bg-info">Đang giao</span>
+                                        @elseif($order->order_status === 'Đã hủy')
+                                            <span class="badge bg-danger">Đã Hủy</span>
+                                        @else
+                                        <span class="badge bg-warning">Đang xử lý</span>
+                                        @endif
+                                    </td>
+                        
+                                    <!-- Ngày đặt hàng -->
+                                    <td class="created_at">
+                                        {{ $order->created_at->format('d/m/Y') }},
+                                        <small class="text-muted">{{ $order->created_at->format('H:i') }}</small>
+                                    </td>
+                        
+                                    <!-- Hành động -->
                                     <td>
                                         <ul class="list-inline hstack gap-2 mb-0">
-                                            <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="View">
-                                                <a href="{{ route('admin.orders.show', $order->id) }}"
-                                                    class="text-primary d-inline-block">
+                                            <!-- Xem đơn hàng -->
+                                            <li class="list-inline-item" data-bs-toggle="tooltip" title="Xem">
+                                                <a href="{{ route('admin.orders.show', $order->id) }}" 
+                                                   class="text-primary d-inline-block">
                                                     <i class="ri-eye-fill fs-16"></i>
                                                 </a>
                                             </li>
-
-                                            <li class="list-inline-item edit" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="Edit">
-                                                <a href="#showModal" data-bs-toggle="modal"
-                                                    class="text-primary d-inline-block edit-item-btn"
-                                                    data-id="{{ $order->id }}" data-status="{{ $order->status_order }}">
-                                                    <i class="ri-pencil-fill fs-16"></i>
-                                                </a>
-
-                                            </li>
-                                            <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="Remove">
-                                                @if ($order->status_order == 'Đã hủy')
-                                                <form action="{{ route('admin.orders.destroy', $order->id) }}"
-                                                    method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <a href="{{ route('admin.orders.destroy', $order->id) }}" 
-                                                        class="text-danger d-inline-block remove-item-btn delete-item">
-                                                        <i class="ri-delete-bin-5-fill fs-16 delete-item"></i>
+                        
+                                            <!-- Chỉnh sửa đơn hàng -->
+                                            <li class="list-inline-item" data-bs-toggle="tooltip" title="{{ $order->order_status === 'Đã hủy' ? 'Delete' : 'Chỉnh sửa' }}">
+                                                @if ($order->order_status === 'Đã hủy')
+                                                    <!-- Nút xóa nếu đơn hàng đã hủy -->
+                                                    <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal"
+                                                       onclick="showDeleteModal({{ $order->id }})">
+                                                        <i class="ri-delete-bin-fill fs-5 align-bottom" style="color:#FF6600;"></i>
                                                     </a>
-                                                </form>
+                                                @else
+                                                    <!-- Nút chỉnh sửa nếu đơn hàng chưa hủy -->
+                                                    <a href="#showModal" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn"
+                                                       data-id="{{ $order->id }}" 
+                                                       data-order-status="{{ $order->order_status }}" 
+                                                       data-payment-status="{{ $order->payment_status }}">
+                                                        <i class="ri-pencil-fill fs-16"></i>
+                                                    </a>
                                                 @endif
                                             </li>
-
+                                            
+                                            
                                         </ul>
                                     </td>
                                 </tr>
-
                                 @endforeach
                             </tbody>
                         </table>
-
+                       <!-- Hiển thị các liên kết phân trang -->
                     </div>
-
+                    {{ $orders->links() }} 
                 </div>
             </div><!-- end card-body -->
         </div><!-- end card -->
         <div class="card-footer">
-    {{ $orders->links() }} <!-- Hiển thị các liên kết phân trang -->
+   
 </div>
     </div><!-- end col -->
 </div>
+{{-- modal edit --}}
 <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light p-3">
                 <h5 class="modal-title" id="exampleModalLabel">Cập nhật trạng thái</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    id="close-modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
             </div>
             <div class="modal-body">
-                <!-- Form cập nhật trạng thái đơn hàng -->
-                <form method="POST">
+                <form method="POST" id="updateStatusForm">
                     @csrf
-                    @method('PUT') <!-- Sử dụng method PUT để cập nhật -->
-
-                    <!-- Hiển thị lỗi nếu có -->
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                    @method('PUT')
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="order-status">Trạng thái đơn hàng</label>
+                            <select class="form-select mb-3" id="order-status" name="order_status">
+                                <option value="" disabled selected>Chọn trạng thái đơn hàng</option>
+                                <option value="Đang xử lí">Đang xử lý</option>
+                                <option value="Đang giao">Đang giao</option>
+                                <option value="Đã giao">Đã giao</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="payment-status">Trạng thái thanh toán</label>
+                            <select class="form-select mb-3" id="payment-status" name="payment_status">
+                                <option value="" disabled selected>Chọn trạng thái thanh toán</option>
+                                <option value="Đã thanh toán">Đã thanh toán</option>
+                                <option value="Chưa thanh toán">Chưa thanh toán</option>
+                            </select>
+                        </div>
                     </div>
-                    @endif
 
-                    <div class="form-group">
-                        <label for="delivered-status">Trạng thái đơn hàng</label>
-                        <select name="status_order" id="delivered-status" class="form-control" required>
-                            <option value="Chưa giải quyết">Chưa giải quyết</option>
-                            <option value="Đang xử lý">Đang xử lý</option>
-                            <option value="Hoàn thành">Hoàn thành</option>
-                            <option value="Đã hủy">Đã hủy</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-top:10px">
+                    <div class="mt-3 float-end">
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     </div>
@@ -231,8 +272,9 @@
         </div>
     </div>
 </div>
+
 {{-- modal delete --}}
-    <div id="deleteCustomer" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+    <div id="deleteOrder" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -243,8 +285,8 @@
                         <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
                             colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
                         <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Xóa tài khoản</h4>
-                            <p class="text-muted mx-4 mb-0">Bạn có muốn xóa tài khoản này không ?</p>
+                            <h4>Xóa đơn hàng</h4>
+                            <p class="text-muted mx-4 mb-0">Bạn có muốn xóa đơn hàng này không ?</p>
                         </div>
                     </div>
                     <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
@@ -287,107 +329,130 @@
 
     });
     // edit from 
-    $(document).on('click', '.edit-item-btn', function () {
-        var orderId = $(this).data('id');  // Lấy ID đơn hàng từ nút Edit
-        var orderStatus = $(this).data('status');  // Lấy trạng thái đơn hàng từ nút Edit
+  // Lắng nghe sự kiện click cho tất cả các nút chỉnh sửa
+  const modalElement = document.getElementById('showModal');
+const modal = new bootstrap.Modal(modalElement);
+const updateStatusForm = document.getElementById('updateStatusForm');
+const updateOrderRoute = "{{ route('admin.updateOrder', ['id' => ':id']) }}";
 
-        // Cập nhật action của form với đường dẫn và ID đơn hàng
-        $('form').attr('action', '/admin/orders/' + orderId);  // Route để cập nhật theo ID
+// Reset giá trị khi đóng modal
+modalElement.addEventListener('hidden.bs.modal', () => {
+    ['order-status', 'payment-status'].forEach(id => document.getElementById(id).value = '');
+});
 
-        // Gán trạng thái đơn hàng vào select box
-        $('#delivered-status').val(orderStatus);
-
-        // Mở modal
-        $('#showModal').modal('show');
+// Mở modal và gán giá trị
+document.querySelectorAll('.edit-item-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const { id: orderId, orderStatus, paymentStatus } = button.dataset;
+        document.getElementById('order-status').value = orderStatus;
+        document.getElementById('payment-status').value = paymentStatus;
+        updateStatusForm.setAttribute('data-id', orderId);
+        modal.show();
     });
-     // Hàm hiển thị modal xác nhận xóa
-     let deleteCustomerId;
+});
 
-        function showDeleteModal(customerId) {
-            deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
-            $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
-            $('#confirmDelete').on('click', function() {
-                if (deleteCustomerId) {
-                    // Thực hiện yêu cầu xóa qua AJAX
-                    fetch('{{ route('admin.deleteCustomer', ':id') }}'.replace(':id', deleteCustomerId), {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                $('#deleteCustomer').modal('hide'); // Ẩn modal
-                                // Cập nhật danh sách khách hàng (có thể reload trang hoặc xóa hàng từ table)
-                                location.reload(); // Tải lại trang sau khi xóa
-                            } else {
-                                alert('Xóa tài khoản không thành công!');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Có lỗi xảy ra trong quá trình xóa.');
-                        });
-                }
+// Cập nhật trạng thái đơn hàng
+updateStatusForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const orderId = updateStatusForm.getAttribute('data-id');
+    const url = updateOrderRoute.replace(':id', orderId);
+
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({
+            order_status: document.getElementById('order-status').value,
+            payment_status: document.getElementById('payment-status').value,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: data.message,
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                modal.hide();
+                location.reload();
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+                text: data.message,
             });
         }
-
-    $(document).ready(function() {
-        // CSRF Token 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Có lỗi xảy ra. Vui lòng thử lại!',
         });
-        // End CSRF Token
+        console.error('Có lỗi xảy ra:', error);
+    });
+});
 
-        // Sweet Alert 
-        $('body').on('click', '.delete-item', function(event) {
-            event.preventDefault();
+     // Hàm hiển thị modal xác nhận xóa
+     let deleteOrderId;
 
-            let deleteUrl = $(this).closest('form').attr('action'); // Lấy URL từ form
+function showDeleteModal(orderId) {
+    deleteOrderId = orderId; // Lưu ID đơn hàng
+    $('#deleteOrder').modal('show'); // Hiển thị modal xác nhận
 
-            Swal.fire({
-                title: 'Bạn có chắc muốn xóa không ?',
-                text: "Bạn có thể khôi phục lại được dữ liệu!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: deleteUrl,
-                        success: function(data) {
-                            if (data.status == 'success') {
-                                Swal.fire(
-                                    'Đã xóa!',
-                                    data.message,
-                                    'success'
-                                )
-                                setTimeout(() => {
-                                    window.location.reload(); // Tải lại trang sau khi xóa
-                                }, 2000);
-                            } else if (data.status == 'error') {
-                                Swal.fire(
-                                    'Không thể xóa',
-                                    data.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(error);
-                        }
+    // Xử lý sự kiện khi nhấn nút "Xóa"
+    $('#confirmDelete').off('click').on('click', function () {
+        if (deleteOrderId) {
+            // Lấy CSRF token từ meta trong <head>
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`{{ route('admin.destroyOrder', ':id') }}`.replace(':id', deleteOrderId), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken // Đảm bảo truyền token động
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    $('#deleteOrder').modal('hide'); // Ẩn modal sau khi xóa
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: data.message,
+                        confirmButtonText: 'Đồng ý'
+                    }).then(() => {
+                        location.reload(); // Tải lại trang
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: data.message,
+                        confirmButtonText: 'Đồng ý'
                     });
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Có lỗi xảy ra',
+                    text: 'Không thể xóa đơn hàng!',
+                    confirmButtonText: 'Đồng ý'
+                });
             });
-        });
+        }
     });
+}
+
 
 </script>
 @endpush
