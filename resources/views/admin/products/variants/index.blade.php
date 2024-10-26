@@ -121,7 +121,7 @@
                                                     class="btn btn-sm btn-warning">Sửa</a>
                                                 <a href="{{ route('admin.variants.destroy', $variantType->id) }}"
                                                     class="btn btn-sm btn-icon btn-danger delete-item"><i
-                                                        class=" ri-delete-bin-line"></i></a>
+                                                        class="ri-delete-bin-line"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

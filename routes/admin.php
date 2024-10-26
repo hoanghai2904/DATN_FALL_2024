@@ -157,8 +157,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
         });
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
+        Route::get('products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);
-        Route::get('/products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         
         
         Route::put('/variants/change-status', [ProductVariantController::class, 'changeStatus'])->name('product-variant.change-status');

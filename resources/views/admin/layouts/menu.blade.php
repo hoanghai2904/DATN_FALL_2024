@@ -58,7 +58,7 @@
                                     Quản lý sản phẩm</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.products.index') }}" class="nav-link" data-key="t-analytics">
+                                <a href="{{ route('admin.variants.index') }}" class="nav-link" data-key="t-analytics">
                                     Quản lý biến thể</a>
                             </li>
                         </ul>
@@ -80,7 +80,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
+                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" aria-controls="sidebarDashboards">
+                        <i class="ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
+                    </a>
+                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class=" ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
                     </a>
@@ -91,7 +96,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#news" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
