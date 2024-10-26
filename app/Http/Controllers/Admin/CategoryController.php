@@ -89,20 +89,6 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.listCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
     }
 
-    // public function restoreCategory($id)
-    // {
-    //     $category = Category::withTrashed()->find($id);
-
-    //     if ($category) {
-    //         $category->status = 1;
-    //         $category->save();
-
-    //         $category->restore();
-    //         return redirect()->route('admin.categories.listCategory')->with(['message' => 'Cập nhật thành công']);
-    //     }
-
-    //     return redirect()->route('admin.categories.listCategory')->with(['message' => 'Danh mục không tồn tại']);
-    // }
     public function restoreCategory($id)
     {
         $category = Category::withTrashed()->find($id);

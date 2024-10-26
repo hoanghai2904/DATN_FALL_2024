@@ -62,4 +62,40 @@ class PostCategoryController extends Controller
 
         return redirect()->route('admin.postcategories.listPostCategory');
     }
+
+    public function deletePostCategory($id)
+    {
+        $category = PostCategory::find($id);
+
+        if ($category) {
+            // Cập nhật trạng thái
+            $category->status = 0;
+            $category->save();
+
+            // Xóa danh mục sau khi cập nhật trạng thái
+            $category->delete();
+        }
+
+        session()->flash('success', 'Cập nhật trạng thái danh mục thành công!');
+
+        // Chuyển hướng về trang danh sách danh mục
+        return redirect()->route('admin.postcategories.listPostCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
+    }
+
+    public function restorePostCategory($id)
+    {
+        $category = PostCategory::withTrashed()->find($id);
+
+        if ($category) {
+            $category->status = 1;
+            $category->save();
+
+            $category->restore(); // Phục hồi danh mục
+            session()->flash('success', 'Cập nhật trạng thái danh mục thành công!');
+
+            return redirect()->route('admin.postcategories.listPostCategory');
+        }
+
+        return redirect()->route('admin.postcategories.listPostCategory')->with(['message' => 'Danh mục không tồn tại']);
+    }
 }

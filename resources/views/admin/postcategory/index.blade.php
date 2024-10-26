@@ -80,7 +80,7 @@
                                                     @if ($value->status == 1)
                                                         <!-- Chỉ hiển thị khi trạng thái là 1 -->
                                                         <form
-                                                            action="{{ route('admin.categories.deleteCategory', $value->id) }}"
+                                                            action="{{ route('admin.postcategories.deletePostCategory', $value->id) }}"
                                                             method="post" class="d-inline">
                                                             @csrf
                                                             @method('delete')
@@ -102,7 +102,7 @@
 
                                                     @if ($value->status == 0)
                                                         <form
-                                                            action="{{ route('admin.categories.restoreCategory', $value->id) }}"
+                                                            action="{{ route('admin.postcategories.restorePostCategory', $value->id) }}"
                                                             method="post" class="d-inline">
                                                             @csrf
                                                             <button
