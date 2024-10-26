@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\admin\CategoryController_;
+use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
