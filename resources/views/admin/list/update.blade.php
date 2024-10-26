@@ -117,7 +117,8 @@
 
                         <!-- Button Row -->
                         <div class="text-end mb-3">
-                            <button onclick="history.back()" type="button" class="btn btn-danger w-sm">Quay lại</button>
+                            <a href="{{ route('admin.categories.listCategory') }}" type="button" class="btn btn-danger w-sm">Quay
+                                lại</a>
                             <button type="submit" class="btn btn-success w-sm">Cập nhật</button>
                         </div>
                     </div>

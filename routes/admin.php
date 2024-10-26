@@ -168,8 +168,8 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::post('/post-category-add', [PostCategoryController::class, 'addPostPostCategory'])->name('addPostPostCategory');
             Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
             Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
-            // Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
-            // Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+            Route::get('/update/{id}', [PostCategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [PostCategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
         // Sản phẩm mới
         // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');

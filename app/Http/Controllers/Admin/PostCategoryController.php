@@ -98,4 +98,42 @@ class PostCategoryController extends Controller
 
         return redirect()->route('admin.postcategories.listPostCategory')->with(['message' => 'Danh mục không tồn tại']);
     }
+
+    public function updateCategory($id)
+    {
+        $category = PostCategory::withTrashed()->find($id);
+
+        return view('admin.postcategory.update')->with([
+            'category' => $category,
+
+        ]);
+    }
+    public function updatePutCategory(Request $req, $id)
+    {
+        $category = PostCategory::withTrashed()->find($id);
+        $req->validate([
+            'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
+
+        ], [
+            'name.required' => 'Tên danh mục không được để trống',
+            'name.string' => 'Tên danh mục phải là chuỗi ký tự',
+            'name.max' => 'Tên danh mục quá dài',
+            'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
+
+        ]);
+
+        $data = [
+            'name' => $req->name,
+            'slug' => $req->slug,
+
+        ];
+
+        $category->update($data);
+
+        // Thông báo thành công khi cập nhật
+        session()->flash('success', 'Cập nhật danh mục thành công!');
+
+
+        return redirect()->route('admin.postcategories.listPostCategory');
+    }
 }

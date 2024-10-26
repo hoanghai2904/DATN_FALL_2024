@@ -12,9 +12,9 @@
     </style>
 
     <div class="d-flex justify-content-between mb-3">
-        <div class="d-flex align-items-center">
-            <a href="{{ route('admin.postcategories.addPostCategory') }}" class="btn btn-primary">Thêm Mới</a>
 
+        <div class="d-flex align-items-center">
+            <a href="{{ route('admin.postcategories.addPostCategory') }}" class="btn btn-primary me-2">Thêm Mới</a>
             <input type="text" id="categorySearchBox" class="form-control custom-input" placeholder="Tìm kiếm danh mục...">
         </div>
 
@@ -71,7 +71,7 @@
                                             <td class="text-center">
                                                 <div class="d-flex justify-content-center align-items-center"
                                                     style="gap: 5px;">
-                                                    <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
+                                                    <a href="{{ route('admin.postcategories.updateCategory', $value->id) }}"
                                                         class="btn btn-sm btn-warning d-flex align-items-center justify-content-center"
                                                         style="width: 30px; height: 30px; padding: 0; border: none;">
                                                         <i data-feather="edit-3" style="width: 16px; height: 16px;"></i>
