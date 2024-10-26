@@ -11,23 +11,27 @@ use Flasher\Notyf\Prime\NotyfInterface;
 
 class CategoryController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
-        // $data = Category::query()->latest('id')->paginate(5);
-        // $data = null;
-        // //        dd($data);
-        // return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-        $activeCategories = Category::where('status', 1)->latest()->paginate(5);
-        $inactiveCategories = Category::withTrashed()->where('status', 0)->latest()->paginate(5);
+        // Lấy tất cả danh mục
+        $query = Category::withTrashed();
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // Sắp xếp theo trạng thái
+        $query->orderBy('status', 'desc');
+
+        // Phân trang
+        $categories = $query->latest()->paginate(5);
+
         return view('admin.list.index')->with([
-            'activeCategories' => $activeCategories,
-            'inactiveCategories' => $inactiveCategories
+            'categories' => $categories,
+            'selectedStatus' => $request->status,
         ]);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function addCategory()
     {
 
