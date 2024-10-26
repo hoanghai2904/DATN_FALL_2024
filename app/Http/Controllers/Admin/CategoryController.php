@@ -79,7 +79,6 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
         ], [
             'name.required' => 'Tên danh mục không được để trống',
-            'name.string' => 'Tên danh mục phải là chuỗi ký tự',
             'name.max' => 'Tên danh mục quá dài',
             'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
         ]);
@@ -89,15 +88,9 @@ class CategoryController extends Controller
             'slug' => $req->slug,
             'parent_id' => $req->parent_id
         ];
-
         Category::create($data);
         return redirect()->route('admin.categories.listCategory')->with('success', 'Danh mục đã được thêm thành công.');
     }
-
-
-
-
-
     public function deleteCategory($id)
     {
         $category = Category::find($id);
@@ -117,6 +110,20 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.listCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
     }
 
+    // public function restoreCategory($id)
+    // {
+    //     $category = Category::withTrashed()->find($id);
+
+    //     if ($category) {
+    //         $category->status = 1;
+    //         $category->save();
+
+    //         $category->restore();
+    //         return redirect()->route('admin.categories.listCategory')->with(['message' => 'Cập nhật thành công']);
+    //     }
+
+    //     return redirect()->route('admin.categories.listCategory')->with(['message' => 'Danh mục không tồn tại']);
+    // }
     public function restoreCategory($id)
     {
         $category = Category::withTrashed()->find($id);
@@ -125,12 +132,15 @@ class CategoryController extends Controller
             $category->status = 1;
             $category->save();
 
-            $category->restore();
-            return redirect()->route('admin.categories.listCategory')->with(['message' => 'Cập nhật thành công']);
+            $category->restore(); // Phục hồi danh mục
+            session()->flash('success', 'Cập nhật danh mục thành công!');
+
+            return redirect()->route('admin.categories.listCategory');
         }
 
         return redirect()->route('admin.categories.listCategory')->with(['message' => 'Danh mục không tồn tại']);
     }
+
     public function updateCategory($id)
     {
         $category = Category::find($id);
