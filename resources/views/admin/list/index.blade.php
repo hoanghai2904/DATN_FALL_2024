@@ -116,40 +116,8 @@
                                                     <span class="badge bg-danger">Tạm Dừng</span>
                                                 @endif
                                             </td>
-                                            {{-- <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center"
-                                                    style="gap: 5px;">
-                                                    <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
-                                                        class="btn btn-sm btn-warning d-flex align-items-center justify-content-center"
-                                                        style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                        <i data-feather="edit-3" style="width: 16px; height: 16px;"></i>
-                                                    </a>
 
-                                                    <form
-                                                        action="{{ route('admin.categories.deleteCategory', $value->id) }}"
-                                                        method="post" class="d-inline">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button
-                                                            onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
-                                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                                            style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                            <i data-feather="trash-2"
-                                                                style="width: 16px; height: 16px;"></i>
-                                                        </button>
-                                                    </form>
 
-                                                    @if ($value->status == 0)
-                                                        <button
-                                                            onclick="return confirm('Bạn có muốn phục hồi danh mục này không?')"
-                                                            class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
-                                                            style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                            <i data-feather="refresh-cw"
-                                                                style="width: 16px; height: 16px;"></i>
-                                                        </button>
-                                                    @endif
-                                                </div>
-                                            </td> --}}
                                             <td class="text-center">
                                                 <div class="d-flex justify-content-center align-items-center"
                                                     style="gap: 5px;">
@@ -159,19 +127,28 @@
                                                         <i data-feather="edit-3" style="width: 16px; height: 16px;"></i>
                                                     </a>
 
-                                                    <form
-                                                        action="{{ route('admin.categories.deleteCategory', $value->id) }}"
-                                                        method="post" class="d-inline">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button
-                                                            onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
-                                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                                            style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                            <i data-feather="trash-2"
-                                                                style="width: 16px; height: 16px;"></i>
-                                                        </button>
-                                                    </form>
+                                                    @if ($value->status == 1)
+                                                        <!-- Chỉ hiển thị khi trạng thái là 1 -->
+                                                        <form
+                                                            action="{{ route('admin.categories.deleteCategory', $value->id) }}"
+                                                            method="post" class="d-inline">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button
+                                                                onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
+                                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
+                                                                style="width: 30px; height: 30px; padding: 0; border: none;">
+                                                                <i data-feather="trash-2"
+                                                                    style="width: 16px; height: 16px;"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+
+                                                    <a class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
+                                                        style="width: 30px; height: 30px; padding: 0; border: none;"
+                                                        title="Xem Chi Tiết">
+                                                        <i data-feather="eye" style="width: 16px; height: 16px;"></i>
+                                                    </a>
 
                                                     @if ($value->status == 0)
                                                         <form
@@ -187,8 +164,10 @@
                                                             </button>
                                                         </form>
                                                     @endif
+
                                                 </div>
                                             </td>
+
 
                                         </tr>
                                     @endforeach
@@ -209,11 +188,10 @@
 @push('script')
     <script>
         $(document).ready(function() {
-            // Tìm kiếm danh mục
             $('#categorySearchBox').on('keyup', function() {
                 var value = $(this).val().toLowerCase();
                 $('#categoryTable tbody tr').filter(function() {
-                    $(this).toggle($(this).find('td:nth-child(3)').text().toLowerCase().indexOf(
+                    $(this).toggle($(this).find('td:nth-child(2)').text().toLowerCase().indexOf(
                         value) > -1);
                 });
             });
