@@ -47,7 +47,7 @@ class CategoryController extends Controller
     public function addPostCategory(Request $req)
     {
         $req->validate([
-            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
         ], [
             'name.required' => 'Tên danh mục không được để trống',
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
@@ -112,7 +112,8 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $req->validate([
-            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
+
         ], [
             'name.required' => 'Tên danh mục không được để trống',
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
