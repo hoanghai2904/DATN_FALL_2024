@@ -27,7 +27,7 @@ class CategoryController extends Controller
             }
         }
         // Phân trang
-        $categories = $query->latest()->paginate(5);
+        $categories = $query->orderBy('status', 'desc')->latest()->paginate(5);
         return view('admin.list.index')->with([
             'categories' => $categories,
             'selectedStatus' => $request->status
@@ -46,8 +46,35 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function addPostCategory(Request $req)
+    // {
+    //     $req->validate([
+    //         'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
+    //     ], [
+    //         'name.required' => 'Tên danh mục không được để trống',
+    //         'name.string' => 'Tên danh mục phải là chuỗi ký tự',
+    //         'name.max' => 'Tên danh mục quá dài',
+    //         'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
+
+    //     ]);
+    //     $data = [
+    //         'name' => $req->name,
+    //         'slug' => $req->slug,
+    //         'parent_id' => $req->parent_id
+    //     ];
+    //     Category::create($data);
+    //     session()->flash('success', 'Thêm mới danh mục thành công!');
+    //     return redirect()->route('admin.categories.listCategory');
+    // }
     public function addPostCategory(Request $req)
     {
+        // Kiểm tra nếu danh mục đã tồn tại
+        $existingCategory = Category::where('name', $req->name)->first();
+
+        if ($existingCategory) {
+            return redirect()->back()->withErrors(['name' => 'Danh mục đã tồn tại.'])->withInput();
+        }
+
         $req->validate([
             'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
         ], [
@@ -55,17 +82,18 @@ class CategoryController extends Controller
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
             'name.max' => 'Tên danh mục quá dài',
             'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
-
         ]);
+
         $data = [
             'name' => $req->name,
             'slug' => $req->slug,
             'parent_id' => $req->parent_id
         ];
+
         Category::create($data);
-        session()->flash('success', 'Thêm mới danh mục thành công!');
-        return redirect()->route('admin.categories.listCategory');
+        return redirect()->route('admin.categories.listCategory')->with('success', 'Danh mục đã được thêm thành công.');
     }
+
 
 
 
