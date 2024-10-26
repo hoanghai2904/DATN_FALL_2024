@@ -69,7 +69,7 @@
                             <table id="myTable" class="table align-middle table-nowrap table-striped-columns mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">ID</th>
+                                        <th scope="col">Thumb</th>
                                         <th scope="col">Tiêu đề</th>
                                         <th scope="col">Tác giả</th>
                                         <th scope="col">Danh mục</th>
@@ -82,7 +82,7 @@
                                     @foreach ($list as $key => $item)
                                         <tbody>
                                             <tr id="tr_{{ $item->id }}">
-                                                <td><a href="#" class="fw-medium">{{ $key + 1 }}</a></td>
+                                                <td><a href="#" class="fw-medium">{{ $item->title }}</a></td>
                                                 <td> <a href="{{ route('admin.posts.edit', [$item->id]) }}">{{ $item->title }}</a></td>
                                                 <td>{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</td>
                                                 <td>{{ $item->Category ? $item->Category->name : 'Không có danh mục' }}</td>
@@ -111,14 +111,10 @@
                                             </tr>
                                         </tbody>
                                     @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="11" class="text-center">Không có bài viết nào</td>
-                                    </tr>
                                 @endif
                             </table>
                             <div class="float-right">
-                                {{-- {{ $list->links() }} --}}
+                                {{ $list->links() }}
                             </div>
                         </div>
                     </div>
