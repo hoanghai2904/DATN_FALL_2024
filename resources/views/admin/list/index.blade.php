@@ -20,13 +20,15 @@
         <!-- Bộ lọc theo trạng thái -->
         <form action="{{ route('admin.categories.listCategory') }}" method="GET" class="d-flex">
             <select class="form-select me-2" name="status">
-                <option value="">Tất cả trạng thái</option>
-                <option value="1" {{ $selectedStatus == 1 ? 'selected' : '' }}>Đang Hoạt Động</option>
-                <option value="0" {{ $selectedStatus == 0 ? 'selected' : '' }}>Tạm Dừng</option>
+                <option value="0">Tất cả trạng thái</option>
+                <option value="1" {{ $selectedStatus == '1' ? 'selected' : '' }}>Đang Hoạt Động</option>
+                <option value="2" {{ $selectedStatus == '2' ? 'selected' : '' }}>Tạm Dừng</option>
             </select>
 
             <button type="submit" class="btn btn-primary">Lọc</button>
         </form>
+
+
     </div>
 
 

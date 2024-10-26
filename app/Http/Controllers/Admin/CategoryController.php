@@ -11,27 +11,40 @@ use Flasher\Notyf\Prime\NotyfInterface;
 
 class CategoryController extends Controller
 {
+
     public function show(Request $request)
     {
         // Lấy tất cả danh mục
-        $query = Category::withTrashed();
+        $query = Category::withTrashed(); // Khởi tạo query để lấy tất cả danh mục
 
-        // Lọc theo trạng thái
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
+        // Kiểm tra xem có giá trị status không
+        if ($request->has('status')) {
+            // Nếu trạng thái là "Tất cả trạng thái", không cần lọc
+            if ($request->status == '0') {
+                // Không làm gì, giữ nguyên query để lấy tất cả danh mục
+            } elseif ($request->status == '1') {
+                // Lọc theo trạng thái "Đang Hoạt Động"
+                $query->where('status', 1);
+            } elseif ($request->status == '2') {
+                // Lọc theo trạng thái "Tạm Dừng"
+                $query->where('status', 0);
+            }
         }
-
-        // Sắp xếp theo trạng thái
-        $query->orderBy('status', 'desc');
 
         // Phân trang
         $categories = $query->latest()->paginate(5);
 
         return view('admin.list.index')->with([
             'categories' => $categories,
-            'selectedStatus' => $request->status,
+            'selectedStatus' => $request->status // Chuyển giá trị status vào view
         ]);
     }
+
+
+
+
+
+
     public function addCategory()
     {
 
