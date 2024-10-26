@@ -293,7 +293,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{ $product->thumbnail }}" alt=""
+                                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt=""
                                                                      class="img-fluid d-block" />
                                                             </div>
                                                             <div>
@@ -319,7 +319,7 @@
                                                         <span class="text-muted">Số lượng</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">${{ number_format($product->OrderItem->count() * $product->price) }}₫</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ number_format($product->OrderItem->count() * $product->price) }}₫</h5>
                                                         <span class="text-muted">Tổng tiền</span>
                                                     </td>
                                                 </tr>
