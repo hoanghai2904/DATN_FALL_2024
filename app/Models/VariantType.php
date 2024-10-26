@@ -10,7 +10,7 @@ class VariantType extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','slug','status'];
 
     public function variantValues()
     {

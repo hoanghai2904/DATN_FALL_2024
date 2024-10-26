@@ -58,7 +58,7 @@ class ProductController extends Controller
 
     public function getVariantValue(Request $request)
     {
-        // dd($request->id);
+        dd($request->id);
         $variantValue = VariantValue::where('variant_type_id', $request->id)->get();
         return $variantValue;
     }

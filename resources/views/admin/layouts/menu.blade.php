@@ -40,7 +40,7 @@
 
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.categories.listCategory') }}" class="nav-link menu-link" href="#"
+                    <a href="{{ route('admin.categories_.index') }}" class="nav-link menu-link" href="#"
                         aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
                     </a>

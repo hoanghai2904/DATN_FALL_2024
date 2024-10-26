@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\admin\CategoryController_;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\ProductVariantController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
@@ -157,11 +158,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
         // Sản phẩm
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::resource('products', ProductController::class);
-        Route::get('/test-variant', function () {
-            return view('admin.products.test');
-        });
-        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
-        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
-        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
+        Route::get('/products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
+        
+        
+        Route::put('/variants/change-status', [ProductVariantController::class, 'changeStatus'])->name('product-variant.change-status');
+        Route::resource('variants', ProductVariantController::class);
     });
 });

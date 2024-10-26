@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('title')
-    danh mục
+    Thuộc tính sản phẩm
 @endsection
 
 @section('style-libs')
@@ -28,12 +28,12 @@
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
                     {{-- <a href="#" class="btn btn-danger mx-2">Xóa</a> --}}
-                    <a href="{{ route('admin.categories_.create') }}" class="btn btn-success">Thêm mới</a>
+                    <a href="{{ route('admin.variants.create') }}" class="btn btn-success">Thêm mới</a>
                 </div>
                 <!-- end card header -->
 
                 <div class="card-body">
-                    <form action="{{ route('admin.categories_.index') }}" method="GET">
+                    <form action="{{ route('admin.variants.index') }}" method="GET">
                         @csrf
                         <div class="row mb-5 ">
                             {{-- <div class="col-lg-3">
@@ -77,14 +77,15 @@
                                             </div>
                                         </th>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Tên Danh mục</th>
+                                        <th scope="col">Tên thuộc tính</th>
+                                        <th scope="col">Slug</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Ngày tạo mới</th>
                                         <th scope="col" style="width: 150px;">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $category)
+                                    @foreach ($variantTypes as $variantType)
                                         <tr>
                                             <td>
                                                 <div class="form-check">
@@ -93,41 +94,32 @@
                                                     <label class="form-check-label" for="cardtableCheck01"></label>
                                                 </div>
                                             </td>
-                                            <td>{{ $category->id }}</td>
+                                            <td>{{ $variantType->id }}</td>
                                             <td>
-                                                {{ $category->name }} <!-- Tên danh mục cha -->
-                                                {{-- <div>
-                                                    @if ($category->children->isNotEmpty())
-                                                        <div style="padding-left: 20px;">
-                                                            <!-- Thêm khoảng cách cho danh mục con -->
-                                                            @foreach ($category->children as $child)
-                                                                <div>&mdash; {{ $child->name }}</div>
-                                                                <!-- Hiển thị tên danh mục con -->
-                                                            @endforeach
-                                                        </div>
-                                                    @endif
-                                                </div> --}}
+                                                {{ $variantType->name }}
                                             </td>
                                             <td>
-                                                @if ($category->status == 1)
+                                                {{ $variantType->slug }}
+                                            </td>
+                                            <td>
+                                                @if ($variantType->status == 1)
                                                     <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
-                                                        <input type="checkbox" checked data-id="{{ $category->id }}"
+                                                        <input type="checkbox" checked data-id="{{ $variantType->id }}"
                                                             class="form-check-input change-status" id="customSwitchsizemd">
                                                     </div>
                                                 @else
                                                     <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
-                                                        <input type="checkbox" data-id="{{ $category->id }}"
+                                                        <input type="checkbox" data-id="{{ $variantType->id }}"
                                                             class="form-check-input change-status" id="customSwitchsizemd">
                                                     </div>
                                                 @endif
 
                                             </td>
-                                            <td>{{ $category->updated_at->format('d/m/Y') }}</td>
+                                            <td>{{ $variantType->updated_at->format('d/m/Y') }}</td>
                                             <td>
-                                                {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
-                                                <a href="{{ route('admin.categories_.edit', $category->id) }}"
+                                                <a href="{{ route('admin.variants.edit', $variantType->id) }}"
                                                     class="btn btn-sm btn-warning">Sửa</a>
-                                                <a href="{{ route('admin.categories_.destroy', $category->id) }}"
+                                                <a href="{{ route('admin.variants.destroy', $variantType->id) }}"
                                                     class="btn btn-sm btn-icon btn-danger delete-item"><i
                                                         class=" ri-delete-bin-line"></i></a>
                                             </td>
@@ -139,7 +131,7 @@
                     </div>
                 </div><!-- end card-body -->
                 <div class="p-3">
-                    {{ $categories->links() }}
+                    {{-- {{ $categories->links() }} --}}
                 </div>
             </div><!-- end card -->
         </div><!-- end col -->
@@ -180,7 +172,7 @@
 
                 $.ajax({
                     // Thay route 
-                    url: "{{ route('admin.category.change-status') }}",
+                    url: "{{ route('admin.product-variant.change-status') }}",
                     method: 'PUT',
                     data: {
                         status: isChecked,
