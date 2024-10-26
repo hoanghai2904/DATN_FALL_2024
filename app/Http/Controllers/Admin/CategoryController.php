@@ -11,23 +11,29 @@ use Flasher\Notyf\Prime\NotyfInterface;
 
 class CategoryController extends Controller
 {
-    public function show()
+
+    public function show(Request $request)
     {
-        // $data = Category::query()->latest('id')->paginate(5);
-        // $data = null;
-        // //        dd($data);
-        // return view(self::PATH_VIEW . __FUNCTION__, compact('data'));
-        $activeCategories = Category::where('status', 1)->latest()->paginate(5);
-        $inactiveCategories = Category::withTrashed()->where('status', 0)->latest()->paginate(5);
+        $query = Category::withTrashed();
+        if ($request->has('status')) {
+
+            if ($request->status == '0') {
+            } elseif ($request->status == '1') {
+
+                $query->where('status', 1);
+            } elseif ($request->status == '2') {
+
+                $query->where('status', 0);
+            }
+        }
+        // Phân trang
+        $categories = $query->orderBy('status', 'desc')->latest()->paginate(5);
         return view('admin.list.index')->with([
-            'activeCategories' => $activeCategories,
-            'inactiveCategories' => $inactiveCategories
+            'categories' => $categories,
+            'selectedStatus' => $request->status
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function addCategory()
     {
 
@@ -40,29 +46,51 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function addPostCategory(Request $req)
+    // {
+    //     $req->validate([
+    //         'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
+    //     ], [
+    //         'name.required' => 'Tên danh mục không được để trống',
+    //         'name.string' => 'Tên danh mục phải là chuỗi ký tự',
+    //         'name.max' => 'Tên danh mục quá dài',
+    //         'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
+
+    //     ]);
+    //     $data = [
+    //         'name' => $req->name,
+    //         'slug' => $req->slug,
+    //         'parent_id' => $req->parent_id
+    //     ];
+    //     Category::create($data);
+    //     session()->flash('success', 'Thêm mới danh mục thành công!');
+    //     return redirect()->route('admin.categories.listCategory');
+    // }
     public function addPostCategory(Request $req)
     {
+        // Kiểm tra nếu danh mục đã tồn tại
+        $existingCategory = Category::where('name', $req->name)->first();
+
+        if ($existingCategory) {
+            return redirect()->back()->withErrors(['name' => 'Danh mục đã tồn tại.'])->withInput();
+        }
+
         $req->validate([
-            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
         ], [
             'name.required' => 'Tên danh mục không được để trống',
-            'name.string' => 'Tên danh mục phải là chuỗi ký tự',
             'name.max' => 'Tên danh mục quá dài',
             'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
-
         ]);
+
         $data = [
             'name' => $req->name,
             'slug' => $req->slug,
             'parent_id' => $req->parent_id
         ];
         Category::create($data);
-        return redirect()->route('admin.categories.listCategory');
+        return redirect()->route('admin.categories.listCategory')->with('success', 'Danh mục đã được thêm thành công.');
     }
-
-
-
-
     public function deleteCategory($id)
     {
         $category = Category::find($id);
@@ -76,11 +104,26 @@ class CategoryController extends Controller
             $category->delete();
         }
 
+        session()->flash('success', 'Cập nhật trạng thái danh mục thành công!');
 
         // Chuyển hướng về trang danh sách danh mục
         return redirect()->route('admin.categories.listCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
     }
 
+    // public function restoreCategory($id)
+    // {
+    //     $category = Category::withTrashed()->find($id);
+
+    //     if ($category) {
+    //         $category->status = 1;
+    //         $category->save();
+
+    //         $category->restore();
+    //         return redirect()->route('admin.categories.listCategory')->with(['message' => 'Cập nhật thành công']);
+    //     }
+
+    //     return redirect()->route('admin.categories.listCategory')->with(['message' => 'Danh mục không tồn tại']);
+    // }
     public function restoreCategory($id)
     {
         $category = Category::withTrashed()->find($id);
@@ -89,12 +132,15 @@ class CategoryController extends Controller
             $category->status = 1;
             $category->save();
 
-            $category->restore();
-            return redirect()->route('admin.categories.listCategory')->with(['message' => 'Cập nhật thành công']);
+            $category->restore(); // Phục hồi danh mục
+            session()->flash('success', 'Cập nhật danh mục thành công!');
+
+            return redirect()->route('admin.categories.listCategory');
         }
 
         return redirect()->route('admin.categories.listCategory')->with(['message' => 'Danh mục không tồn tại']);
     }
+
     public function updateCategory($id)
     {
         $category = Category::find($id);
@@ -108,7 +154,8 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $req->validate([
-            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
+
         ], [
             'name.required' => 'Tên danh mục không được để trống',
             'name.string' => 'Tên danh mục phải là chuỗi ký tự',
@@ -126,6 +173,7 @@ class CategoryController extends Controller
         $category->update($data);
 
         // Thông báo thành công khi cập nhật
+        session()->flash('success', 'Cập nhật danh mục thành công!');
 
 
         return redirect()->route('admin.categories.listCategory');

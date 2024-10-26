@@ -6,6 +6,11 @@
 
 @section('content')
     <form class="needs-validation" action="{{ route('admin.categories.updatePutCategory', $category->id) }}" method="POST">
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         @csrf
         @method('put')
         <div class="row">
