@@ -40,32 +40,9 @@ class CategoryController extends Controller
         $category = Category::all();
         // dd($category);
         return view('admin.list.create')->with((['category' => $category]));
-        // return view(self::PATH_VIEW . __FUNCTION__);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function addPostCategory(Request $req)
-    // {
-    //     $req->validate([
-    //         'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
-    //     ], [
-    //         'name.required' => 'Tên danh mục không được để trống',
-    //         'name.string' => 'Tên danh mục phải là chuỗi ký tự',
-    //         'name.max' => 'Tên danh mục quá dài',
-    //         'name.regex' => 'Tên danh mục phải là chuỗi ký tự'
 
-    //     ]);
-    //     $data = [
-    //         'name' => $req->name,
-    //         'slug' => $req->slug,
-    //         'parent_id' => $req->parent_id
-    //     ];
-    //     Category::create($data);
-    //     session()->flash('success', 'Thêm mới danh mục thành công!');
-    //     return redirect()->route('admin.categories.listCategory');
-    // }
     public function addPostCategory(Request $req)
     {
         // Kiểm tra nếu danh mục đã tồn tại
@@ -89,6 +66,8 @@ class CategoryController extends Controller
             'parent_id' => $req->parent_id
         ];
         Category::create($data);
+        session()->flash('success', 'Thêm danh mục thành công!');
+
         return redirect()->route('admin.categories.listCategory')->with('success', 'Danh mục đã được thêm thành công.');
     }
     public function deleteCategory($id)
@@ -133,7 +112,7 @@ class CategoryController extends Controller
             $category->save();
 
             $category->restore(); // Phục hồi danh mục
-            session()->flash('success', 'Cập nhật danh mục thành công!');
+            session()->flash('success', 'Cập nhật trạng thái danh mục thành công!');
 
             return redirect()->route('admin.categories.listCategory');
         }
@@ -143,7 +122,7 @@ class CategoryController extends Controller
 
     public function updateCategory($id)
     {
-        $category = Category::find($id);
+        $category = Category::withTrashed()->find($id);
         $categories = Category::all();
         return view('admin.list.update')->with([
             'category' => $category,
@@ -152,7 +131,7 @@ class CategoryController extends Controller
     }
     public function updatePutCategory(Request $req, $id)
     {
-        $category = Category::find($id);
+        $category = Category::withTrashed()->find($id);
         $req->validate([
             'name' => 'required|string|max:255|regex:/^[\p{L}\s]+$/u'
 

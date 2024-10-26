@@ -53,56 +53,7 @@
                                 </thead>
 
 
-                                {{-- <tbody>
-                                    @foreach ($categories as $key => $value)
-                                        <tr>
-                                            <td>{{ $categories->firstItem() + $key }}</td>
-                                            <td>{{ $value->name }}</td>
-                                            <td>{{ $value->parent ? $value->parent->name : 'Không có' }}</td>
-                                            <td>
-                                                @if ($value->status == 1)
-                                                    <span class="badge bg-success">Đang Hoạt Động</span>
-                                                @else
-                                                    <span class="badge bg-danger">Tạm Dừng</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center"
-                                                    style="gap: 5px;">
-                                                    <a href="{{ route('admin.categories.updateCategory', $value->id) }}"
-                                                        class="btn btn-sm btn-warning d-flex align-items-center justify-content-center"
-                                                        style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                        <i data-feather="edit-3" style="width: 16px; height: 16px;"></i>
-                                                    </a>
-
-                                                    <form
-                                                        action="{{ route('admin.categories.deleteCategory', $value->id) }}"
-                                                        method="post" class="d-inline">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button
-                                                            onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
-                                                            class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                                            style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                            <i data-feather="trash-2"
-                                                                style="width: 16px; height: 16px;"></i>
-                                                        </button>
-
-                                                        @if ($value->status == 0)
-                                                            <button
-                                                                onclick="return confirm('Bạn có muốn phục hồi danh mục này không?')"
-                                                                class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
-                                                                style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                                <i data-feather="refresh-cw"
-                                                                    style="width: 16px; height: 16px;"></i>
-                                                            </button>
-                                                        @endif
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody> --}}
+                            
                                 <tbody>
                                     @foreach ($categories as $key => $value)
                                         <tr>
