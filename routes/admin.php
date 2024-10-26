@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAccountController;
+use App\Http\Controllers\admin\CategoryController_;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
@@ -88,7 +89,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::post('/profile/store', [AdminUserController::class, 'storeadd'])->name('addAddress');
 
         //Ai làm cái gì thì ghi cmt lên trên này  
-        Route::resource('categories', CategoryController::class);
         Route::resource('orders', OrderController::class);
         Route::put('/orders/{id}', [OrderController::class, 'update'])->name('updateOrder');
         Route::delete('/order/{id}', [OrderController::class, 'destroyOrder'])->name('destroyOrder');
@@ -141,9 +141,12 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::put('change-status', [CommentController::class, 'changeStatus'])->name('change-status');
         });
 
+
         // Categories
+        Route::put('/categories/change-status', [CategoryController_::class, 'changeStatus'])->name('category.change-status');
+        Route::resource('categories_',CategoryController_::class);
         Route::group(['prefix' => 'categories', 'as' => 'categories.'], function () {
-            Route::get('/category', [CategoryController::class, 'show'])->name('listCategory');
+            Route::get('/', [CategoryController::class, 'show'])->name('listCategory');
             Route::get('/category-add', [CategoryController::class, 'addCategory'])->name('addCategory');
             Route::post('/list-add', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
             Route::delete('/delete-catgegory/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
