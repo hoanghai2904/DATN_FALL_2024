@@ -14,36 +14,25 @@ class CategoryController extends Controller
 
     public function show(Request $request)
     {
-        // Lấy tất cả danh mục
-        $query = Category::withTrashed(); // Khởi tạo query để lấy tất cả danh mục
-
-        // Kiểm tra xem có giá trị status không
+        $query = Category::withTrashed();
         if ($request->has('status')) {
-            // Nếu trạng thái là "Tất cả trạng thái", không cần lọc
+
             if ($request->status == '0') {
-                // Không làm gì, giữ nguyên query để lấy tất cả danh mục
             } elseif ($request->status == '1') {
-                // Lọc theo trạng thái "Đang Hoạt Động"
+
                 $query->where('status', 1);
             } elseif ($request->status == '2') {
-                // Lọc theo trạng thái "Tạm Dừng"
+
                 $query->where('status', 0);
             }
         }
-
         // Phân trang
         $categories = $query->latest()->paginate(5);
-
         return view('admin.list.index')->with([
             'categories' => $categories,
-            'selectedStatus' => $request->status // Chuyển giá trị status vào view
+            'selectedStatus' => $request->status
         ]);
     }
-
-
-
-
-
 
     public function addCategory()
     {
@@ -74,6 +63,7 @@ class CategoryController extends Controller
             'parent_id' => $req->parent_id
         ];
         Category::create($data);
+        session()->flash('success', 'Thêm mới danh mục thành công!');
         return redirect()->route('admin.categories.listCategory');
     }
 
@@ -93,6 +83,7 @@ class CategoryController extends Controller
             $category->delete();
         }
 
+        session()->flash('success', 'Cập nhật trạng thái danh mục thành công!');
 
         // Chuyển hướng về trang danh sách danh mục
         return redirect()->route('admin.categories.listCategory')->with('message', 'Cập nhật trạng thái danh mục thành công');
@@ -144,6 +135,7 @@ class CategoryController extends Controller
         $category->update($data);
 
         // Thông báo thành công khi cập nhật
+        session()->flash('success', 'Cập nhật danh mục thành công!');
 
 
         return redirect()->route('admin.categories.listCategory');

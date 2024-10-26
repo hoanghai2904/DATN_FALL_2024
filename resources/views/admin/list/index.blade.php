@@ -45,7 +45,6 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">STT</th>
-                                        <th scope="col">ID</th>
                                         <th scope="col">Tên Danh Mục</th>
                                         <th scope="col">Danh Mục Cha</th>
                                         <th scope="col">Trạng Thái</th>
@@ -85,7 +84,6 @@
                                     @foreach ($categories as $key => $value)
                                         <tr>
                                             <td>{{ $categories->firstItem() + $key }}</td>
-                                            <td>{{ $value->id }}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>{{ $value->parent ? $value->parent->name : 'Không có' }}</td>
                                             <td>
