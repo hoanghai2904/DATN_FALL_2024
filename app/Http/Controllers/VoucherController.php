@@ -44,6 +44,7 @@ class VoucherController extends Controller
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
+            'max_uses' => $req->max_uses,
             'discount' => $discount,
             'qty' => $qty,
             'start' => $req->start,
@@ -95,6 +96,7 @@ class VoucherController extends Controller
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
+            'max_uses' => $req->max_uses,
             'discount' => $discount, // Sử dụng giá trị đã được xử lý
             'qty' => $qty, // Sử dụng giá trị đã được xử lý
             'start' => $req->start,

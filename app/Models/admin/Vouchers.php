@@ -17,6 +17,7 @@ class Vouchers extends Model
     'name',
     'discount_type',
     'status',
+    'max_uses',
     'discount',
     'qty',
     'start',

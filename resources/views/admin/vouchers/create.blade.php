@@ -60,6 +60,15 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
+                                    <label class="form-label" for="meta-title-input">Số lần sử dụng</label>
+                                    <input type="number" class="form-control" id="numberInput" name="max_uses" 
+                                           placeholder="Nhập giá trị giảm giá" 
+                                           value="{{ old('discount') }}" 
+                                           min="1000" oninput="formatNumber(this)">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Số lượng</label>
                                     <input type="text" class="form-control" placeholder="Nhập số lượng..."
                                     id="numberInput" name="qty" min="1" oninput="formatNumber(this)" value="{{old('qty')}}">
