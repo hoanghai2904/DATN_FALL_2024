@@ -105,10 +105,10 @@
                     <div class="collapse menu-dropdown" id="news">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý danh mục</a>
+                                <a href="{{ route('admin.posts.index') }}" class="nav-link">Quản lý danh mục</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý bài viết</a>
+                                <a href="{{ route('admin.posts.index') }}" class="nav-link">Quản lý bài viết</a>
                             </li>
                         </ul>
                     </div>
