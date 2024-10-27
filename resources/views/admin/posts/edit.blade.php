@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <form id="createproduct-form" method="POST" action="{{ route('admin.posts.update',[$find->id]) }}" autocomplete="off" class="needs-validation" novalidate>
+    <form id="createproduct-form" method="POST" action="{{ route('admin.posts.update',[$find->id]) }}" autocomplete="off" class="needs-validation" novalidate enctype="multipart/form-data">
         @method('PUT')
         @csrf
         <a class="btn btn-info" href="{{route('admin.posts.index')}}">Trở về</a>
@@ -134,41 +134,34 @@
 
     <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-create.init.js') }}"></script>
     <script>
-        document.getElementById('addImageButton').onclick = function () {
-            document.getElementById('imageInput').click();
+       document.getElementById('addImageButton').onclick = function () {
+    document.getElementById('imageInput').click();
+};
+
+document.getElementById('imageInput').onchange = function (event) {
+    const files = event.target.files;
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    imagePreviewContainer.innerHTML = ''; // Xóa các ảnh trước đó
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'image-wrapper'; // Thêm lớp cho khung ảnh
+
+            const img = document.createElement('img');
+            img.src = e.target.result;
+
+            imgWrapper.appendChild(img);
+            imagePreviewContainer.appendChild(imgWrapper);
         };
 
-        document.getElementById('imageInput').onchange = function (event) {
-            const files = event.target.files;
-            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-            imagePreviewContainer.innerHTML = ''; // Xóa các ảnh trước đó
+        reader.readAsDataURL(file);
+    }
+};
 
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.className = 'image-wrapper'; // Thêm lớp cho khung ảnh
-
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.innerHTML = '&times;'; // Dấu x (để xóa)
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.onclick = function () {
-                        imgWrapper.remove(); // Xóa ảnh và nút
-                    };
-
-                    imgWrapper.appendChild(img);
-                    imgWrapper.appendChild(deleteBtn); // Đặt nút xóa sau ảnh
-                    imagePreviewContainer.appendChild(imgWrapper);
-                };
-
-                reader.readAsDataURL(file);
-            }
-        };
     </script>
     
     @endpush
