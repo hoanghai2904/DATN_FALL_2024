@@ -42,7 +42,7 @@ class Product extends Model
         return $this->hasMany(ProductGallery::class);
     }
 
-    public function OrderItem(){
+    public function OrderItems(){
         return $this->hasMany(OrderItem::class);
     }
 }
