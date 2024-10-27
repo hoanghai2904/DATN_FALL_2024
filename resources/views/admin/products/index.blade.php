@@ -156,7 +156,7 @@
                                             <td>
                                                 {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
                                                 <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                    class="btn btn-sm btn-warning">Sửa</a>
+                                                    class="btn btn-sm btn-warning"><i class="ri-edit-fill"></i></a>
                                                 <a href="{{ route('admin.products.destroy', $product->id) }}"
                                                     class="btn btn-sm btn-icon btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                             </td>
