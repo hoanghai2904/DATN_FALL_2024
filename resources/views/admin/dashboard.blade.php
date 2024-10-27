@@ -293,7 +293,8 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{ asset('storage/'.$product->thumbnail) }}" alt="" class="img-fluid d-block" />
+                                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt=""
+                                                                     class="img-fluid d-block" />
                                                             </div>
                                                             <div>
                                                                 <h5 class="fs-14 my-1">

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\admin\CategoryController_;
+use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\admin\ProductVariantController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -154,7 +155,19 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
             Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
         });
-        // Sản phẩm
+        // Post Categories
+        Route::group(['prefix' => 'postcategories', 'as' => 'postcategories.'], function () {
+            Route::get('/post-category', [PostCategoryController::class, 'show'])->name('listPostCategory');
+            Route::get('/post-category-add', [PostCategoryController::class, 'addPostCategory'])->name('addPostCategory');
+            Route::post('/post-category-add', [PostCategoryController::class, 'addPostPostCategory'])->name('addPostPostCategory');
+            Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
+            Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
+            Route::get('/update/{id}', [PostCategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [PostCategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+            Route::put('postcategories/change-status', [PostCategoryController::class, 'changeStatus'])->name('change-status');
+        });
+        // Sản phẩm mới
+        // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
         Route::get('products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);

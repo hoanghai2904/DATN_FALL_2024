@@ -7,6 +7,11 @@
 @section('content')
     <form class="needs-validation" action="{{ route('admin.categories.addPostCategory') }}" method="POST">
         @csrf
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -47,6 +52,9 @@
                 </div>
 
                 <div class="text-end mb-3">
+                    <a href="{{ route('admin.categories.listCategory') }}" type="button" class="btn btn-danger w-sm">Quay
+                        lại</a>
+
                     <button type="submit" class="btn btn-success w-sm">Thêm mới</button>
                 </div>
             </div>
