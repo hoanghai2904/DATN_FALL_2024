@@ -46,6 +46,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.brands.index') }}" aria-controls="sidebarDashboards">
+                        <i class="ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý thương hiệu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#product" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class=" ri-fridge-fill"></i> <span data-key="t-dashboards">Sản phẩm</span>
@@ -136,7 +141,7 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
@@ -150,14 +155,14 @@
 
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}"
                         aria-controls="sidebarDashboards">
                         <i class="bx bx-message-detail"></i> <span data-key="t-dashboards">Quản lý Bình Luận</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class=" ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
@@ -169,7 +174,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
             </ul>
         </div>
 

@@ -371,7 +371,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="flex-shrink-0 me-2">
-                                                                <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="avatar-xs rounded-circle" />
+                                                                <img src="{{ $order->user->cover ? asset('storage/' .$order->user->cover) : asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}" alt="" class="avatar-xs rounded-circle" />
                                                             </div>
                                                             <div class="flex-grow-1">{{ $order->user->full_name }}</div> <!-- Tên khách hàng -->
                                                         </div>
