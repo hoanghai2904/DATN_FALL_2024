@@ -3,7 +3,7 @@
 namespace App\Models;
 use App\Models\User;
 use App\Models\admin\Product;
-use App\Models\Order_statuses;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +16,7 @@ class Review extends Model
     protected $fillable = [
 
         'user_id',
-        'order_status_id',
+        'order_id',
         'product_id',
         'rating',
         'comment',
@@ -28,9 +28,9 @@ class Review extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function Order_statuses()
+    public function Order()
     {
-        return $this->belongsTo(Order_statuses::class, 'order_id');
+        return $this->belongsTo(Order::class, 'order_id');
     }
     public function Product()
     {
