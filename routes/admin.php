@@ -4,8 +4,6 @@ use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
-use App\Http\Controllers\OrderItemController;
-use App\Http\Controllers\OrderStatusController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandsController;
@@ -20,6 +18,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Models\Category;
 use App\Http\Controllers\ContactController;
+use App\Http\Middleware\NotificationMiddleware;
 
 
 Route::prefix('admin')->as('admin.')->group(function () {
@@ -91,8 +90,6 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('/orders/{id}', [OrderController::class, 'update'])->name('updateOrder');
 
         Route::resource('transactions', TransactionController::class);
-        Route::resource('order-items', OrderItemController::class);
-        Route::resource('order-statuses', OrderStatusController::class);
         Route::resource('cancelled-orders', CancelledOrderController::class);
         //contact
         Route::resource('contacts', ContactController::class);
@@ -100,6 +97,10 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::post('contacts/{contact}/reply', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
         Route::post('contacts/{contact}/sendResponse', [ContactController::class, 'sendResponse'])->name('contacts.sendResponse');
         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
+       // Route cho AJAX lấy thông báo
+        Route::get('/notifications', [ContactController::class, 'getNotifications'])->name('notifications');
+
+        Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
 
         Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);

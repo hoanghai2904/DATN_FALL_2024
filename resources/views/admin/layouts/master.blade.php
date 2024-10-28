@@ -234,6 +234,54 @@
             })
         })
     </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function fetchNotifications() {
+            $.ajax({
+                url: '{{ route('admin.notifications') }}',
+                method: 'GET',
+                success: function (data) {
+                    $('#notificationDropdown .topbar-badge').text(data.unreadCount);
+                    $('#all-noti-tab').empty(); // Xóa dữ liệu cũ
+
+                    $.each(data.unreadMessages, function (index, message) {
+                        $('#all-noti-tab').append(`
+                            <div class="text-reset notification-item d-block dropdown-item position-relative">
+                                <div class="d-flex">
+                                    <img src="{{ asset('assets/images/users/avatar-8.jpg') }}" class="me-3 rounded-circle avatar-xs flex-shrink-0" alt="user-pic">
+                                    <div class="flex-grow-1">
+                                        <a href="#!" class="stretched-link">
+                                            <h6 class="mt-0 mb-1 fs-13 fw-semibold">${message.name}</h6>
+                                        </a>
+                                        <div class="fs-13 text-muted">
+                                            <p class="mb-1">${message.message}</p>
+                                        </div>
+                                        <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">
+                                            <span><i class="mdi mdi-clock-outline"></i> ${message.created_at}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        // Gọi hàm fetchNotifications khi trang tải
+        fetchNotifications();
+        
+        // Nếu cần, bạn có thể gọi lại khi có sự kiện nhất định (ví dụ: nút refresh)
+        $('#refresh-notifications').on('click', function () {
+            fetchNotifications();
+        });
+    });
+</script>
+
 
 </body>
 

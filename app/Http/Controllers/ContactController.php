@@ -114,12 +114,12 @@ class ContactController extends Controller
             'response_message' => 'required|string|max:500',
         ]);
     
-        $contacts = Contact::findOrFail($id);
+        $contact = Contact::findOrFail($id);
     
         $data = [
-            'name' => $contacts->name,  // Lấy tên từ bản ghi liên hệ
-            'email' => $contacts->email,  // Lấy email từ bản ghi liên hệ
-            'message' => $request->input('response_message'), // Nội dung phản hồi
+            'name' => $contact->name,
+            'email' => $contact->email,
+            'message' => $request->input('response_message'),
         ];
     
         // Kiểm tra nếu email tồn tại
@@ -130,18 +130,32 @@ class ContactController extends Controller
                         ->subject('Phản hồi liên hệ');
             });
         } else {
-            // Xử lý khi email không hợp lệ
             return back()->with('error', 'Không thể gửi phản hồi vì email không tồn tại.');
         }
     
-        // Cập nhật trạng thái liên hệ thành "Đã liên hệ" sau khi gửi phản hồi
-        $contacts->update([
+        // Ghép nội dung phản hồi mới vào nội dung cũ trong cột `response_message`
+        $newResponseMessage = $contact->response_message 
+            ? $contact->response_message . "\n---\n" . $data['message']  // Giữ lại nội dung cũ và thêm ngắt dòng
+            : $data['message']; // Nếu chưa có dữ liệu, chỉ lưu phản hồi mới
+    
+        // Cập nhật `response_message` và `status_contacts`
+        $contact->update([
             'status_contacts' => 'Đã phản hồi',
+            'response_message' => $newResponseMessage,
         ]);
     
         return redirect()->route('admin.contacts.index')->with('success', 'Phản hồi đã được gửi thành công và trạng thái đã được cập nhật!');
     }
+    public function markAsRead($id)
+{
+    $contact = Contact::findOrFail($id);
+    
+    // Cập nhật trạng thái thông báo
+    $contact->update(['status_contacts' => 'Đã phản hồi']);
 
+    return response()->json(['success' => true]);
+}
+   
     public function destroy($id)
     {
 

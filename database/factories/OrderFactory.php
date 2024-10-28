@@ -26,7 +26,7 @@ class OrderFactory extends Factory
             'shipping_fee' => $this->faker->randomFloat(2, 5, 15),
             'payment_status' => $this->faker->randomElement(['Chưa thanh toán', 'Đã thanh toán']),
             'order_status' => $this->faker->randomElement(['Đang xử lí', 'Đang giao', 'Đã giao', 'Đã hủy']),
-            'payment_method' => 'Thẻ tín dụng',
+            'payment_method' => $this->faker->randomElement(['Thẻ tín dụng', 'COD']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

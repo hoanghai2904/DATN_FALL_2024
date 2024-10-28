@@ -165,28 +165,29 @@ liên hệ
                                     </td>
                                     <td class="message-column">
                                         <div class="d-flex align-items-center">
-                                            <div class="message-text me-2" id="message-{{ $contact->id }}"
-                                                title="{{  $contact->message}}">
-                                                {{ $contact->message}}
+                                            <div class="message-text me-2" id="message-{{ $contact->id }}" title="{{ $contact->message }}">
+                                                {{ $contact->message }}
                                             </div>
-                                            <!-- <i class="fas fa-eye message-icon" data-id="{{ $contact->id }}" style="cursor: pointer; font-size: 12px;"></i> -->
+                                          
                                         </div>
+                                        
+                                        <!-- Modal hiển thị tin nhắn -->
                                         <div class="modal fade" id="messageModal{{ $contact->id }}" tabindex="-1"
                                             aria-labelledby="messageModalLabel{{ $contact->id }}" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title"
-                                                            id="messageModalLabel{{ $contact->id }}">Bình luận</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
+                                                        <h5 class="modal-title" id="messageModalLabel{{ $contact->id }}">Liên Hệ</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        {{ $contact->message}}
+                                                        <strong>Khách hàng:</strong> {{ $contact->message }}<br>
+                                                        @if($contact->response_message)
+                                                        <strong>Phản hồi:</strong> {{ $contact->response_message }}
+                                                        @endif
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Đóng</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,41 +237,39 @@ liên hệ
                             </tbody>
                         </table>
                     </div>
-                    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-light p-3">
-                                    <h5 class="modal-title" id="exampleModalLabel">Phản hồi liên hệ</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                        id="close-modal"></button>
-                                </div>
-                            @foreach($contacts as $contact)
-                                <form action="{{ route('admin.contacts.sendResponse', $contact->id) }}" method="POST" id="responseForm">
-                                    @csrf
-                                    <div class="modal-body">
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <label class="form-label mb-0 me-2">Name:</label>
-                                        <p class="contact-name mb-0">{{ $contact->name }}</p>
-                                    </div>
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <label class="form-label mb-0 me-2">Email:</label>
-                                        <p class="contact-email mb-0">{{ $contact->email }}</p>
-                                    </div>
-                                        <div class="mb-3">
-                                            <label for="response_message" class="form-label">Nội dung phản hồi</label>
-                                            <textarea class="form-control" name="response_message" rows="4" required>{{ old('response_message') }}</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-                                        <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
-                                    </div>
-                                </form>
-                            @endforeach
-                            </div>
-                        </div>
+                    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-3">
+                <h5 class="modal-title" id="exampleModalLabel">Phản hồi liên hệ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="responseForm" action="" method="POST">
+                    @csrf
+                    <div class="mb-3 d-flex align-items-center">
+                        <label class="form-label mb-0 me-2">Name:</label>
+                        <p id="contact-name" class="contact-name mb-0"></p>
                     </div>
+                    <div class="mb-3 d-flex align-items-center">
+                        <label class="form-label mb-0 me-2">Email:</label>
+                        <p id="contact-email" class="contact-email mb-0"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="response_message" class="form-label">Nội dung phản hồi</label>
+                        <textarea class="form-control" name="response_message" rows="4" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
                     <!-- Phân trang -->
@@ -346,6 +345,21 @@ liên hệ
     $('#showModal').modal('show');
 });
 
+
+</script>
+<script>
+    // Cập nhật modal với thông tin liên hệ
+$('#showModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Nút đã nhấn để mở modal
+    var name = button.data('name'); // Lấy tên
+    var email = button.data('email'); // Lấy email
+    var action = button.data('action'); // Lấy action form
+
+    var modal = $(this);
+    modal.find('.contact-name').text(name);
+    modal.find('.contact-email').text(email);
+    modal.find('#responseForm').attr('action', action); // Cập nhật action của form
+});
 
 </script>
 @endpush

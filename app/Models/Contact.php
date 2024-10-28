@@ -12,6 +12,7 @@ class Contact extends Model
         'email',
         'phone',
         'message',
+        'response_message',
         'status_contacts', // Đảm bảo trường này có ở đây
     ];
 }
