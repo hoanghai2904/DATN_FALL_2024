@@ -67,45 +67,47 @@ class ProductController extends Controller
     {
         // dd($request->all());
         // Xác thực dữ liệu nếu cần
-        $productValidate = $request->validate([
-            'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
-            'name' => ['required'],
-            'categories' => ['required'],
-            'brands' => ['required'],
-            'sku' => ['nullable', 'unique:products'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'price_sale' => ['nullable', 'numeric', 'min:0'],
-            'qty' => ['required'],
-            'description' => ['required', 'max:500'],
-            'content' => ['nullable'],
-            'status' => ['required'],
-            'quantities.*' => 'nullable|integer|min:0', // Xác thực số lượng
-            'prices.*' => 'nullable|numeric|min:0', // Xác thực giá
-            'tags' => ['nullable', 'array'],
-        ],
-        [
-            'thumbnail.image' => 'Ảnh phải là một tệp hình ảnh.',
-            'thumbnail.required' => 'Ảnh đại diện không được để trống.',
-            'thumbnail.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, svg, hoặc webp.',
-            'thumbnail.max' => 'Dung lượng ảnh không được vượt quá 2048KB.',
-            'name.required' => 'Tên sản phẩm không được để trống.',
-            'categories.required' => 'Danh mục không được để trống.',
-            'brands.required' => 'Thương hiệu không được để trống.',
-            'sku.unique' => 'Mã SKU đã tồn tại.',
-            'price.required' => 'Giá sản phẩm không được để trống.',
-            'price.numeric' => 'Giá sản phẩm phải là số.',
-            'price.min' => 'Giá sản phẩm không được nhỏ hơn 0.',
-            'price_sale.numeric' => 'Giá khuyến mãi phải là số.',
-            'price_sale.min' => 'Giá khuyến mãi không được nhỏ hơn 0.',
-            'qty.required' => 'Số lượng sản phẩm không được để trống.',
-            'description.required' => 'Mô tả sản phẩm không được để trống.',
-            'description.max' => 'Mô tả sản phẩm không được vượt quá 500 ký tự.',
-            'status.required' => 'Trạng thái không được để trống.',
-            'quantities.*.integer' => 'Số lượng phải là số nguyên.',
-            'quantities.*.min' => 'Số lượng không được nhỏ hơn 0.',
-            'prices.*.numeric' => 'Giá phải là số.',
-            'prices.*.min' => 'Giá không được nhỏ hơn 0.',
-        ]);
+        $productValidate = $request->validate(
+            [
+                'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+                'name' => ['required'],
+                'categories' => ['required'],
+                'brands' => ['required'],
+                'sku' => ['nullable', 'unique:products'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'price_sale' => ['nullable', 'numeric', 'min:0'],
+                'qty' => ['required'],
+                'description' => ['required', 'max:500'],
+                'content' => ['nullable'],
+                'status' => ['required'],
+                'quantities.*' => 'nullable|integer|min:0', // Xác thực số lượng
+                'prices.*' => 'nullable|numeric|min:0', // Xác thực giá
+                'tags' => ['nullable', 'array'],
+            ],
+            [
+                'thumbnail.image' => 'Ảnh phải là một tệp hình ảnh.',
+                'thumbnail.required' => 'Ảnh đại diện không được để trống.',
+                'thumbnail.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, svg, hoặc webp.',
+                'thumbnail.max' => 'Dung lượng ảnh không được vượt quá 2048KB.',
+                'name.required' => 'Tên sản phẩm không được để trống.',
+                'categories.required' => 'Danh mục không được để trống.',
+                'brands.required' => 'Thương hiệu không được để trống.',
+                'sku.unique' => 'Mã SKU đã tồn tại.',
+                'price.required' => 'Giá sản phẩm không được để trống.',
+                'price.numeric' => 'Giá sản phẩm phải là số.',
+                'price.min' => 'Giá sản phẩm không được nhỏ hơn 0.',
+                'price_sale.numeric' => 'Giá khuyến mãi phải là số.',
+                'price_sale.min' => 'Giá khuyến mãi không được nhỏ hơn 0.',
+                'qty.required' => 'Số lượng sản phẩm không được để trống.',
+                'description.required' => 'Mô tả sản phẩm không được để trống.',
+                'description.max' => 'Mô tả sản phẩm không được vượt quá 500 ký tự.',
+                'status.required' => 'Trạng thái không được để trống.',
+                'quantities.*.integer' => 'Số lượng phải là số nguyên.',
+                'quantities.*.min' => 'Số lượng không được nhỏ hơn 0.',
+                'prices.*.numeric' => 'Giá phải là số.',
+                'prices.*.min' => 'Giá không được nhỏ hơn 0.',
+            ]
+        );
 
         $path = null;
         if ($request->hasFile('thumbnail')) {
@@ -200,10 +202,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Đã thêm sản phẩm thành công!');
     }
 
-    public function show($id)
-    {
-
-    }
+    public function show($id) {}
 
     public function edit($id)
     {
@@ -275,26 +274,26 @@ class ProductController extends Controller
         $product->delete();
         return response(['status' => 'success', 'Xóa thành công!']);
     }
-//     public function deleteGallery($id)
-// {
+    //     public function deleteGallery($id)
+    // {
 
-//     // Tìm ảnh theo ID
-//     $gallery = ProductGallery::find($id);
-//     // dd($gallery);
-//     if ($gallery) {
-//         // Xóa ảnh khỏi file storage
-//         if (Storage::exists($gallery->image)) {
-//             Storage::delete($gallery->image);
-//         }
+    //     // Tìm ảnh theo ID
+    //     $gallery = ProductGallery::find($id);
+    //     // dd($gallery);
+    //     if ($gallery) {
+    //         // Xóa ảnh khỏi file storage
+    //         if (Storage::exists($gallery->image)) {
+    //             Storage::delete($gallery->image);
+    //         }
 
-//         // Xóa ảnh khỏi cơ sở dữ liệu
-//         $gallery->delete();
+    //         // Xóa ảnh khỏi cơ sở dữ liệu
+    //         $gallery->delete();
 
-//         return response()->json(['success' => true, 'message' => 'Xóa ảnh thành công.']);
-//     }
+    //         return response()->json(['success' => true, 'message' => 'Xóa ảnh thành công.']);
+    //     }
 
-//     return response()->json(['success' => false, 'message' => 'Image not found.'], 404);
-// }
+    //     return response()->json(['success' => false, 'message' => 'Image not found.'], 404);
+    // }
 
 
     public function changeStatus(Request $request)

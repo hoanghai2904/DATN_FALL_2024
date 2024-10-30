@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\ProductListController;
 use App\Http\Controllers\ProductController;
 
 
-route::get('/', [HomeController::class, 'index'])->name('home.index');
+// route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::group(['prefix' => 'account'], function () {
     route::get('/login', [AccountController::class, 'login'])->name('account.login');
     route::post('/login', [AccountController::class, 'Check_login'])->name('account.Check_login');
@@ -34,3 +35,8 @@ Route::group(['prefix' => 'account'], function () {
     route::get('/reset_pass', [AccountController::class, 'reset_pass'])->name('account.reset_pass');
     route::post('/reset_pass', [AccountController::class, 'Check_resetPass']);
 });
+
+
+// Product
+
+Route::get('/', [ProductListController::class, 'index'])->name('home.index');

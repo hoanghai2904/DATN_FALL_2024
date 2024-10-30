@@ -15474,16 +15474,18 @@ input {
     justify-content: space-between;
     align-items: flex-end;
 }
+
 .product-default-single-item .content-left .title {
     font-size: 16px;
     font-weight: 700;
     text-transform: uppercase;
 }
+
 .product-default-single-item .content-left .title a {
     color: #24262b;
 }
 .product-default-single-item .content-right .price del {
-    padding-right: 10px;
+    padding-right: 8px;
 }
 .product-default-single-item:hover > .image-box > .image-link img:nth-child(2) {
     opacity: 1;
