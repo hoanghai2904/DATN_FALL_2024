@@ -8,7 +8,7 @@ use App\Http\Controllers\Client\ProductListController;
 use App\Http\Controllers\ProductController;
 
 
-// route::get('/', [HomeController::class, 'index'])->name('home.index');
+route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::group(['prefix' => 'account'], function () {
     route::get('/login', [AccountController::class, 'login'])->name('account.login');
     route::post('/login', [AccountController::class, 'Check_login'])->name('account.Check_login');
@@ -38,5 +38,3 @@ Route::group(['prefix' => 'account'], function () {
 
 
 // Product
-
-Route::get('/', [ProductListController::class, 'index'])->name('home.index');
