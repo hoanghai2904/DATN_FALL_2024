@@ -238,36 +238,36 @@ liên hệ
                         </table>
                     </div>
                     <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Phản hồi liên hệ</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="responseForm" action="" method="POST">
-                    @csrf
-                    <div class="mb-3 d-flex align-items-center">
-                        <label class="form-label mb-0 me-2">Name:</label>
-                        <p id="contact-name" class="contact-name mb-0"></p>
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header bg-light p-3">
+                                    <h5 class="modal-title" id="exampleModalLabel">Phản hồi liên hệ</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="responseForm" action="" method="POST">
+                                        @csrf
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label class="form-label mb-0 me-2">Name:</label>
+                                            <p id="contact-name" class="contact-name mb-0"></p>
+                                        </div>
+                                        <div class="mb-3 d-flex align-items-center">
+                                            <label class="form-label mb-0 me-2">Email:</label>
+                                            <p id="contact-email" class="contact-email mb-0"></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="response_message" class="form-label">Nội dung phản hồi</label>
+                                            <textarea class="form-control" name="response_message" rows="4" required></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                                            <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3 d-flex align-items-center">
-                        <label class="form-label mb-0 me-2">Email:</label>
-                        <p id="contact-email" class="contact-email mb-0"></p>
-                    </div>
-                    <div class="mb-3">
-                        <label for="response_message" class="form-label">Nội dung phản hồi</label>
-                        <textarea class="form-control" name="response_message" rows="4" required></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Gửi phản hồi</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 

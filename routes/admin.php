@@ -99,9 +99,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::get('/invoices/{id}/invoice', [OrderController::class, 'showInvoice'])->name('orders.invoice');
        // Route cho AJAX lấy thông báo
         Route::get('/notifications', [ContactController::class, 'getNotifications'])->name('notifications');
-
-        Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
-
+        
         Route::resource('brands', BrandsController::class);
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {

@@ -221,116 +221,122 @@
                     </button>
                 </div>
                 <div class="dropdown topbar-head-dropdown ms-1 header-item" id="notificationDropdown">
-    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
-        id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-        aria-haspopup="true" aria-expanded="false">
-        <i class='bx bx-bell fs-22'></i>
-        <span class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">
-            <span id="notification-count">{{ $unreadCount }}</span>
-            <span class="visually-hidden">unread messages</span>
-        </span>
-    </button>
-    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-        aria-labelledby="page-header-notifications-dropdown">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                        id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class='bx bx-bell fs-22'></i>
+                        <span
+                            class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">
+                            <span id="notification-count">{{ $unreadCount }}</span>
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                        aria-labelledby="page-header-notifications-dropdown">
 
-        <div class="dropdown-head bg-primary bg-pattern rounded-top">
-            <div class="p-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h6 class="m-0 fs-16 fw-semibold text-white">Thông báo</h6>
-                    </div>
-                    <div class="col-auto dropdown-tabs">
-                        <span class="badge bg-light-subtle text-body fs-13">{{ $unreadCount }} New</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="px-2 pt-2">
-                <ul class="nav nav-tabs dropdown-tabs nav-tabs-custom" data-dropdown-tabs="true"
-                    id="notificationItemsTab" role="tablist">
-                    <li class="nav-item waves-effect waves-light">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#all-noti-tab" role="tab"
-                            aria-selected="true">
-                            All ({{ $unreadCount }})
-                        </a>
-                    </li>
-                    <li class="nav-item waves-effect waves-light">
-                        <a class="nav-link" data-bs-toggle="tab" href="#messages-tab" role="tab"
-                            aria-selected="false">
-                            Messages
-                        </a>
-                    </li>
-                    <li class="nav-item waves-effect waves-light">
-                        <a class="nav-link" data-bs-toggle="tab" href="#alerts-tab" role="tab"
-                            aria-selected="false">
-                            Alerts
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="tab-content position-relative" id="notificationItemsTabContent">
-            <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab" role="tabpanel">
-                <div data-simplebar style="max-height: 300px;" class="pe-2">
-                    @if ($unreadMessages->isNotEmpty() || $unreadResponses->isNotEmpty())
-                     @foreach ($unreadMessages as $message)
-                        <div class="text-reset notification-item d-block dropdown-item position-relative"
-                            data-id="{{ $message->id }}">
-                            <div class="d-flex" >
-                                <div class="avatar-xs me-3 flex-shrink-0">
-                                    <span class="avatar-title bg-danger-subtle text-danger rounded-circle fs-16">
-                                        <i class="bx bx-badge-check"></i>
-                                    </span>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <strong>{{ $message->name }}</strong>
-                                    <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">{{ $message->message }}</p>
-                                    <small class="text-muted">{{ $message->created_at->diffForHumans() }}</small>
-                                    <span class="btn btn-link" onclick="markAsRead({{ $message->id }})">
-                                        <i class="bx bx-arrow-to-right"></i> <!-- Biểu tượng mũi tên -->
-                                    </span>
-                                </div>
-                                <div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-
-                        @foreach ($unreadResponses as $response)
-                            <div class="text-reset notification-item d-block dropdown-item position-relative"
-                                data-id="{{ $response->id }}" onclick="markAsRead({{ $response->id }})">
-                                <div class="d-flex">
-                                    <div class="avatar-xs me-3 flex-shrink-0">
-                                        <span class="avatar-title bg-success-subtle text-success rounded-circle fs-16">
-                                            <i class="bx bx-badge-check"></i>
-                                        </span>
+                        <div class="dropdown-head bg-primary bg-pattern rounded-top">
+                            <div class="p-3">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h6 class="m-0 fs-16 fw-semibold text-white">Thông báo</h6>
                                     </div>
-                                    <div class="flex-grow-1">
-                                        <strong>{{ $response->name }}</strong>:
-                                        <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">{{ $response->message }}</p>
-                                        <small class="text-muted">{{ $response->created_at->diffForHumans() }}</small>
+                                    <div class="col-auto dropdown-tabs">
+                                        <span class="badge bg-light-subtle text-body fs-13">{{ $unreadCount }}
+                                            New</span>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
 
-                    @else
-                        <div class="notification-item">
-                            <p>Không có thông báo mới.</p>
+                            <div class="px-2 pt-2">
+                                <ul class="nav nav-tabs dropdown-tabs nav-tabs-custom" data-dropdown-tabs="true"
+                                    id="notificationItemsTab" role="tablist">
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#all-noti-tab" role="tab"
+                                            aria-selected="true">
+                                            All ({{ $unreadCount }})
+                                        </a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#messages-tab" role="tab"
+                                            aria-selected="false">
+                                            Messages
+                                        </a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#alerts-tab" role="tab"
+                                            aria-selected="false">
+                                            Alerts
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    @endif
-                    <div class="my-3 text-center view-all">
-                        <a href="{{ route('admin.contacts.index') }}"
-                            class="btn btn-soft-success waves-effect waves-light">
-                            Tất cả liên hệ <i class="ri-arrow-right-line align-middle"></i>
-                        </a>
+
+                        <div class="tab-content position-relative" id="notificationItemsTabContent">
+                            <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab" role="tabpanel">
+                                <div data-simplebar style="max-height: 300px;" class="pe-2">
+                                    @if ($unreadMessages->isNotEmpty() || $unreadResponses->isNotEmpty())
+                                    @foreach ($unreadMessages as $message)
+                                    <div class="text-reset notification-item d-block dropdown-item position-relative"
+                                        data-id="{{ $message->id }}">
+                                        <div class="d-flex">
+                                            <div class="avatar-xs me-3 flex-shrink-0">
+                                                <span
+                                                    class="avatar-title bg-danger-subtle text-danger rounded-circle fs-16">
+                                                    <i class="bx bx-badge-check"></i>
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <strong>{{ $message->name }}</strong>
+                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">{{
+                                                    $message->message }}</p>
+                                                <small class="text-muted">{{ $message->updated_at
+                                                    }}</small>
+
+                                            </div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
+                                    @foreach ($unreadResponses as $response)
+                                    <div class="text-reset notification-item d-block dropdown-item position-relative"
+                                        data-id="{{ $response->id }}">
+                                        <div class="d-flex">
+                                            <div class="avatar-xs me-3 flex-shrink-0">
+                                                <span
+                                                    class="avatar-title bg-success-subtle text-success rounded-circle fs-16">
+                                                    <i class="bx bx-badge-check"></i>
+                                                </span>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <strong>{{ $response->name }}</strong>
+                                                <p class="mb-0 fs-11 fw-medium text-uppercase text-muted">{{
+                                                    $response->message }}</p>
+                                                <small class="text-muted">{{ $response->created_at->diffForHumans()
+                                                    }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+
+                                    @else
+                                    <div class="notification-item">
+                                        <p>Không có thông báo mới.</p>
+                                    </div>
+                                    @endif
+                                    <div class="my-3 text-center view-all">
+                                        <a href="{{ route('admin.contacts.index') }}"
+                                            class="btn btn-soft-success waves-effect waves-light">
+                                            Tất cả liên hệ <i class="ri-arrow-right-line align-middle"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 
                 <div class="d-flex align-items-center">
                     <div class="dropdown ms-sm-3 header-item topbar-user">
@@ -392,30 +398,5 @@
     </div>
 </header>
 @push('script')
-<!-- Bootstrap JS -->
 
-
-<!-- Font Awesome -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-function markAsRead(messageId) {
-    $.ajax({
-        url: '/notifications/mark-as-read', // URL tương ứng với route trong middleware
-        method: 'POST',
-        data: {
-            message_id: messageId,
-            _token: '{{ csrf_token() }}' // CSRF token để bảo mật
-        },
-        success: function(response) {
-            // Cập nhật số lượng thông báo trên giao diện
-            $('#notification-count').text(response.unreadCount); // Cập nhật số lượng
-            // Xóa thông báo khỏi giao diện
-            $('div[data-id="' + messageId + '"]').remove(); // Xóa thông báo
-        },
-        error: function(xhr, status, error) {
-            console.error('Error marking as read:', error);
-        }
-    });
-}
-</script>
 @endpush

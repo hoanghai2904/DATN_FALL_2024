@@ -15,49 +15,44 @@ class OrderController extends Controller
         $query = Order::with(['user', 'user.addresses']);
     
       // Lọc theo trạng thái đơn hàng
-if ($request->filled('order_status')) {
-    $query->where('order_status', $request->order_status);
-}
+    if ($request->filled('order_status')) {
+        $query->where('order_status', $request->order_status);
+    }
 
-// Lọc theo trạng thái thanh toán
-if ($request->filled('payment_status')) {
-    $query->where('payment_status', $request->payment_status);
-}
+    // Lọc theo trạng thái thanh toán
+    if ($request->filled('payment_status')) {
+        $query->where('payment_status', $request->payment_status);
+    }
 
-// Lọc theo khoảng thời gian
-if ($request->filled('start_date') && $request->filled('end_date')) {
-    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
-    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+    // Lọc theo khoảng thời gian
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
 
-    $query->whereBetween('created_at', [$startDate, $endDate]);
-} elseif ($request->filled('start_date')) {
-    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
-    $query->where('created_at', '>=', $startDate);
-} elseif ($request->filled('end_date')) {
-    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
-    $query->where('created_at', '<=', $endDate);
-}
+        $query->whereBetween('created_at', [$startDate, $endDate]);
+    } elseif ($request->filled('start_date')) {
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+        $query->where('created_at', '>=', $startDate);
+    } elseif ($request->filled('end_date')) {
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+        $query->where('created_at', '<=', $endDate);
+    }
 
-// Lọc theo tìm kiếm chung
-if ($request->filled('search')) {
-    $search = $request->search;
-    $query->where(function ($query) use ($search) {
-        $query->where('order_code', 'like', '%' . $search . '%');
-    
-              
-    });
-}
+    // Lọc theo tìm kiếm chung
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($query) use ($search) {
+            $query->where('order_code', 'like', '%' . $search . '%');
+        
+                
+        });
+    }
         // Lấy danh sách đơn hàng sau khi lọc
         $orders = $query->paginate(7)->appends($request->except('page'));
     
         // Trả về view với danh sách đơn hàng
         return view('admin.orders.index', compact('orders'));
     }
-    
-    
-    
-    
-
     // Tạo đơn hàng mới
     public function create()
     {

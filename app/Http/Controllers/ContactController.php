@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // Đảm bảo dòng này là dòng đầu tiên
 
 use App\Models\Contact;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 
 class ContactController extends Controller
 {
@@ -14,30 +15,28 @@ class ContactController extends Controller
     {
         // Khởi tạo query để lọc liên hệ
         $query = Contact::query();
-    
+
         // Lọc theo trạng thái liên hệ
         if ($request->filled('status_contacts')) {
             $query->where('status_contacts', $request->status_contacts);
         }
-    
+
         // Lọc theo email
         if ($request->filled('email')) {
             $query->where('email', 'like', '%' . $request->email . '%');
         }
-    
+
         // Lọc theo tên khách hàng
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
-    // Khoảng thời gian
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        // Chuyển đổi định dạng ngày để phù hợp
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
 
-        // Lọc theo khoảng thời gian
-        $query->whereBetween('created_at', [$startDate, $endDate]);
-    }
+        // Khoảng thời gian
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+            $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
 
         // Lọc theo tìm kiếm chung
         if ($request->filled('search')) {
@@ -50,14 +49,13 @@ class ContactController extends Controller
                   ->orWhere('status_contacts', 'like', '%' . $search . '%');
             });
         }
-    
+
         // Lấy danh sách liên hệ với phân trang
         $contacts = $query->orderBy('created_at', 'desc')->paginate(10);
-    
+        
         // Trả về view danh sách liên hệ
         return view('admin.contacts.index', compact('contacts'));
     }
-    
 
     public function create()
     {
@@ -145,25 +143,11 @@ class ContactController extends Controller
         ]);
     
         return redirect()->route('admin.contacts.index')->with('success', 'Phản hồi đã được gửi thành công và trạng thái đã được cập nhật!');
-    }
-    public function markAsRead($id)
-{
-    $contact = Contact::findOrFail($id);
-    
-    // Cập nhật trạng thái thông báo
-    $contact->update(['status_contacts' => 'Đã phản hồi']);
-
-    return response()->json(['success' => true]);
-}
-   
+    }   
     public function destroy($id)
     {
-
-        $contact = Contact::find($id);
-        if ($contact) {
-            $contact->delete();
-            return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
-        }
-        return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
+        $contact = Contact::findOrFail($id);
+        $contact->delete();
+        return response()->json(['status' => 'success', 'message' => 'Liên hệ đã được xóa!']);
     }
 }

@@ -19,23 +19,6 @@ class NotificationMiddleware
         view()->share('unreadMessages', $unreadMessages);
         view()->share('unreadResponses', $unreadResponses);
 
-        // Kiểm tra nếu có yêu cầu để đánh dấu thông báo đã đọc
-        if ($request->isMethod('post') && $request->routeIs('notifications.markAsRead')) {
-            $messageId = $request->input('message_id'); // Đổi tên thành message_id để dễ hiểu hơn
-
-            $contact = Contact::find($messageId);
-            if ($contact) {
-                $contact->status_contacts = 'Đã đọc'; // Cập nhật trạng thái
-                $contact->save(); // Lưu thay đổi
-
-                // Cập nhật lại số lượng thông báo chưa đọc
-                $unreadCount = Contact::where('status_contacts', 'Chưa giải quyết')->count();
-                return response()->json(['unreadCount' => $unreadCount]); // Trả về số lượng mới
-            } else {
-                return response()->json(['error' => 'Thông báo không tồn tại.'], 404); // Trả về lỗi nếu không tìm thấy
-            }
-        }
-
         return $next($request); // Tiếp tục xử lý nếu không phải yêu cầu đánh dấu
     }
 }
