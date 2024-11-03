@@ -226,16 +226,7 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Sản phẩm theo danh mục</h4>
                                 <div class="flex-shrink-0">
                                     <div class="dropdown card-header-dropdown">
-                                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <span class="text-muted">Report<i
-                                                    class="mdi mdi-chevron-down ms-1"></i></span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">Download Report</a>
-                                            <a class="dropdown-item" href="#">Export</a>
-                                            <a class="dropdown-item" href="#">Import</a>
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             </div><!-- end card header -->
@@ -370,7 +361,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="flex-shrink-0 me-2">
-                                                                <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="avatar-xs rounded-circle" />
+                                                                <img src="{{ $order->user->cover ? asset('storage/' .$order->user->cover) : asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}" alt="" class="avatar-xs rounded-circle" />
                                                             </div>
                                                             <div class="flex-grow-1">{{ $order->user->full_name }}</div> <!-- Tên khách hàng -->
                                                         </div>
