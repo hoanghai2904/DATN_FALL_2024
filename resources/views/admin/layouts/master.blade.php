@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg"
     data-sidebar-image="none" data-preloader="disable">
+
 <head>
     <meta charset="utf-8" />
     <title>Shop-Pet</title>
@@ -10,7 +11,6 @@
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     {{-- CSRF Token --}}
-
     <!-- App favicon -->
     <link rel="shortcut icon" href=" {{ asset('theme/admin/assets/images/favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -30,28 +30,23 @@
     <!-- custom Css-->
     <link href="{{ asset('theme/admin/assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
     {{-- <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script> --}}
-
     <!--datatable css-->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
     <!--datatable responsive css-->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
-
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-
     <!-- CDN Notyf CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css">
-    
     {{-- Toastr hiện thông báo lỗi --}}
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="{{ asset('theme/admin/assets/js/layout2.js') }}"></script>
     <!--jquery cdn-->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     @yield('style-libs')
     @stack('style')
 </head>
@@ -117,7 +112,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('theme/admin/assets/js/pages/select2.init.js') }}"></script>
     <!-- apexcharts -->
-    <script src="{{ asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+    {{-- <script src="{{ asset('theme/admin/assets/libs/apexcharts/apexcharts.min.js') }}"></script> --}}
     <!-- Vector map-->
     <script src="{{ asset('theme/admin/assets/libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
     <script src="{{ asset('theme/admin/assets/libs/jsvectormap/maps/world-merc.js') }}"></script>
@@ -125,16 +120,12 @@
     <script src="{{ asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
     <!-- Dashboard init -->
     <script src="{{ asset('theme/admin/assets/js/pages/dashboard-ecommerce.init.js') }}"></script>
-
     <!-- sortablejs -->
     <script src="{{ asset('theme/admin/assets/libs/sortablejs/Sortable.min.js') }}"></script>
-
     <!-- nestable init js -->
     <script src="{{ asset('theme/admin/assets/js/pages/nestable.init.js') }}"></script>
-
     <!-- Sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -153,12 +144,7 @@
 
     <!-- App js -->
     <script src="{{ asset('theme/admin/assets/js/app.js') }}"></script>
-    <!-- list.js min js -->
-    <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
-    <script src="{{ asset('assets/js/pages/crm-leads.init.js') }}"></script>
     @stack('script')
-
     @if (session('success'))
         <script>
             var notyf = new Notyf();
@@ -170,12 +156,11 @@
         @foreach ($errors->all() as $error)
             <script>
                 // var notyf = new Notyf();
-                // notyf.error('{{$error}}');
-                toastr.error("{{$error}}")
+                // notyf.error('{{ $error }}');
+                toastr.error("{{ $error }}")
             </script>
         @endforeach
     @endif
-
     <script>
         $(document).ready(function() {
             // CSRF Token 
@@ -235,7 +220,5 @@
             })
         })
     </script>
-
 </body>
-
 </html>

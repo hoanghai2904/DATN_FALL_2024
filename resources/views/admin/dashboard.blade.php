@@ -299,11 +299,11 @@
                                                         <span class="text-muted">Giá</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->orderItems->sum('qty') }}</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->orderItems->sum('qty')  }}</h5>
                                                         <span class="text-muted">Số lượng</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty }}</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty - $product->orderItems->sum('qty')}}</h5>
                                                         <span class="text-muted">Sản phẩm</span>
                                                     </td>
                                                     <td>

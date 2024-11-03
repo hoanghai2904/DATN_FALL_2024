@@ -245,8 +245,8 @@
                     <div class="col-12">
                         <div class="section-content-gap">
                             <div class="secton-content">
-                                <h3 class="section-title">Sản phẩm mới nhất</h3>
-                                <p>Bạn hãy đặt hàng để nhận ưu đãi và độc quyền</p>
+                                <h3 class="section-title">Sản phẩm mới</h3>
+                               
                             </div>
                         </div>
                     </div>
@@ -355,7 +355,7 @@
                     <div class="col-12">
                         <div class="section-content-gap">
                             <div class="secton-content">
-                                <h3 class="section-title">Sản phẩm bán chạy nhất</h3>
+                                <h3 class="section-title">Sản phẩm bán chạy</h3>
 
                             </div>
                         </div>
@@ -438,8 +438,8 @@
                     <div class="col-12">
                         <div class="section-content-gap">
                             <div class="secton-content">
-                                <h3 class="section-title">THE LATEST BLOGS</h3>
-                                <p>Present posts in a best way to highlight interesting moments of your blog.</p>
+                                <h3 class="section-title">Tin tức</h3>
+                              
                             </div>
                         </div>
                     </div>
