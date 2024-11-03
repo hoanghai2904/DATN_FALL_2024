@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AccountController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\PostClients;
 use App\Http\Controllers\ProductController;
 
 
@@ -33,4 +34,8 @@ Route::group(['prefix' => 'account'], function () {
 
     route::get('/reset_pass', [AccountController::class, 'reset_pass'])->name('account.reset_pass');
     route::post('/reset_pass', [AccountController::class, 'Check_resetPass']);
+});
+Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
+    Route::get('/', [PostClients::class, 'index'])->name('index');
+    Route::get('{id}', [PostClients::class, 'show'])->name('show');
 });

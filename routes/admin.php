@@ -114,12 +114,14 @@ Route::prefix('admin')->as('admin.')->group(function () {
         // Route::resource('vouchers', VoucherController::class);
         Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
             Route::get('/', [VoucherController::class, 'index'])->name('index');
+            Route::get('checkStatus', [VoucherController::class, 'checkStatus'])->name('checkStatus');
             Route::get('create', [VoucherController::class, 'create'])->name('create');
             Route::post('store', [VoucherController::class, 'store'])->name('store');
             Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
             Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
             Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
             Route::put('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
+
         });
         Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
             Route::get('/', [PostController::class, 'index'])->name('index');

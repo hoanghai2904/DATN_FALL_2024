@@ -109,34 +109,51 @@
 
 @endsection
 @push('script')
-
 <script>
     const notyf = new Notyf();
     $(document).ready(function() {
         $('body').on('click', '.change-status', function() {
             let isChecked = $(this).is(':checked');
             let id = $(this).data('id');
-            console.log(isChecked, id);
-
 
             $.ajax({
                 url: "{{ route('admin.vouchers.updateStatus') }}",
                 method: 'PUT',
                 data: {
-                    status: isChecked,
-                    id: id
+                    status: isChecked ? 2 : 1, // Hoạt động: 2, Ngừng hoạt động: 1
+                    id: id,
+                    _token: '{{ csrf_token() }}'
                 },
                 success: function(data) {
-                    // toastr.success(data.message)
                     notyf.success(data.message);
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
                 }
-            })
+            });
+        });
 
-        })
-    })
-
+        // Hàm kiểm tra trạng thái mã giảm giá theo thời gian thực
+        setInterval(function() {
+            $.ajax({
+                url: "{{ route('admin.vouchers.checkStatus') }}",
+                method: 'GET',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Cập nhật trạng thái checkbox cho các mã giảm giá đã hết hạn
+                        response.data.forEach(function(id) {
+                            let checkbox = $('input[data-id="' + id + '"]');
+                            checkbox.prop('checked', false);
+                        });
+                        notyf.success(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }, 60000); // Kiểm tra mỗi phút
+    });
 </script>
+
 @endpush

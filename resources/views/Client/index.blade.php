@@ -160,7 +160,7 @@
                                             </div>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="blog-single-sidebar-left.html">Tin tức <i class="fa fa-angle-down"></i></a>
+                                            <a href="{{route('blog.index')}}">Tin tức <i class="fa fa-angle-down"></i></a>
                                             <!-- Sub Menu -->
                                             <ul class="sub-menu">
                                                 <li><a href="blog-grid-sidebar-left.html">Blog Grid Sidebar left</a></li>

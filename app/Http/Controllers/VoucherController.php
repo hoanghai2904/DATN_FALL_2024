@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\VoucherRequest;
 use App\Models\admin\Vouchers;
+use Carbon\Carbon;
 use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
 class VoucherController extends Controller
@@ -13,6 +14,12 @@ class VoucherController extends Controller
         $query = Vouchers::query();
         $search = null;
         $search = $request->input('keywords');
+        foreach ($query as $voucher) {
+            if (Carbon::now()->greaterThan($voucher->end)) {
+                $voucher->status = 1; // Change to inactive
+                $voucher->save(); // Save the updated status
+            }
+        }
         if ($request->has('status') && is_numeric($request->status)) {
             $status = (int) $request->status; // Convert to integer
             $query->where('status', '=', $status);
@@ -118,6 +125,22 @@ class VoucherController extends Controller
 
     return response(['message' => 'Cập nhật trạng thái thành công!']);
         
+}
+public function checkStatus()
+{
+    $vouchers = Vouchers::all();
+    $updatedStatus = [];
+
+    foreach ($vouchers as $voucher) {
+        if ($voucher->end->lt(Carbon::now())) {
+            $voucher->status = 1;
+            $voucher->save();
+        }
+        
+        $updatedStatus[] = ['id' => $voucher->id, 'status' => $voucher->status];
+    }
+
+    return response()->json($updatedStatus);
 }
 
 }
