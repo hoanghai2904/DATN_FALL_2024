@@ -16,4 +16,5 @@ class PostClients extends Controller
         return view('Client.blog',compact('list','allCate'));
 
     }
+    
 }
