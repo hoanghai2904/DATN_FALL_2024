@@ -38,4 +38,5 @@ Route::group(['prefix' => 'account'], function () {
 Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
     Route::get('/', [PostClients::class, 'index'])->name('index');
     Route::get('{id}', [PostClients::class, 'show'])->name('show');
+    Route::get('category/{id}', [PostClients::class, 'ByCategory'])->name('byCategory');
 });

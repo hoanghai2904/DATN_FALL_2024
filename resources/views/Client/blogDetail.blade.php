@@ -1,7 +1,3 @@
-@php
-    use Illuminate\Support\Str;
-@endphp
-
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -218,12 +214,13 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="breadcrumb-title">Tin Tức</h3>
+                        <h3 class="breadcrumb-title">Blog Single - Left Sidebar</h3>
                         <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                             <nav aria-label="breadcrumb">
                                 <ul>
                                     <li><a href="index.html">Trang chủ</a></li>
-                                    <li class="active" aria-current="page"><a href="blog-grid-sidebar-left.html">Tin Tức</a></li>
+                                    <li><a href="blog-grid-sidebar-left.html">Tin Tức</a></li>
+                                    <li class="active" aria-current="page">{{$post->title}}</li>
                                 </ul>
                             </nav>
                         </div>
@@ -232,85 +229,67 @@
             </div>
         </div>
     </div>
-        <!-- ...:::: Start Blog List Section:::... -->
-        <div class="blog-section">
-            <div class="container">
-                <div class="row flex-column-reverse flex-lg-row">
-                    <div class="col-lg-3">
-                        <!-- Start Sidebar Area -->
-                            <div class="siderbar-section"  data-aos="fade-up"  data-aos-delay="0">
-        
-                                <!-- Start Single Sidebar Widget -->
-                                <div class="sidebar-single-widget" >
-                                    <h6 class="sidebar-title">Tìm kiếm</h6>
-                                    <div class="default-search-style d-flex">
-                                        <input class="default-search-style-input-box" type="search" placeholder="Search..." required>
-                                        <button class="default-search-style-input-btn" type="submit"><i class="fa fa-search"></i></button>
-                                    </div>
-                                </div> <!-- End Single Sidebar Widget -->
-        
-                                <!-- Start Single Sidebar Widget -->
-                                <div class="sidebar-single-widget" >
-                                    <h6 class="sidebar-title">Danh mục</h6>
-                                    <div class="sidebar-content">
-                                        <ul class="sidebar-menu">
-                                        @foreach ($allCate as $key => $item)
-                                        <li ><a href="{{ route('blog.byCategory', $item->id) }}">{{$item->name}}</a></li>
-                                        @endforeach
-                                        </ul>
-                                    </div>
-                                </div> <!-- End Single Sidebar Widget -->
-        
-                            </div> <!-- End Sidebar Area -->
-                    </div>
-                                    <div class="col-lg-9">
-                    <div class="blog-wrapper">
-                        <div class="row mb-n6">
-                            @foreach ($list as $key => $item)
-
-                            <div class="col-12 mb-6">
-                                <!-- Start Product Default Single Item -->
-                                <div class="blog-list blog-list-single-item blog-color--golden" data-aos="fade-up"  data-aos-delay="0">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-md-6">
-                                            <div class="image-box">
-                                                <a href="{{route('blog.show',$item->id)}}" class="image-link">
-                                                    {{-- <img class="img-fluid" src="assets/images/blog/blog-grid-home-1-img-1.jpg" alt=""> --}}
-                                                    <img class="img-fluid" src="{{ asset('storage/' . $item->thumbnail) }}" alt="">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-7 col-md-6">
-                                            <div class="content">
-                                                <ul class="post-meta">
-                                                   <li>Tác giả : <a href="#" class="author">{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</a></li> 
-                                                   <li><a href="#" class="date">{{ $item->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($item->created_at)->locale('vi')->dayName }}</a></li>
-                                                </ul>
-                                                <hr>
-                                                <h6>
-                                                    <a href="{{route('blog.show',$item->id)}}">{{ $item->title }}</a>
-                                                </h6>                                                
-                                                <p>{{ \Illuminate\Support\Str::limit($item->description, 250) }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Product Default Single Item -->
+    <div class="blog-section">
+        <div class="container">
+            <div class="row flex-column-reverse flex-lg-row">
+                <div class="col-lg-3">
+                    <!-- Start Sidebar Area -->
+                    <div class="siderbar-section"  data-aos="fade-up"  data-aos-delay="0">
+    
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget" >
+                            <h6 class="sidebar-title">Tìm kiếm</h6>
+                            <div class="default-search-style d-flex">
+                                <input class="default-search-style-input-box" type="search" placeholder="Search..." required>
+                                <button class="default-search-style-input-btn" type="submit"><i class="fa fa-search"></i></button>
                             </div>
-                            @endforeach
-                        </div>
-                    </div>
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <!-- Start Pagination -->
-                    <div class="page-pagination text-center" data-aos="fade-up"  data-aos-delay="0">
-                        <ul>
-                            <li>{{ $list->links() }}</li>
-                        </ul>
-                    </div> <!-- End Pagination -->
-                </div>                     
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget" >
+                            <h6 class="sidebar-title">Danh mục</h6>
+                            <div class="sidebar-content">
+                                <ul class="sidebar-menu">
+                                   @foreach ($allCate as $key => $item)
+                                   <li ><a href="#">{{$item->name}}</a></li>
+                                   @endforeach
+                                </ul>
+                            </div>
+                        </div> <!-- End Single Sidebar Widget -->
+
+                    </div> <!-- End Sidebar Area --> <!-- End Sidebar Area -->
+                </div>
+                <div class="col-lg-9">
+                    <!-- Start Blog Single Content Area -->
+                    <div class="blog-single-wrapper">
+                        <div class="blog-single-img" data-aos="fade-up"  data-aos-delay="0">
+                            <img width="" class="img-thumbnail"
+                                                    src="{{ asset('storage/' . $post->thumbnail) }}" alt="">
+                        </div>
+                        <ul class="post-meta" data-aos="fade-up"  data-aos-delay="200">
+                            <li>Tác giả : <a href="#" class="author">{{ $post->User ? $post->User->full_name : 'Không tên tác giả' }}</a></li> 
+                            <li> <a href="#" class="date">{{ $post->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($post->created_at)->locale('vi')->dayName }}</a></li> 
+                         </ul>
+                        <h4 class="post-title" data-aos="fade-up"  data-aos-delay="400">{{$post->title}}</h4>
+                        <div class="para-content" data-aos="fade-up"  data-aos-delay="600">
+                            <blockquote class="blockquote-content">
+                                {{$post->description}}
+                            </blockquote>
+                            <p>
+                                {!! $post->body !!}
+                            </p>
+                        </div>
+                        <div class="para-tags" data-aos="fade-up"  data-aos-delay="0">
+                            <span>Danh mục </span>
+                            <ul>
+                                <li><a href="#">{{ $post->Category ? $post->Category->name : 'Không có danh mục' }}</a></li>
+                            </ul>
+                        </div>
+                    </div> <!-- End Blog Single Content Area -->
                 </div>
             </div>
-        </div> <!-- ...:::: End Blog List Section:::... -->
+        </div>
+    </div>
     <footer class="footer-section footer-bg section-top-gap-100">
         <div class="footer-wrapper">
          <!-- Start Footer Top -->
@@ -434,29 +413,6 @@
         </div>
         
     </footer>
-    <style>
-        h6 {
-            line-height: 1.2;
-            font-size: 24px; /* Cỡ chữ */
-            font-weight: bold; /* Làm cho phông chữ đậm */
-            transition: color 0.3s ease; /* Hiệu ứng chuyển màu mượt mà */
-        }
-        
-        h6 a {
-            text-decoration: none; /* Bỏ gạch chân */
-            color: black; /* Màu chữ mặc định */
-        }
-        
-        h6 a:hover {
-            color: rgb(134, 88, 9); /* Màu chữ khi hover */
-        }
-        .page-pagination nav p {
-    display: none; /* Ẩn phần "Showing x to y of z results" */
-}
-
-
-
-    </style>
        <!-- ::::::::::::::All JS Files here :::::::::::::: -->
     <!-- Global Vendor, plugins JS -->
     <script src="{{ asset('assets') }}/js/vendor/modernizr-3.11.2.min.js"></script>
