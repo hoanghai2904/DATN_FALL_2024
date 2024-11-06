@@ -146,11 +146,11 @@
                                             </div>
                                         </li>
                                         <li class="has-dropdown">
-                                            <a href="blog-single-sidebar-left.html">Tin tức <i class="fa fa-angle-down"></i></a>
+                                            <a href="{{route('blog.index')}}">Tin tức <i class="fa fa-angle-down"></i></a>
                                             <!-- Sub Menu -->
                                             <ul class="sub-menu">
                                        @foreach ($allCate as $key => $item)
-                                                <li><a href="blog-grid-sidebar-left.html">{{$item->name}}</a></li>
+                                                <li><a href="{{ route('blog.byCategory', $item->id) }}">{{$item->name}}</a></li>
                                        @endforeach
                                                 
                                             </ul>
@@ -222,7 +222,7 @@
                         <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                             <nav aria-label="breadcrumb">
                                 <ul>
-                                    <li><a href="index.html">Trang chủ</a></li>
+                                    <li><a href="{{route('home.index')}}">Trang chủ</a></li>
                                     <li class="active" aria-current="page"><a href="blog-grid-sidebar-left.html">Tin Tức</a></li>
                                 </ul>
                             </nav>
@@ -241,14 +241,15 @@
                             <div class="siderbar-section"  data-aos="fade-up"  data-aos-delay="0">
         
                                 <!-- Start Single Sidebar Widget -->
+                                <form action="" method="get">
                                 <div class="sidebar-single-widget" >
                                     <h6 class="sidebar-title">Tìm kiếm</h6>
                                     <div class="default-search-style d-flex">
-                                        <input class="default-search-style-input-box" type="search" placeholder="Search..." required>
+                                        <input class="default-search-style-input-box" type="search" name="keywords" placeholder="Search..." required>
                                         <button class="default-search-style-input-btn" type="submit"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div> <!-- End Single Sidebar Widget -->
-        
+                                </form>
                                 <!-- Start Single Sidebar Widget -->
                                 <div class="sidebar-single-widget" >
                                     <h6 class="sidebar-title">Danh mục</h6>
@@ -264,42 +265,48 @@
                             </div> <!-- End Sidebar Area -->
                     </div>
                                     <div class="col-lg-9">
-                    <div class="blog-wrapper">
-                        <div class="row mb-n6">
-                            @foreach ($list as $key => $item)
-
-                            <div class="col-12 mb-6">
-                                <!-- Start Product Default Single Item -->
-                                <div class="blog-list blog-list-single-item blog-color--golden" data-aos="fade-up"  data-aos-delay="0">
-                                    <div class="row">
-                                        <div class="col-xl-5 col-md-6">
-                                            <div class="image-box">
-                                                <a href="{{route('blog.show',$item->id)}}" class="image-link">
-                                                    {{-- <img class="img-fluid" src="assets/images/blog/blog-grid-home-1-img-1.jpg" alt=""> --}}
-                                                    <img class="img-fluid" src="{{ asset('storage/' . $item->thumbnail) }}" alt="">
-                                                </a>
+                                        <div class="blog-wrapper">
+                                            <div class="row mb-n6">
+                                                @if($list->isEmpty())
+                                                <h4 style="text-align: center">Không có bài viết nào</h4>
+                                            @else
+                                                @foreach ($list as $key => $item)
+                                                    @if($item->status == 2)
+                                                        <div class="col-12 mb-6">
+                                                            <!-- Start Product Default Single Item -->
+                                                            <div class="blog-list blog-list-single-item blog-color--golden" data-aos="fade-up" data-aos-delay="0">
+                                                                <div class="row">
+                                                                    <div class="col-xl-5 col-md-6">
+                                                                        <div class="image-box">
+                                                                            <a href="{{ route('blog.show', $item->id) }}" class="image-link">
+                                                                                <img class="img-fluid" src="{{ asset('storage/' . $item->thumbnail) }}" alt="">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-7 col-md-6">
+                                                                        <div class="content">
+                                                                            <ul class="post-meta">
+                                                                                <li>Tác giả: {{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</li>
+                                                                                <li>{{ $item->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($item->created_at)->locale('vi')->dayName }}</li>
+                                                                            </ul>
+                                                                            <hr>
+                                                                            <h6>
+                                                                                <a href="{{ route('blog.show', $item->id) }}">{{ $item->title }}</a>
+                                                                            </h6>
+                                                                            <p>{{ \Illuminate\Support\Str::limit($item->description, 250) }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- End Product Default Single Item -->
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                            
                                             </div>
                                         </div>
-                                        <div class="col-xl-7 col-md-6">
-                                            <div class="content">
-                                                <ul class="post-meta">
-                                                   <li>Tác giả : <a href="#" class="author">{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</a></li> 
-                                                   <li><a href="#" class="date">{{ $item->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($item->created_at)->locale('vi')->dayName }}</a></li>
-                                                </ul>
-                                                <hr>
-                                                <h6>
-                                                    <a href="{{route('blog.show',$item->id)}}">{{ $item->title }}</a>
-                                                </h6>                                                
-                                                <p>{{ \Illuminate\Support\Str::limit($item->description, 250) }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Product Default Single Item -->
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+                                        
 
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up"  data-aos-delay="0">

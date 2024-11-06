@@ -9,25 +9,44 @@ use Illuminate\Http\Request;
 
 class PostClients extends Controller
 {
-    public function index(){
-        $query = Posts::query();
+    public function index(Request $request)
+    {
+        $query = Posts::where('status', 2); // Thêm điều kiện where để lọc bài viết có status = 2
         $allCate = PostCategory::all();
-        $list= $query->orderBy('id','DESC')->paginate(2)->withQueryString();
-        return view('Client.blog',compact('list','allCate'));
+        $search = null;
+        $search = $request->input('keywords');
+        if ($search) {
+            $query->where('title', 'like', '%'.$search.'%');
+        }
+        $list = $query->orderBy('id', 'DESC')->paginate(4)->withQueryString();
+        return view('Client.blog', compact('list', 'allCate'));
+    }
 
+    public function show($id)
+    {
+        $post = Posts::find($id);
+        $allCate = PostCategory::orderBy("id", "desc")->get();
+        if (!$post) {
+            return redirect()->route('blog.index');
+        }
+        return view('Client.blogDetail', compact('post', 'allCate'));
     }
-    public function show($id){
-    $post = Posts::findOrFail($id);
-    $allCate = PostCategory::orderBy("id", "desc")->get();
-    return view('Client.blogDetail',compact('post','allCate'));
+    public function ByCategory(Request $request, $id)
+    {
+        $category = PostCategory::find($id);
+        $allCate = PostCategory::all();
+    
+        if (!$category) {
+            return redirect()->route('blog.index');
+        }
+        $search = $request->input('keywords');
+        $query = $category->posts()->where('status', 2);
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+        $list = $query->orderBy('id', 'DESC')->paginate(6)->withQueryString();
+    
+        return view('Client.blog', compact('list', 'allCate'));
     }
-    public function ByCategory($id){
-    $category = PostCategory::find($id);
-    $allCate = PostCategory::all();
-    if (!$category) {
-        return redirect()->route('blog.index');
-    }
-    $list = $category->posts()->orderBy('id', 'DESC')->paginate(6)->withQueryString();
-    return view('Client.blog', compact('list','allCate'));
-    }
+    
 }

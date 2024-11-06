@@ -209,26 +209,7 @@
             <!-- End Header Bottom -->
         </div>
     </header>
-    <div class="breadcrumb-section breadcrumb-bg-color--golden">
-        <div class="breadcrumb-wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="breadcrumb-title">Blog Single - Left Sidebar</h3>
-                        <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
-                            <nav aria-label="breadcrumb">
-                                <ul>
-                                    <li><a href="index.html">Trang chủ</a></li>
-                                    <li><a href="blog-grid-sidebar-left.html">Tin Tức</a></li>
-                                    <li class="active" aria-current="page">{{$post->title}}</li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="blog-section">
         <div class="container">
             <div class="row flex-column-reverse flex-lg-row">
@@ -267,8 +248,8 @@
                                                     src="{{ asset('storage/' . $post->thumbnail) }}" alt="">
                         </div>
                         <ul class="post-meta" data-aos="fade-up"  data-aos-delay="200">
-                            <li>Tác giả : <a href="#" class="author">{{ $post->User ? $post->User->full_name : 'Không tên tác giả' }}</a></li> 
-                            <li> <a href="#" class="date">{{ $post->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($post->created_at)->locale('vi')->dayName }}</a></li> 
+                            <li>Tác giả :{{ $post->User ? $post->User->full_name : 'Không tên tác giả' }}</li> 
+                            <li>{{ $post->created_at->format('Y-m') }}-{{ \Illuminate\Support\Carbon::parse($post->created_at)->locale('vi')->dayName }}</li> 
                          </ul>
                         <h4 class="post-title" data-aos="fade-up"  data-aos-delay="400">{{$post->title}}</h4>
                         <div class="para-content" data-aos="fade-up"  data-aos-delay="600">
@@ -282,7 +263,7 @@
                         <div class="para-tags" data-aos="fade-up"  data-aos-delay="0">
                             <span>Danh mục </span>
                             <ul>
-                                <li><a href="#">{{ $post->Category ? $post->Category->name : 'Không có danh mục' }}</a></li>
+                                <li><a href="{{ route('blog.byCategory', $item->id) }}">{{ $post->Category ? $post->Category->name : 'Không có danh mục' }}</a></li>
                             </ul>
                         </div>
                     </div> <!-- End Blog Single Content Area -->
