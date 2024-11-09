@@ -43,9 +43,12 @@
                                             <div class="accordion-content">
                                                 <ul class="accordion-category-list">
                                                     @foreach ($categories as $item)
-                                                        <li><a href="">{{ $item->name }}</a></li>
+                                                        <li><a
+                                                                href="{{ route('all-products', $item->id) }}">{{ $item->name }}</a>
+                                                        </li>
                                                     @endforeach
                                                 </ul>
+
                                             </div>
                                         </div>
                                     </li>
@@ -236,20 +239,15 @@
                                                                     </h6>
                                                                     <ul class="review-star">
                                                                         <li class="fill"><i
-                                                                                class="ion-android-star"></i>
-                                                                        </li>
+                                                                                class="ion-android-star"></i></li>
                                                                         <li class="fill"><i
-                                                                                class="ion-android-star"></i>
-                                                                        </li>
+                                                                                class="ion-android-star"></i></li>
                                                                         <li class="fill"><i
-                                                                                class="ion-android-star"></i>
-                                                                        </li>
+                                                                                class="ion-android-star"></i></li>
                                                                         <li class="fill"><i
-                                                                                class="ion-android-star"></i>
-                                                                        </li>
+                                                                                class="ion-android-star"></i></li>
                                                                         <li class="empty"><i
-                                                                                class="ion-android-star"></i>
-                                                                        </li>
+                                                                                class="ion-android-star"></i></li>
                                                                     </ul>
                                                                 </div>
                                                                 <div class="content-right">
@@ -272,13 +270,13 @@
                                                                         @endif
                                                                     </span>
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                         <!-- End Product Default Single Item -->
                                                     </div>
                                                 @endforeach
-                                            </div> <!-- End Grid View Product -->
+                                            </div>
+
                                             <!-- Start List View Product -->
                                             <div class="tab-pane sort-layout-single" id="layout-list">
                                                 <div class="row">

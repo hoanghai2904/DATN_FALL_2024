@@ -20,15 +20,20 @@ class ClientProductController extends Controller
         return view('Client.pages.product', compact('products'));
     }
     // /////////////////////////////////////////////////////////////////
-    public function showAllProducts()
+    public function showAllProducts($category_id = null)
     {
-        $products = Product::all();
+        if ($category_id) {
+            // Nếu có, lấy sản phẩm theo category_id
+            $products = Product::where('category_id', $category_id)->get();
+        } else {
+            // Nếu không có, lấy tất cả sản phẩm
+            $products = Product::all();
+        }
         $tags = Tag::withCount('products')->get();
         $brands = Brands::withCount('products')->get();
         $minPrice = $products->min(function ($product) {
             return min($product->price, $product->price_sale);
         });
-
         $maxPrice = $products->max(function ($product) {
             return max($product->price, $product->price_sale);
         });
