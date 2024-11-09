@@ -56,7 +56,7 @@ class OrderController extends Controller
     // Hiển thị chi tiết đơn hàng
     public function show($id)
     {
-        $order = Order::with('items', 'payment')->findOrFail($id);
+        $order = Order::with('items.product', 'payment')->findOrFail($id);
 
         // Kiểm tra nếu đơn hàng có liên kết với user
         $customer = $order->user_id

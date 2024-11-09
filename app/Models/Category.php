@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\admin\Product;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,7 +29,8 @@ class Category extends Model
     // ];
     public function parent()
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+
+        return $this->belongsToMany(Category::class, 'parent_category', 'category_id', 'parent_id');
     }
 
     public function children()

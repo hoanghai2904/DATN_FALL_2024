@@ -279,7 +279,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($bestSellingProducts as $product)
+                                            {{-- @foreach($bestSellingProducts as $product)
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex align-items-center">
@@ -311,7 +311,7 @@
                                                         <span class="text-muted">Tổng tiền</span>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                     
@@ -320,7 +320,7 @@
                                 <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
                                    
                                     <div class="">
-                                        {{ $bestSellingProducts->appends(request()->except('bestSellingPage'))->links() }}
+                                        {{-- {{ $bestSellingProducts->appends(request()->except('bestSellingPage'))->links() }} --}}
                                     </div>
                                 </div>
                             </div>

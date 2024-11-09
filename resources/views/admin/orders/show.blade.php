@@ -44,7 +44,7 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                <img src="{{ asset('storage/' . $item->product_thumbnail) }}" 
+                                                <img src="{{  $item->product->thumbnail}}" 
                                                      alt="{{ $item->product_name }}" class="img-fluid d-block">
                                             </div>
                                             <div class="flex-grow-1 ms-2">

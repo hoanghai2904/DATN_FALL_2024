@@ -6,7 +6,7 @@
 
 @section('content')
     <form id="createproduct-form" method="POST" action="{{ route('admin.posts.store') }}" autocomplete="off"
-        class="needs-validation" novalidate>
+        class="needs-validation" novalidate enctype="multipart/form-data">
         @csrf
         <a class="btn btn-info" href="{{route('admin.posts.index')}}">Trở về</a>
         <div class="row">
@@ -29,29 +29,37 @@
                                            id="meta-keywords-input" value="{{ Auth::user()->full_name }}" disabled>
                                 </div>
                             </div>
-                            
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="image-input">Ảnh Bìa bài viết </label>
+                                    <input type="file" class="form-control" name="thumbnail">
+                                    @error('thumbnail')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                             <!-- Hidden field to store user_id -->
                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">                            
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
                                     <select class="form-select mb-3" aria-label="Default select example" name="status">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
-                                        <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Public</option>
-                                        <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Private</option>
+                                        <option value="" disabled {{ old('status', isset($post) ? $post->status : '') == '' ? 'selected' : '' }}>Chọn trạng thái</option>
+                                        <option value="2" {{ old('status', isset($post) ? $post->status : '') == '2' ? 'selected' : '' }}>Public</option>
+                                        <option value="1" {{ old('status', isset($post) ? $post->status : '') == '1' ? 'selected' : '' }}>Private</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Danh mục</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="category_id">
-                                        <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Danh mục</option>
+                                    <select class="form-control js-example-basic-single select2-hidden-accessible" aria-label="Default select example" name="category_id">
+                                        <option value="" disabled {{ old('category_id', isset($post) ? $post->category_id : '') == '' ? 'selected' : '' }}>Danh mục</option>
                                         @foreach ($allCate as $key => $item)
-                                        <option value="{{ $item->id }}"{{old('product_category')==$item->id?'selected':false}}>{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}" {{ old('category_id', isset($post) ? $post->category_id : '') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div>                                
                             </div>
 
                             <div class="card">
@@ -62,7 +70,7 @@
                                 <div class="collapse show" id="content">
                                     <div class="card-body">
                                         <div class="mb-3">
-                                            <textarea id="ckeditor-classic" name="body"></textarea>
+                                            <textarea id="ckeditor-classic" name="body" >{{old('body')}}</textarea>
                                         </div>
                                     </div>
                                 </div>

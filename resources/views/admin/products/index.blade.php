@@ -68,7 +68,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-lg-2 mt-4">
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                             </div>
@@ -116,17 +116,21 @@
                                             <td class="break-word">{{ $product->name }}</td>
                                             <td><a href="#" class="fw-medium">{{ $product->sku }}</a></td>
                                             <td>
-                                                @if ($product->price_sale > 0)
+                                                @if ((float) $product->price_sale > 0)
                                                     <div>
                                                         <div data-order="{{ $product->price_sale }}">
-                                                            {{ number_format($product->price_sale, 0, ',', '.') }}₫</div>
-                                                        <del style="color: red"
-                                                            data-order="{{ $product->price }}">{{ number_format($product->price, 0, ',', '.') }}₫</del>
+                                                            {{ number_format((float) $product->price_sale, 0, ',', '.') }}₫
+                                                        </div>
+                                                        <del style="color: red" data-order="{{ $product->price }}">
+                                                            {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                        </del>
                                                     </div>
                                                 @else
                                                     <div data-order="{{ $product->price }}">
-                                                        {{ number_format($product->price, 0, ',', '.') }}₫</div>
+                                                        {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                    </div>
                                                 @endif
+
                                             </td>
                                             <td>{{ $product->category->name }}
                                             </td>
@@ -151,9 +155,10 @@
                                             </td>
                                             <td>
                                                 {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
-                                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                                                <a href="{{ route('admin.products.edit', $product->id) }}"
+                                                    class="btn btn-sm btn-warning">Sửa</a>
                                                 <a href="{{ route('admin.products.destroy', $product->id) }}"
-                                                    class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                                    class="btn btn-sm btn-icon btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -188,7 +193,8 @@
                 "columnDefs": [{
                     "orderable": false,
                     "targets": [0, 2, 8,
-                        9] // Ko hiển thị sắp xếp cột checkbox , hình ảnh , trạng thái , hđộng
+                        9
+                    ] // Ko hiển thị sắp xếp cột checkbox , hình ảnh , trạng thái , hđộng
                 }],
                 "language": {
                     "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
@@ -203,10 +209,9 @@
             });
 
         });
-
     </script>
 
-<script>
+    <script>
         // change-status
         const notyf = new Notyf();
         $(document).ready(function() {
