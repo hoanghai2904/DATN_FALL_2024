@@ -610,12 +610,11 @@
 @endsection
 
 @push('script')
-
-<script>
-    // Lấy các phần tử button và input
-    const decrement = document.getElementById('decrement');
-    const increment = document.getElementById('increment');
-    const qtyInput = document.getElementById('qty');
+    <script>
+        // Lấy các phần tử button và input
+        const decrement = document.getElementById('decrement');
+        const increment = document.getElementById('increment');
+        const qtyInput = document.getElementById('qty');
 
     decrement.addEventListener('click', () => {
         let currentValue = parseInt(qtyInput.value);
