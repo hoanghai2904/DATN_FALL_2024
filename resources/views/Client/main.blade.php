@@ -246,7 +246,7 @@
                         <div class="section-content-gap">
                             <div class="secton-content">
                                 <h3 class="section-title">Sản phẩm mới</h3>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -265,47 +265,65 @@
                                 <div class="swiper-wrapper">
                                     <!-- End Product Default Single Item -->
                                     <!-- Start Product Default Single Item -->
-                                    <div class="product-default-single-item product-color--green swiper-slide">
-                                        <div class="image-box">
-                                            <a href="product-details-default.html" class="image-link">
-                                                <img src="{{ asset('assets') }}/images/product/default/home-2/default-9.jpg"
-                                                    alt="">
-                                                <img src="{{ asset('assets') }}/images/product/default/home-2/default-10.jpg"
-                                                    alt="">
-                                            </a>
-                                            <div class="action-link">
-                                                <div class="action-link-left">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#modalAddcart">Add to Cart</a>
+                                    @foreach ($products as $product)
+                                        <div class="product-default-single-item product-color--green swiper-slide">
+                                            <div class="image-box">
+                                                <a href="{{ route('product-detail',$product->slug) }}" class="image-link">
+                                                    <img src="{{ asset('storage/' . $product->thumbnail) }}"
+                                                        alt="">
+                                                    <img src="{{ asset('storage/' . $product->thumbnail) }}"
+                                                        alt="">
+                                                </a>
+                                                <div class="action-link">
+                                                    <div class="action-link-left">
+                                                        <a href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#modalAddcart">Add to Cart</a>
+                                                    </div>
+                                                    <div class="action-link-right">
+                                                        <a href="#" data-bs-toggle="modal"
+                                                            data-bs-target="#modalQuickview"><i
+                                                                class="icon-magnifier"></i></a>
+                                                        <a href="wishlist.html"><i class="icon-heart"></i></a>
+                                                        <a href="compare.html"><i class="icon-shuffle"></i></a>
+                                                    </div>
                                                 </div>
-                                                <div class="action-link-right">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#modalQuickview"><i
-                                                            class="icon-magnifier"></i></a>
-                                                    <a href="wishlist.html"><i class="icon-heart"></i></a>
-                                                    <a href="compare.html"><i class="icon-shuffle"></i></a>
+                                            </div>
+                                            <div class="content">
+                                                <div class="content-left">
+                                                    <h6 class="title"><a href="{{ route('product-detail',$product->slug) }}">{{ $product->name }}</a></h6>
+                                                    <ul class="review-star">
+                                                        <li class="fill"><i class="ion-android-star"></i></li>
+                                                        <li class="fill"><i class="ion-android-star"></i></li>
+                                                        <li class="fill"><i class="ion-android-star"></i></li>
+                                                        <li class="fill"><i class="ion-android-star"></i></li>
+                                                        <li class="empty"><i class="ion-android-star"></i></li>
+                                                    </ul>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="content-left">
-                                                <h6 class="title"><a href="product-details-default.html">Epicuri per
-                                                        lobortis</a></h6>
-                                                <ul class="review-star">
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="empty"><i class="ion-android-star"></i></li>
-                                                </ul>
-                                            </div>
-                                            <div class="content-right">
-                                                <span class="price">$68</span>
-                                            </div>
+                                                <div class="content-right">
+                                                        <span class="price">
+                                                            @if ((float) $product->price_sale > 0)
+                                                                <div>
+                                                                    <div
+                                                                        data-order="{{ $product->price_sale }}">
+                                                                        {{ number_format((float) $product->price_sale, 0, ',', '.') }}₫
+                                                                    </div>
+                                                                    <del style="color: red"
+                                                                        data-order="{{ $product->price }}">
+                                                                        {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                                    </del>
+                                                                </div>
+                                                            @else
+                                                                <div data-order="{{ $product->price }}">
+                                                                    {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                                </div>
+                                                            @endif
+                                                        </span>
+                                                </div>
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- End Product Default Single Item -->
+                                        <!-- End Product Default Single Item -->
+                                    @endforeach
 
                                 </div>
                             </div>
@@ -439,7 +457,7 @@
                         <div class="section-content-gap">
                             <div class="secton-content">
                                 <h3 class="section-title">Tin tức</h3>
-                              
+
                             </div>
                         </div>
                     </div>
