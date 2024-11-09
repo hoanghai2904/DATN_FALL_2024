@@ -22,15 +22,26 @@ class PostClients extends Controller
         return view('Client.blog', compact('list', 'allCate'));
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $post = Posts::find($id);
+        $query = Posts::where('status', 2);
+        $search = $request->input('keywords');
+    
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+    
+        $post = $query->find($id);
+    
         $allCate = PostCategory::orderBy("id", "desc")->get();
+    
         if (!$post) {
             return redirect()->route('blog.index');
         }
+    
         return view('Client.blogDetail', compact('post', 'allCate'));
     }
+    
     public function ByCategory(Request $request, $id)
     {
         $category = PostCategory::find($id);

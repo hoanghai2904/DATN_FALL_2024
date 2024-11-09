@@ -218,13 +218,16 @@
                     <div class="siderbar-section"  data-aos="fade-up"  data-aos-delay="0">
     
                         <!-- Start Single Sidebar Widget -->
-                        <div class="sidebar-single-widget" >
-                            <h6 class="sidebar-title">Tìm kiếm</h6>
-                            <div class="default-search-style d-flex">
-                                <input class="default-search-style-input-box" type="search" placeholder="Search..." required>
-                                <button class="default-search-style-input-btn" type="submit"><i class="fa fa-search"></i></button>
-                            </div>
-                        </div> <!-- End Single Sidebar Widget -->
+                        <form action="{{ route('blog.index') }}" method="get">
+                            <div class="sidebar-single-widget">
+                                <h6 class="sidebar-title">Tìm kiếm</h6>
+                                <div class="default-search-style d-flex">
+                                    <input class="default-search-style-input-box" type="search" name="keywords" placeholder="Search..." required>
+                                    <button class="default-search-style-input-btn" type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div> <!-- End Single Sidebar Widget -->
+                        </form>
+                         <!-- End Single Sidebar Widget -->
 
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget" >
@@ -232,7 +235,7 @@
                             <div class="sidebar-content">
                                 <ul class="sidebar-menu">
                                    @foreach ($allCate as $key => $item)
-                                   <li ><a href="#">{{$item->name}}</a></li>
+                                   <li ><a href="{{ route('blog.byCategory', $item->id) }}">{{$item->name}}</a></li>
                                    @endforeach
                                 </ul>
                             </div>
