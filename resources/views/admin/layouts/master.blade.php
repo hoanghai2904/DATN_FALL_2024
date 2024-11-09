@@ -157,6 +157,11 @@
     <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
     <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/crm-leads.init.js') }}"></script>
+    
+    {{-- Chi tiết sản phẩm  --}}
+    <script src="{{ asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-details.init.js') }}"></script>
+
     @stack('script')
 
     @if (session('success'))

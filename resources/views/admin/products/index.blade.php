@@ -113,7 +113,7 @@
                                                 <img width="80px" class="img-thumbnail"
                                                     src="{{ asset('storage/' . $product->thumbnail) }}" alt="">
                                             </td>
-                                            <td class="break-word">{{ $product->name }}</td>
+                                            <td class="break-word"><a href="{{ route('admin.products.show', $product->id) }}">{{ $product->name }}</a></td>
                                             <td><a href="#" class="fw-medium">{{ $product->sku }}</a></td>
                                             <td>
                                                 @if ((float) $product->price_sale > 0)

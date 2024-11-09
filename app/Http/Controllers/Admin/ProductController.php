@@ -202,7 +202,11 @@ class ProductController extends Controller
 
     public function show($id)
     {
-
+        $product = Product::with(['variants.variantType','variants.variantValue','category','brand','tags','galleries']) ->findOrFail($id);
+        // dd($product->variants);
+        $variantTypes = $product->variants->groupBy('variantType.name');
+        // dd($productVariant);
+        return view('admin.products.show',compact('product','variantTypes'));
     }
 
     public function edit($id)

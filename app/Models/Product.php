@@ -26,6 +26,11 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+    public function productVariants()
+    {
+        return $this->hasManyThrough(VariantValue::class, ProductVariant::class);
+    }
     public function category(){
         return $this->belongsTo(Category::class);
     }
