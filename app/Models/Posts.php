@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
 use App\Models\Category;
 use App\Models\PostCategory;
@@ -20,6 +20,7 @@ class Posts extends Model
         'thumbnail',
         'category_id',
         'title',
+        'description',
         'body',
         'status',
         ];

@@ -420,7 +420,9 @@
                 <div class="col-md-4">
                     <select class="js-example-basic-multiple select-variant-type" name="variant_types[]">
                         <option value="0">Chọn Nhóm thuộc tính</option>
-                       
+                        @foreach ($variantTypes as $variantType)
+                            <option value="{{ $variantType->id }}">{{ $variantType->name }}</option>
+                        @endforeach
                     </select>
                 </div>
 

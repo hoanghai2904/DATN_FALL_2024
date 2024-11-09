@@ -44,12 +44,12 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                <img src="{{  $item->product->thumbnail}}" 
-                                                     alt="{{ $item->product_name }}" class="img-fluid d-block">
+                                                <img src="{{ asset('storage/' . $item->product->thumbnail) }}" 
+                                                     alt="{{ $item->product->name }}" class="img-fluid d-block">
                                             </div>
                                             <div class="flex-grow-1 ms-2">
                                                 <h5 class="fs-15">
-                                                    <a href="#" class="link-primary">{{ $item->product_name }}</a>
+                                                    <a href="#" class="link-primary">{{ $item->product->name  }}</a>
                                                 </h5>
                                                 @if($item->variant_color)
                                                 <p class="text-muted mb-0">Màu sắc: <span class="fw-medium">{{ $item->variant_color }}</span></p>
@@ -65,12 +65,12 @@
                                             </div>
                                         </div>
                                     </td>
-                                
-                                    <td class="text-center">{{ number_format($item->price) }}₫</td>
+                                   
+                                    <td class="text-center">{{ number_format($item->product->price) }}₫</td>
                                     <td class="text-center">{{ $item->qty }}</td>
                                    
                                     <td class="fw-medium text-center">
-                                        {{ number_format($item->price * $item->qty) }}₫
+                                        {{ number_format($item->product->price * $item->qty) }}₫
                                     </td>
                                 </tr>
                                 @endforeach
@@ -90,7 +90,7 @@
                                                 <td class="text-end">{{ number_format($order->total_amount) }}₫</td>
                                             </tr>
                                             <tr>
-                                                <td>Khuyến mãi ({{ $order->discount }}) :</td>
+                                                <td>Khuyến mãi ({{ number_format($order->discount) }}) :</td>
                                                 <td class="text-end">-{{ number_format($order->discount) }}₫</td>
                                             </tr>
                                             <tr>

@@ -82,7 +82,8 @@
                                     @foreach ($list as $key => $item)
                                         <tbody>
                                             <tr id="tr_{{ $item->id }}">
-                                                <td><a href="#" class="fw-medium">{{ $item->title }}</a></td>
+                                                <td><img width="80px" class="img-thumbnail"
+                                                    src="{{ asset('storage/' . $item->thumbnail) }}" alt=""></td>
                                                 <td> <a href="{{ route('admin.posts.edit', [$item->id]) }}">{{ $item->title }}</a></td>
                                                 <td>{{ $item->User ? $item->User->full_name : 'Không tên tác giả' }}</td>
                                                 <td>{{ $item->Category ? $item->Category->name : 'Không có danh mục' }}</td>

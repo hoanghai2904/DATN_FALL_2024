@@ -16,20 +16,8 @@ class Product extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'category_id',
-        'product_code',
-        'brand_id',
-        'thumbnail',
-        'name',
-        'slug',
-        'sku',
-        'description',
-        'content',
-        'cost_price',
-        'price',
-        'price_sale',
-        'product_type',
-        'status',
+        'category_id', 'brand_id', 'thumbnail', 'name', 'slug', 'sku','qty',
+        'description', 'content', 'price', 'price_sale', 'status'
     ];
     // public function categories(){
     //     return $this->belongsToMany(Category::class, 'category_id');
@@ -37,6 +25,11 @@ class Product extends Model
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    public function productVariants()
+    {
+        return $this->hasManyThrough(VariantValue::class, ProductVariant::class);
     }
     public function category(){
         return $this->belongsTo(Category::class);
@@ -50,11 +43,9 @@ class Product extends Model
     public function tags(){
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
-     // Quan hệ với bảng ProductImage
-     public function images()
-     {
-         return $this->hasMany(ProductImage::class);
-     }
+    public function galleries(){
+        return $this->hasMany(ProductGallery::class);
+    }
 
     public function OrderItems(){
         return $this->hasMany(OrderItem::class);

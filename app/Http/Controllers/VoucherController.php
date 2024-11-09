@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\VoucherRequest;
-use App\Models\admin\Vouchers;
+use App\Models\Vouchers;
 use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;
 class VoucherController extends Controller
@@ -44,6 +44,7 @@ class VoucherController extends Controller
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
+            'max_uses' => $req->max_uses,
             'discount' => $discount,
             'qty' => $qty,
             'start' => $req->start,
@@ -95,6 +96,7 @@ class VoucherController extends Controller
             'name' => $req->name,
             'discount_type' => $req->discount_type,
             'status' => $req->status,
+            'max_uses' => $req->max_uses,
             'discount' => $discount, // Sử dụng giá trị đã được xử lý
             'qty' => $qty, // Sử dụng giá trị đã được xử lý
             'start' => $req->start,

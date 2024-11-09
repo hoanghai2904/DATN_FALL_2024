@@ -11,25 +11,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductVariant extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+    protected $table = 'product_variant';
 
-    protected $fillable = [
-        'product_id',
-        'variant_name',
-        'sku',
-        'price',
-        'stock',
-    ];
+    protected $fillable = ['product_id', 'variant_type_id', 'variant_value_id', 'qty', 'price', 'image'];
 
-    // Quan hệ với bảng Product
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class,'product_id');
     }
 
-    // Quan hệ với bảng ProductVariantAttribute
-    public function attributes()
+    // Trong model ProductVariant_
+    public function variantType()
     {
-        return $this->hasMany(ProductVariantAttribute::class);
+        return $this->belongsTo(VariantType::class, 'variant_type_id');
+    }
+
+    public function variantValue()
+    {
+        return $this->belongsTo(VariantValue::class, 'variant_value_id');
     }
 }

@@ -243,7 +243,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xl-5">
+                    <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Sản phẩm bán chạy nhất</h4>
@@ -279,12 +279,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- @foreach($bestSellingProducts as $product)
+                                            @foreach($bestSellingProducts as $product)
                                                 <tr>
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="avatar-sm bg-light rounded p-1 me-2">
-                                                                <img src="{{ $product->thumbnail }}" alt="" class="img-fluid d-block" />
+                                                                <img src="{{ asset('storage/' . $product->thumbnail) }}" alt=""
+                                                                     class="img-fluid d-block" />
                                                             </div>
                                                             <div>
                                                                 <h5 class="fs-14 my-1">
@@ -311,7 +312,7 @@
                                                         <span class="text-muted">Tổng tiền</span>
                                                     </td>
                                                 </tr>
-                                            @endforeach --}}
+                                            @endforeach
                                         </tbody>
                                     </table>
                                     
@@ -320,7 +321,7 @@
                                 <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
                                    
                                     <div class="">
-                                        {{-- {{ $bestSellingProducts->appends(request()->except('bestSellingPage'))->links() }} --}}
+                                        {{ $bestSellingProducts->appends(request()->except('bestSellingPage'))->links() }}
                                     </div>
                                 </div>
                             </div>
@@ -328,7 +329,7 @@
                     </div>
                     
 
-                    <div class="col-xl-7">
+                    <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Đơn hàng gần đây</h4>

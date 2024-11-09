@@ -80,38 +80,39 @@ class DashboardController extends Controller
 
         // Lấy các sản phẩm bán chạy nhất dựa trên tổng số lượng đã bán
         
-        // $perPage = 5; // Số sản phẩm hiển thị mỗi trang
-        // $bestSellingProducts = Product::with(['orderItems' => function($query) {
-        //     $query->whereHas('order', function($orderQuery) {
-        //         $orderQuery->where('order_status', 'Đã giao'); // Chỉ lấy đơn hàng đã giao
-        //     });
-        // }])
-        // ->where('status', 1) // Lọc sản phẩm đang hoạt động
-        // ->selectRaw('products.*, SUM(order_items.qty) as total_sold') // Tính tổng số lượng đã bán
-        // ->join('order_items', 'products.id', '=', 'order_items.product_id') // Kết nối với bảng order_items
-        // ->join('orders', 'order_items.order_id', '=', 'orders.id') // Kết nối với bảng orders
-        // ->where('orders.order_status', 'Đã giao') // Chỉ lấy các đơn hàng đã giao
-        // ->groupBy(
-        //     'products.id',
-        //     'products.category_id',
-        //     'products.brand_id',
-        //     'products.thumbnail',
-        //     'products.name',
-        //     'products.slug',
-        //     'products.sku',
-        //     'products.qty',
-        //     'products.description',
-        //     'products.content',
-        //     'products.price',
-        //     'products.price_sale',
-        //     'products.status',
-        //     'products.created_at',
-        //     'products.updated_at',
-        //     'products.deleted_at'
-        // )
-        // ->distinct() // Thêm dòng này để loại bỏ các bản ghi trùng lặp
-        // ->orderBy('total_sold', 'desc') // Sắp xếp theo số lượng đã bán
-        // ->paginate($perPage); // Phân trang kết quả
+        $perPage = 5; // Số sản phẩm hiển thị mỗi trang
+        $bestSellingProducts = Product::with(['orderItems' => function($query) {
+            $query->whereHas('order', function($orderQuery) {
+                $orderQuery->where('order_status', 'Đã giao'); // Chỉ lấy đơn hàng đã giao
+            });
+        }])
+        ->where('status', 1) // Lọc sản phẩm đang hoạt động
+        ->selectRaw('products.*, SUM(order_items.qty) as total_sold') // Tính tổng số lượng đã bán
+        ->join('order_items', 'products.id', '=', 'order_items.product_id') // Kết nối với bảng order_items
+        ->join('orders', 'order_items.order_id', '=', 'orders.id') // Kết nối với bảng orders
+        ->where('orders.order_status', 'Đã giao') // Chỉ lấy các đơn hàng đã giao
+        ->groupBy(
+            'products.id',
+            'products.category_id',
+            'products.brand_id',
+            'products.thumbnail',
+            'products.name',
+            'products.slug',
+            'products.sku',
+            'products.qty',
+            'products.description',
+            'products.content',
+            'products.price',
+            'products.price_sale',
+            'products.status',
+            'products.product_type',
+            'products.created_at',
+            'products.updated_at',
+            'products.deleted_at'
+        )
+        ->distinct() // Thêm dòng này để loại bỏ các bản ghi trùng lặp
+        ->orderBy('total_sold', 'desc') // Sắp xếp theo số lượng đã bán
+        ->paginate($perPage); // Phân trang kết quả
     
            
         // Lấy danh sách các đơn hàng cùng với thông tin khách hàng, sắp xếp giảm dần
@@ -136,7 +137,7 @@ class DashboardController extends Controller
             'orders',
             'income',
             'canceled',
-            // 'bestSellingProducts',
+            'bestSellingProducts',
             'ordersview',
             'canceledOrderCount',
             'cancelPercentage'

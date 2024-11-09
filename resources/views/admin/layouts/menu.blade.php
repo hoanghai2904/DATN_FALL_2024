@@ -40,9 +40,14 @@
 
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.categories.listCategory') }}" class="nav-link menu-link" href="#"
+                    <a href="{{ route('admin.categories_.index') }}" class="nav-link menu-link" href="#"
                         aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý danh mục</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.brands.index') }}" aria-controls="sidebarDashboards">
+                        <i class="ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý thương hiệu</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -58,40 +63,48 @@
                                     Quản lý sản phẩm</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.products.index') }}" class="nav-link" data-key="t-analytics">
+                                <a href="{{ route('admin.variants.index') }}" class="nav-link" data-key="t-analytics">
                                     Quản lý biến thể</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.banners.listBanner') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.banners.listBanner') }}"
+                        aria-controls="sidebarDashboards">
                         <i class=" las la-photo-video"></i> <span data-key="t-dashboards">Quản lý banner</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.orders.index') }}"
+                        aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Quản lý đơn hàng</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.contacts.index') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.contacts.index') }}"
+                        aria-controls="sidebarDashboards">
                         <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sale" data-bs-toggle="collapse" role="button"
+                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" aria-controls="sidebarDashboards">
+                        <i class="ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
+                    </a>
+                </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class=" ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sale">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Nếu có thì làm dropdow</a>
+                                <a href="{{route('admin.vouchers.index')}}" class="nav-link">Nếu có thì làm dropdow</a>
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#news" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
@@ -100,10 +113,11 @@
                     <div class="collapse menu-dropdown" id="news">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý danh mục</a>
+                                <a href="{{ route('admin.postcategories.listPostCategory') }}" class="nav-link">Quản
+                                    lý danh mục</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Quản lý bài viết</a>
+                                <a href="{{route('admin.posts.index')}}" class="nav-link">Quản lý bài viết</a>
                             </li>
                         </ul>
                     </div>
@@ -116,23 +130,39 @@
                     <div class="collapse menu-dropdown" id="user">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{route('admin.listRole')}}" class="nav-link">Quản lý phân quyền</a>
+                                <a href="{{ route('admin.listRole') }}" class="nav-link">Quản lý phân quyền</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.listCusstomer') }}" class="nav-link">Quản lý người dùng</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.listUser')}}" class="nav-link">Quản lý nhân viên</a>
+                                <a href="{{ route('admin.listUser') }}" class="nav-link">Quản lý nhân viên</a>
                             </li>
                         </ul>
                     </div>
                 </li>
+                {{-- <li class="nav-item">
+                    <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
+                    </a>
+
+                    <div class="collapse menu-dropdown" id="contact">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">ádfsdfsf</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li> --}}
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}"
+                        aria-controls="sidebarDashboards">
                         <i class="bx bx-message-detail"></i> <span data-key="t-dashboards">Quản lý Bình Luận</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class=" ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
@@ -144,7 +174,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
             </ul>
         </div>
 

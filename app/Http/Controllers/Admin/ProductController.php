@@ -44,14 +44,14 @@ class ProductController extends Controller
         $categories = Category::all();
         $brands = Brands::all();
         $tags = Tag::all();
-        // $variantTypes = VariantType::all();
+        $variantTypes = VariantType::all();
 
         // dd($variants);
 
         return view('admin.products.create', compact(
             'categories',
             'brands',
-            // 'variantTypes',
+            'variantTypes',
             'tags',
         ));
     }

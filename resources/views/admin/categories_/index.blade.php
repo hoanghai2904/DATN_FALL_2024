@@ -122,7 +122,7 @@
                                                 @endif
 
                                             </td>
-                                            <td>{{ $category->created_at->format('d/m/Y') }}</td>
+                                            <td>{{ $category->updated_at->format('d/m/Y') }}</td>
                                             <td>
                                                 {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
                                                 <a href="{{ route('admin.categories_.edit', $category->id) }}"
