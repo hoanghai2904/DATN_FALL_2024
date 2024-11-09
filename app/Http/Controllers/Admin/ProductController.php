@@ -11,6 +11,7 @@ use App\Models\VariantValue;
 use App\Models\ProductGallery;
 use App\Models\Brands;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -205,8 +206,9 @@ class ProductController extends Controller
         $product = Product::with(['variants.variantType','variants.variantValue','category','brand','tags','galleries']) ->findOrFail($id);
         // dd($product->variants);
         $variantTypes = $product->variants->groupBy('variantType.name');
+        $comments = Comment::with(['user'])->where('product_id',$id)->where('status',1)->get();
         // dd($productVariant);
-        return view('admin.products.show',compact('product','variantTypes'));
+        return view('admin.products.show',compact('product','variantTypes','comments'));
     }
 
     public function edit($id)
