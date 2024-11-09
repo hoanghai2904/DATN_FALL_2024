@@ -40,4 +40,12 @@ Route::group(['prefix' => 'account'], function () {
 // Product 
 
 Route::get('products', [ClientProductController::class, 'productsIndex'])->name('products.index');
+Route::get('all-products', [ClientProductController::class, 'showAllProducts'])->name('all-products');
+
+
+// Đảm bảo khai báo đúng controller và phương thức
+
+
+
+
 Route::get('products/{slug}', [ClientProductController::class, 'showProduct'])->name('product-detail');

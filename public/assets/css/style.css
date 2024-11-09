@@ -16332,16 +16332,22 @@ input {
 .filter-type-price {
     display: flex;
     margin-top: 20px;
-    justify-content: space-between;
+    justify-content: start;
+    align-items: center; /* Đảm bảo input và label được căn giữa theo chiều dọc */
 }
+
 .filter-type-price label {
     display: inline-block;
+    margin-right: 10px; /* Khoảng cách giữa label và input */
 }
+
 .filter-type-price input {
-    width: 100px;
-    display: inline-block;
-    text-align: right;
+    width: 50px; /* Đảm bảo độ rộng input hợp lý */
+    text-align: center;
+    padding: 5px 10px; /* Thêm padding để làm cho input đẹp hơn */
+    margin: 0; /* Đảm bảo không có margin gây tách rời */
 }
+
 
 .ui-slider-horizontal {
     height: 5px;
