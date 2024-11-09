@@ -9,23 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('cancelled_orders', function (Blueprint $table) {
+        Schema::create('parent_category', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
-            $table->string('reason');
-            $table->timestamp('cancelled_at')->useCurrent();
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->foreignId('parent_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('cancelled_orders');
+        Schema::dropIfExists('parent_category');
     }
 };

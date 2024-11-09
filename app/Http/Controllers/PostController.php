@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\PostRequest;
-use App\Models\admin\Posts;
+use App\Models\Posts;
 use App\Models\Category;
 use App\Models\PostCategory;
 use Illuminate\Http\Request;

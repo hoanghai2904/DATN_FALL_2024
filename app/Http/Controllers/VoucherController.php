@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\admin\VoucherRequest;
-use App\Models\admin\Vouchers;
+use App\Models\Vouchers;
 use Carbon\Carbon;
 use Flasher\Laravel\Facade\Flasher;
 use Illuminate\Http\Request;

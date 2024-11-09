@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\admin\Product;
-use App\Models\admin\ProductVariant;
-use App\Models\admin\Tag;
-use App\Models\admin\VariantType;
-use App\Models\admin\VariantValue;
-use App\Models\admin\ProductGallery;
+use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\Tag;
+use App\Models\VariantType;
+use App\Models\VariantValue;
+use App\Models\ProductGallery;
 use App\Models\Brands;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -68,20 +68,43 @@ class ProductController extends Controller
         // dd($request->all());
         // Xác thực dữ liệu nếu cần
         $productValidate = $request->validate([
-            'thumbnail' => ['image', 'nullable', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
-            'name' => ['nullable'],
-            'categories' => ['nullable'],
-            'brands' => ['nullable'],
+            'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+            'name' => ['required'],
+            'categories' => ['required'],
+            'brands' => ['required'],
             'sku' => ['nullable', 'unique:products'],
-            'price' => ['nullable', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'price_sale' => ['nullable', 'numeric', 'min:0'],
-            'qty' => ['nullable'],
-            'description' => ['nullable', 'max:500'],
+            'qty' => ['required'],
+            'description' => ['required', 'max:500'],
             'content' => ['nullable'],
-            'status' => ['nullable'],
+            'status' => ['required'],
             'quantities.*' => 'nullable|integer|min:0', // Xác thực số lượng
             'prices.*' => 'nullable|numeric|min:0', // Xác thực giá
             'tags' => ['nullable', 'array'],
+        ],
+        [
+            'thumbnail.image' => 'Ảnh phải là một tệp hình ảnh.',
+            'thumbnail.required' => 'Ảnh đại diện không được để trống.',
+            'thumbnail.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, svg, hoặc webp.',
+            'thumbnail.max' => 'Dung lượng ảnh không được vượt quá 2048KB.',
+            'name.required' => 'Tên sản phẩm không được để trống.',
+            'categories.required' => 'Danh mục không được để trống.',
+            'brands.required' => 'Thương hiệu không được để trống.',
+            'sku.unique' => 'Mã SKU đã tồn tại.',
+            'price.required' => 'Giá sản phẩm không được để trống.',
+            'price.numeric' => 'Giá sản phẩm phải là số.',
+            'price.min' => 'Giá sản phẩm không được nhỏ hơn 0.',
+            'price_sale.numeric' => 'Giá khuyến mãi phải là số.',
+            'price_sale.min' => 'Giá khuyến mãi không được nhỏ hơn 0.',
+            'qty.required' => 'Số lượng sản phẩm không được để trống.',
+            'description.required' => 'Mô tả sản phẩm không được để trống.',
+            'description.max' => 'Mô tả sản phẩm không được vượt quá 500 ký tự.',
+            'status.required' => 'Trạng thái không được để trống.',
+            'quantities.*.integer' => 'Số lượng phải là số nguyên.',
+            'quantities.*.min' => 'Số lượng không được nhỏ hơn 0.',
+            'prices.*.numeric' => 'Giá phải là số.',
+            'prices.*.min' => 'Giá không được nhỏ hơn 0.',
         ]);
 
         $path = null;
@@ -179,7 +202,11 @@ class ProductController extends Controller
 
     public function show($id)
     {
-
+        $product = Product::with(['variants.variantType','variants.variantValue','category','brand','tags','galleries']) ->findOrFail($id);
+        // dd($product->variants);
+        $variantTypes = $product->variants->groupBy('variantType.name');
+        // dd($productVariant);
+        return view('admin.products.show',compact('product','variantTypes'));
     }
 
     public function edit($id)

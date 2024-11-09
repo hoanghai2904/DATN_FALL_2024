@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +14,6 @@ class ProductTypes extends Model
 
     public function variants()
     {
-        return $this->hasMany(ProductVariants::class, foreignKey: 'product_type_id');
+        return $this->hasMany(ProductVariant::class, foreignKey: 'product_type_id');
     }
 }

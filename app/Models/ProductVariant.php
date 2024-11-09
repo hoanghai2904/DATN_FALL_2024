@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models\admin;
+namespace App\Models;
 
+use App\Models\VariantType;
+use App\Models\VariantValue;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

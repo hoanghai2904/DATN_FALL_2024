@@ -4,90 +4,76 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use Carbon\Carbon; 
+use App\Models\User;
+use Carbon\Carbon;
+
 class OrderController extends Controller
 {
     // Hiển thị danh sách đơn hàng
     public function index(Request $request)
-{
-    // Bắt đầu truy vấn
-    $query = Order::query();
- 
-    // Lọc theo trạng thái đơn hàng
-    if ($request->filled('status_order')) {
-        $query->where('status_order', $request->status_order);
-    }
+    {
+        // Bắt đầu truy vấn với quan hệ users và user_addresses
+        $query = Order::with(['user', 'user.addresses']);
 
-    // Lọc theo mã đơn hàng
-    if ($request->filled('order_code')) {
-        $query->where('order_code', 'like', '%' . $request->order_code . '%');
-    }
+        // Lọc theo trạng thái đơn hàng
+        if ($request->filled('order_status')) {
+            $query->where('order_status', $request->order_status);
+        }
 
-    // Lọc theo tên khách hàng
-    if ($request->filled('user_name')) {
-        $query->where('user_name', 'like', '%' . $request->user_name . '%');
-    }
+        // Lọc theo trạng thái thanh toán
+        if ($request->filled('payment_status')) {
+            $query->where('payment_status', $request->payment_status);
+        }
 
-   // Khoảng thời gian
+        // Lọc theo khoảng thời gian
         if ($request->filled('start_date') && $request->filled('end_date')) {
-            // Chuyển đổi định dạng ngày để phù hợp
             $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
             $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
 
-            // Lọc theo khoảng thời gian
             $query->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($request->filled('start_date')) {
+            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date)->startOfDay();
+            $query->where('created_at', '>=', $startDate);
+        } elseif ($request->filled('end_date')) {
+            $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date)->endOfDay();
+            $query->where('created_at', '<=', $endDate);
         }
 
+        // Lọc theo tìm kiếm chung
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($query) use ($search) {
+                $query->where('order_code', 'like', '%' . $search . '%');
+            });
+        }
+        // Lấy danh sách đơn hàng sau khi lọc
+        $orders = $query->paginate(7)->appends($request->except('page'));
 
-    // Lọc theo tìm kiếm chung
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($query) use ($search) {
-            $query->where('order_code', 'like', '%' . $search . '%')
-                  ->orWhere('user_name', 'like', '%' . $search . '%')
-                  ->orWhere('user_email', 'like', '%' . $search . '%')
-                  ->orWhere('status_order', 'like', '%' . $search . '%');
-        });
-    }
-
-    // Lấy danh sách đơn hàng sau khi lọc
-    $orders = $query->paginate(10);
-
-    // Trả về view với danh sách đơn hàng
-    return view('admin.orders.index', compact('orders'));
-}
-
-    
-    
-
-    // Tạo đơn hàng mới
-    public function create()
-    {
-        return view('admin.orders.create');
-    }
-
-    // Lưu đơn hàng mới
-    public function store(Request $request)
-    {
-        $order = Order::create($request->all());
-        return redirect()->route('admin.orders.index')->with('success', 'Order created successfully');
+        // Trả về view với danh sách đơn hàng
+        return view('admin.orders.index', compact('orders'));
     }
 
     // Hiển thị chi tiết đơn hàng
-    public function show(Order $order)
+    public function show($id)
     {
-        // Lấy các sản phẩm trong đơn hàng bằng quan hệ đã thiết lập
-        $orderItems = $order->items;
+        $order = Order::with('items', 'payment')->findOrFail($id);
+        // dd($order);
+        // Kiểm tra nếu đơn hàng có liên kết với user
+        $customer = $order->user_id
+            ? User::find($order->user_id) // Nếu có user_id, lấy thông tin từ User
+            : (object) [ // Nếu không, dùng thông tin trong đơn hàng
+                'name' => $order->user_name,
+                'email' => $order->user_email,
+                'phone' => $order->user_phone,
+                'address' => $order->user_address,
+            ];
 
-        $totalAmount = $orderItems->sum(function ($item) {
-            return $item->product_price_sale ? $item->product_price_sale * $item->qty : $item->product_price * $item->qty;
-        });
-    
-        // Cập nhật tổng tiền vào bảng orders (nếu cần)
-        $order->total_price = $totalAmount; // Giả sử bạn đã có trường total_price trong bảng orders
-        $order->save(); // Lưu thay đổi vào cơ sở dữ liệu
-    
-        return view('admin.orders.show', compact('order', 'orderItems', 'totalAmount'));
+        // Chỉ gọi addresses() nếu $customer là một đối tượng User
+        $addresses = isset($customer->addresses)
+            ? $customer->addresses()->get()
+            : collect(); // Trả về một collection rỗng nếu không có user_id
+
+        return view('admin.orders.show', compact('order', 'customer', 'addresses'));
     }
 
     // Chỉnh sửa đơn hàng
@@ -97,40 +83,50 @@ class OrderController extends Controller
     }
 
     // Cập nhật đơn hàng
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        // Validate the incoming request
+        // Validate dữ liệu
         $request->validate([
-            'status_order' => 'required|string', // Thêm xác thực cho trạng thái
-            // Các xác thực khác nếu cần
+            'order_status' => 'required|string',
+            'payment_status' => 'required|string',
         ]);
-    
-        // Kiểm tra nếu trạng thái mới là "Hoàn thành"
-        if ($request->input('status_order') === 'Hoàn thành') {
-            $order->payment_method = 'Đã thanh toán'; // Cập nhật phương thức thanh toán
-        }
-    
-        // Cập nhật các trường khác của đơn hàng
-        $order->update($request->except('payment_method')); // Bỏ qua payment_method nếu nó được cập nhật trong điều kiện trên
-    
-        return redirect()->route('admin.orders.index')->with('success', 'Order updated successfully');
+
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
+
+        // Cập nhật trạng thái
+        $order->order_status = $request->order_status;
+        $order->payment_status = $request->payment_status;
+        $order->save();
+
+        return response()->json(['success' => true, 'message' => 'Cập nhật trạng thái đơn hàng thành công!']);
     }
+
     public function showInvoice($id)
     {
         $order = Order::findOrFail($id);
         // Lấy thông tin các sản phẩm liên quan
         $orderItems = $order->items; // Đảm bảo rằng bạn đã thiết lập quan hệ items
-    
+
         return view('admin.orders.invoice', compact('order', 'orderItems'));
     }
     // Xóa đơn hàng
-    public function destroy($id)
-{
-    $order = Order::find($id);
-    if ($order) {
-        $order->delete();
-        return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
+    public function destroyOrder($id)
+    {
+        $order = Order::with(['items', 'payment', 'statusLogs'])->find($id); // Tải các quan hệ liên quan
+    
+        if ($order) {
+            // Xóa các quan hệ liên quan trước khi xóa đơn hàng
+            $order->items()->delete();
+            $order->payment()->delete();
+            $order->statusLogs()->delete();
+            
+            $order->delete(); // Xóa đơn hàng
+    
+            return response()->json(['status' => 'success', 'message' => 'Đơn hàng đã được xóa!']);
+        }
+    
+        return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
     }
-    return response()->json(['status' => 'error', 'message' => 'Không tìm thấy đơn hàng!']);
-}
+    
 }

@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            if (!Schema::hasColumn('orders', 'deleted_at')) {
-                $table->softDeletes(); // Thêm cột deleted_at
-            }
+            $table->string('user_name')->nullable();
+            $table->string('user_email')->nullable();
+            $table->string('user_phone')->nullable();
+            $table->string('user_address')->nullable();
+            $table->text('user_note')->nullable();
         });
     }
 
@@ -24,9 +26,13 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            if (Schema::hasColumn('orders', 'deleted_at')) {
-                $table->dropSoftDeletes(); // Xóa cột deleted_at
-            }
+            $table->dropColumn([
+                'user_name', 
+                'user_email', 
+                'user_phone', 
+                'user_address', 
+                'user_note'
+            ]);
         });
     }
 };

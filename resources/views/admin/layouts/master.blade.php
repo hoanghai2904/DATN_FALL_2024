@@ -53,6 +53,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     @yield('style-libs')
     @stack('style')
@@ -74,7 +75,7 @@
                         <div class="col-sm-6">
                             <script>
                                 document.write(new Date().getFullYear())
-                            </script> © Velzon.
+                            </script> © DATN.
                         </div>
                         <div class="col-sm-6">
                             <div class="text-sm-end d-none d-sm-block">
@@ -99,12 +100,6 @@
             <div class="spinner-border text-primary avatar-sm" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-        </div>
-    </div>
-    <div class="customizer-setting d-none d-md-block">
-        <div class="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2" data-bs-toggle="offcanvas"
-            data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
-            <i class='mdi mdi-spin mdi-cog-outline fs-22'></i>
         </div>
     </div>
     <!-- Theme Settings -->
@@ -162,6 +157,11 @@
     <script src="{{ asset('assets/libs/list.js/list.min.js') }}"></script>
     <script src="{{ asset('assets/libs/list.pagination.js/list.pagination.min.js') }}"></script>
     <script src="{{ asset('assets/js/pages/crm-leads.init.js') }}"></script>
+    
+    {{-- Chi tiết sản phẩm  --}}
+    <script src="{{ asset('theme/admin/assets/libs/swiper/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('theme/admin/assets/js/pages/ecommerce-product-details.init.js') }}"></script>
+
     @stack('script')
 
     @if (session('success'))

@@ -28,6 +28,9 @@
                 </div>
 
                 <div class="text-end mb-3">
+                    <a href="{{ route('admin.postcategories.listPostCategory') }}" type="button"
+                        class="btn btn-danger w-sm">Quay lại</a>
+
                     <button type="submit" class="btn btn-success w-sm">Thêm mới</button>
                 </div>
             </div>
