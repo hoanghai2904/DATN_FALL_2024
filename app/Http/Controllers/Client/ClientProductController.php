@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brands;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -21,7 +23,8 @@ class ClientProductController extends Controller
     public function showAllProducts()
     {
         $products = Product::all();
-        $tags = Tag::all();
+        $tags = Tag::withCount('products')->get();
+        $brands = Brands::withCount('products')->get();
         $minPrice = $products->min(function ($product) {
             return min($product->price, $product->price_sale);
         });
@@ -30,7 +33,7 @@ class ClientProductController extends Controller
             return max($product->price, $product->price_sale);
         });
         $categories = Category::where('status', 1)->get();
-        return view('Client.pages.all-product', compact('products', 'categories', 'minPrice', 'maxPrice', 'tags'));
+        return view('Client.pages.all-product', compact('products', 'categories', 'minPrice', 'maxPrice', 'tags','brands'));
     }
 
 

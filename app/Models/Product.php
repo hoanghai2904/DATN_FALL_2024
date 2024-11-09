@@ -13,11 +13,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'category_id', 'brand_id', 'thumbnail', 'name', 'slug', 'sku','qty',
-        'description', 'content', 'price', 'price_sale', 'status'
+        'category_id',
+        'brand_id',
+        'thumbnail',
+        'name',
+        'slug',
+        'sku',
+        'qty',
+        'description',
+        'content',
+        'price',
+        'price_sale',
+        'status'
     ];
     // public function categories(){
     //     return $this->belongsToMany(Category::class, 'category_id');
@@ -27,27 +37,37 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
+
     public function productVariants()
     {
         return $this->hasManyThrough(VariantValue::class, ProductVariant::class);
     }
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
-    public function brand(){
+    public function brand()
+    {
         return $this->belongsTo(Brands::class);
     }
     // belongsToMany : thiết lập mối quan hệ nhiều-nhiều giữa hai model.
     // Tag::class là tham chiếu đến class Tag. Nó chỉ ra rằng Product có quan hệ với Tag
     // 'product_tags' : bảng trung gian (pivot table) kết nối hai bảng products và tags.
-    public function tags(){
+    public function tags()
+    {
         return $this->belongsToMany(Tag::class, 'product_tags');
     }
-    public function galleries(){
+    public function galleries()
+    {
         return $this->hasMany(ProductGallery::class);
     }
 
-    public function OrderItems(){
+    public function OrderItems()
+    {
         return $this->hasMany(OrderItem::class);
+    }
+    public function brands()
+    {
+        return $this->belongsTo(Brands::class, 'brand_id');
     }
 }
