@@ -143,7 +143,7 @@ class AccountController extends Controller
    public function profile()
    {
     $auth = auth()->user();
-      return view('Client.myAccount',compact('auth'));
+      return view('Client.login.myAccount',compact('auth'));
    }
 
    public function check_profile(Request $request) 
@@ -202,12 +202,6 @@ class AccountController extends Controller
 }
 
    
-
-   public function change_pass()
-   {
-      return view('account.Check_changePass');
-   }
-
    public function Check_changePass(Request $request) 
 {
     $auth = auth()->user(); 

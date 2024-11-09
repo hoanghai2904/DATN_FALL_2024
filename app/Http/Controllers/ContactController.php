@@ -80,7 +80,7 @@ class ContactController extends Controller
     public function show($id)
     {
         $contact = Contact::findOrFail($id); // Lấy thông tin liên hệ theo ID
-        return view('admin.contacts.show', compact('contact')); // Trả về view hiển thị
+        return view('admin.contacts.show', compact('contacts')); // Trả về view hiển thị
     }
 
     public function edit(Contact $contact)

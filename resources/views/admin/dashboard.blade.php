@@ -226,16 +226,7 @@
                                 <h4 class="card-title mb-0 flex-grow-1">Sản phẩm theo danh mục</h4>
                                 <div class="flex-shrink-0">
                                     <div class="dropdown card-header-dropdown">
-                                        <a class="text-reset dropdown-btn" href="#" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false">
-                                            <span class="text-muted">Report<i
-                                                    class="mdi mdi-chevron-down ms-1"></i></span>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item" href="#">Download Report</a>
-                                            <a class="dropdown-item" href="#">Export</a>
-                                            <a class="dropdown-item" href="#">Import</a>
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             </div><!-- end card header -->
@@ -252,7 +243,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xl-5">
+                    <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Sản phẩm bán chạy nhất</h4>
@@ -309,11 +300,11 @@
                                                         <span class="text-muted">Giá</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->orderItems->sum('qty') }}</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->orderItems->sum('qty')  }}</h5>
                                                         <span class="text-muted">Số lượng</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty }}</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty - $product->orderItems->sum('qty')}}</h5>
                                                         <span class="text-muted">Sản phẩm</span>
                                                     </td>
                                                     <td>
@@ -338,7 +329,7 @@
                     </div>
                     
 
-                    <div class="col-xl-7">
+                    <div class="col-xl-6">
                         <div class="card">
                             <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Đơn hàng gần đây</h4>

@@ -105,6 +105,7 @@ class DashboardController extends Controller
             'products.price',
             'products.price_sale',
             'products.status',
+            'products.product_type',
             'products.created_at',
             'products.updated_at',
             'products.deleted_at'

@@ -166,7 +166,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                        data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                         <a href="javascript:void(0);" class="btn-info view-details-btn"
                                                             data-id="{{ $employee->id }}"> <i
                                                                 class="ri-pencil-fill align-bottom text-muted fs-5"></i></a>
