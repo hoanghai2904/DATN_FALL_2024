@@ -177,14 +177,14 @@
                                 <div class="row g-0 text-center">
                                     <div class="col-6 col-sm-3">
                                         <div class="p-3 border border-dashed border-start-0">
-                                            <h5 class="mb-1"><span class="counter-value" data-target="7585">0</span></h5>
+                                            <h5 class="mb-1"><span class="counter-value" data-target="{{ number_format($totalOrders) }}">0</span></h5>
                                             <p class="text-muted mb-0">Đơn hàng</p>
                                         </div>
                                     </div>
                                     <!--end col-->
                                     <div class="col-6 col-sm-3">
                                         <div class="p-3 border border-dashed border-start-0">
-                                            <h5 class="mb-1">$<span class="counter-value" data-target="22.89">0</span>k
+                                            <h5 class="mb-1"><span class="counter-value" data-target="{{ number_format($totalEarnings) }}">0</span>k
                                             </h5>
                                             <p class="text-muted mb-0">Thu nhập</p>
                                         </div>
@@ -192,7 +192,7 @@
                                     <!--end col-->
                                     <div class="col-6 col-sm-3">
                                         <div class="p-3 border border-dashed border-start-0">
-                                            <h5 class="mb-1"><span class="counter-value" data-target="367">0</span>
+                                            <h5 class="mb-1"><span class="counter-value" data-target="{{$canceledOrderCount}}">0</span>
                                             </h5>
                                             <p class="text-muted mb-0">Đơn hủy</p>
                                         </div>
@@ -201,8 +201,8 @@
                                     <div class="col-6 col-sm-3">
                                         <div class="p-3 border border-dashed border-start-0 border-end-0">
                                             <h5 class="mb-1 text-success"><span class="counter-value"
-                                                    data-target="18.92">0</span>%</h5>
-                                            <p class="text-muted mb-0">Phần trăm hoàn đơn</p>
+                                                    data-target="{{ number_format($cancelPercentage,2)}}">0</span>%</h5>
+                                            <p class="text-muted mb-0">Phần trăm hủy đơn</p>
                                         </div>
                                     </div>
                                     <!--end col-->
@@ -282,7 +282,7 @@
                                             <tr>
                                                 <th>Sản phẩm</th>
                                                 <th>Giá</th>
-                                                <th>Đơn hàng</th>
+                                                <th>Đã bán</th>
                                                 <th>Số lượng</th>
                                                 <th>Tổng tiền</th>
                                             </tr>
@@ -298,11 +298,9 @@
                                                             </div>
                                                             <div>
                                                                 <h5 class="fs-14 my-1">
-                                                                    <a href=""
-                                                                       class="text-reset">{{ $product->name }}</a>
+                                                                    <a href="" class="text-reset">{{ $product->name }}</a>
                                                                 </h5>
                                                                 <span class="text-muted">{{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y') }}</span>
-
                                                             </div>
                                                         </div>
                                                     </td>
@@ -311,27 +309,28 @@
                                                         <span class="text-muted">Giá</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->OrderItem->count() }}</h5>
-                                                        <span class="text-muted">Đơn hàng</span>
-                                                    </td>
-                                                    <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty - $product->OrderItem->count()}}</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->orderItems->sum('qty') }}</h5>
                                                         <span class="text-muted">Số lượng</span>
                                                     </td>
                                                     <td>
-                                                        <h5 class="fs-14 my-1 fw-normal">{{ number_format($product->OrderItem->count() * $product->price) }}₫</h5>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ $product->qty }}</h5>
+                                                        <span class="text-muted">Sản phẩm</span>
+                                                    </td>
+                                                    <td>
+                                                        <h5 class="fs-14 my-1 fw-normal">{{ number_format($product->orderItems->sum('qty') * $product->price) }}₫</h5>
                                                         <span class="text-muted">Tổng tiền</span>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    
                                 </div>
                     
                                 <div class="align-items-center mt-4 pt-2 justify-content-between row text-center text-sm-start">
                                    
                                     <div class="">
-                                        {{ $bestSellingProducts->links() }} <!-- Hiển thị link phân trang -->
+                                        {{ $bestSellingProducts->appends(request()->except('bestSellingPage'))->links() }}
                                     </div>
                                 </div>
                             </div>
@@ -355,7 +354,7 @@
                                     <table class="table table-borderless table-centered align-middle table-nowrap mb-0">
                                         <thead class="text-muted table-light">
                                             <tr>
-                                                <th scope="col">Order ID</th>
+                                                <th scope="col">Mã đơn</th>
                                                 <th scope="col">Khách hàng</th>
                                                 <th scope="col">Tổng tiền</th>
                                                 <th scope="col">Thanh toán</th>
@@ -372,13 +371,13 @@
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <div class="flex-shrink-0 me-2">
-                                                                <img src="{{ asset('assets/images/users/avatar-1.jpg') }}" alt="" class="avatar-xs rounded-circle" />
+                                                                <img src="{{ $order->user->cover ? asset('storage/' .$order->user->cover) : asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}" alt="" class="avatar-xs rounded-circle" />
                                                             </div>
                                                             <div class="flex-grow-1">{{ $order->user->full_name }}</div> <!-- Tên khách hàng -->
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <span class="text-success">${{ number_format($order->total_amount, 2) }}</span> <!-- Tổng tiền -->
+                                                        <span class="text-success">{{ number_format($order->total_amount) }}₫</span> <!-- Tổng tiền -->
                                                     </td>
                                                     <td>
                                                         @if ($order->payment_status === 'Chưa thanh toán')
@@ -609,7 +608,7 @@
                     },
                     {
                         formatter: function(e) {
-                            return e !== undefined ? e.toFixed(0) + "đơn" : e;
+                            return e !== undefined ? e.toFixed(0) : e;
                         },
                     },
                 ],

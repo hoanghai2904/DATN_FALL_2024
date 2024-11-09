@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\client\ClientProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Client\AccountController;
@@ -36,5 +37,7 @@ Route::group(['prefix' => 'account'], function () {
     route::post('/reset_pass', [AccountController::class, 'Check_resetPass']);
 });
 
+// Product 
 
-// Product
+Route::get('products', [ClientProductController::class, 'productsIndex'])->name('products.index');
+Route::get('products/{slug}', [ClientProductController::class, 'showProduct'])->name('product-detail');

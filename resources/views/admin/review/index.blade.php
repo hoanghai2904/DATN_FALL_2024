@@ -81,12 +81,11 @@ td.comment-column {
                                             <label class="form-check-label" for="cardtableCheck"></label>
                                         </div>
                                     </th>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Id User</th>
-                                    <th scope="col">Id trạng thái đơn hàng</th>
-                                    <th scope="col">Id sản phấm </th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Sản phấm </th>
+                                    <th scope="col">Trạng thái đơn hàng</th>
                                     <th scope="col">Đánh giá  </th>
-                                    <th scope="col">Nội dung </th>
+                                    <th scope="col">Nội dung đánh giá</th>
                                     <th scope="col" style="width: 150px;">Hành động</th>
                                 </tr>
                             </thead>
@@ -100,52 +99,49 @@ td.comment-column {
                                         <label class="form-check-label" for="cardtableCheck01"></label>
                                     </div>
                                 </td>
-                                <td>{{ $review->id }}</td>
                                 <td>{{ $review->user->full_name }}</td>
-                                <td>{{ $review->order_statuses->status }}</td>
-                                {{-- <td>{{ $review->product->name 'Sản phẩm không tồn tại' }}</td> --}}
-                                {{-- <td>{{ $review->rating }}</td> --}}
                                 <td>
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $review->rating)
-                                            <i class="fas fa-star"></i> <!-- Sao đầy đủ -->
-                                        @else
-                                            <i class="far fa-star"></i> <!-- Sao rỗng -->
-                                        @endif
-                                    @endfor
-                                </td> <!-- Đánh giá -->
-
-                                {{-- <td>{{ $review->comment }}</td> --}}
-                                <td class="comment-column">
-                                    <div class="d-flex align-items-center">
-                                        <div class="comment-text me-2" id="review-{{ $review->id }}" title="{{ $review->comment }}">
-                                            {{ $review->comment }}
-                                        </div>
-                                        <i class="fas fa-eye comment-icon" data-id="{{ $review->id }}" style="cursor: pointer;"></i>
-                                    </div>
-                                    <div class="modal fade" id="reviewModal{{ $review->id }}" tabindex="-1"
-                                        aria-labelledby="reviewModalLabel{{ $review->id }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="reviewModalLabel{{ $review->id }}">Bình luận</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{ $review->comment }}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <img width="80px" class="img-thumbnail" src="{{ asset('storage/' . $review->product->thumbnail) }}" alt="">
+                                </td>
+                                <td>{{ $review->order->status_order }}</td>
+                                {{-- <td>{{ $review->rating }}</td> --}}
+                                <td >
+                                    <div class="text-warning fs-15">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="ri-star{{ $i <= $review->rating ? '-fill' : '-line' }}"></i>
+                                        @endfor
                                     </div>
                                 </td>
-                                <td>
-                                    <td>
-                                        <a href="{{ route('admin.review.deleteReview', $review->id) }}"
-                                            class="btn btn-sm btn-danger delete-item">Xóa</a>
-                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
+                                <td >
+                                    <div class="d-flex align-items-center">
+                                        @if($review->order->status_order === 'Hoàn thành')
+                                        <div class="comment-text me-2" id="comment-{{ $review->id }}"
+                                            title="{{ $review->comment }}">
+                                            {{ $review->comment }}
+                                        </div>
+                                        @else
+                                        <span class="text-muted">Bình luận không khả dụng</span>
+                                    @endif
+                                    </div>
+                                </td>
+                                    <td class="text-center">
+                                        <ul class="list-inline hstack gap-2 mb-0 ">
+                                            <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                <a href="javascript:void(0);" class="view-item-btn"
+                                                    data-comment-id="{{ $review->id }}">
+                                                    <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
+                                                </a>
+                                            </li>
+                                            <li class="list-inline-item" data-bs-toggle="tooltip"
+                                                data-bs-trigger="hover" data-bs-placement="top" title="Delete">
+    
+                                                <a href="{{ route('admin.review.deleteReview', $review->id) }}"
+                                                    class=" delete-item">
+                                                    <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </td>
                             </tr>
                         @endforeach
@@ -163,7 +159,24 @@ td.comment-column {
     </div><!-- end col -->
 </div>
     
-        
+<div class="modal fade" id="viewCommentModal" tabindex="-1" aria-labelledby="viewCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewCommentModalLabel">Chi tiết </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="commentContent">
+                    <!-- Nội dung bình luận sẽ được cập nhật qua JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @push('script')
 <!-- Bootstrap JS -->
@@ -175,21 +188,24 @@ td.comment-column {
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
- 
+
     <script>
         $(document).ready(function() {
             // Khi nhấn vào biểu tượng mắt
-            $('.review-icon').on('click', function() {
-                // Lấy ID bình luận từ thuộc tính data-id
-                var reviewId = $(this).data('id');
-                console.log('ID của bình luận: ' + reviewId);
-                
+            $('.view-item-btn').on('click', function() {
+                // Lấy ID bình luận từ thuộc tính data-comment-id
+                var commentId = $(this).data('comment-id');
+                console.log('ID của bình luận: ' + commentId);
+
                 // Lấy nội dung bình luận tương ứng
-                var reviewText = $('#review-' + reviewId).text();
-                console.log('Nội dung bình luận: ' + reviewText);
-                
-                // Mở modal với ID tương ứng
-                $('#reviewModal' + reviewId).modal('show');
+                var commentText = $('#comment-' + commentId).text();
+                console.log('Nội dung bình luận: ' + commentText);
+
+                // Cập nhật nội dung cho modal
+                $('#commentContent').text(commentText);
+
+                // Mở modal
+                $('#viewCommentModal').modal('show');
             });
         });
     </script>
@@ -202,5 +218,53 @@ td.comment-column {
                 done(); // Xác nhận hoàn thành xếp hạng
             }
         });
+    </script>
+     <script>
+
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable({
+                "dom": '<"top">rt<"bottom"><"clear">',
+                // "searching": false,
+                "language": {
+                    "emptyTable": "Không có dữ liệu phù hợp", // Thay đổi thông báo không có dữ liệu
+                    "zeroRecords": "Không tìm thấy bản ghi nào phù hợp", // Thay đổi thông báo không có bản ghi tìm thấy
+                    "infoEmpty": "Không có bản ghi để hiển thị", // Thông báo khi không có dữ liệu để hiển thị
+                }
+            });
+
+            $('#customSearchBox').on('keyup', function() {
+                table.search(this.value).draw(); // Áp dụng tìm kiếm trên bảng
+            });
+
+        });
+    </script>
+
+    <script>
+        const notyf = new Notyf();
+        $(document).ready(function() {
+            $('body').on('click', '.change-status', function() {
+                let isChecked = $(this).is(':checked');
+                let id = $(this).data('id');
+                console.log(isChecked, id);
+
+
+                $.ajax({
+                    url: "{{ route('admin.product.change-status') }}",
+                    method: 'PUT',
+                    data: {
+                        status: isChecked,
+                        id: id
+                    },
+                    success: function(data) {
+                        // toastr.success(data.message)
+                        notyf.success(data.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                })
+
+            })
+        })
     </script>
 @endpush

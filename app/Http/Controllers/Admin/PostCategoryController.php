@@ -103,6 +103,7 @@ class PostCategoryController extends Controller
     {
         $category = PostCategory::withTrashed()->find($id);
 
+        // dd($category);
         return view('admin.postcategory.update')->with([
             'category' => $category,
 
@@ -135,5 +136,16 @@ class PostCategoryController extends Controller
 
 
         return redirect()->route('admin.postcategories.listPostCategory');
+    }
+
+    public function changeStatus(Request $request)
+    {
+        // dd($request->id);
+        $category = PostCategory::findOrFail($request->id);
+        // dd($category);
+        $category->status = $request->status == 'true' ? 1 : 0;
+        $category->save();
+
+        return response(['message' => 'Cập nhật trạng thái thành công!']);
     }
 }

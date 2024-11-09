@@ -113,7 +113,7 @@
                                                 <img width="80px" class="img-thumbnail"
                                                     src="{{ asset('storage/' . $product->thumbnail) }}" alt="">
                                             </td>
-                                            <td class="break-word">{{ $product->name }}</td>
+                                            <td class="break-word"><a href="{{ route('admin.products.show', $product->id) }}">{{ $product->name }}</a></td>
                                             <td><a href="#" class="fw-medium">{{ $product->sku }}</a></td>
                                             <td>
                                                 @if ((float) $product->price_sale > 0)
@@ -156,7 +156,7 @@
                                             <td>
                                                 {{-- <button type="button" class="btn btn-sm btn-info">Chi tiết</button> --}}
                                                 <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                    class="btn btn-sm btn-warning">Sửa</a>
+                                                    class="btn btn-sm btn-warning"><i class="ri-edit-fill"></i></a>
                                                 <a href="{{ route('admin.products.destroy', $product->id) }}"
                                                     class="btn btn-sm btn-icon btn-danger delete-item"><i
                                                         class=" ri-delete-bin-line"></i></a>

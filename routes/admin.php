@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\admin\CategoryController_;
 use App\Http\Controllers\Admin\PostCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\ProductVariantController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CancelledOrderController;
 use App\Http\Controllers\OrderItemController;
@@ -42,8 +43,7 @@ Route::prefix('admin')->as('admin.')->group(function () {
 
         //Dashboard
         route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/dashboard/order-data', [DashboardController::class, 'dashboard'])->name('dashboard');
-
+       
         //Account to Admin
         //logout
         route::get('/logout', [AdminAccountController::class, 'logout'])->name('logout');
@@ -162,18 +162,18 @@ Route::prefix('admin')->as('admin.')->group(function () {
             Route::post('/post-category-add', [PostCategoryController::class, 'addPostPostCategory'])->name('addPostPostCategory');
             Route::delete('/delete-postcatgegory/{id}', [PostCategoryController::class, 'deletePostCategory'])->name('deletePostCategory');
             Route::post('/restore-postcatgegory/{id}', [PostCategoryController::class, 'restorePostCategory'])->name('restorePostCategory');
-            // Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
-            // Route::put('/update/{id}', [CategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+            Route::get('/update/{id}', [PostCategoryController::class, 'updateCategory'])->name('updateCategory');
+            Route::put('/update/{id}', [PostCategoryController::class, 'updatePutCategory'])->name('updatePutCategory');
+            Route::put('postcategories/change-status', [PostCategoryController::class, 'changeStatus'])->name('change-status');
         });
         // Sản phẩm mới
         // Route::delete('galleries/{id}', [ProductController::class, 'deleteGallery'])->name('product.deleteGallery');
         Route::put('change-status', [ProductController::class, 'changeStatus'])->name('product.change-status');
+        Route::get('products/get-variant-value', [ProductController::class, 'getVariantValue'])->name('products.value');
         Route::resource('products', ProductController::class);
-        Route::get('/test-variant', function () {
-            return view('admin.products.test');
-        });
-        Route::get('/product/{id}/variations', [ProductController::class, 'manageVariations'])->name('product.variations.manage');
-        Route::post('/product/{id}/variations/generate', [ProductController::class, 'generateVariations'])->name('product.variations.generate');
-        Route::put('/product/{id}/variations/update', [ProductController::class, 'updateVariations'])->name('product.variations.update');
+        
+        
+        Route::put('/variants/change-status', [ProductVariantController::class, 'changeStatus'])->name('product-variant.change-status');
+        Route::resource('variants', ProductVariantController::class);
     });
 });

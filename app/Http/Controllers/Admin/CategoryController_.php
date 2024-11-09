@@ -94,6 +94,7 @@ class CategoryController_ extends Controller
         ]);
 
         $category = Category::findOrFail($id);
+        $category->slug = slug($validated['name']);
         $category->update(['name' => $validated['name']]);
 
         if (empty($validated['parent_id'])) {

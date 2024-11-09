@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('variant_types', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Ví dụ: "Màu sắc", "Kích thước"
+            $table->string('slug');
+            $table->boolean('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -59,12 +59,27 @@
                                         <tr>
                                             <td>{{ $postcategories->firstItem() + $key }}</td>
                                             <td>{{ $value->name }}</td>
-                                            <td>
+                                            {{-- <td>
                                                 @if ($value->status == 1)
                                                     <span class="badge bg-success">Đang Hoạt Động</span>
                                                 @else
                                                     <span class="badge bg-danger">Tạm Dừng</span>
                                                 @endif
+                                            </td> --}}
+
+                                            <td>
+                                                @if ($value->status == 1)
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" checked data-id="{{ $value->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @else
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" data-id="{{ $value->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @endif
+
                                             </td>
 
 
@@ -94,11 +109,11 @@
                                                         </form>
                                                     @endif
 
-                                                    <a class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
+                                                    {{-- <a class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
                                                         style="width: 30px; height: 30px; padding: 0; border: none;"
                                                         title="Xem Chi Tiết">
                                                         <i data-feather="eye" style="width: 16px; height: 16px;"></i>
-                                                    </a>
+                                                    </a> --}}
 
                                                     @if ($value->status == 0)
                                                         <form
@@ -146,5 +161,33 @@
                 });
             });
         });
+
+        const notyf = new Notyf();
+        $(document).ready(function() {
+            $('body').on('click', '.change-status', function() {
+                let isChecked = $(this).is(':checked');
+                let id = $(this).data('id');
+
+
+                $.ajax({
+                    // Thay route 
+                    url: "{{ route('admin.postcategories.change-status') }}",
+                    method: 'PUT',
+                    data: {
+                        status: isChecked,
+                        id: id
+                    },
+                    success: function(data) {
+                        // toastr.success(data.message)
+                        notyf.success(data.message);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                })
+
+            })
+        })
+
     </script>
 @endpush
