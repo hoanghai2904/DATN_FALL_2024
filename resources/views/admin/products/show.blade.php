@@ -111,7 +111,7 @@
                                                         </del>
                                                     </div>
                                                 @else
-                                                    <div data-order="{{ $product->price }}">
+                                                    <div data-order="{{ $product->price }}" class="fw-bold text-danger mb-3">
                                                         {{ number_format((float) $product->price, 0, ',', '.') }}₫
                                                     </div>
                                                 @endif
@@ -177,7 +177,7 @@
                                         @foreach ($variantTypes as $variantTypeName => $variants)
                                             <div class="mb-3">
                                                 <div class="col-xl-6">
-                                                    <div class="mt-4">
+                                                    <div class="mt-2">
                                                         <h5 class="fs-14">{{ $variantTypeName }} :</h5>
                                                         <div class="d-flex flex-wrap gap-2">
                                                             @foreach ($variants as $variant)
@@ -225,9 +225,12 @@
                                     <div class="row align-items-center">
                                         <div class="mb-3">
                                             <div class="d-flex">
-                                                <button class="btn btn-outline-secondary" id="decrement" type="button">-</button>
-                                                <input type="number" class="text-center" id="qty" name="qty" value="1" min="1">
-                                                <button class="btn btn-outline-secondary" id="increment" type="button">+</button>
+                                                <button class="btn btn-outline-secondary" id="decrement"
+                                                    type="button">-</button>
+                                                <input type="number" class="text-center" id="qty" name="qty"
+                                                    value="1" min="1">
+                                                <button class="btn btn-outline-secondary" id="increment"
+                                                    type="button">+</button>
                                             </div>
                                         </div>
                                         <button class="btn btn-dark ">Thêm vào giỏ</button>
@@ -448,145 +451,56 @@
 
                                             <div class="col-lg-8">
                                                 <div class="ps-lg-4">
-                                                    <div class="d-flex flex-wrap align-items-start gap-3">
-                                                        <h5 class="fs-14">Đánh giá: </h5>
-                                                    </div>
+                                                    @if ($comments->isNotEmpty())
+                                                        <div class="d-flex flex-wrap align-items-start gap-3">
+                                                            <h5 class="fs-14">Đánh giá: </h5>
+                                                        </div>
 
-                                                    <div class="me-lg-n3 pe-lg-4" data-simplebar
-                                                        style="max-height: 225px;">
-                                                        <ul class="list-unstyled mb-0">
-                                                            <li class="py-2">
-                                                                <div class="border border-dashed rounded p-3">
-                                                                    <div class="d-flex align-items-start mb-3">
-                                                                        <div class="hstack gap-3">
-                                                                            <div
-                                                                                class="badge rounded-pill bg-success mb-0">
-                                                                                <i class="mdi mdi-star"></i> 4.2
+                                                        <div class="me-lg-n3 pe-lg-4" data-simplebar
+                                                            style="max-height: 225px;">
+                                                            <ul class="list-unstyled mb-0">
+                                                                @foreach ($comments as $comment)
+                                                                    <li class="py-2">
+                                                                        <div class="border border-dashed rounded p-3">
+                                                                            <div class="d-flex align-items-start mb-3">
+                                                                                <div class="hstack gap-3">
+                                                                                    <div
+                                                                                        class="badge rounded-pill bg-success mb-0">
+                                                                                        <i
+                                                                                            class="mdi mdi-star"></i>{{ $comment->rating }}
+                                                                                    </div>
+                                                                                    <div class="vr"></div>
+                                                                                    <div class="flex-grow-1">
+                                                                                        <p class="text-muted mb-0">
+                                                                                            {{ $comment->comment }}</p>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="vr"></div>
-                                                                            <div class="flex-grow-1">
-                                                                                <p class="text-muted mb-0"> Superb
-                                                                                    sweatshirt. I loved it. It is for
-                                                                                    winter.</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                            <div class="d-flex align-items-end">
+                                                                                <div class="flex-grow-1">
+                                                                                    <h5 class="fs-14 mb-0">
+                                                                                        {{ $comment->user->full_name }}
+                                                                                    </h5>
+                                                                                </div>
 
-                                                                    <div class="d-flex flex-grow-1 gap-2 mb-3">
-                                                                        <a href="#" class="d-block">
-                                                                            <img src="assets/images/small/img-12.jpg"
-                                                                                alt=""
-                                                                                class="avatar-sm rounded object-fit-cover">
-                                                                        </a>
-                                                                        <a href="#" class="d-block">
-                                                                            <img src="assets/images/small/img-11.jpg"
-                                                                                alt=""
-                                                                                class="avatar-sm rounded object-fit-cover">
-                                                                        </a>
-                                                                        <a href="#" class="d-block">
-                                                                            <img src="assets/images/small/img-10.jpg"
-                                                                                alt=""
-                                                                                class="avatar-sm rounded object-fit-cover">
-                                                                        </a>
-                                                                    </div>
-
-                                                                    <div class="d-flex align-items-end">
-                                                                        <div class="flex-grow-1">
-                                                                            <h5 class="fs-14 mb-0">Henry</h5>
-                                                                        </div>
-
-                                                                        <div class="flex-shrink-0">
-                                                                            <p class="text-muted fs-13 mb-0">12 Jul, 21</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li class="py-2">
-                                                                <div class="border border-dashed rounded p-3">
-                                                                    <div class="d-flex align-items-start mb-3">
-                                                                        <div class="hstack gap-3">
-                                                                            <div
-                                                                                class="badge rounded-pill bg-success mb-0">
-                                                                                <i class="mdi mdi-star"></i> 4.0
-                                                                            </div>
-                                                                            <div class="vr"></div>
-                                                                            <div class="flex-grow-1">
-                                                                                <p class="text-muted mb-0"> Great at this
-                                                                                    price, Product quality and look is
-                                                                                    awesome.</p>
+                                                                                <div class="flex-shrink-0">
+                                                                                    <p class="text-muted fs-13 mb-0">
+                                                                                        {{ \Carbon\Carbon::parse($comment->created_at)->format('d/m/Y : H:i') }}
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-end">
-                                                                        <div class="flex-grow-1">
-                                                                            <h5 class="fs-14 mb-0">Nancy</h5>
-                                                                        </div>
-
-                                                                        <div class="flex-shrink-0">
-                                                                            <p class="text-muted fs-13 mb-0">06 Jul, 21</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li class="py-2">
-                                                                <div class="border border-dashed rounded p-3">
-                                                                    <div class="d-flex align-items-start mb-3">
-                                                                        <div class="hstack gap-3">
-                                                                            <div
-                                                                                class="badge rounded-pill bg-success mb-0">
-                                                                                <i class="mdi mdi-star"></i> 4.2
-                                                                            </div>
-                                                                            <div class="vr"></div>
-                                                                            <div class="flex-grow-1">
-                                                                                <p class="text-muted mb-0">Good product. I
-                                                                                    am so happy.</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-end">
-                                                                        <div class="flex-grow-1">
-                                                                            <h5 class="fs-14 mb-0">Joseph</h5>
-                                                                        </div>
-
-                                                                        <div class="flex-shrink-0">
-                                                                            <p class="text-muted fs-13 mb-0">06 Jul, 21</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                            <li class="py-2">
-                                                                <div class="border border-dashed rounded p-3">
-                                                                    <div class="d-flex align-items-start mb-3">
-                                                                        <div class="hstack gap-3">
-                                                                            <div
-                                                                                class="badge rounded-pill bg-success mb-0">
-                                                                                <i class="mdi mdi-star"></i> 4.1
-                                                                            </div>
-                                                                            <div class="vr"></div>
-                                                                            <div class="flex-grow-1">
-                                                                                <p class="text-muted mb-0">Nice Product,
-                                                                                    Good Quality.</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-end">
-                                                                        <div class="flex-grow-1">
-                                                                            <h5 class="fs-14 mb-0">Jimmy</h5>
-                                                                        </div>
-
-                                                                        <div class="flex-shrink-0">
-                                                                            <p class="text-muted fs-13 mb-0">24 Jun, 21</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-
-                                                        </ul>
-                                                    </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    @else
+                                                        <p>Hiện tại không có đánh giá nào.</p>
+                                                    @endif
                                                 </div>
                                             </div>
+
+
                                             <!-- end col -->
                                         </div>
                                         <!-- end Ratings & Reviews -->
@@ -616,16 +530,25 @@
         const increment = document.getElementById('increment');
         const qtyInput = document.getElementById('qty');
 
-    decrement.addEventListener('click', () => {
-        let currentValue = parseInt(qtyInput.value);
-        if (currentValue > 1) {
-            qtyInput.value = currentValue - 1;
-        }
-    });
+        decrement.addEventListener('click', () => {
+            let currentValue = parseInt(qtyInput.value);
+            if (currentValue > 0) {
+                qtyInput.value = currentValue - 1;
+            } else {
+                qtyInput.value = 0; // Đảm bảo không có giá trị âm
+            }
+        });
 
-    increment.addEventListener('click', () => {
-        let currentValue = parseInt(qtyInput.value);
-        qtyInput.value = currentValue + 1;
-    });
-</script>
+        increment.addEventListener('click', () => {
+            let currentValue = parseInt(qtyInput.value);
+            qtyInput.value = currentValue + 1;
+        });
+
+        qtyInput.addEventListener('input', () => {
+            let currentValue = parseInt(qtyInput.value);
+            if (isNaN(currentValue) || currentValue < 0) {
+                qtyInput.value = 0; // Nếu giá trị âm, đặt lại thành 0
+            }
+        });
+    </script>
 @endpush
