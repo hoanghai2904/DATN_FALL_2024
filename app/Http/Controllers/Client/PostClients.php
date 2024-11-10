@@ -12,14 +12,14 @@ class PostClients extends Controller
     public function index(Request $request)
     {
         $query = Posts::where('status', 2); // Thêm điều kiện where để lọc bài viết có status = 2
-        $allCate = PostCategory::all();
+        $postCate = PostCategory::all();
         $search = null;
         $search = $request->input('keywords');
         if ($search) {
             $query->where('title', 'like', '%'.$search.'%');
         }
         $list = $query->orderBy('id', 'DESC')->paginate(4)->withQueryString();
-        return view('Client.blog', compact('list', 'allCate'));
+        return view('Client.blog', compact('list', 'postCate'));
     }
 
     public function show(Request $request, $id)
@@ -33,19 +33,19 @@ class PostClients extends Controller
     
         $post = $query->find($id);
     
-        $allCate = PostCategory::orderBy("id", "desc")->get();
+        $postCate = PostCategory::orderBy("id", "desc")->get();
     
         if (!$post) {
             return redirect()->route('blog.index');
         }
     
-        return view('Client.blogDetail', compact('post', 'allCate'));
+        return view('Client.blogDetail', compact('post', 'postCate'));
     }
     
     public function ByCategory(Request $request, $id)
     {
         $category = PostCategory::find($id);
-        $allCate = PostCategory::all();
+        $postCate = PostCategory::all();
     
         if (!$category) {
             return redirect()->route('blog.index');
@@ -57,7 +57,8 @@ class PostClients extends Controller
         }
         $list = $query->orderBy('id', 'DESC')->paginate(6)->withQueryString();
     
-        return view('Client.blog', compact('list', 'allCate'));
+        return view('Client.blog', compact('list', 'postCate', 'category'));
+
     }
     
 }

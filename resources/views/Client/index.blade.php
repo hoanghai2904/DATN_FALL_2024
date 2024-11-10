@@ -163,13 +163,9 @@
                                             <a href="{{route('blog.index')}}">Tin tức <i class="fa fa-angle-down"></i></a>
                                             <!-- Sub Menu -->
                                             <ul class="sub-menu">
-                                                <li><a href="blog-grid-sidebar-left.html">Blog Grid Sidebar left</a></li>
-                                                <li><a href="blog-grid-sidebar-right.html">Blog Grid Sidebar Right</a></li>
-                                                <li><a href="blog-full-width.html">Blog Full Width</a></li>
-                                                <li><a href="blog-list-sidebar-left.html">Blog List Sidebar Left</a></li>
-                                                <li><a href="blog-list-sidebar-right.html">Blog List Sidebar Right</a></li>
-                                                <li><a href="blog-single-sidebar-left.html">Blog Single Sidebar left</a></li>
-                                                <li><a href="blog-single-sidebar-right.html">Blog Single Sidebar Right</a></li>
+                                                @foreach ($postCate as $key => $item)
+                                                <li ><a href="{{ route('blog.byCategory', $item->id) }}">{{$item->name}}</a></li>
+                                                @endforeach
                                             </ul>
                                         </li>
                                         <li class="has-dropdown">

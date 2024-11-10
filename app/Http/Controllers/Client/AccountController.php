@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyAccount;
+use App\Models\PostCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,9 @@ class AccountController extends Controller
 {
    public function login()
    {
-      return view('Client.Login');
+    $postCate = PostCategory::all();
+
+      return view('Client.Login',compact('postCate'));
    }
 
    public function Check_login(Request $request) 
@@ -66,7 +69,9 @@ class AccountController extends Controller
 
    public function rigester()
    {
-      return view('Client.Rigester');
+    $postCate = PostCategory::all();
+
+      return view('Client.Rigester',compact('postCate'));
    }
 
    public function Check_rigester(Request $request) {
@@ -142,8 +147,9 @@ class AccountController extends Controller
 
    public function profile()
    {
+    $postCate = PostCategory::all();
     $auth = auth()->user();
-      return view('Client.myAccount',compact('auth'));
+      return view('Client.myAccount',compact('auth','postCate'));
    }
 
    public function check_profile(Request $request) 
