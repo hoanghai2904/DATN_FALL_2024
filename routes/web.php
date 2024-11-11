@@ -44,6 +44,16 @@ Route::get('products', [ClientProductController::class, 'productsIndex'])->name(
 Route::get('/all-products/{category_id?}', [ClientProductController::class, 'showAllProducts'])->name('all-products');
 
 
+Route::post('/filter-products', [ClientProductController::class, 'filterByPrice'])->name('filter.products');
+
+
+
+
+
+
+
+
+
 
 
 
