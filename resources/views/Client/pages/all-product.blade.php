@@ -1,6 +1,29 @@
 @extends('Client.layout.master')
 @section('content')
     <!-- ...:::: Start Breadcrumb Section:::... -->
+    <style>
+        .empty-content {
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        .empty-content .icon {
+            font-size: 130px;
+            color: #f30;
+        }
+
+        .empty-content .title {
+            font-size: 36px;
+            color: #f30;
+            font-weight: 600;
+        }
+
+        .empty-content .content {
+            font-size: 20px;
+            color: #000;
+        }
+    </style>
+
     <div class="breadcrumb-section breadcrumb-bg-color--golden">
         <div class="breadcrumb-wrapper">
             <div class="container">
@@ -204,7 +227,7 @@
                                     <div class="tab-content tab-animate-zoom">
                                         <!-- Start Grid View Product -->
                                         <div class="tab-pane active show sort-layout-single" id="layout-3-grid">
-                                            <div class="row">
+                                            {{-- <div class="row">
                                                 @foreach ($products as $product)
                                                     <div class="col-xl-4 col-sm-6 col-12">
                                                         <!-- Start Product Default Single Item -->
@@ -275,6 +298,87 @@
                                                         <!-- End Product Default Single Item -->
                                                     </div>
                                                 @endforeach
+                                            </div> --}}
+                                            <div class="row">
+                                                @if ($products->isEmpty())
+                                                    <div class="empty-content">
+                                                        <div class="icon"><i class="fab fa-searchengin"></i></div>
+                                                        <div class="title">Oooops!</div>
+                                                        <div class="content">Không có sản phẩm</div>
+                                                    </div>
+                                                @else
+                                                    @foreach ($products as $product)
+                                                        <div class="col-xl-4 col-sm-6 col-12">
+                                                            <!-- Start Product Default Single Item -->
+                                                            <div class="product-default-single-item product-color--golden"
+                                                                data-aos="fade-up" data-aos-delay="0">
+                                                                <div class="image-box">
+                                                                    <a href="{{ route('product-detail', $product->slug) }}"
+                                                                        class="image-link">
+                                                                        <img src="{{ asset('storage/' . $product->thumbnail) }}"
+                                                                            alt="">
+                                                                        <img src="{{ asset('storage/' . $product->thumbnail) }}"
+                                                                            alt="">
+                                                                    </a>
+                                                                    <div class="action-link">
+                                                                        <div class="action-link-left">
+                                                                            <a href="#" data-bs-toggle="modal"
+                                                                                data-bs-target="#modalAddcart">Add to
+                                                                                Cart</a>
+                                                                        </div>
+                                                                        <div class="action-link-right">
+                                                                            <a href="#" data-bs-toggle="modal"
+                                                                                data-bs-target="#modalQuickview"><i
+                                                                                    class="icon-magnifier"></i></a>
+                                                                            <a href="wishlist.html"><i
+                                                                                    class="icon-heart"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="content">
+                                                                    <div class="content-left">
+                                                                        <h6 class="title"><a
+                                                                                href="{{ route('product-detail', $product->slug) }}">{{ $product->name }}</a>
+                                                                        </h6>
+                                                                        <ul class="review-star">
+                                                                            <li class="fill"><i
+                                                                                    class="ion-android-star"></i></li>
+                                                                            <li class="fill"><i
+                                                                                    class="ion-android-star"></i></li>
+                                                                            <li class="fill"><i
+                                                                                    class="ion-android-star"></i></li>
+                                                                            <li class="fill"><i
+                                                                                    class="ion-android-star"></i></li>
+                                                                            <li class="empty"><i
+                                                                                    class="ion-android-star"></i></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div class="content-right">
+                                                                        <span class="price">
+                                                                            @if ((float) $product->price_sale > 0)
+                                                                                <div>
+                                                                                    <div
+                                                                                        data-order="{{ $product->price_sale }}">
+                                                                                        {{ number_format((float) $product->price_sale, 0, ',', '.') }}₫
+                                                                                    </div>
+                                                                                    <del style="color: red"
+                                                                                        data-order="{{ $product->price }}">
+                                                                                        {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                                                    </del>
+                                                                                </div>
+                                                                            @else
+                                                                                <div data-order="{{ $product->price }}">
+                                                                                    {{ number_format((float) $product->price, 0, ',', '.') }}₫
+                                                                                </div>
+                                                                            @endif
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- End Product Default Single Item -->
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
 
                                             <!-- Start List View Product -->
