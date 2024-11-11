@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/venobox.min.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/jquery.lineProgressbar.css">
     <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/aos.min.css">
-    {{-- <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/plugins.min.css"> --}}
+    <link rel="stylesheet" href="{{ asset('assets') }}/css/plugins/plugins.min.css">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('assets') }}/css/style.css">
     <!-- Nhúng CSS cho toastr -->
@@ -42,10 +42,14 @@
 
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+<<<<<<< HEAD
     {{-- <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/vendor.min.css">
+=======
+     <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/vendor.min.css">
+>>>>>>> 80aa27bf32aa9f94d05dfbfc5350141e6fed76d8
     
     <link rel="stylesheet" href="{{ asset('assets') }}/css/style.min.css">
-  --}}
+ 
 </head>
 
 <body>
@@ -270,6 +274,7 @@
     </header>
 
 
+<<<<<<< HEAD
     <!--  Start Offcanvas Mobile Menu Section -->
     <div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
         <!-- Start Offcanvas Header -->
@@ -447,6 +452,9 @@
         </div>
         <!-- End Mobile contact Info -->
     </div> <!-- ...:::: End Offcanvas Mobile Menu Section:::... -->
+=======
+  
+>>>>>>> 80aa27bf32aa9f94d05dfbfc5350141e6fed76d8
 
     <!-- Start Offcanvas Addcart Section -->
     <div id="offcanvas-add-cart" class="offcanvas offcanvas-rightside offcanvas-add-cart-section">
@@ -1006,8 +1014,8 @@
     <script src="{{ asset('assets') }}/js/plugins/ajax-mail.js"></script>
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
-    {{-- <script src="{{ asset('assets') }}/js/vendor/vendor.min.js"></script>
-    <script src="{{ asset('assets') }}/js/plugins/plugins.min.js"></script>  --}}
+    <script src="{{ asset('assets') }}/js/vendor/vendor.min.js"></script>
+    <script src="{{ asset('assets') }}/js/plugins/plugins.min.js"></script> 
 
     <!-- Main JS -->
     <script src="{{ asset('assets') }}/js/main.js"></script>

@@ -4,8 +4,8 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col-xl-9">
+<div class="row ms-40">
+    <div class="col-xl-8">
         <div class="card">
             <div class="card-header">
                 <div class="d-flex align-items-center">
@@ -31,12 +31,10 @@
                     <table class="table table-nowrap align-middle table-borderless mb-0">
                         <thead class="table-light text-muted">
                             <tr>
-                                <th scope="col">Sản phẩm</th>
-                                <th scope="col">Đánh giá</th>
-                                <th scope="col" class="text-center">Giá sản phẩm</th>
-                                <th scope="col" class="text-center">Số lượng</th>
-                                
-                                <th scope="col" class="text-center">Tổng tiền</th>
+                                <th >Sản phẩm</th>
+                                <th  class="text-center">Giá sản phẩm</th>
+                                <th  class="text-center">Số lượng</th>
+                                <th  class="text-center">Tổng tiền</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,13 +65,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="text-warning fs-15">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <i class="ri-star{{ $i <= $item->rating ? '-fill' : '-line' }}"></i>
-                                            @endfor
-                                        </div>
-                                    </td>
+                                   
                                     <td class="text-center">{{ number_format($item->product->price) }}₫</td>
                                     <td class="text-center">{{ $item->qty }}</td>
                                    
@@ -123,7 +115,7 @@
 
     </div>
     <!--end col-->
-    <div class="col-xl-3">
+    <div class="col-xl-4">
         <div class="card">
             <div class="card-header">
                 <div class="d-flex">
