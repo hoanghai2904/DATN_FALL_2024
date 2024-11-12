@@ -51,7 +51,9 @@
                         </div>
                         <div class="desc-post">
                           <span><i class="fas fa-user"></i> Admin</span>
-                          <span><i class="fas fa-clock"></i> {{ date_format($post->created_at, 'd/m/Y') }}</span>
+                          <span><i class="fas fa-clock"></i> 
+                            {{ \Carbon\Carbon::parse($post->created_at)->locale('vi')->isoFormat('dddd-DD-Y') }}
+                        </span>                        
                         </div>
                       </div>
                     </div>
