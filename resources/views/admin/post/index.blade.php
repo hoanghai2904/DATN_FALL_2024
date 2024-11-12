@@ -109,7 +109,6 @@
                   <td>
                     <a class="text-left" href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">{{ $post->title }}</a>
                   </td>
-                  <td> fix </td>
                   <td>
                     <div dir="ltr" class="toggle-icon" data-id="{{ $post->id }}">
                         @if ($post->status == 0)
