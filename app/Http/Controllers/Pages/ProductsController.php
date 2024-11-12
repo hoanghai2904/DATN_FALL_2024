@@ -30,6 +30,13 @@ class ProductsController extends Controller
         $query->where('quantity', '>', 0);
       });
     }
+    // Lọc sản phẩm còn hàng
+    if($request->has('stock') && $request->input('stock') == 'in_stock') {
+      $query_products->whereHas('product_detail', function (Builder $query) {
+          $query->where('quantity', '>', 0);
+      });
+  }
+  // ///////////////////////////////
 
     $query_products->with(['product_detail' => function($query) {
       $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
