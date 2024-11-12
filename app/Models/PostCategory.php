@@ -14,9 +14,8 @@ class PostCategory extends Model
     protected $fillable = [
         'name',
         'status',
-        ' updated_at',
-        ' created_at'
-
+        'updated_at',
+        'created_at'
     ];
     public function posts() {
         return $this->hasMany(Posts::class, 'category_id');

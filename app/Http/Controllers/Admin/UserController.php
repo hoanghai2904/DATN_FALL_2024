@@ -2,436 +2,128 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\District;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\UserAddress;
-use App\Models\Ward;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+
+use App\Models\User;
+use App\Models\ProductVote;
+use App\Models\Order;
+use App\Mail\Admin\ActiveAccountMail;
 
 class UserController extends Controller
 {
-    
-    //list and search by phonn and email Customer---------------------------------------------------------
-    public function listCusstomer(Request $request) // Thêm Request vào tham số
-    {
-        // Lấy dữ liệu tìm kiếm từ form (email, số điện thoại, tên, và trạng thái)
-        $searchQuery = $request->input('query');
-        $status = $request->input('status'); // Giả sử bạn gửi trạng thái từ form tìm kiếm
-    
-        // Kiểm tra nếu có giá trị tìm kiếm
-        $listCustomer = User::doesntHave('roles')->where(function($query) use ($searchQuery, $status) {
-            if ($searchQuery) {
-                $query->where(function($q) use ($searchQuery) {
-                    $q->where('email', 'like', "%{$searchQuery}%")
-                      ->orWhere('phone', 'like', "%{$searchQuery}%")
-                      ->orWhere('full_name', 'like', "%{$searchQuery}%"); // Tìm kiếm theo tên
-                });
-            }
-    
-            // Kiểm tra trạng thái nếu có
-            if ($status) {
-                $query->where('status', $status); // Tìm kiếm theo trạng thái
-            }
-        })
-        ->paginate(7);
-    
-        return view('admin.user.listCusstomer', compact('listCustomer'));
+  public function index()
+  {
+    $users = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where('admin', '<>', true)->get();
+    return view('admin.user.index')->with('users', $users);
+  }
+
+  public function new(Request $request)
+  {
+    $rules = array(
+      'email' => array('required', 'regex:/^[a-z](\.?[a-z0-9]){5,}@gmail\.com$/', 'unique:users')
+    );
+    $messsages = array(
+      'email.required'  =>  'Email không được để trống!',
+      'email.regex'  =>  'Email không đúng định dạng!',
+      'email.unique'  =>  'Email đã tồn tại!'
+    );
+    $validator = Validator::make($request->all(), $rules, $messsages);
+    if ($validator->fails()) {
+
+      return response()->json($validator->messages(), 400);
+    } else {
+
+      $password = str::random(8);
+
+      $user = new User;
+      $user->name = 'New Account';
+      $user->email = $request->email;
+      $user->password = Hash::make($password);
+      $user->active_token = str::random(40);
+
+      $user->save();
+
+      $data['token'] = $user->active_token;
+      $data['password'] = $password;
+
+      Mail::to($user)->send(new ActiveAccountMail($data));
+
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Thêm tài khoản thành công!';
+
+      return response()->json($data, 200);
     }
-    
+  }
 
+  public function delete(Request $request)
+  {
+    $user = User::where([['id', $request->user_id],['active', false]])->first();
+    if(!$user) {
 
-    //delete
-    public function deleteCustomer($id)
-    {
-        $customer = User::find($id);
-        if ($customer) {
-            $customer->delete();
-            return response()->json(['success' => true]);
-        }
-        return response()->json(['success' => false]);
-    }
+      $data['type'] = 'error';
+      $data['title'] = 'Thất Bại';
+      $data['content'] = 'Bạn không thể xóa tài khoản đã kích hoạt hoặc tài khoản không tồn tại!';
+    } else {
 
-    //update status
-    public function updateStatus(Request $request, $id)
-    {
-        $customer = User::find($id);
+      $user->delete();
 
-        if ($customer) {
-            // Chuyển trạng thái dựa trên giá trị checkbox
-            $customer->status = $request->input('status') === 'active' ? 'active' : 'inactive';
-            $customer->save();
-            return response()->json(['success' => true, 'status' => $customer->status]);
-        }
-        return response()->json(['success' => false], 404);
-    }
-
-    
-
-    // user-----------------------------------------------------------------------------
-    public function listUser(Request $request)
-{
-    // Lấy ID của người dùng đang đăng nhập
-    $currentUserId = auth()->id();
-
-    // Khởi tạo truy vấn cho User với các vai trò, chỉ lấy những user có vai trò
-    $query = User::with('roles')->has('roles')->where('id', '!=', $currentUserId);
-
-     // Tìm kiếm theo trạng thái và vai trò nếu có
-     if ($request->has('status') && $request->status != '') {
-        $query->where('status', $request->status);
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Xóa tài khoản thành công!';
     }
 
-    if ($request->has('role_id') && $request->role_id != '') {
-        $query->whereHas('roles', function ($q) use ($request) {
-            $q->where('roles.id', $request->role_id);
-        });
-    }
+    return response()->json($data, 200);
+  }
 
-    if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('email', 'like', "%{$search}%")
-                ->orWhere('phone', 'like', "%{$search}%");
-        });
-    }
+  public function show($id)
+  {
+    $user = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['admin', false]])->first();
+    if(!$user) abort(404);
+    $product_votes = ProductVote::where('user_id', $user->id)->with(['product' => function($query) {
+      $query->select('id', 'name', 'image');
+    }])->latest()->get();
 
-    // Phân trang kết quả
-    $employees = $query->paginate(7);
-    $roles = Role::all();
-
-    // Truyền employees đến view
-    return view('admin.user.listUser', compact('employees', 'roles'));
-}
-
-
-    // add user and roles
-    public function addUser(Request $request)
-    {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|min:10|max:10|unique:users',
-            'password' => 'required|string|min:5',
-            'birthday' => 'nullable|date',
-            'roles' => 'required|array',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'full_name.required' => 'Vui lòng nhập tên đầy đủ.',
-            'full_name.min' => 'Tên đầy đủ phải có ít nhất 6 ký tự.',
-            'full_name.max' => 'Tên đầy đủ không được vượt quá 100 ký tự.',
-            'cover.image' => 'Hãy chọn một tệp hình ảnh hợp lệ.',
-            'cover.mimes' => 'Hãy chọn tệp hình ảnh có định dạng jpeg, png, jpg, gif hoặc svg.',
-            'cover.max' => 'Kích thước tệp hình ảnh không được vượt quá 2MB.',
-            'phone.required' => 'Vui lòng nhập số điện thoại.',
-            'phone.regex' => 'Số điện thoại không hợp lệ.',
-            'phone.min' => 'Số điện thoại phải có ít nhất 10 ký tự.',
-            'phone.max' => 'Số điện thoại không được vượt quá 10 ký tự.',
-            'phone.unique' => 'Số điện thoại này đã được sử dụng.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu phải có ít nhất 5 ký tự.',
-            'password.max' => 'Mật khẩu không được vượt quá 20 ký tự.',
-            'email.required' => 'Vui lòng nhập địa chỉ email.',
-            'email.email' => 'Địa chỉ email không hợp lệ.',
-            'email.unique' => 'Email này đã được sử dụng.',
-
-        ]);
-
-        try {
-            // Tạo người dùng mới
-            $user = User::create([
-                'full_name' => $request->full_name, // Sửa từ 'name' thành 'full_name'
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'birthday' => $request->birthday, // Sửa từ 'dob' thành 'birthday'
-                'password' => Hash::make($request->password), // Sử dụng Hash::make
-                'cover' => $request->file('avatar') ? $request->file('avatar')->store('avatars', 'public') : null, // Sửa từ 'avatar' thành 'cover'
+    $orders = Order::where('user_id', $user->id)->with([
+      'payment_method' => function($query) {
+        $query->select('id', 'name');
+      },
+      'order_details' => function($query) {
+        $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+        ->with([
+          'product_detail' => function ($query) {
+            $query->select('id', 'product_id', 'color')
+            ->with([
+              'product' => function ($query) {
+                $query->select('id', 'name', 'image', 'sku_code');
+              }
             ]);
-
-            // Gán vai trò cho người dùng
-            $user->roles()->sync($request->roles);
-
-            return response()->json(['success' => true, 'message' => 'User added successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'User creation failed: ' . $e->getMessage()]); // Thêm chi tiết lỗi
-        }
-    }
-
-    // show user
-    public function showUser($id)
-    {
-        try {
-            $user = User::with('roles')->findOrFail($id); // Lấy người dùng cùng với vai trò
-            return response()->json($user); // Trả về JSON
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'User not found.'], 404); // Trả về lỗi 404 nếu người dùng không tồn tại
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred.'], 500); // Trả về lỗi 500 cho các trường hợp khác
-        }
-    }
-    //update user
-    public function updateUser(Request $request, $id)
-    {
-        // Validation rules tương tự như addUser nhưng không bắt buộc email và phone phải là unique (trừ khi chúng thay đổi)
-        $request->validate([
-            'full_name' => 'required|string|max:50',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id . ',id',
-            'phone' => 'required|string|min:10|max:10|unique:users,phone,' . $id . ',id',
-            'birthday' => 'nullable|date',
-            'roles' => 'required|array',
-            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'full_name.required' => 'Vui lòng nhập tên đầy đủ.',
-            'full_name.max' => 'Tên đầy đủ không được vượt quá 50 ký tự.',
-            'phone.required' => 'Vui lòng nhập số điện thoại.',
-            'phone.unique' => 'Số điện thoại này đã được sử dụng.',
-            'email.required' => 'Vui lòng nhập địa chỉ email.',
-            'email.unique' => 'Email này đã được sử dụng.',
-            'cover.image' => 'Hãy chọn một tệp hình ảnh hợp lệ.',
-            'cover.mimes' => 'Hãy chọn tệp hình ảnh có định dạng jpeg, png, jpg, hoặc gif.',
-            'cover.max' => 'Kích thước tệp hình ảnh không được vượt quá 2MB.',
+          }
         ]);
+      }
+    ])->latest()->get();
+    return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders]);
+  }
 
-        try {
-            // Tìm user theo ID
-            $user = User::findOrFail($id);
+  public function send($id)
+  {
+    $user = User::where([['id', $id], ['active', false], ['admin', false]])->first();
+    if(!$user) abort(404);
 
-            // Cập nhật thông tin user
-            $user->full_name = $request->full_name;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->birthday = $request->birthday;
+    $data['token'] = $user->active_token;
+    $data['password'] = null;
 
-            // Nếu có hình đại diện mới, cập nhật cover
-            if ($request->hasFile('cover')) { // Thay đổi từ 'avatar' thành 'cover'
-                // Xóa avatar cũ nếu có
-                if ($user->cover) {
-                    Storage::disk('public')->delete($user->cover);
-                }
-                // Lưu ảnh mới
-                $user->cover = $request->file('cover')->store('avatars', 'public'); // Đảm bảo sử dụng 'cover'
-            }
+    Mail::to($user)->send(new ActiveAccountMail($data));
 
-            // Lưu user
-            $user->save();
-
-            // Cập nhật vai trò của user
-            $user->roles()->sync($request->roles);
-
-            return response()->json(['success' => true, 'message' => 'User updated successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'User update failed: ' . $e->getMessage()]);
-        }
-    }
-
-    // delete user
-    public function destroyUser($id)
-    {
-        $user = User::with('roles')->findOrFail($id); // Tải người dùng cùng với vai trò
-        // Xóa vai trò của người dùng
-        $user->roles()->detach(); // Xóa tất cả vai trò của người dùng
-        // Xóa người dùng
-        $user->delete();
-        return response()->json(['success' => true, 'message' => 'User and roles deleted successfully.']);
-    }
-    
-    //role-------------------------------------------------------------------------------
-    public function listRole(Request $request) // Thêm Request vào tham số
-    {
-        // Khởi tạo truy vấn cho Role với permissions
-        $query = Role::with('permissions')->has('permissions');
-
-        // Tìm kiếm theo vai trò
-        if ($request->has('query') && $request->input('query') !== '') {
-            $query->where('name', 'like', '%' . $request->input('query') . '%');
-        }
-
-        // Tìm kiếm theo trạng thái
-        if ($request->has('status') && $request->input('status') !== '') {
-            $query->where('status', $request->input('status'));
-        }
-
-        // Phân trang kết quả
-        $roles = $query->paginate(7);
-
-        // Lấy tất cả quyền
-        $permissions = Permission::all();
-
-        // Truyền cả roles và permissions đến view
-        return view('admin.user.roleUser', compact('roles', 'permissions'));
-    }
-
-    // tạo mới role
-    public function store(Request $request)
-    {
-        // Validate các trường đầu vào
-        $request->validate([
-            'role_name' => [
-                'required',
-                'max:50',
-                Rule::unique('roles', 'name')->whereNull('deleted_at'),
-            ],
-            'permission_name' => 'nullable|unique:permissions,name|max:50',
-            'permissions' => 'required|array',
-        ], [
-            'role_name.required' => 'Vui lòng nhập tên vai trò.',
-            'role_name.unique' => 'Tên vai trò này đã được sử dụng.',
-            'role_name.max' => 'Tên vai trò không được vượt quá 50 ký tự.',
-            'permission_name.unique' => 'Tên quyền này đã được sử dụng.',
-            'permission_name.max' => 'Tên quyền không được vượt quá 50 ký tự.',
-            'permissions.required' => 'Vui lòng chọn ít nhất một quyền.',
-        ]);
-
-        // Kiểm tra xem vai trò đã bị xóa mềm có tồn tại không
-        $existingRole = Role::withTrashed()->where('name', $request->role_name)->first();
-
-        if ($existingRole) {
-            // Khôi phục vai trò đã xóa mềm
-            $existingRole->restore();
-            // Cập nhật các quyền cho vai trò đã khôi phục
-            $existingRole->permissions()->sync($request->permissions);
-        } else {
-            // Tạo vai trò mới
-            $role = Role::create(['name' => $request->role_name]);
-
-            // Tạo mới quyền (nếu có)
-            if ($request->permission_name) {
-                $permission = Permission::create(['name' => $request->permission_name]);
-                $role->permissions()->attach($permission->id);
-            }
-
-            // Gán các quyền đã chọn vào vai trò
-            $role->permissions()->attach($request->permissions);
-        }
-
-        return redirect()->route('admin.listRole')->with('success', 'Thêm vai trò và quyền thành công!');
-    }
-    // xóa role
-    public function deleteRole($id)
-    {
-        $role = Role::findOrFail($id); // Tìm vai trò theo ID, nếu không có sẽ trả về lỗi
-        if ($role) {
-            $role->permissions()->detach();
-            $role->delete();
-            // Trả về phản hồi thành công
-            return response()->json(['success' => true]);
-        }
-        return response()->json(['success' => false]);
-    }
-
-    // update status role
-    public function updateStatusRole(Request $request, $id)
-    {
-        $role = Role::find($id);
-
-        if ($role) {
-            // Chuyển trạng thái dựa trên giá trị checkbox
-            $role->status = $request->input('status') === 'active' ? 'active' : 'inactive';
-            $role->save();
-            return response()->json(['success' => true, 'status' => $role->status]);
-        }
-        return response()->json(['success' => false], 404);
-    }
-
-    // edit
-    public function edit($id)
-    {
-        $role = Role::with('permissions')->findOrFail($id); // Lấy vai trò theo ID
-        $allPermissions = Permission::all(); // Lấy tất cả quyền
-
-        return response()->json([
-            'role' => $role,
-            'all_permissions' => $allPermissions,
-            'permissions' => $role->permissions->pluck('id')->toArray() // Chỉ lấy ID của các quyền
-        ]);
-    }
-
-    // update
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'permissions' => 'required|array', // Bắt buộc phải chọn quyền
-        ]);
-
-        $role = Role::findOrFail($id);
-        // Gán quyền mới cho vai trò
-        $role->permissions()->sync($request->permissions); // Cập nhật quyền
-
-        return response()->json(['message' => 'Cập nhật quyền thành công!']);
-    }
-
-    //address-------------------------------------------------------------------------------
-   
-    
-    public function getAddresses($userId)
-    {
-        $user = User::findOrFail($userId);
-        $addresses = $user->addresses()->get();
-    
-        // Xử lý đường dẫn avatar
-        $avatar = $user->cover 
-            ? asset("storage/{$user->cover}")  // Sửa cú pháp chuỗi
-            : asset('theme/admin/assets/images/users/user-dummy-img.jpg');
-    
-        return response()->json([
-            'user' => [
-                'name' => $user->full_name,
-                'avatar' => $avatar,
-            ],
-            'address' => $addresses, // Kiểm tra xem có dữ liệu không
-        ]);
-    }
-    
-    
- 
-
- public function getDistricts($provinceId)
- {
-     $districts = District::where('province_id', $provinceId)->get();
-     return response()->json($districts);
- }
-
- public function getWards($districtId)
-{
-    $wards = Ward::where('district_id', $districtId)->get(); // Lấy phường/xã theo district_id
-    return response()->json($wards);
-}
-
-
-public function storeadd(Request $request)
-{
-    $request->validate([
-        'province_id' => 'required|exists:provinces,id',
-        'district_id' => 'required|exists:districts,id',
-        'ward_id' => 'required|exists:wards,id',
-        'address_detail' => 'required|string|max:255',
-    ], [
-        'province_id.required' => 'Vui lòng chọn tỉnh/thành phố.',
-        'province_id.exists' => 'Tỉnh/thành phố không tồn tại.',
-        'district_id.required' => 'Vui lòng chọn quận/huyện.',
-        'district_id.exists' => 'Quận/huyện không tồn tại.',
-        'ward_id.required' => 'Vui lòng chọn phường/xã.',
-        'ward_id.exists' => 'Phường/xã không tồn tại.',
-        'address_detail.required' => 'Vui lòng nhập địa chỉ chi tiết.',
-        'address_detail.string' => 'Địa chỉ chi tiết phải là một chuỗi ký tự.',
-        'address_detail.max' => 'Địa chỉ chi tiết không được vượt quá 255 ký tự.',
-    ]);
-
-    UserAddress::create([
-        'user_id' => auth()->id(),  // Lấy ID của user đã đăng nhập
-        'province_id' => $request->province_id,
-        'district_id' => $request->district_id,
-        'ward_id' => $request->ward_id,
-        'address' => $request->address_detail,
-    ]);
-
-    return response()->json(['message' => 'Địa chỉ đã được thêm thành công']);
-}
-    
+    return back()->with(['alert' => [
+      'type' => 'success',
+      'title' => 'Thành Công',
+      'content' => 'Gửi email kích hoạt tài khoản thành công.'
+    ]]);
+  }
 }

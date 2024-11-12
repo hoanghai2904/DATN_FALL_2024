@@ -1,314 +1,632 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\Tag;
-use App\Models\VariantType;
-use App\Models\VariantValue;
-use App\Models\ProductGallery;
-use App\Models\Brands;
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+
+use App\Models\Product;
+use App\Models\Producer;
+use App\Models\Promotion;
+use App\Models\ProductDetail;
+use App\Models\ProductImage;
+use App\Models\OrderDetail;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
-    {
-        $query = Product::query();
-        $categories = Category::all();
-        $brands = Brands::all();
+  public function index()
+  {
+    $products = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'rate', 'created_at')
+    ->whereHas('product_details', function (Builder $query) {
+      $query->where('import_quantity', '>', 0);
+    })
+    ->with([
+      'producer' => function ($query) {
+        $query->select('id', 'name');
+      }
+    ])
+    ->withCount([
+    'product_details' => function (Builder $query) {
+        $query->where([['import_quantity', '>', 0], ['quantity', '>', 0]]);
+      }
+    ])->latest()->get();
+    return view('admin.product.index')->with('products', $products);
+  }
 
-        if ($request->has('categories') && !empty($request->categories)) {
-            $query->whereIn('category_id', $request->categories);
+  public function delete(Request $request)
+  {
+    $product = Product::whereHas('product_details', function (Builder $query) {
+      $query->where('import_quantity', '>', 0);
+    })->where('id', $request->product_id)->first();
+
+    if(!$product) {
+
+      $data['type'] = 'error';
+      $data['title'] = 'Thất Bại';
+      $data['content'] = 'Bạn không thể xóa sản phẩm không tồn tại!';
+    } else {
+
+      $can_delete = 1;
+      $product_details = $product->product_details;
+      foreach($product_details as $product_detail) {
+        if($product_detail->import_quantity == 0 || $product_detail->import_quantity != $product_detail->quantity) {
+          $can_delete = 0;
+          break;
         }
+      }
 
-        if ($request->has('brands') && !empty($request->brands)) {
-            $query->where('brand_id', $request->brands);
+      if($can_delete) {
+
+        foreach($product_details as $product_detail) {
+          foreach($product_detail->product_images as $image) {
+            Storage::disk('public')->delete('images/products/' . $image->image_name);
+            $image->delete();
+          }
+          $product_detail->delete();
         }
-
-        // if ($request->has('search') && !empty($request->search)) {
-        //     $query->where('name', 'like', '%' . $request->search . '%');
-        // }
-        $products = $query->paginate(8);
-
-        // dd($products);
-        return view('admin.products.index', compact('products', 'categories', 'brands'));
-    }
-
-    public function create()
-    {
-        $categories = Category::all();
-        $brands = Brands::all();
-        $tags = Tag::all();
-        $variantTypes = VariantType::all();
-
-        // dd($variants);
-
-        return view('admin.products.create', compact(
-            'categories',
-            'brands',
-            'variantTypes',
-            'tags',
-        ));
-    }
-
-    public function getVariantValue(Request $request)
-    {
-        // dd($request->id);
-        $variantValue = VariantValue::where('variant_type_id', $request->id)->get();
-        return $variantValue;
-    }
-
-    public function store(Request $request)
-    {
-        // dd($request->all());
-        // Xác thực dữ liệu nếu cần
-        $productValidate = $request->validate([
-            'thumbnail' => ['image', 'required', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
-            'name' => ['required'],
-            'categories' => ['required'],
-            'brands' => ['required'],
-            'sku' => ['nullable', 'unique:products'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'price_sale' => ['nullable', 'numeric', 'min:0'],
-            'qty' => ['required'],
-            'description' => ['required', 'max:500'],
-            'content' => ['nullable'],
-            'status' => ['required'],
-            'quantities.*' => 'nullable|integer|min:0', // Xác thực số lượng
-            'prices.*' => 'nullable|numeric|min:0', // Xác thực giá
-            'tags' => ['nullable', 'array'],
-        ],
-        [
-            'thumbnail.image' => 'Ảnh phải là một tệp hình ảnh.',
-            'thumbnail.required' => 'Ảnh đại diện không được để trống.',
-            'thumbnail.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, svg, hoặc webp.',
-            'thumbnail.max' => 'Dung lượng ảnh không được vượt quá 2048KB.',
-            'name.required' => 'Tên sản phẩm không được để trống.',
-            'categories.required' => 'Danh mục không được để trống.',
-            'brands.required' => 'Thương hiệu không được để trống.',
-            'sku.unique' => 'Mã SKU đã tồn tại.',
-            'price.required' => 'Giá sản phẩm không được để trống.',
-            'price.numeric' => 'Giá sản phẩm phải là số.',
-            'price.min' => 'Giá sản phẩm không được nhỏ hơn 0.',
-            'price_sale.numeric' => 'Giá khuyến mãi phải là số.',
-            'price_sale.min' => 'Giá khuyến mãi không được nhỏ hơn 0.',
-            'qty.required' => 'Số lượng sản phẩm không được để trống.',
-            'description.required' => 'Mô tả sản phẩm không được để trống.',
-            'description.max' => 'Mô tả sản phẩm không được vượt quá 500 ký tự.',
-            'status.required' => 'Trạng thái không được để trống.',
-            'quantities.*.integer' => 'Số lượng phải là số nguyên.',
-            'quantities.*.min' => 'Số lượng không được nhỏ hơn 0.',
-            'prices.*.numeric' => 'Giá phải là số.',
-            'prices.*.min' => 'Giá không được nhỏ hơn 0.',
-        ]);
-
-        $path = null;
-        if ($request->hasFile('thumbnail')) {
-            $rename = slug($request->name);
-            $image = $request->file('thumbnail');
-            $newImage = $rename . '_' . time() . '_' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('uploads/products', $newImage, 'public');
+        foreach ($product->promotions as $promotion) {
+          $promotion->delete();
         }
-
-
-        $price_sale = $request->has('price_sale') ? $request->price_sale : null;
-
-        $product = Product::create([
-            'name' => $productValidate['name'],
-            'slug' => slug($productValidate['name']),
-            'sku' => $productValidate['sku'],
-            'thumbnail' => $path,
-            'description' => $productValidate['description'],
-            'content' => $productValidate['content'],
-            'price' => $productValidate['price'],
-            'price_sale' => $price_sale,
-            'qty' => $productValidate['qty'], // Thêm qty
-            'status' => $productValidate['status'], // Thêm status
-            'category_id' => $productValidate['categories'],
-            'brand_id' => $productValidate['brands'],
-        ]);
-
-        if ($request->has('tags')) {
-            foreach ($request->tags as $tag) {
-                //attach() trong Laravel dùng để gắn một bản ghi vào bảng trung gian. Nó sẽ thêm một dòng mới vào bảng product_tag, bao gồm product_id và tag_id
-                $product->tags()->attach($tag);
-            }
+        foreach ($product->product_votes as $product_vote) {
+          $product_vote->delete();
         }
-
-        if ($request->hasFile('galleries')) {
-            $productPrefix = slug($product->name);
-            $index = 1;
-            foreach ($request->file('galleries') as $gallery) {
-                $newImage = $productPrefix . '_' . $index . '_' . uniqid() . '.' . $gallery->getClientOriginalExtension();
-                $path = $gallery->storeAs('uploads/products/galleries', $newImage, 'public');
-
-                $productGallery = new ProductGallery();
-                $productGallery->product_id = $product->id;
-                $productGallery->image = $path;
-                $productGallery->name = $newImage;
-
-                $productGallery->save();
-                $index++;
-            }
-        }
-
-        $variant_types = $request->input('variant_types', []); // Đảm bảo là mảng, mặc định rỗng nếu null
-        $variant_values = $request->input('variant_values', []);
-        $quantities = $request->input('quantities', []);
-        $prices = $request->input('prices', []);
-
-        $variants = [];
-
-        // Kiểm tra xem có bất kỳ loại biến thể hoặc giá trị biến thể nào không
-        if (!empty($variant_types) && !empty($variant_values)) {
-            // Xử lý vòng lặp để lấy đúng thông tin
-            foreach ($variant_types as $typeIndex => $variant_type_id) {
-                foreach ($variant_values as $valueIndex => $variant_value_id) {
-                    // Tính chỉ số tương ứng cho số lượng và giá
-                    $qtyIndex = $typeIndex * count($variant_values) + $valueIndex;
-                    $priceIndex = $typeIndex * count($variant_values) + $valueIndex;
-
-                    // Kiểm tra xem chỉ số tồn tại
-                    if (isset($quantities[$qtyIndex]) && isset($prices[$priceIndex])) {
-                        $qty = $quantities[$qtyIndex];
-                        $price = str_replace(',', '', $prices[$priceIndex]); // Loại bỏ dấu phẩy nếu có trong giá
-
-                        $variants[] = [
-                            'product_id' => $product->id,
-                            'variant_type_id' => $variant_type_id,
-                            'variant_value_id' => $variant_value_id,
-                            'qty' => $qty,
-                            'price' => $price,
-                        ];
-                    }
-                }
-            }
-        }
-
-
-        // Lưu vào DB
-        foreach ($variants as $variant) {
-            // Lưu từng variant vào DB
-            ProductVariant::create($variant);
-        }
-
-        return redirect()->route('admin.products.index')->with('success', 'Đã thêm sản phẩm thành công!');
-    }
-
-    public function show($id)
-    {
-        $product = Product::with(['variants.variantType','variants.variantValue','category','brand','tags','galleries']) ->findOrFail($id);
-        // dd($product->variants);
-        $variantTypes = $product->variants->groupBy('variantType.name');
-        // dd($productVariant);
-        return view('admin.products.show',compact('product','variantTypes'));
-    }
-
-    public function edit($id)
-    {
-        $product = Product::with(['variants.variantType', 'variants.variantValue'])->findOrFail($id);
-        $categories = Category::all();
-        $brands = Brands::all();
-        $tags = Tag::all();
-        // Truy vấn sản phẩm theo ID
-        // dd($product);
-        return view('admin.products.edit', compact('product', 'categories', 'brands', 'tags'));
-    }
-    public function update(Request $request, $id)
-    {
-        // Lấy sản phẩm theo ID
-        $product = Product::findOrFail($id);
-
-        // dd($request->all());
-        // Cập nhật thông tin chung của sản phẩm
-        $product->name = $request->input('name');
-        $product->sku = $request->input('sku');
-        $product->price = str_replace('.', '', $request->input('price')); // Loại bỏ dấu phẩy
-        $product->price_sale = str_replace('.', '', $request->input('price_sale')); // Loại bỏ dấu phẩy
-        $product->qty = $request->input('qty');
-        $product->status = $request->input('status');
-        $product->content = $request->input('content');
-        $product->description = $request->input('description');
-        $product->category_id = $request->input('categories');
-        $product->brand_id = $request->input('brands');
-
-        // Cập nhật ảnh đại diện nếu có thay đổi
-        if ($request->hasFile('thumbnail')) {
-            // Xóa ảnh cũ nếu có
-            if ($product->thumbnail && Storage::exists($product->thumbnail)) {
-                Storage::delete($product->thumbnail);
-            }
-
-            // Lưu ảnh mới
-            $thumbnailPath = $request->file('thumbnail')->store('/uploads/products', 'public');
-            $product->thumbnail = $thumbnailPath;
-        }
-
-        // Cập nhật các thẻ (tags)
-        $product->tags()->sync($request->input('tags', []));
-
-        // Lưu sản phẩm
-        $product->save();
-
-        // Xử lý cập nhật biến thể (variants)
-        $variantQuantities = $request->input('quantities', []);
-        $variantPrices = $request->input('prices', []);
-
-        foreach ($product->variants as $key => $variant) {
-            if (isset($variantQuantities[$key]) && isset($variantPrices[$key])) {
-                // Cập nhật số lượng và giá của từng biến thể nếu tồn tại
-                $variant->qty = (int) $variantQuantities[$key]; // Chuyển đổi thành số nguyên
-                $variant->price = (float) str_replace(',', '', $variantPrices[$key]); // Loại bỏ dấu phẩy và chuyển thành số thực
-                $variant->save();
-            }
-        }
-
-
-        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
-    }
-
-
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
         $product->delete();
-        return response(['status' => 'success', 'Xóa thành công!']);
+      } else {
+        foreach($product_details as $product_detail) {
+          if($product_detail->import_quantity > 0 && $product_detail->import_quantity == $product_detail->quantity) {
+
+            foreach($product_detail->product_images as $image) {
+              Storage::disk('public')->delete('images/products/' . $image->image_name);
+              $image->delete();
+            }
+            $product_detail->delete();
+          } else {
+
+            $product_detail->import_quantity = 0;
+            $product_detail->quantity = 0;
+            $product_detail->save();
+          }
+        }
+        foreach ($product->promotions as $promotion) {
+          $promotion->delete();
+        }
+      }
+
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Xóa sản phẩm thành công!';
     }
-//     public function deleteGallery($id)
-// {
 
-//     // Tìm ảnh theo ID
-//     $gallery = ProductGallery::find($id);
-//     // dd($gallery);
-//     if ($gallery) {
-//         // Xóa ảnh khỏi file storage
-//         if (Storage::exists($gallery->image)) {
-//             Storage::delete($gallery->image);
-//         }
+    return response()->json($data, 200);
+  }
 
-//         // Xóa ảnh khỏi cơ sở dữ liệu
-//         $gallery->delete();
+  public function new(Request $request)
+  {
+    $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
+    return view('admin.product.new')->with('producers', $producers);
+  }
 
-//         return response()->json(['success' => true, 'message' => 'Xóa ảnh thành công.']);
-//     }
+  public function save(Request $request)
+  {
+    $product = new Product;
 
-//     return response()->json(['success' => false, 'message' => 'Image not found.'], 404);
-// }
+    if($request->information_details != null) {
+      //Xử lý Ảnh trong nội dung
+      $information_details = $request->information_details;
 
+      $dom = new \DomDocument();
 
-    public function changeStatus(Request $request)
-    {
-        // dd($request->id);
-        $product = Product::findOrFail($request->id);
-        // dd($product);
-        $product->status = $request->status == 'true' ? 1 : 0;
-        $product->save();
+      // conver utf-8 to html entities
+      $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
 
-        return response(['message' => 'Cập nhật trạng thái thành công!']);
+      $dom->loadHtml($information_details, LIBXML_HTML_NODEFDTD);
+
+      $images = $dom->getElementsByTagName('img');
+
+      foreach($images as $k => $img){
+
+          $data = $img->getAttribute('src');
+
+          if(Str::containsAll($data, ['data:image', 'base64'])){
+
+              list(, $type) = explode('data:image/', $data);
+              list($type, ) = explode(';base64,', $type);
+
+              list(, $data) = explode(';base64,', $data);
+
+              $data = base64_decode($data);
+
+              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
+
+              Storage::disk('public')->put('images/posts/'.$image_name, $data);
+
+              $img->removeAttribute('src');
+              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
+          }
+      }
+
+      $information_details = $dom->saveHTML();
+
+      //conver html-entities to utf-8
+      $information_details = mb_convert_encoding($information_details, "UTF-8", 'HTML-ENTITIES');
+
+      //get content
+      list(, $information_details) = explode('<html><body>', $information_details);
+      list($information_details, ) = explode('</body></html>', $information_details);
+
+      $product->information_details = $information_details;
     }
+    if($request->product_introduction != null) {
+      //Xử lý Ảnh trong nội dung
+      $product_introduction = $request->product_introduction;
+
+      $dom = new \DomDocument();
+
+      // conver utf-8 to html entities
+      $product_introduction = mb_convert_encoding($product_introduction, 'HTML-ENTITIES', "UTF-8");
+
+      $dom->loadHtml($product_introduction, LIBXML_HTML_NODEFDTD);
+
+      $images = $dom->getElementsByTagName('img');
+
+      foreach($images as $k => $img){
+
+          $data = $img->getAttribute('src');
+
+          if(Str::containsAll($data, ['data:image', 'base64'])){
+
+              list(, $type) = explode('data:image/', $data);
+              list($type, ) = explode(';base64,', $type);
+
+              list(, $data) = explode(';base64,', $data);
+
+              $data = base64_decode($data);
+
+              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
+
+              Storage::disk('public')->put('images/posts/'.$image_name, $data);
+
+              $img->removeAttribute('src');
+              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
+          }
+      }
+
+      $product_introduction = $dom->saveHTML();
+
+      //conver html-entities to utf-8
+      $product_introduction = mb_convert_encoding($product_introduction, "UTF-8", 'HTML-ENTITIES');
+
+      //get content
+      list(, $product_introduction) = explode('<html><body>', $product_introduction);
+      list($product_introduction, ) = explode('</body></html>', $product_introduction);
+
+      $product->product_introduction = $product_introduction;
+    }
+
+    $product->name = $request->name;
+    $product->producer_id = $request->producer_id;
+    $product->sku_code = $request->sku_code;
+    $product->rate = 5.0;
+
+    if($request->hasFile('image')){
+      $image = $request->file('image');
+      $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+      $image->storeAs('images/products',$image_name,'public');
+      $product->image = $image_name;
+    }
+
+    $product->save();
+
+    if ($request->has('product_promotions')) {
+      foreach ($request->product_promotions as $product_promotion) {
+        $promotion = new Promotion;
+        $promotion->product_id = $product->id;
+        $promotion->content = $product_promotion['content'];
+
+        //Xử lý ngày bắt đầu, ngày kết thúc
+        list($start_date, $end_date) = explode(' - ', $product_promotion['promotion_date']);
+
+        $start_date = str_replace('/', '-', $start_date);
+        $start_date = date('Y-m-d', strtotime($start_date));
+
+        $end_date = str_replace('/', '-', $end_date);
+        $end_date = date('Y-m-d', strtotime($end_date));
+
+        $promotion->start_date = $start_date;
+        $promotion->end_date = $end_date;
+
+        $promotion->save();
+      }
+    }
+
+    if ($request->has('product_details')) {
+      foreach ($request->product_details as $key => $product_detail) {
+        $new_product_detail = new ProductDetail;
+        $new_product_detail->product_id = $product->id;
+        $new_product_detail->color = $product_detail['color'];
+        $new_product_detail->import_quantity = $product_detail['quantity'];
+        $new_product_detail->quantity = $product_detail['quantity'];
+        $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
+        $new_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+        if($product_detail['promotion_price'] != null) {
+          $new_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+        }
+        if($product_detail['promotion_date'] != null) {
+          //Xử lý ngày bắt đầu, ngày kết thúc
+          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+
+          $start_date = str_replace('/', '-', $start_date);
+          $start_date = date('Y-m-d', strtotime($start_date));
+
+          $end_date = str_replace('/', '-', $end_date);
+          $end_date = date('Y-m-d', strtotime($end_date));
+
+          $new_product_detail->promotion_start_date = $start_date;
+          $new_product_detail->promotion_end_date = $end_date;
+        }
+
+        $new_product_detail->save();
+
+        foreach ($request->file('product_details')[$key]['images'] as $image) {
+          $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+          $image->storeAs('images/products',$image_name,'public');
+
+          $new_image = new ProductImage;
+          $new_image->product_detail_id = $new_product_detail->id;
+          $new_image->image_name = $image_name;
+
+          $new_image->save();
+        }
+      }
+    }
+
+    return redirect()->route('admin.product.index')->with(['alert' => [
+      'type' => 'success',
+      'title' => 'Thành Công',
+      'content' => 'Thêm sản phẩm thành công.'
+    ]]);
+  }
+
+  public function edit($id)
+  {
+    $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
+    $product = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'information_details', 'product_introduction')
+    ->whereHas('product_details', function (Builder $query) {
+      $query->where('import_quantity', '>', 0);
+    })->where('id', $id)->with([
+      'promotions' => function ($query) {
+        $query->select('id', 'product_id', 'content', 'start_date', 'end_date');
+      },
+      'product_details' => function ($query) {
+        $query->select('id', 'product_id', 'color', 'import_quantity', 'import_price', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('import_quantity', '>', 0)
+        ->with([
+          'product_images' => function ($query) {
+            $query->select('id', 'product_detail_id', 'image_name');
+          },
+          'order_details' => function ($query) {
+            $query->select('id', 'product_detail_id', 'quantity');
+          }
+        ]);
+      }
+    ])->first();
+    if(!$product) abort(404);
+    return view('admin.product.edit')->with(['product' => $product, 'producers' =>$producers]);
+  }
+
+  public function update(Request $request, $id) {
+
+    $product = Product::whereHas('product_details', function (Builder $query) {
+      $query->where('import_quantity', '>', 0);
+    })->where('id', $id)->first();
+    if(!$product) abort(404);
+
+    if($request->information_details != null) {
+      //Xử lý Ảnh trong nội dung
+      $information_details = $request->information_details;
+
+      $dom = new \DomDocument();
+
+      // conver utf-8 to html entities
+      $information_details = mb_convert_encoding($information_details, 'HTML-ENTITIES', "UTF-8");
+
+      $dom->loadHtml($information_details, LIBXML_HTML_NODEFDTD);
+
+      $images = $dom->getElementsByTagName('img');
+
+      foreach($images as $k => $img){
+
+          $data = $img->getAttribute('src');
+
+          if(Str::containsAll($data, ['data:image', 'base64'])){
+
+              list(, $type) = explode('data:image/', $data);
+              list($type, ) = explode(';base64,', $type);
+
+              list(, $data) = explode(';base64,', $data);
+
+              $data = base64_decode($data);
+
+              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
+
+              Storage::disk('public')->put('images/posts/'.$image_name, $data);
+
+              $img->removeAttribute('src');
+              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
+          }
+      }
+
+      $information_details = $dom->saveHTML();
+
+      //conver html-entities to utf-8
+      $information_details = mb_convert_encoding($information_details, "UTF-8", 'HTML-ENTITIES');
+
+      //get content
+      list(, $information_details) = explode('<html><body>', $information_details);
+      list($information_details, ) = explode('</body></html>', $information_details);
+
+      $product->information_details = $information_details;
+    }
+    if($request->product_introduction != null) {
+      //Xử lý Ảnh trong nội dung
+      $product_introduction = $request->product_introduction;
+
+      $dom = new \DomDocument();
+
+      // conver utf-8 to html entities
+      $product_introduction = mb_convert_encoding($product_introduction, 'HTML-ENTITIES', "UTF-8");
+
+      $dom->loadHtml($product_introduction, LIBXML_HTML_NODEFDTD);
+
+      $images = $dom->getElementsByTagName('img');
+
+      foreach($images as $k => $img){
+
+          $data = $img->getAttribute('src');
+
+          if(Str::containsAll($data, ['data:image', 'base64'])){
+
+              list(, $type) = explode('data:image/', $data);
+              list($type, ) = explode(';base64,', $type);
+
+              list(, $data) = explode(';base64,', $data);
+
+              $data = base64_decode($data);
+
+              $image_name = time().$k.'_'.Str::random(8).'.'.$type;
+
+              Storage::disk('public')->put('images/posts/'.$image_name, $data);
+
+              $img->removeAttribute('src');
+              $img->setAttribute('src', '/storage/images/posts/'.$image_name);
+          }
+      }
+
+      $product_introduction = $dom->saveHTML();
+
+      //conver html-entities to utf-8
+      $product_introduction = mb_convert_encoding($product_introduction, "UTF-8", 'HTML-ENTITIES');
+
+      //get content
+      list(, $product_introduction) = explode('<html><body>', $product_introduction);
+      list($product_introduction, ) = explode('</body></html>', $product_introduction);
+
+      $product->product_introduction = $product_introduction;
+    }
+
+    $product->name = $request->name;
+    $product->producer_id = $request->producer_id;
+    $product->sku_code = $request->sku_code;
+
+    if($request->hasFile('image')){
+      $image = $request->file('image');
+      $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+      $image->storeAs('images/products',$image_name,'public');
+      Storage::disk('public')->delete('images/products/' . $product->image);
+      $product->image = $image_name;
+    }
+
+    $product->save();
+
+    if ($request->has('old_product_promotions')) {
+      foreach ($request->old_product_promotions as $key => $old_product_promotion) {
+        $promotion = Promotion::where('id', $key)->first();
+        if(!$promotion) abort(404);
+
+        $promotion->content = $old_product_promotion['content'];
+
+        //Xử lý ngày bắt đầu, ngày kết thúc
+        list($start_date, $end_date) = explode(' - ', $old_product_promotion['promotion_date']);
+
+        $start_date = str_replace('/', '-', $start_date);
+        $start_date = date('Y-m-d', strtotime($start_date));
+
+        $end_date = str_replace('/', '-', $end_date);
+        $end_date = date('Y-m-d', strtotime($end_date));
+
+        $promotion->start_date = $start_date;
+        $promotion->end_date = $end_date;
+
+        $promotion->save();
+      }
+    }
+
+    if ($request->has('product_promotions')) {
+      foreach ($request->product_promotions as $product_promotion) {
+        $promotion = new Promotion;
+        $promotion->product_id = $product->id;
+        $promotion->content = $product_promotion['content'];
+
+        //Xử lý ngày bắt đầu, ngày kết thúc
+        list($start_date, $end_date) = explode(' - ', $product_promotion['promotion_date']);
+
+        $start_date = str_replace('/', '-', $start_date);
+        $start_date = date('Y-m-d', strtotime($start_date));
+
+        $end_date = str_replace('/', '-', $end_date);
+        $end_date = date('Y-m-d', strtotime($end_date));
+
+        $promotion->start_date = $start_date;
+        $promotion->end_date = $end_date;
+
+        $promotion->save();
+      }
+    }
+
+    if ($request->has('old_product_details')) {
+      foreach ($request->old_product_details as $key => $product_detail) {
+        $sum = OrderDetail::where('product_detail_id', $key)->sum('quantity');
+        $old_product_detail = ProductDetail::where('id', $key)->first();
+        if(!$old_product_detail) abort(404);
+
+        $old_product_detail->color = $product_detail['color'];
+        $old_product_detail->import_quantity = $product_detail['quantity'];
+        $old_product_detail->quantity = $product_detail['quantity'] - $sum;
+        $old_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
+        $old_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+        if($product_detail['promotion_price'] != null) {
+          $old_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+        }
+        if($product_detail['promotion_date'] != null) {
+          //Xử lý ngày bắt đầu, ngày kết thúc
+          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+
+          $start_date = str_replace('/', '-', $start_date);
+          $start_date = date('Y-m-d', strtotime($start_date));
+
+          $end_date = str_replace('/', '-', $end_date);
+          $end_date = date('Y-m-d', strtotime($end_date));
+
+          $old_product_detail->promotion_start_date = $start_date;
+          $old_product_detail->promotion_end_date = $end_date;
+        }
+
+        $old_product_detail->save();
+      }
+    }
+
+    if ($request->has('product_details')) {
+      foreach ($request->product_details as $key => $product_detail) {
+        $new_product_detail = new ProductDetail;
+        $new_product_detail->product_id = $product->id;
+        $new_product_detail->color = $product_detail['color'];
+        $new_product_detail->import_quantity = $product_detail['quantity'];
+        $new_product_detail->quantity = $product_detail['quantity'];
+        $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
+        $new_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+        if($product_detail['promotion_price'] != null) {
+          $new_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+        }
+        if($product_detail['promotion_date'] != null) {
+          //Xử lý ngày bắt đầu, ngày kết thúc
+          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+
+          $start_date = str_replace('/', '-', $start_date);
+          $start_date = date('Y-m-d', strtotime($start_date));
+
+          $end_date = str_replace('/', '-', $end_date);
+          $end_date = date('Y-m-d', strtotime($end_date));
+
+          $new_product_detail->promotion_start_date = $start_date;
+          $new_product_detail->promotion_end_date = $end_date;
+        }
+
+        $new_product_detail->save();
+
+        foreach ($request->file('product_details')[$key]['images'] as $image) {
+          $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+          $image->storeAs('images/products',$image_name,'public');
+
+          $new_image = new ProductImage;
+          $new_image->product_detail_id = $new_product_detail->id;
+          $new_image->image_name = $image_name;
+
+          $new_image->save();
+        }
+      }
+    }
+
+    if($request->file('old_product_details') != null){
+      foreach ($request->file('old_product_details') as $key => $images) {
+        foreach($images['images'] as $image) {
+          $image_name = time().'_'.Str::random(8).'_'.$image->getClientOriginalName();
+          $image->storeAs('images/products',$image_name,'public');
+
+          $new_image = new ProductImage;
+          $new_image->product_detail_id = $key;
+          $new_image->image_name = $image_name;
+
+          $new_image->save();
+        }
+      }
+    }
+
+    return redirect()->route('admin.product.index')->with(['alert' => [
+      'type' => 'success',
+      'title' => 'Thành Công',
+      'content' => 'Chỉnh sửa sản phẩm thành công.'
+    ]]);
+  }
+
+  public function delete_promotion(Request $request)
+  {
+    $promotion = Promotion::where('id', $request->promotion_id)->first();
+
+    if(!$promotion) {
+
+      $data['type'] = 'error';
+      $data['title'] = 'Thất Bại';
+      $data['content'] = 'Bạn không thể xóa khuyễn mãi không tồn tại!';
+    } else {
+
+      $promotion->delete();
+
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Xóa khuyến mãi thành công!';
+    }
+
+    return response()->json($data, 200);
+  }
+
+  public function delete_product_detail(Request $request)
+  {
+    $product_detail = ProductDetail::where([['id', $request->product_detail_id], ['import_quantity', '>', 0]])->first();
+
+    if(!$product_detail) {
+
+      $data['type'] = 'error';
+      $data['title'] = 'Thất Bại';
+      $data['content'] = 'Bạn không thể xóa chi tiết sản phẩm không tồn tại!';
+    } else {
+
+      if($product_detail->import_quantity == $product_detail->quantity) {
+        foreach($product_detail->product_images as $image) {
+          Storage::disk('public')->delete('images/products/' . $image->image_name);
+          $image->delete();
+        }
+        $product_detail->delete();
+      } else {
+        $product_detail->import_quantity = 0;
+        $product_detail->quantity = 0;
+        $product_detail->save();
+      }
+
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Xóa chi tiết sản phẩm thành công!';
+    }
+
+    return response()->json($data, 200);
+  }
+
+  public function delete_image(Request $request)
+  {
+    $image = ProductImage::find($request->key);
+    Storage::disk('public')->delete('images/products/' . $image->image_name);
+    $image->delete();
+    return response()->json();
+  }
 }

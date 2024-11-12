@@ -1,193 +1,242 @@
 @extends('admin.layouts.master')
 
-@section('title')
-    Danh mục bài viết
+@section('title', 'Quản Lý Bài Viết')
+
+@section('embed-css')
+<link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+@endsection
+
+@section('custom-css')
+<style>
+  #post-table td,
+  #post-table th {
+    vertical-align: middle !important;
+  }
+  #post-table span.status-label {
+    display: block;
+    width: 85px;
+    text-align: center;
+    padding: 2px 0px;
+  }
+  #search-input span.input-group-addon {
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 34px;
+    border: none;
+    background: none;
+  }
+  #search-input span.input-group-addon i {
+    font-size: 18px;
+    line-height: 34px;
+    width: 34px;
+    color: #f30;
+  }
+  #search-input input {
+    position: static;
+    width: 100%;
+    font-size: 15px;
+    line-height: 22px;
+    padding: 5px 5px 5px 34px;
+    float: none;
+    height: unset;
+    border-color: #fbfbfb;
+    box-shadow: none;
+    background-color: #e8f0fe;
+    border-radius: 5px;
+  }
+</style>
+@endsection
+
+@section('breadcrumb')
+<ol class="breadcrumb">
+  <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+  <li class="active">Quản Lý Bài Viết</li>
+</ol>
 @endsection
 
 @section('content')
-    <style>
-        .custom-input {
-            width: 400px;
-        }
-    </style>
 
-    <div class="d-flex justify-content-between mb-3">
-
-        <div class="d-flex align-items-center">
-            <a href="{{ route('admin.postcategories.addPostCategory') }}" class="btn btn-primary me-2">Thêm Mới</a>
-            <input type="text" id="categorySearchBox" class="form-control custom-input" placeholder="Tìm kiếm danh mục...">
-        </div>
-
-        <!-- Bộ lọc theo trạng thái -->
-        <form action="{{ route('admin.postcategories.listPostCategory') }}" method="GET" class="d-flex">
-            <select class="form-select me-2" name="status">
-                <option value="0">Tất cả trạng thái</option>
-                <option value="1" {{ $selectedStatus == '1' ? 'selected' : '' }}>Đang Hoạt Động</option>
-                <option value="2" {{ $selectedStatus == '2' ? 'selected' : '' }}>Tạm Dừng</option>
-            </select>
-
-            <button type="submit" class="btn btn-primary">Lọc</button>
-        </form>
-
-
-    </div>
-
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-                <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
-                </div>
-                <div class="card-body">
-                    <div class="live-preview">
-                        <div class="table-responsive table-card">
-                            <table id="categoryTable" class="table align-middle table-nowrap table-striped-columns mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col">STT</th>
-                                        <th scope="col">Tên Danh Mục</th>
-                                        <th scope="col">Trạng Thái</th>
-                                        <th scope="col" style="width: 150px;">Action</th>
-                                    </tr>
-                                </thead>
-
-
-
-                                <tbody>
-                                    @foreach ($postcategories as $key => $value)
-                                        <tr>
-                                            <td>{{ $postcategories->firstItem() + $key }}</td>
-                                            <td>{{ $value->name }}</td>
-                                            {{-- <td>
-                                                @if ($value->status == 1)
-                                                    <span class="badge bg-success">Đang Hoạt Động</span>
-                                                @else
-                                                    <span class="badge bg-danger">Tạm Dừng</span>
-                                                @endif
-                                            </td> --}}
-
-                                            <td>
-                                                @if ($value->status == 1)
-                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
-                                                        <input type="checkbox" checked data-id="{{ $value->id }}"
-                                                            class="form-check-input change-status" id="customSwitchsizemd">
-                                                    </div>
-                                                @else
-                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
-                                                        <input type="checkbox" data-id="{{ $value->id }}"
-                                                            class="form-check-input change-status" id="customSwitchsizemd">
-                                                    </div>
-                                                @endif
-
-                                            </td>
-
-
-                                            <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center"
-                                                    style="gap: 5px;">
-                                                    <a href="{{ route('admin.postcategories.updateCategory', $value->id) }}"
-                                                        class="btn btn-sm btn-warning d-flex align-items-center justify-content-center"
-                                                        style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                        <i data-feather="edit-3" style="width: 16px; height: 16px;"></i>
-                                                    </a>
-
-                                                    @if ($value->status == 1)
-                                                        <!-- Chỉ hiển thị khi trạng thái là 1 -->
-                                                        <form
-                                                            action="{{ route('admin.postcategories.deletePostCategory', $value->id) }}"
-                                                            method="post" class="d-inline">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button
-                                                                onclick="return confirm('Bạn có muốn chuyển trạng thái danh mục về \'Tạm Dừng\' không?')"
-                                                                class="btn btn-sm btn-danger d-flex align-items-center justify-content-center"
-                                                                style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                                <i data-feather="trash-2"
-                                                                    style="width: 16px; height: 16px;"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-
-                                                    {{-- <a class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
-                                                        style="width: 30px; height: 30px; padding: 0; border: none;"
-                                                        title="Xem Chi Tiết">
-                                                        <i data-feather="eye" style="width: 16px; height: 16px;"></i>
-                                                    </a> --}}
-
-                                                    @if ($value->status == 0)
-                                                        <form
-                                                            action="{{ route('admin.postcategories.restorePostCategory', $value->id) }}"
-                                                            method="post" class="d-inline">
-                                                            @csrf
-                                                            <button
-                                                                onclick="return confirm('Bạn có muốn phục hồi danh mục này không?')"
-                                                                class="btn btn-sm btn-info d-flex align-items-center justify-content-center"
-                                                                style="width: 30px; height: 30px; padding: 0; border: none;">
-                                                                <i data-feather="refresh-cw"
-                                                                    style="width: 16px; height: 16px;"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endif
-
-                                                </div>
-                                            </td>
-
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-
-
-                            </table>
-                        </div>
-                    </div>
-                </div>
+  <!-- Main row -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <div class="row">
+            <div class="col-md-5 col-sm-6 col-xs-6">
+              <div id="search-input" class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" placeholder="search...">
+              </div>
             </div>
+            <div class="col-md-7 col-sm-6 col-xs-6">
+              <div class="btn-group pull-right">
+                <a href="{{ route('admin.post.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
+                  <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
+                </a>
+                <a href="{{ route('admin.post.new') }}" class="btn btn-success btn-flat" title="New Post">
+                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Post</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="box-body">
+          <table id="post-table" class="table table-hover" style="width:100%; min-width: 768px;">
+            <thead>
+              <tr>
+                <th data-width="10px">ID</th>
+                <th data-orderable="false" data-width="100px">Hình Ảnh</th>
+                <th data-orderable="false">Tiêu Đề</th>
+                <th scope="col">Danh mục</th>
+                <th scope="col">Trạng thái</th>
+                <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
+                <th data-orderable="false" data-width="70px">Tác Vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($posts as $post)
+                <tr>
+                  <td class="text-center">
+                    {{ $post->id }}
+                  </td>
+                  <td>
+                    <div style="background-image: url('{{ Helper::get_image_post_url($post->image) }}'); padding-top: 50%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                  </td>
+                  <td>
+                    <a class="text-left" href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">{{ $post->title }}</a>
+                  </td>
+                  <td> fix </td>
+                  <td>
+                    <div dir="ltr" class="toggle-icon" data-id="{{ $post->id }}">
+                        @if ($post->status == 0)
+                            <i class="fa-solid fa-toggle-off" data-status="0"></i>
+                        @else
+                            <i class="fa-solid fa-toggle-on" data-status="1"></i>
+                        @endif
+                    </div>
+                </td>                
+                  <td> {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y')}}</td>
+                  {{-- <td>
+                    <a href="{{ route('admin.post.edit', ['id' => $post->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <a href="javascript:void(0);" data-id="{{ $post->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.post.delete') }}">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </td> --}}
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
     </div>
-
-    {{ $postcategories->appends(['status' => $selectedStatus])->links('pagination::bootstrap-5') }}
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
 @endsection
 
-@push('script')
-    <script>
-        $(document).ready(function() {
-            $('#categorySearchBox').on('keyup', function() {
-                var value = $(this).val().toLowerCase();
-                $('#categoryTable tbody tr').filter(function() {
-                    $(this).toggle($(this).find('td:nth-child(2)').text().toLowerCase().indexOf(
-                        value) > -1);
-                });
+@section('embed-js')
+  <!-- DataTables -->
+  <script src="{{ asset('AdminLTE/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('AdminLTE/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+  <!-- SlimScroll -->
+  <script src="{{ asset('AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+  <!-- FastClick -->
+  <script src="{{ asset('AdminLTE/bower_components/fastclick/lib/fastclick.js') }}"></script>
+  <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/date-euro.js"></script>
+@endsection
+
+@section('custom-js')
+<script>
+  $(function () {
+    var table = $('#post-table').DataTable({
+      "language": {
+        "zeroRecords":    "Không tìm thấy kết quả phù hợp",
+        "info":           "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> bài viết",
+        "infoEmpty":      "Hiển thị trang <b>1/1</b> của <b>0</b> bài viết",
+        "infoFiltered":   "(Tìm kiếm từ <b>_MAX_</b> bài viết)",
+        "emptyTable": "Không có dữ liệu bài viết",
+      },
+      "lengthChange": false,
+       "autoWidth": false,
+       "order": [],
+      "dom": '<"table-responsive"t><<"row"<"col-md-6 col-sm-6"i><"col-md-6 col-sm-6"p>>>',
+      "drawCallback": function(settings) {
+        var api = this.api();
+        if (api.page.info().pages <= 1) {
+          $('#'+ $(this).attr('id') + '_paginate').hide();
+        }
+      }
+    });
+
+    $('#search-input input').on('keyup', function() {
+        table.search(this.value).draw();
+    });
+  });
+
+  $(document).ready(function(){
+
+    $(".deleteDialog").click(function() {
+
+      var post_id = $(this).attr('data-id');
+      var url = $(this).attr('data-url');
+
+      Swal.fire({
+        type: 'question',
+        title: 'Thông báo',
+        text: 'Bạn có chắc muốn xóa bài viết này?',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return fetch(url, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            body: JSON.stringify({'post_id': post_id}),
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(response.statusText);
+            }
+            return response.json();
+          })
+          .catch(error => {
+            Swal.showValidationMessage(error);
+
+            Swal.update({
+              type: 'error',
+              title: 'Lỗi!',
+              text: '',
+              showConfirmButton: false,
+              cancelButtonText: 'Ok',
             });
-        });
-
-        const notyf = new Notyf();
-        $(document).ready(function() {
-            $('body').on('click', '.change-status', function() {
-                let isChecked = $(this).is(':checked');
-                let id = $(this).data('id');
-
-
-                $.ajax({
-                    // Thay route 
-                    url: "{{ route('admin.postcategories.change-status') }}",
-                    method: 'PUT',
-                    data: {
-                        status: isChecked,
-                        id: id
-                    },
-                    success: function(data) {
-                        // toastr.success(data.message)
-                        notyf.success(data.message);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log(error);
-                    }
-                })
-
-            })
-        })
-
-    </script>
-@endpush
+          })
+        },
+      }).then((result) => {
+        if (result.value) {
+          Swal.fire({
+            type: result.value.type,
+            title: result.value.title,
+            text: result.value.content,
+          }).then((result) => {
+            if (result.value)
+              location.reload(true);
+          });
+        }
+      })
+    });
+  });
+</script>
+@endsection

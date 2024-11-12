@@ -1,12 +1,8 @@
-<footer class="site-footer">
-            <div class="footer-inner bg-white">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Copyright &copy; 2018 Ela Admin
-                    </div>
-                    <div class="col-sm-6 text-right">
-                        Designed by <a href="https://colorlib.com">Colorlib</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+<footer class="main-footer">
+  <!-- To the right -->
+  <div class="pull-right hidden-xs">
+    <b>AdminLTE</b> 2.4.18
+  </div>
+  <!-- Default to the left -->
+  <strong>Copyright &copy; 2024 <a href="#"></a>.</strong> All rights reserved.
+</footer>

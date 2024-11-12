@@ -1,4 +1,4 @@
-<?php
+?php
 
 use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\admin\CategoryController_;
