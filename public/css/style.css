@@ -240,7 +240,7 @@ body {
 }
 .header .main-menu {
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
   align-items: center;
 }
 .header .main-menu .nav-item,
@@ -282,7 +282,7 @@ body {
 }
 .header .main-menu .dropdown-menu {
 	margin: 0;
-    left: -175px !important;
+    left: -50px !important;
 }
 .header .main-menu .dropdown-menu>li.active>a {
   background: #f30;
@@ -295,11 +295,11 @@ body {
 }
 .header .main-menu .dropdown-menu .dropdown-menu-item {
 	padding: 0 10px;
-	width: 650px;
+	width: 200px;
 }
 .header .main-menu .dropdown-menu .dropdown-menu-subitem>li {
 	display: inline-block;
-	width: 32%;
+	/* width: 32%; */
 }
 
 /*--------------------------------------------------------------
@@ -700,6 +700,7 @@ body {
   margin-right: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 .section-products .section-content>.row {
   display: flex;

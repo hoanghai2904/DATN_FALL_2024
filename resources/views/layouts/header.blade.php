@@ -36,7 +36,7 @@
               </li>
               <li class="nav-item dropdown {{ Helper::check_active(['products_page', 'producer_page', 'product_page']) }}">
                 <a href="{{ route('products_page') }}" title="{{ __('Sản Phẩm') }}">
-                  <span class="fas fa-mobile-alt"></span>
+                  <span class="fa-solid fa-bone"></span>
                   {{ __('Sản Phẩm') }} <i class="fas fa-angle-down"></i>
                 </a>
                 <div class="dropdown-menu">

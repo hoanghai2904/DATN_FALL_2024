@@ -91,7 +91,7 @@
                     @endforeach
                   </div>
                   <div class="color-product">
-                    <div class="title">Màu sắc:</div>
+                    <div class="title">Phân loại:</div>
                     <div class="select-color">
                       <div class="row">
                         @foreach($data['product_details'] as $key => $product)

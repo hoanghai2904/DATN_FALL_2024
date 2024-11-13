@@ -127,7 +127,6 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->address = $request->address;
-
         if($request->hasFile('avatar_image')){
           $image = $request->file('avatar_image');
           $image_name = time().'_'.$image->getClientOriginalName();
@@ -139,6 +138,8 @@ class UserController extends Controller
 
           $user->avatar_image = $image_name;
         }
+
+      
 
         $user->save();
 
