@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-
+use App\Notifications\ResetPasswordNotification;
+use App\Notifications\ActiveAccountNotification;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,44 +20,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'full_name',
-        'cover',
-        'phone',
-        'password',
-        'email',
-        'gender',
-        'verification_token',
-        'birthday',
+        'name', 'email', 'phone', 'password', 'active_token','active',
     ];
-
-    // Một người dùng thuộc về một vai trò
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'user_roles', 'user_id', 'role_id');
-    }
-
-    // Một người dùng có nhiều quyền qua bảng role_permissions
-    public function permissions()
-    {
-        return $this->hasManyThrough(
-            Permission::class,  // Model mà bạn muốn lấy
-            RolePermission::class, // Bảng trung gian
-            'role_id',          // Foreign key trên bảng trung gian
-            'id',               // Foreign key trên bảng permissions
-            'id',               // Local key trên bảng users
-            'permission_id'     // Local key trên bảng role_permissions
-        );
-    }
-
-    public function addresses()
-    {
-        return $this->hasMany(UserAddress::class);
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -65,8 +29,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token', 'active_token',
     ];
 
     /**
@@ -76,8 +39,43 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
-}
 
-?>
+    public function comments() {
+        return $this->hasMany('App\Models\Comment');
+    }
+    public function notices() {
+        return $this->hasMany('App\Models\Notice');
+    }
+    public function orders() {
+        return $this->hasMany('App\Models\Order');
+    }
+    public function posts() {
+        return $this->hasMany('App\Models\Post');
+    }
+    public function product_votes() {
+        return $this->hasMany('App\Models\ProductVote');
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    /**
+     * Send the active account notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendActiveAccountNotification($token)
+    {
+        $this->notify(new ActiveAccountNotification($token));
+    }
+}
