@@ -35,7 +35,11 @@
               <div class="note">
                 <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                 <div class="note-content">
+<<<<<<< HEAD
                   <p>website <strong>VDO</strong> là một sản phẩm của đồ án tốt nghiệp đề tài: <i> Xây dựng Website bán hàng điện tử trực tuyến Paddy chạy được trên cả máy tính và thiết bị di động</i>. Được thực hiện bởi sinh viên . Mọi hoạt động mua sắm trên website đều không có giá trị !</p>
+=======
+                  <p>website <strong>Shop Pet</strong> là một sản phẩm của đồ án tốt nghiệp đề tài: <i> Xây dựng Website bán hàng điện tử trực tuyến Paddy chạy được trên cả máy tính và thiết bị di động</i>. Được thực hiện bởi sinh viên . Mọi hoạt động mua sắm trên website đều không có giá trị !</p>
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                 </div>
               </div>
               <div class="content">

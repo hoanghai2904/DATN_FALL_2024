@@ -22,7 +22,7 @@
                                 <div class="col-12 d-flex align-items-center">
                                     <form action="" method="GET" class="d-flex me-auto">
                                         <select name="status" id="" class="form-control me-3" style="width: 200px;">
-                                            <option value="">Chọn trạng thái</option>
+                                            <option value="" disabled selected>Chọn trạng thái</option>
                                             <option value="2" >Hoạt động</option>
                                             <option value="1" >Ngừng hoạt động</option>
                                         </select>
@@ -38,7 +38,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th scope="col">ID</th>
-                                        <th scope="col">Mã số</th>
+                                        <th scope="col">Mã</th>
                                         <th scope="col">Tên mã giảm giá</th>
                                         <th scope="col">Giảm giá</th>
                                         <th scope="col">Trạng thái</th>
@@ -81,9 +81,10 @@
                                                 <td>{{ $item->end }}</td>
                                                 <td>
                                                     <a href="{{ route('admin.vouchers.edit', [$item->id]) }}"
-                                                        class="btn btn-sm btn-warning sm-2">Sửa</a>
+                                                        class="btn btn-sm btn-info"><i
+                                                        class=" ri-edit-box-line"></i></a>
                                                         <a href="{{ route('admin.vouchers.destroy', $item->id) }}"
-                                                            class="btn btn-sm btn-danger delete-item">Xóa</a>
+                                                            class="btn btn-sm btn-danger delete-item"><i class=" ri-delete-bin-line"></i></a>
                                                 </td>
 
                                             </tr>

@@ -22,6 +22,11 @@
   <link rel="stylesheet" href="{{ asset('common/css/owl.carousel.min.css') }}">
   <link rel="stylesheet" href="{{ asset('common/css/owl.theme.default.min.css') }}">
   <link rel="stylesheet" href="{{ asset('common/css/sweetalert2.min.css') }}">
+<<<<<<< HEAD
+=======
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -31,6 +36,7 @@
   @yield('css')
 </head>
 <body>
+<<<<<<< HEAD
     <!-- Load Facebook SDK for JavaScript -->
     <div id="fb-root"></div>
     <script>
@@ -57,6 +63,35 @@
       logged_in_greeting="{{ __('message.welcome') }}"
       logged_out_greeting="{{ __('message.welcome') }}">
     </div>
+=======
+  <!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      xfbml: true,
+      version: 'v4.0'
+    });
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- Facebook Messenger Chat Plugin -->
+<div class="fb-customerchat"
+  attribution=setup_tool
+  page_id="61563798942587"
+  theme_color="#ff3300"
+  logged_in_greeting="Chào bạn, chúng tôi có thể giúp gì cho bạn?"
+  logged_out_greeting="Chào bạn, vui lòng đăng nhập để chat với chúng tôi.">
+</div>
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
 
     <!-- Header -->
     @include('layouts.header')

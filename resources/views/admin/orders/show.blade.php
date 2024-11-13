@@ -4,7 +4,11 @@
 
 @section('content')
 
+<<<<<<< HEAD
 <div class="row">
+=======
+<div class="row ms-40">
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
     <div class="col-xl-8">
         <div class="card">
             <div class="card-header">
@@ -31,11 +35,18 @@
                     <table class="table table-nowrap align-middle table-borderless mb-0">
                         <thead class="table-light text-muted">
                             <tr>
+<<<<<<< HEAD
                                 <th scope="col">Sản phẩm</th>
                                 <th scope="col" class="text-center">Giá sản phẩm</th>
                                 <th scope="col" class="text-center">Số lượng</th>
                                 
                                 <th scope="col" class="text-center">Tổng tiền</th>
+=======
+                                <th >Sản phẩm</th>
+                                <th  class="text-center">Giá sản phẩm</th>
+                                <th  class="text-center">Số lượng</th>
+                                <th  class="text-center">Tổng tiền</th>
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                             </tr>
                         </thead>
                         <tbody>
@@ -45,12 +56,12 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 avatar-md bg-light rounded p-1">
-                                                <img src="{{ asset('storage/' . $item->product_thumbnail) }}" 
-                                                     alt="{{ $item->product_name }}" class="img-fluid d-block">
+                                                <img src="{{ asset('storage/' . $item->product->thumbnail) }}" 
+                                                     alt="{{ $item->product->name }}" class="img-fluid d-block">
                                             </div>
                                             <div class="flex-grow-1 ms-2">
                                                 <h5 class="fs-15">
-                                                    <a href="#" class="link-primary">{{ $item->product_name }}</a>
+                                                    <a href="#" class="link-primary">{{ $item->product->name  }}</a>
                                                 </h5>
                                                 @if($item->variant_color)
                                                 <p class="text-muted mb-0">Màu sắc: <span class="fw-medium">{{ $item->variant_color }}</span></p>
@@ -67,11 +78,15 @@
                                         </div>
                                     </td>
                                    
+<<<<<<< HEAD
                                     <td class="text-center">{{ number_format($item->price) }}₫</td>
+=======
+                                    <td class="text-center">{{ number_format($item->product->price) }}₫</td>
+>>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                                     <td class="text-center">{{ $item->qty }}</td>
                                    
                                     <td class="fw-medium text-center">
-                                        {{ number_format($item->price * $item->qty) }}₫
+                                        {{ number_format($item->product->price * $item->qty) }}₫
                                     </td>
                                 </tr>
                                 @endforeach
@@ -91,7 +106,7 @@
                                                 <td class="text-end">{{ number_format($order->total_amount) }}₫</td>
                                             </tr>
                                             <tr>
-                                                <td>Khuyến mãi ({{ $order->discount }}) :</td>
+                                                <td>Khuyến mãi ({{ number_format($order->discount) }}) :</td>
                                                 <td class="text-end">-{{ number_format($order->discount) }}₫</td>
                                             </tr>
                                             <tr>
@@ -147,40 +162,44 @@
             </div>
         </div>
         <!--end card-->
-        <div class="card mb-4">
-            <div class="card-header" style="padding: 10px 15px;">
-                <h5 class="card-title mb-0"><i class="ri-map-pin-line align-middle me-1 text-muted"></i>Địa chỉ giao hàng</h5>
+     
+        {{-- adress --}}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0 "><i class="ri-map-pin-line align-middle me-1 text-muted"></i>Địa chỉ giao hàng</h5>
             </div>
             <div class="card-body">
-                <ul class="list-unstyled mb-0 vstack gap-3">
-                    <li>
-                        <div class="d-flex  mb-3">
-                            <i class="ri-map-pin-line me-2 align-middle text-muted fs-16"></i>
-                            <strong style="width: 100px">Địa chỉ:</strong> 
-                            <span class="ms-2 text-secondary">
-                                @if($order->user_id)
-                                    {{-- Lấy địa chỉ mặc định từ bảng user_addresses nếu có user_id --}}
-                                    @php
-                                        $defaultAddress = $customer->addresses->firstWhere('is_default', 1);
-                                    @endphp
-                                    {{ $defaultAddress->address ?? 'Không có địa chỉ mặc định' }}
-                                @else
-                                    {{-- Lấy địa chỉ từ bảng orders nếu không có user_id --}}
-                                    {{ $order->user_address ?? 'Không có địa chỉ' }}
-                                @endif
-                            </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="ri-book-open-line me-2"></i>
-                            <strong class="text-primary">Ghi chú:</strong>
-                            <span class="ms-2 text-secondary">{{ $order->user_note ?? 'Không có ghi chú' }}</span>
-                        </div>
-                    </li>
-                </ul>
+                <div class="d-flex mb-2">
+                    <div class="flex-shrink-0">
+                        <h6 class="text-muted mb-1"><i class="ri-map-pin-line me-2 align-middle text-muted fs-16"></i>Địa chỉ :</h6>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                        <p class="mb-0 text-muted">
+                            @if($order->user_id)
+                            {{-- Lấy địa chỉ mặc định từ bảng user_addresses nếu có user_id --}}
+                            @php
+                                $defaultAddress = $customer->addresses->firstWhere('is_default', 1);
+                            @endphp
+                            {{ $defaultAddress->address ?? 'Không có địa chỉ mặc định' }}
+                        @else
+                            {{-- Lấy địa chỉ từ bảng orders nếu không có user_id --}}
+                            {{ $order->user_address ?? 'Không có địa chỉ' }}
+                        @endif
+                        </p>
+                    </div>
+                </div>
+                <div class="d-flex mb-4">
+                    <div class="flex-shrink-0">
+                        <h6 class="text-muted mb-0"><i class="ri-book-open-line me-2"></i>Ghi chú :</h6>
+                    </div>
+                    <div class="flex-grow-1 ms-2">
+                        <p class="mb-0 text-secondary">{{ $order->user_note ?? 'Không có ghi chú' }}</p>
+                    </div>
+                </div>
+              
             </div>
         </div>
+        {{-- end --}}
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0"><i class="ri-secure-payment-line align-bottom me-1 text-muted"></i>Chi tiết thanh toán</h5>
@@ -219,7 +238,7 @@
                     </div>
                 </div>
               
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center mb-2">
                     <div class="flex-shrink-0">
                         <p class="text-muted mb-0">Tổng tiền thanh toán:</p>
                     </div>

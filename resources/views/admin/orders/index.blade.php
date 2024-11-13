@@ -194,11 +194,16 @@
                                             </li>
                         
                                             <!-- Chỉnh sửa đơn hàng -->
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" title="Chỉnh sửa">
-                                                @if ($order->order_status !== 'Đã hủy')
-                                                    <a href="#showModal" 
-                                                       data-bs-toggle="modal" 
-                                                       class="text-primary d-inline-block edit-item-btn"
+                                            <li class="list-inline-item" data-bs-toggle="tooltip" title="{{ $order->order_status === 'Đã hủy' ? 'Delete' : 'Chỉnh sửa' }}">
+                                                @if ($order->order_status === 'Đã hủy')
+                                                    <!-- Nút xóa nếu đơn hàng đã hủy -->
+                                                    <a class="remove-item-btn" data-bs-toggle="modal" href="#deleteRecordModal"
+                                                       onclick="showDeleteModal({{ $order->id }})">
+                                                        <i class="ri-delete-bin-fill fs-5 align-bottom" style="color:#FF6600;"></i>
+                                                    </a>
+                                                @else
+                                                    <!-- Nút chỉnh sửa nếu đơn hàng chưa hủy -->
+                                                    <a href="#showModal" data-bs-toggle="modal" class="text-primary d-inline-block edit-item-btn"
                                                        data-id="{{ $order->id }}" 
                                                        data-order-status="{{ $order->order_status }}" 
                                                        data-payment-status="{{ $order->payment_status }}">
@@ -207,20 +212,7 @@
                                                 @endif
                                             </li>
                                             
-                        
-                                            <!-- Xóa đơn hàng (nếu đã hủy) -->
-                                            @if ($order->order_status == 'Đã hủy')
-                                            <li class="list-inline-item" data-bs-toggle="tooltip" title="Xóa">
-                                                <form action="{{ route('admin.orders.destroy', $order->id) }}" 
-                                                      method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn text-danger p-0 remove-item-btn">
-                                                        <i class="ri-delete-bin-5-fill fs-16"></i>
-                                                    </button>
-                                                </form>
-                                            </li>
-                                            @endif
+                                            
                                         </ul>
                                     </td>
                                 </tr>
@@ -282,7 +274,7 @@
 </div>
 
 {{-- modal delete --}}
-    <div id="deleteCustomer" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+    <div id="deleteOrder" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -293,8 +285,8 @@
                         <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
                             colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
                         <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Xóa tài khoản</h4>
-                            <p class="text-muted mx-4 mb-0">Bạn có muốn xóa tài khoản này không ?</p>
+                            <h4>Xóa đơn hàng</h4>
+                            <p class="text-muted mx-4 mb-0">Bạn có muốn xóa đơn hàng này không ?</p>
                         </div>
                     </div>
                     <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
@@ -408,93 +400,59 @@ updateStatusForm.addEventListener('submit', event => {
 });
 
      // Hàm hiển thị modal xác nhận xóa
-     let deleteCustomerId;
+     let deleteOrderId;
 
-        function showDeleteModal(customerId) {
-            deleteCustomerId = customerId; // Lưu ID khách hàng vào biến
-            $('#deleteCustomer').modal('show'); // Hiển thị modal xác nhận
-            $('#confirmDelete').on('click', function() {
-                if (deleteCustomerId) {
-                    // Thực hiện yêu cầu xóa qua AJAX
-                    fetch('{{ route('admin.deleteCustomer', ':id') }}'.replace(':id', deleteCustomerId), {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                $('#deleteCustomer').modal('hide'); // Ẩn modal
-                                // Cập nhật danh sách khách hàng (có thể reload trang hoặc xóa hàng từ table)
-                                location.reload(); // Tải lại trang sau khi xóa
-                            } else {
-                                alert('Xóa tài khoản không thành công!');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Có lỗi xảy ra trong quá trình xóa.');
-                        });
+function showDeleteModal(orderId) {
+    deleteOrderId = orderId; // Lưu ID đơn hàng
+    $('#deleteOrder').modal('show'); // Hiển thị modal xác nhận
+
+    // Xử lý sự kiện khi nhấn nút "Xóa"
+    $('#confirmDelete').off('click').on('click', function () {
+        if (deleteOrderId) {
+            // Lấy CSRF token từ meta trong <head>
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`{{ route('admin.destroyOrder', ':id') }}`.replace(':id', deleteOrderId), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken // Đảm bảo truyền token động
                 }
-            });
-        }
-
-    $(document).ready(function() {
-        // CSRF Token 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        // End CSRF Token
-
-        // Sweet Alert 
-        $('body').on('click', '.delete-item', function(event) {
-            event.preventDefault();
-
-            let deleteUrl = $(this).closest('form').attr('action'); // Lấy URL từ form
-
-            Swal.fire({
-                title: 'Bạn có chắc muốn xóa không ?',
-                text: "Bạn có thể khôi phục lại được dữ liệu!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Có!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: deleteUrl,
-                        success: function(data) {
-                            if (data.status == 'success') {
-                                Swal.fire(
-                                    'Đã xóa!',
-                                    data.message,
-                                    'success'
-                                )
-                                setTimeout(() => {
-                                    window.location.reload(); // Tải lại trang sau khi xóa
-                                }, 2000);
-                            } else if (data.status == 'error') {
-                                Swal.fire(
-                                    'Không thể xóa',
-                                    data.message,
-                                    'error'
-                                )
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.log(error);
-                        }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    $('#deleteOrder').modal('hide'); // Ẩn modal sau khi xóa
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: data.message,
+                        confirmButtonText: 'Đồng ý'
+                    }).then(() => {
+                        location.reload(); // Tải lại trang
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: data.message,
+                        confirmButtonText: 'Đồng ý'
                     });
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Có lỗi xảy ra',
+                    text: 'Không thể xóa đơn hàng!',
+                    confirmButtonText: 'Đồng ý'
+                });
             });
-        });
+        }
     });
+}
+
 
 </script>
 @endpush

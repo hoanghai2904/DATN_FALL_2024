@@ -1,92 +1,95 @@
 @extends('admin.layouts.master')
 @push('style')
-<style>
-    #contact-view-detail {
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
+    <style>
+        #contact-view-detail {
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
 
-    .address-list {
-        max-height: 200px;
-        /* Giới hạn chiều cao */
-        overflow-y: auto;
-        /* Cho phép cuộn dọc */
-        padding-right: 10px;
-    }
+        .address-list {
+            max-height: 200px;
+            /* Giới hạn chiều cao */
+            overflow-y: auto;
+            /* Cho phép cuộn dọc */
+            padding-right: 10px;
+        }
 
-    .address-list li {
-        border-bottom: 1px dashed #e3e6ef;
-        padding-bottom: 8px;
-    }
+        .address-list li {
+            border-bottom: 1px dashed #e3e6ef;
+            padding-bottom: 8px;
+        }
 
-    .address-list li:last-child {
-        border-bottom: none;
-    }
+        .address-list li:last-child {
+            border-bottom: none;
+        }
 
-    input[type="radio"] {
-        accent-color: #198754;
-        /* Màu của radio button */
-    }
+        input[type="radio"] {
+            accent-color: #198754;
+            /* Màu của radio button */
+        }
 
-    label {
-        font-weight: 600;
-        color: #495057;
-    }
+        label {
+            font-weight: 600;
+            color: #495057;
+        }
 
-    p {
-        margin-top: 0;
-        color: #6c757d;
-    }
-</style>
+        p {
+            margin-top: 0;
+            color: #6c757d;
+        }
+    </style>
 @endpush
 @section('title')
     Nhân viên
 @endsection
 
 @section('content')
-    <div class="row" >
-        <div  id="user-list" class="col-lg-12">
+    <div class="row">
+        <div id="user-list" class="col-lg-12">
             <div class="card" id="leadsList">
                 <div class="card-header border-0">
                     <form action="{{ route('admin.listUser') }}" method="GET">
                         @csrf
-                    <div class="row g-4 align-items-center">
-                        <div class="col-lg-2">
-                            <select class="js-example-basic-single select2-hidden-accessible" name="status"
-                                aria-hidden="true">
-                                <option value="" disabled selected>Tìm theo trạng thái</option>
-                                <option value="active">active</option>
-                                <option value="inactive">inactive</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2">
-                            <select class="js-example-basic-single select2-hidden-accessible" name="role_id" aria-hidden="true">
-                                <option value="" disabled selected>Tìm theo Vai trò</option>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="search-box">
-                                <input type="text" class="form-control search" name="search" placeholder="Search for...">
-                                <i class="ri-search-line search-icon"></i>
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-2">
+                                <select class="js-example-basic-single select2-hidden-accessible" name="status"
+                                    aria-hidden="true">
+                                    <option value="" disabled selected>Tìm theo trạng thái</option>
+                                    <option value="active">active</option>
+                                    <option value="inactive">inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2">
+                                <select class="js-example-basic-single select2-hidden-accessible" name="role_id"
+                                    aria-hidden="true">
+                                    <option value="" disabled selected>Tìm theo Vai trò</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="search-box">
+                                    <input type="text" class="form-control search" name="search"
+                                        placeholder="Search for...">
+                                    <i class="ri-search-line search-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-auto ms-auto">
+                                <div class="hstack gap-2">
+                                    <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
+                                            class="ri-delete-bin-2-line"></i></button>
+                                    <button type="submit" class="btn btn-info" data-bs-toggle="offcanvas"
+                                        href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i>
+                                        Tìm kiếm</button>
+                                    <button type="button" class="btn btn-success add-btn" id="openModalButton"
+                                        data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i>Thêm nhân
+                                        viên
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    
-                        <div class="col-sm-auto ms-auto">
-                            <div class="hstack gap-2">
-                                <button class="btn btn-soft-danger" id="remove-actions" onClick="deleteMultiple()"><i
-                                        class="ri-delete-bin-2-line"></i></button>
-                                <button type="submit" class="btn btn-info" data-bs-toggle="offcanvas"
-                                    href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i>
-                                    Tìm kiếm</button>
-                                <button type="button" class="btn btn-success add-btn" id="openModalButton"
-                                    data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i>Thêm nhân viên
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     </form>
                 </div>
                 <div class="card-body">
@@ -101,7 +104,7 @@
                                                     value="option">
                                             </div>
                                         </th>
-                                       
+
                                         <th style="padding-left: 50px">Họ và tên</th>
                                         <th style="padding-left: 50px">Email</th>
                                         <th>Điện thoại</th>
@@ -111,7 +114,7 @@
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
-                                <tbody class="list form-check-all"  >
+                                <tbody class="list form-check-all">
                                     @foreach ($employees as $employee)
                                         <tr>
                                             <th scope="row">
@@ -121,7 +124,7 @@
                                                         onchange="previewImage(event, 'avatar-img')">
                                                 </div>
                                             </th>
-                                           
+
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-shrink-0">
@@ -129,7 +132,8 @@
                                                             alt=""
                                                             class="avatar-xxs rounded-circle image_src object-fit-cover">
                                                     </div>
-                                                    <div class="flex-grow-1 ms-2 name text-start fw-semibold">{{ $employee->full_name }}
+                                                    <div class="flex-grow-1 ms-2 name text-start fw-semibold">
+                                                        {{ $employee->full_name }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -142,11 +146,13 @@
                                                 @endforeach
                                             </td>
                                             <td>
-                                                <div class="form-check form-switch form-switch-success form-switch-md" dir="ltr">
-                                                    <input type="checkbox" class="form-check-input" style="margin-left: 20px"
-                                                           {{ $employee->status === 'active' ? 'checked' : '' }}
-                                                           id="statusCheckbox{{ $employee->id }}"
-                                                           onchange="confirmStatusChange({{ $employee->id }}, this)">
+                                                <div class="form-check form-switch form-switch-success form-switch-md"
+                                                    dir="ltr">
+                                                    <input type="checkbox" class="form-check-input"
+                                                        style="margin-left: 20px"
+                                                        {{ $employee->status === 'active' ? 'checked' : '' }}
+                                                        id="statusCheckbox{{ $employee->id }}"
+                                                        onchange="confirmStatusChange({{ $employee->id }}, this)">
                                                 </div>
                                             </td>
                                             <td>{{ $employee->created_at->format('d/m/Y') }}</td>
@@ -160,7 +166,7 @@
                                                         </a>
                                                     </li>
                                                     <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                    data-bs-trigger="hover" data-bs-placement="top" title="View">
+                                                        data-bs-trigger="hover" data-bs-placement="top" title="Edit">
                                                         <a href="javascript:void(0);" class="btn-info view-details-btn"
                                                             data-id="{{ $employee->id }}"> <i
                                                                 class="ri-pencil-fill align-bottom text-muted fs-5"></i></a>
@@ -171,7 +177,8 @@
                                                         <a class="remove-item-btn " data-bs-toggle="modal"
                                                             href="#deleteRecordModal"
                                                             onclick="showDeleteModal({{ $employee->id }})">
-                                                            <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
+                                                            <i class="ri-delete-bin-fill align-bottom fs-5"
+                                                                style="color:#FF6600;"></i>
 
                                                         </a>
                                                     </li>
@@ -432,12 +439,9 @@
                             </div>
                         </div>
                     </div>
-
-
-
                     {{-- end modal --}}
 
-                    <!-- Modal -->
+
                     <!-- Modal delete -->
                     <div id="deleteCustomer" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -467,32 +471,35 @@
                         </div>
                     </div>
                     <!--end modal -->
-    {{-- modal update status --}}
-    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon>
-                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Khóa tài khoản !</h4>
-                            <p class="text-muted mx-4 mb-0">Bạn có muốn khóa tài khoản này không ?</p>
-                        </div>
+                    {{-- modal update status --}}
+                    <div id="removeNotificationModal" class="modal fade zoomIn" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mt-2 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop"
+                                            colors="primary:#f7b84b,secondary:#f06548"
+                                            style="width:100px;height:100px"></lord-icon>
+                                        <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                            <h4>Khóa tài khoản !</h4>
+                                            <p class="text-muted mx-4 mb-0">Bạn có muốn khóa tài khoản này không ?</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                                        <button type="button" class="btn w-sm btn-light"
+                                            data-bs-dismiss="modal">Đóng</button>
+                                        <button type="button" class="btn w-sm btn-danger" id="updateStatus">Đồng
+                                            ý</button>
+                                    </div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
                     </div>
-                    <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" class="btn w-sm btn-light" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn w-sm btn-danger" id="updateStatus">Đồng ý</button>
-                    </div>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
-{{-- adress --}}
-
-
+                    {{-- adress --}}
                 </div>
             </div>
         </div>
@@ -508,7 +515,7 @@
                     </div>
                     <h5 class="mt-4 mb-1">Hà Thế Bảo</h5>
                 </div>
-        
+
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase fw-semibold mb-3">Địa chỉ khách hàng</h6>
                     <div class="address-list">
@@ -520,8 +527,8 @@
                                 </div>
                                 <p>Tổ 5 khu 10, Bãi Cháy, Hạ Long, Quảng Ninh</p>
                             </li>
-        
-                       
+
+
                             <!-- Thêm các địa chỉ khác tại đây -->
                         </ul>
                     </div>
@@ -631,16 +638,16 @@
                         // Cập nhật avatar nếu có
                         if (data.cover) {
                             $('#cover-img').attr('src', '{{ asset('storage') }}/' + data
-                            .cover);
+                                .cover);
                         } else {
                             $('#cover-img').attr('src',
                                 '{{ asset('theme/admin/assets/images/users/user-dummy-img.jpg') }}'
-                                );
+                            );
                         }
 
                         // Hiển thị danh sách vai trò
                         $('#modal-roles').val(data.roles.map(role => role.id)).trigger(
-                        'change');
+                            'change');
 
                         // Hiển thị modal
                         $('#userDetailsModal').modal('show');
@@ -748,117 +755,122 @@
             });
         }
 
-// confirm status 
-function confirmStatusChange(customerId, checkbox) {
-        const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
-        console.log("Trạng thái ban đầu:", originalChecked);
+        // confirm status 
+        function confirmStatusChange(customerId, checkbox) {
+            const originalChecked = checkbox.checked; // Lưu trạng thái ban đầu của checkbox
+            console.log("Trạng thái ban đầu:", originalChecked);
 
-        // Hiển thị modal
-        $('#removeNotificationModal').modal('show');
+            // Hiển thị modal
+            $('#removeNotificationModal').modal('show');
 
-        // Khi người dùng xác nhận cập nhật
-        $('#updateStatus').off('click').on('click', function() {
-            updateStatus(customerId, checkbox); // Truyền checkbox để xử lý
-            $('#removeNotificationModal').modal('hide');
+            // Khi người dùng xác nhận cập nhật
+            $('#updateStatus').off('click').on('click', function() {
+                updateStatus(customerId, checkbox); // Truyền checkbox để xử lý
+                $('#removeNotificationModal').modal('hide');
 
-            // Loại bỏ sự kiện hủy khi đã xác nhận
-            $('#removeNotificationModal').off('hidden.bs.modal');
-        });
+                // Loại bỏ sự kiện hủy khi đã xác nhận
+                $('#removeNotificationModal').off('hidden.bs.modal');
+            });
 
-        // Khi người dùng hủy modal
-        $('#removeNotificationModal').on('hidden.bs.modal', function() {
-            checkbox.checked = !originalChecked; // Khôi phục trạng thái nếu người dùng hủy
-            console.log("Trạng thái sau khi hủy:", checkbox.checked);
-        });
-    }
+            // Khi người dùng hủy modal
+            $('#removeNotificationModal').on('hidden.bs.modal', function() {
+                checkbox.checked = !originalChecked; // Khôi phục trạng thái nếu người dùng hủy
+                console.log("Trạng thái sau khi hủy:", checkbox.checked);
+            });
+        }
 
         function updateStatus(customerId, checkbox) {
-        const isChecked = checkbox.checked;
-        const status = isChecked ? 'active' : 'inactive'; // Cập nhật theo giá trị mong muốn
+            const isChecked = checkbox.checked;
+            const status = isChecked ? 'active' : 'inactive'; // Cập nhật theo giá trị mong muốn
 
-        fetch('{{ route("admin.updateStatus", ":id") }}'.replace(':id', customerId), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ status: status })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            fetch('{{ route('admin.updateStatus', ':id') }}'.replace(':id', customerId), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        status: status
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response:', data); // Kiểm tra phản hồi
+                    if (data.success) {
+                        console.log("Cập nhật thành công");
+                        checkbox.checked = isChecked; // Giữ nguyên trạng thái sau khi thành công
+                        console.log("Trạng thái sau update thành công:", checkbox.checked);
+
+                    } else {
+                        alert('Cập nhật trạng thái không thành công!');
+                        checkbox.checked = !isChecked; // Khôi phục trạng thái nếu không thành công
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
+                });
+        }
+        //view address
+        const userAddressesRoute = "{{ route('admin.getAddresses', ':userId') }}";
+        document.addEventListener('click', function(event) {
+            if (event.target.closest('.view-item-btn')) {
+                const btn = event.target.closest('.view-item-btn');
+                const userId = btn.dataset.userId; // Lấy ID người dùng
+                const url = userAddressesRoute.replace(':userId', userId); // Thay thế :userId trong route
+                console.log("Fetching data for user ID:", userId);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Dữ liệu nhận được:', data); // Kiểm tra cấu trúc của dữ liệu
+                        if (!data.address) {
+                            console.error('Dữ liệu địa chỉ không hợp lệ:', data.address);
+                            return;
+                        }
+                        // Gọi hàm cập nhật danh sách địa chỉ và hiển thị card
+                        updateAddressList(data);
+
+                        // Xóa lớp d-none để hiển thị card địa chỉ
+                        document.getElementById('contact-view-detail').classList.remove('d-none');
+                        // Thay đổi kích thước của danh sách user
+                        document.getElementById('user-list').classList.remove('col-xxl-12');
+                        document.getElementById('user-list').classList.add('col-xxl-9');
+                    })
+                    .catch(error => console.error('Error:', error));
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Response:', data); // Kiểm tra phản hồi
-            if (data.success) {
-                console.log("Cập nhật thành công");
-                checkbox.checked = isChecked; // Giữ nguyên trạng thái sau khi thành công
-                console.log("Trạng thái sau update thành công:", checkbox.checked);
-                
-            } else {
-                alert('Cập nhật trạng thái không thành công!');
-                checkbox.checked = !isChecked; // Khôi phục trạng thái nếu không thành công
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            checkbox.checked = !isChecked; // Khôi phục trạng thái nếu có lỗi
         });
-    }
-    //view address
-    const userAddressesRoute = "{{ route('admin.getAddresses', ':userId') }}";
-document.addEventListener('click', function (event) {
-    if (event.target.closest('.view-item-btn')) {
-        const btn = event.target.closest('.view-item-btn');
-        const userId = btn.dataset.userId; // Lấy ID người dùng
-        const url = userAddressesRoute.replace(':userId', userId); // Thay thế :userId trong route
-        console.log("Fetching data for user ID:", userId);
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Dữ liệu nhận được:', data); // Kiểm tra cấu trúc của dữ liệu
-                if (!data.address) {
-                    console.error('Dữ liệu địa chỉ không hợp lệ:', data.address);
-                    return;
-                }
-                // Gọi hàm cập nhật danh sách địa chỉ và hiển thị card
-                updateAddressList(data);
-                
-                // Xóa lớp d-none để hiển thị card địa chỉ
-                document.getElementById('contact-view-detail').classList.remove('d-none');
-                // Thay đổi kích thước của danh sách user
-                document.getElementById('user-list').classList.remove('col-xxl-12');
-                document.getElementById('user-list').classList.add('col-xxl-9');
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
+        // Hàm cập nhật thông tin người dùng và danh sách địa chỉ
+        function updateAddressList(data) {
+            const {
+                user,
+                address
+            } = data;
 
-// Hàm cập nhật thông tin người dùng và danh sách địa chỉ
-function updateAddressList(data) {
-    const { user, address } = data;
+            // Kiểm tra nếu addresses là mảng
+            if (!Array.isArray(address)) {
+                console.error('Dữ liệu địa chỉ không hợp lệ:', address);
+                return;
+            }
 
-    // Kiểm tra nếu addresses là mảng
-    if (!Array.isArray(address)) {
-        console.error('Dữ liệu địa chỉ không hợp lệ:', address);
-        return;
-    }
+            // Cập nhật thông tin người dùng
+            document.querySelector('#contact-view-detail h5').innerText = user.name;
+            document.querySelector('#contact-view-detail img').src = user.avatar;
 
-    // Cập nhật thông tin người dùng
-    document.querySelector('#contact-view-detail h5').innerText = user.name;
-    document.querySelector('#contact-view-detail img').src = user.avatar;
+            const addressList = document.querySelector('.address-list ul');
+            addressList.innerHTML = ''; // Xóa nội dung cũ
 
-    const addressList = document.querySelector('.address-list ul');
-    addressList.innerHTML = ''; // Xóa nội dung cũ
-
-    // Lặp qua các địa chỉ và thêm vào danh sách
-    address.forEach((address, index) => {
-        const li = document.createElement('li');
-        li.className = 'text-muted mb-3';
-        li.innerHTML = `
+            // Lặp qua các địa chỉ và thêm vào danh sách
+            address.forEach((address, index) => {
+                const li = document.createElement('li');
+                li.className = 'text-muted mb-3';
+                li.innerHTML = `
             <div class="d-flex align-items-center">
                 <input type="radio" name="is_default" id="address${index}" class="me-2"
                     ${address.is_default ? 'checked' : ''}>
@@ -866,10 +878,8 @@ function updateAddressList(data) {
             </div>
             <p>${address.address}</p>
         `;
-        addressList.appendChild(li);
-    });
-}
-
-
+                addressList.appendChild(li);
+            });
+        }
     </script>
 @endsection
