@@ -450,15 +450,9 @@
 #more-infomation .modal-footer {
   padding: 10px;
 }
-<<<<<<< HEAD
-.section-product .suggest-product {
-  margin-top: 20px;
-}
-=======
 /* .section-product .suggest-product {
   margin-top: 20px;
 } */
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
 .section-product .suggest-product a:hover,
 .section-product .suggest-product a:focus {
   text-decoration: none;
@@ -469,10 +463,7 @@
   margin-bottom: 5px;
   padding-bottom: 5px;
   border-bottom: 1px solid #eae9ef;
-<<<<<<< HEAD
-=======
   gap: 10px;
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
 }
 .section-product .suggest-product .suggest-content a:last-child .product-content {
   margin-bottom: 0;

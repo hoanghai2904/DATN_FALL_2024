@@ -19,11 +19,7 @@
         <div class="col-md-4">
           <div class="new-posts">
             <div class="posts-header">
-<<<<<<< HEAD
-              <h3 class="posts-title">TIN TỨC LEGO</h3>
-=======
               <h3 class="posts-title">TIN TỨC THÚ CƯNG</h3>
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
             </div>
             <div class="posts-content">
               @foreach($data['posts'] as $post)
@@ -82,11 +78,7 @@
     <section class="section-products">
       <div class="section-header">
         <div class="section-header-left">
-<<<<<<< HEAD
-          <h2 class="section-title">ĐIỆN THOẠI</h2>
-=======
           <h2 class="section-title">Sản Phẩm</h2>
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
         </div>
         <div class="section-header-right">
           <ul>
@@ -101,11 +93,7 @@
           @foreach($data['products'] as $key => $product)
             @if($key == 0)
               <div class="col-md-2 col-md-40">
-<<<<<<< HEAD
-                <div class="item-product">
-=======
                 <div class="item-product text-center">
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                   <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
                     <div class="row">
                       <div class="col-md-6 col-sm-6 col-xs-6">

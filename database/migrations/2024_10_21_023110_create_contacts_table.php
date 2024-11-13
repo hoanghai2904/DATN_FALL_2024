@@ -15,7 +15,6 @@ class CreateContactsTable extends Migration
             $table->string('phone')->nullable(); // Số điện thoại liên hệ (bắt buộc)
             $table->text('message')->nullable(); // Thông điệp
             $table->string('status_contacts')->default('Chưa giải quyết');
-            $table->text('response_message')->nullable();
             $table->timestamps(); // Được tạo ra tại
             $table->softDeletes();
         });

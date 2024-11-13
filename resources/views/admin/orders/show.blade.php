@@ -4,11 +4,7 @@
 
 @section('content')
 
-<<<<<<< HEAD
-<div class="row">
-=======
 <div class="row ms-40">
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
     <div class="col-xl-8">
         <div class="card">
             <div class="card-header">
@@ -35,18 +31,10 @@
                     <table class="table table-nowrap align-middle table-borderless mb-0">
                         <thead class="table-light text-muted">
                             <tr>
-<<<<<<< HEAD
-                                <th scope="col">Sản phẩm</th>
-                                <th scope="col" class="text-center">Giá sản phẩm</th>
-                                <th scope="col" class="text-center">Số lượng</th>
-                                
-                                <th scope="col" class="text-center">Tổng tiền</th>
-=======
                                 <th >Sản phẩm</th>
                                 <th  class="text-center">Giá sản phẩm</th>
                                 <th  class="text-center">Số lượng</th>
                                 <th  class="text-center">Tổng tiền</th>
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                             </tr>
                         </thead>
                         <tbody>
@@ -78,11 +66,7 @@
                                         </div>
                                     </td>
                                    
-<<<<<<< HEAD
-                                    <td class="text-center">{{ number_format($item->price) }}₫</td>
-=======
                                     <td class="text-center">{{ number_format($item->product->price) }}₫</td>
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
                                     <td class="text-center">{{ $item->qty }}</td>
                                    
                                     <td class="fw-medium text-center">

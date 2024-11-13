@@ -127,10 +127,6 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->address = $request->address;
-<<<<<<< HEAD
-
-=======
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
         if($request->hasFile('avatar_image')){
           $image = $request->file('avatar_image');
           $image_name = time().'_'.$image->getClientOriginalName();
@@ -143,11 +139,8 @@ class UserController extends Controller
           $user->avatar_image = $image_name;
         }
 
-<<<<<<< HEAD
-=======
       
 
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
         $user->save();
 
         return redirect()->route('show_user')->with(['alert' => [

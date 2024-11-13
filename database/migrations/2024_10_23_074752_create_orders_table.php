@@ -20,8 +20,7 @@ return new class extends Migration
         $table->decimal('shipping_fee', 10, 2)->default(0);
         $table->enum('payment_status', ['Chưa thanh toán', 'Đã thánh toán'])->default('Chưa thanh toán');
         $table->enum('order_status', ['Đang xử lí', 'Đang giao ', 'Đã giao', 'Đã hủy'])->default('Đang xử lí');
-        $table->string('payment_method', ['Thẻ tín dụng', 'COD '])->default('Thẻ tín dụng');
-        $table->softDeletes();
+        $table->string('payment_method');
         $table->timestamps();
     });
 }

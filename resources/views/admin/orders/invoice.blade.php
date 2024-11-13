@@ -1,4 +1,4 @@
- @extends('admin.layouts.master')
+{{-- @extends('admin.layouts.master')
 
 @section('title')
 Đơn hàng
@@ -150,27 +150,20 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td class="text-start">
-                                          
-                                                    <div class="flex-grow-1 ms-2">
-                                                            <h5 class="fs-15">
-                                                                <a href="#" class="link-primary">{{ $item->product_name }}</a>
-                                                            </h5>
-                                                            @if($item->variant_color)
-                                                            <p class="text-muted mb-0">Màu sắc: <span class="fw-medium">{{ $item->variant_color }}</span></p>
-                                                        @endif
-                                                        
-                                                        @if($item->variant_size)
-                                                            <p class="text-muted mb-0">Size: <span class="fw-medium">{{ $item->variant_size }}</span></p>
-                                                        @endif
-                                                        
-                                                        @if($item->variant_weight)
-                                                            <p class="text-muted mb-0">Trọng lượng (gam): <span class="fw-medium">{{ (int) $item->variant_weight }}</span></p>
-                                                        @endif
-                                                    </div>
+                                            <span class="fw-medium">{{$item->product_name }}</span>
+                                            <p class="text-muted mb-0">Color: <span class="fw-medium">{{
+                                                    $item->variant_color_name }}</span></p>
+                                            <p class="text-muted mb-0">Size: <span class="fw-medium">{{
+                                                    $item->variant_size_name }}</span></p>
                                         </td>
-                                        <td class="text-center">{{ number_format($item->price) }}₫</td>
-                                        <td class="text-center">{{ $item->qty }}</td>
-                                        <td class="text-end"> {{ number_format($item->price * $item->qty) }}₫</td>
+                                        <td>
+                                            
+                                            {{ number_format($item->product_price_sale, 0, ',', '.') }}₫
+                                          
+                                        </td>
+                                        <td>{{ $item->qty }}</td>
+                                        <td class="text-end">{{ number_format($item->product_price_sale * $item->qty)
+                                            }}₫</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -184,25 +177,32 @@
                                                     <tr>
                                                         <td class="text-start">Tổng tiền :</td>
                                                         <td class="text-end">
-                                                        {{ number_format($order->total_amount) }}₫
+                                                            {{ number_format($orderItems->sum(function($item) {
+                                                            return $item->product_price_sale ?
+                                                            $item->product_price_sale * $item->qty :
+                                                            $item->product_price * $item->qty;
+                                                            }), 0, ',', '.') }}₫
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td class="text-start">Khuyến mãi ({{ $order->discount }}) :</td>
+                                                        <td class="text-start">Giảm giá:</td>
                                                         <td class="text-end">
-                                                        -{{ number_format($order->discount) }}₫
+                                                            {{ number_format($order->discount_price ?? 0, 0, ',', '.')
+                                                            }}₫
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-start">Phí vận chuyển:</td>
                                                         <td class="text-end">
-                                                        {{ number_format($order->shipping_fee) }}₫
+                                                            {{ number_format($order->shipping_fee, 0, ',', '.') }}₫
                                                         </td>
                                                     </tr>
                                                     <tr class="border-top border-top-dashed">
                                                         <th class="text-start" scope="row">Tổng tiền:</th>
                                                         <th class="text-end">
-                                                        {{ number_format($order->total_amount - ($order->discount ?? 0) + $order->shipping_fee, 0, ',', '.') }}₫
+                                                            {{ number_format($order->total_price -
+                                                            ($order->discount_price ?? 0) + $order->shipping_fee, 0,
+                                                            ',', '.') }}₫
                                                         </th>
                                                     </tr>
                                                 </tbody>
@@ -229,8 +229,4 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
-@endsection 
-=======
 @endsection --}}
->>>>>>> 41f6df5dc0dec956fd164d7464249d40d670949c
