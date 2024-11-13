@@ -51,12 +51,7 @@
                                             Giá từ cao tới thấp
                                         </option>
                                     </select>
-                                    <select name='stock' onchange="this.form.submit()">
-                                        <option value='' {{ Request::input('stock') == null ? 'selected' : '' }}>Tất
-                                            cả sản phẩm</option>
-                                        <option value='in_stock'
-                                            {{ Request::input('stock') == 'in_stock' ? 'selected' : '' }}>Còn hàng</option>
-                                    </select>
+
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-xs-6">
                                     <select name='type'>
@@ -70,6 +65,8 @@
                                         <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
                                             Sản phẩm đánh giá cao
                                         </option>
+                                        <option value='in_stock'
+                                            {{ Request::input('type') == 'in_stock' ? 'selected' : '' }}>Còn hàng</option>
                                     </select>
                                 </div>
                             </div>
