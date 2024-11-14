@@ -30,7 +30,6 @@
                 
                 <a href="{{ route('admin.brands.create') }}"><button type="button" class="btn btn-success add-btn" ><i class="ri-add-line align-bottom me-1"></i> Thêm mới</button></a>
             </div>
-            <!-- end card header -->
             @if (session('message'))
             <div class="alert alert-info" role="alert">
                 {{ session('message') }}
@@ -38,7 +37,6 @@
             
         @endif
             <div class="card-body">
-                {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
                 <div class="row mb-5 ">
                     <div class="col-lg-4">
                         <div class="d-flex justify-content-start mt-4">
@@ -93,6 +91,13 @@
                                             <a href="javascript:void(0);" class="view-item-btn"
                                                 data-comment-id="{{ $item->id }}">
                                                 <i class="ri-eye-fill align-bottom text-muted fs-5"></i>
+                                            </a>
+                                        </li> --}}
+                                        {{-- <li class="list-inline-item" data-bs-toggle="tooltip"
+                                            data-bs-trigger="hover" data-bs-placement="top" title="View">
+
+                                            <a href="{{ route('admin.brands.edit', $item->id) }}">
+                                                <i class="ri-pencil-fill align-bottom text-muted fs-5"></i>
                                             </a>
                                         </li> --}}
                                         <li class="list-inline-item" data-bs-toggle="tooltip"
