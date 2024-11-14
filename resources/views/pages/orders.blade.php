@@ -62,7 +62,29 @@
                         <td class="text-center">{{ $qty }}</td>
                         <td class="text-center" style="color: #f30;">{{ number_format($price,0,',','.') }}₫</td>
                         @if($order->status)
-                        <td class="text-center"><span class="label label-success">Thành Công</span></td>
+                        <td class="text-center">
+                          @switch($order->status)
+                              @case(1)
+                                  <span class="label label-warning">Đang xử lý</span>
+                                  @break
+                      
+                              @case(2)
+                                  <span class="label label-primary">Đang vận chuyển</span>
+                                  @break
+                      
+                              @case(3)
+                                  <span class="label label-success">Đã giao hàng</span>
+                                  @break
+                      
+                              @case(4)
+                                  <span class="label label-danger">Đã hủy</span>
+                                  @break
+                      
+                              @default
+                                  <span class="label label-default">Không xác định</span>
+                          @endswitch
+                      </td>
+                      
                         @else
                         <td class="text-center"><span class="label label-danger">Thất Bại</span></td>
                         @endif
@@ -79,7 +101,7 @@
               <img src="{{ asset('images/support_online.jpg') }}">
               <h3 class="sub_title">Để được hỗ trợ tốt nhất. Hãy gọi</h3>
               <div class="phone">
-                <a href="tel:18006750" title="1800 6750">1800 6750</a>
+                <a href="tel:18006750" title="1800 6750">0377887668</a>
               </div>
               <div class="or"><span>HOẶC</span></div>
               <h3 class="title">Chat hỗ trợ trực tuyến</h3>

@@ -54,8 +54,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="payment-service" title="{{ __('footer.nganluong') }}"><img
-                                            src="{{ asset('images/nganluong.png') }}"></div>
+                                   
                             </ul>
                         </div>
                     </div>

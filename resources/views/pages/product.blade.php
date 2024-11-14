@@ -154,7 +154,7 @@
                 <img src="{{ asset('images/support_online.jpg') }}">
                 <h3 class="sub_title">Để được hỗ trợ tốt nhất. Hãy gọi</h3>
                 <div class="phone">
-                  <a href="tel:18006750" title="1800 6750">1800 6750</a>
+                  <a href="tel:18006750" title="1800 6750">0377887668</a>
                 </div>
                 <div class="or"><span>HOẶC</span></div>
                 <h3 class="title">Chat hỗ trợ trực tuyến</h3>
@@ -170,7 +170,7 @@
                 <div class="tab-header">
                   <ul class="nav nav-tabs nav-tab-custom">
                     <li class="active"><a data-toggle="tab" href="#description">Mô Tả</a></li>
-                    <li><a data-toggle="tab" href="#vote">Nhận Xét Và Đánh Giá</a></li>
+                    <li><a data-toggle="tab" href="#vote">Bình Luận Sản Phẩm</a></li>
                   </ul>
                 </div>
                 <div class="tab-content">
@@ -189,7 +189,7 @@
                     <div class="content-vote">
                       @if(Auth::check())
                       <div class="section-rating">
-                        <div class="rating-title">Đánh giá sản phẩm</div>
+                        <div class="rating-title">Bình Luận</div>
                         <div class="rating-content">
                           <div class="rating-product"></div>
                           <div class="rating-form">
@@ -198,7 +198,7 @@
                               <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                               <input type="hidden" name="product_id" value="{{ $data['product']->id }}">
                               <textarea name="content" placeholder="Nội dung..." rows="3"></textarea>
-                              <button type="submit" class="btn btn-default">Gửi đánh giá</button>
+                              <button type="submit" class="btn btn-default">Gửi bình luận</button>
                             </form>
                           </div>
                         </div>

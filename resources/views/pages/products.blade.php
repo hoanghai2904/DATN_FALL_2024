@@ -75,7 +75,7 @@
     <section class="section-products">
       <div class="section-header">
         <div class="section-header-left">
-          <h2 class="section-title">ĐIỆN THOẠI</h2>
+          <h2 class="section-title">SẢN PHẨM</h2>
         </div>
         <div class="section-header-right">
           <ul>
