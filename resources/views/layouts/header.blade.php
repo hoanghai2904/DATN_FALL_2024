@@ -230,5 +230,14 @@
         <i class="fa fa-envelope" aria-hidden="true"></i> EMAIL: <a href="mailto:phonestore@gmail.com" title="phonestore@gmail.com">phonestore@gmail.com</a>
       </div>
     </div>
+    <div class="mobile-support">
+      <div class="text-support">HỖ TRỢ</div>
+      <div class="info-support">
+        <i class="fa fa-phone" aria-hidden="true"></i> HOTLINE: <a href="tel: +84 967 999 999" title="(+84) 967 999 999">(+84) 967 999 999</a>
+      </div>
+      <div class="info-support">
+        <i class="fa fa-envelope" aria-hidden="true"></i> EMAIL: <a href="mailto:phonestore@gmail.com" title="phonestore@gmail.com">phonestore@gmail.com</a>
+      </div>
+    </div>
   </div>
 </div>

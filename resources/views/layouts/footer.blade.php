@@ -82,5 +82,8 @@
         <div class="copyright text-center">
             Copyright &copy 2024 Hà Thế Bảo. All rights reserved.
         </div>
+        <div class="copyright text-center">
+            Copyright &copy 2024 Hà Thế Bảo. All rights reserved.
+        </div>
     </div>
 </footer>
