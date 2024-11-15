@@ -65,18 +65,6 @@
                                 <img id="avatarPreview" src="" alt="Avatar Preview"
                                     class="ml-3 rounded d-none float-left" width="70" height="70" />
                             </div>
-                            {{-- <div class="default-form-box mb-3 d-flex align-items-center">
-                            <div>
-                                <input type="file" id="logo" name="logo" class="form-control-file"
-                                    onchange="previewAvatar(event)" />
-                                @error('cover')
-                                    <small
-                                        style="color: #dc3545; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</small>
-                                @enderror
-                            </div>
-                            <img id="avatarPreview" src="" alt="Avatar Preview"
-                                class="ml-3 rounded d-none float-left" width="70" height="70" />
-                        </div> --}}
                         </div>
                     </div>
                 </div>
