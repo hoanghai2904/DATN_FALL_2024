@@ -148,14 +148,6 @@
                                                                 style="color:#FF6600;"></i>
                                                         </a>
                                                     </li>
-                                                    {{-- <li class="list-inline-item" data-bs-toggle="tooltip"
-                                                data-bs-trigger="hover" data-bs-placement="top" title="Delete">
-    
-                                                <a href="{{ route('admin.review.deleteReview', $review->id) }}"
-                                                    class=" delete-item">
-                                                    <i class="ri-delete-bin-fill align-bottom fs-5" style="color:#FF6600;"></i>
-                                                </a>
-                                            </li> --}}
                                                 </ul>
                                             </td>
                                         </tr>

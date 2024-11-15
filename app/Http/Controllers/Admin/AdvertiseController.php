@@ -33,17 +33,6 @@ class AdvertiseController extends Controller
       'date.required' => 'Ngày bắt đầu và kết thúc phải được chọn!',
       'image.required' => 'Hình ảnh hiển thị bài viết phải được tải lên!',
     ]);
-    // $validator = Validator::make($request->all(), [
-    //   'title' => 'required',
-    //   'at_home_page' => 'required',
-    //   'date' => 'required',
-    //   'image' => 'required',
-    // ], [
-    //   'title.required' => 'Tiêu đề quảng cáo không được để trống!',
-    //   'at_home_page.required' => 'Vị trí trang hiển thị phải được chọn!',
-    //   'date.required' => 'Ngày bắt đầu và kết thúc phải được chọn!',
-    //   'image.required' => 'Hình ảnh hiển thị bài viết phải được tải lên!',
-    // ]);
 
     if ($validator->fails()) {
       return back()
