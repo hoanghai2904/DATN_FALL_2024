@@ -234,17 +234,5 @@ class PostController extends Controller
       'title' => 'Thành Công',
       'content' => 'Chỉnh sửa bài viết thành công.'
     ]]);
-  }
-  public function updateStatus(Request $request, $id)
-  {
-      $post = Post::findOrFail($id);
-      $post->status = $request->input('status');
-      
-      if ($post->save()) {
-          return response()->json(['success' => true]);
-      } else {
-          return response()->json(['success' => false], 500);
-      }
-  }
-  
+  }  
 }

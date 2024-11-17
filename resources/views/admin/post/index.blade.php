@@ -92,7 +92,6 @@
                 <th data-orderable="false" data-width="100px">Hình Ảnh</th>
                 <th data-orderable="false">Tiêu Đề</th>
                 <th scope="col">Danh mục</th>
-                <th scope="col">Trạng thái</th>
                 <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
               </tr>
@@ -109,15 +108,7 @@
                   <td>
                     <a class="text-left" href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">{{ $post->title }}</a>
                   </td>
-                  <td>
-                    <div dir="ltr" class="toggle-icon" data-id="{{ $post->id }}">
-                        @if ($post->status == 0)
-                            <i class="fa-solid fa-toggle-off" data-status="0"></i>
-                        @else
-                            <i class="fa-solid fa-toggle-on" data-status="1"></i>
-                        @endif
-                    </div>
-                </td>                
+             
                   <td> {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y')}}</td>
                   <td>
                     <a href="{{ route('admin.post.edit', ['id' => $post->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">

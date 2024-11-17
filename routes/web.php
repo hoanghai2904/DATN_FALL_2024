@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\admin\VoucherController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -41,18 +40,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('post/{id}/update', 'PostController@update')->name('post.update');
   Route::post('/update-post-status/{id}', 'PostController@updateStatus')->name('post.updateStatus');
   
-  Route::group(['prefix' => 'vouchers', 'as' => 'vouchers.'], function () {
-    Route::get('/', [VoucherController::class, 'index'])->name('index');
-    Route::get('checkStatus', [VoucherController::class, 'checkStatus'])->name('checkStatus');
-    Route::get('create', [VoucherController::class, 'create'])->name('create');
-    Route::post('store', [VoucherController::class, 'store'])->name('store');
-    Route::delete('destroy/{id}', [VoucherController::class, 'destroy'])->name('destroy');
-    Route::get('edit/{id}', [VoucherController::class, 'edit'])->name('edit');
-    Route::put('updater/{id}', [VoucherController::class, 'update'])->name('update');
-    Route::put('update-status', [VoucherController::class, 'updateStatus'])->name('updateStatus');
-
-});
-
   Route::get('advertises', 'AdvertiseController@index')->name('advertise.index');
   Route::get('advertise/new', 'AdvertiseController@new')->name('advertise.new');
   Route::post('advertise/save', 'AdvertiseController@save')->name('advertise.save');
