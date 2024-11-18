@@ -27,6 +27,7 @@
     <section class="section-filter">
       <div class="section-header">
         <h2 class="section-title">Tìm Kiếm Và Sắp Xếp</h2>
+        <h2 class="section-title">Tìm Kiếm Và Sắp Xếp</h2>
       </div>
       <div class="section-content">
         <form action="{{ route('products_page') }}" method="GET" accept-charset="utf-8">
