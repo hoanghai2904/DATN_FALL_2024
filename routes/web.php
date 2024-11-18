@@ -93,17 +93,4 @@ Route::namespace('Pages')->group(function () {
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');
   Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
-    //page products
-    Route::get('products', 'ProductsController@index')->name('products_page');
-    Route::get('producer/{id}', 'ProductsController@getProducer')->name('producer_page');
-    Route::get('product/{id}', 'ProductsController@getProduct')->name('product_page');
-    Route::post('vote', 'ProductsController@addVote')->name('add_vote');
-    Route::post('cart/add', 'CartController@addCart')->name('add_cart');
-    Route::post('cart/remove', 'CartController@removeCart')->name('remove_cart');
-    Route::post('minicart/update', 'CartController@updateMiniCart')->name('update_minicart');
-    Route::post('cart/update', 'CartController@updateCart')->name('update_cart');
-    Route::get('cart', 'CartController@showCart')->name('show_cart');
-    Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
-    Route::post('payment', 'CartController@payment')->name('payment');
-    Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
 });
