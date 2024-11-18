@@ -87,3 +87,31 @@
         }
     </script>
 @endsection
+{{-- <script>
+    const notyf = new Notyf();
+    $(document).ready(function() {
+        $('body').on('click', '.change-status', function() {
+            let isChecked = $(this).is(':checked');
+            let id = $(this).data('id');
+            console.log(isChecked, id);
+
+
+            $.ajax({
+                url: "{{ route('admin.product.change-status') }}",
+                method: 'PUT',
+                data: {
+                    status: isChecked,
+                    id: id
+                },
+                success: function(data) {
+                    // toastr.success(data.message)
+                    notyf.success(data.message);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            })
+
+        })
+    })
+</script> --}}
