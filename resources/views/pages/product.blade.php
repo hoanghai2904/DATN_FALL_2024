@@ -157,7 +157,6 @@
                   <a href="tel:18006750" title="1800 6750">1800 6750</a>
                 </div>
                 <div class="or"><span>HOẶC</span></div>
-                <div class="or"><span>HOẶC</span></div>
                 <h3 class="title">Chat hỗ trợ trực tuyến</h3>
                 <h3 class="sub_title">Chúng tôi luôn trực tuyến 24/7.</h3>
               </div>

@@ -28,7 +28,6 @@
     <section class="section-products">
       <div class="section-header">
         <h2 class="section-title">Sản Phẩm <span>( {{ $data['products']->count() }} sản phẩm )</span></h2>
-        <h2 class="section-title">Sản Phẩm <span>( {{ $data['products']->count() }} sản phẩm )</span></h2>
       </div>
       <div class="section-content">
         @if($data['products']->isEmpty())
