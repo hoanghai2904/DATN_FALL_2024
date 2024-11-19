@@ -37,6 +37,7 @@
   border: none;
   box-shadow: none;
   width: 100%;
+  border: 1px solid #e1e1e1;
 }
 .form-checkout .form-group input:focus,
 .form-checkout .form-group textarea:focus {
@@ -52,7 +53,7 @@
 .col-order {
   background: #fafafa;
   margin-right: -15px;
-  height: 100%;
+  /* height: 100%; */
   border-left: 1px solid #e1e1e1;
 }
 .col-order .col-header {
@@ -176,6 +177,13 @@
   text-shadow: none;
   padding: 10px 20px;
 }
+.shipping-methods ul {
+  display: flex;
+  gap: 10px;
+  & li {
+    flex: 1;
+  }
+}
 .list-content {
   list-style: none;
   padding: 0;
@@ -214,6 +222,9 @@
 }
 .margin-bottom34 {
   margin-bottom: 34px;
+}
+.margin-top20 {
+  margin-top: 20px;
 }
 @media only screen and (max-width: 1199px){
 

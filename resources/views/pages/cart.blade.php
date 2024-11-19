@@ -43,16 +43,20 @@
         @else
           <div class="row">
             <div class="col-md-8">
-              <div class="cart-items">
+            <div class="cart-items">
                 @foreach($cart->items as $key => $item)
                   <div class="item product-{{ $key }}">
                     <div class="image-product">
                       <a href="{{ route('product_page', ['id' => $item['item']->product->id]) }}" target="_blank" title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">
-                        <img src="{{ Helper::get_image_product_url($item['item']->product->image) }}" style="background-size: 100%;">
+                        <img src="{{ Helper::get_image_product_url($item['item']->product->image) }}" style="background-size: 100%;"
+                        onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
                       </a>
                     </div>
                     <div class="info-product">
                       <div class="name"><a href="{{ route('product_page', ['id' => $item['item']->product->id]) }}" target="_blank" title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">{{ $item['item']->product->name . ' - ' . $item['item']->color }}</a></div>
+                      @if ($item['item']?->size)
+                        <div>Size: {{$item['item']?->size}}</div>
+                      @endif
                       <div class="price">{!! Helper::get_real_price($item['item']->sale_price, $item['item']->promotion_price, $item['item']->promotion_start_date, $item['item']->promotion_end_date) !!}</div>
                       <div class="quantity-block">
                         <div class="input-group-btn">

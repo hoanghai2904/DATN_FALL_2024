@@ -1,6 +1,6 @@
 $(document).ready(function(){
-
-  var slider = displayGallery(0);
+  var key = '0-0';
+  var slider = displayGallery(key);
 
   $("#slide-advertise").owlCarousel({
     items: 2,
@@ -53,87 +53,161 @@ $(document).ready(function(){
     $('.form-payment .row>div>button').prop('disabled', true);
 
   $('.select-color .color-inner').click(function() {
-    var key = $(this).attr('data-key');
-    if(!$(this).hasClass("active")) {
-      $('.select-color .color-inner').removeClass('active');
-      $(this).addClass('active');
-      $('.price-product>div').css('display', 'none');
-      $('.price-product>.product-'+key).css('display', 'block');
-      if(!!slider.destroy) slider.destroy();
-      $('.section-infomation .image-product>div').css('display', 'none');
-      $('.section-infomation .image-product>.image-gallery-'+key).css('display', 'block');
-      slider = displayGallery(key);
+    var colorKey = $(this).attr('data-key');
+    var selectedSizeKey = $('.select-size .size-inner.active').attr('data-key') ?? '0';  // Lấy key của màu đã chọn
+    if (!$(this).hasClass("active")) {
+        // Chuyển đổi trạng thái giữa các màu
+        $('.select-color .color-inner').removeClass('active');
+        $(this).addClass('active');
+        $('.select-size .size-inner').removeClass('active');
+        var first = false;
+        $('.select-size .size-inner').each(function() {
+            var dataColorKey = $(this).attr('data-color-key');
+            if(dataColorKey == colorKey) {
+                $(this).css('display', 'block');
+                if(!first) {
+                    $(this).addClass('active');
+                    first = true;
+                }
+            } else {
+                $(this).css('display', 'none');
+            }
+        });
+        
+        // Ẩn tất cả các sản phẩm và chỉ hiển thị sản phẩm của màu đã chọn
+        $('.price-product>div').css('display', 'none');
+        $('.price-product>.product-' + colorKey + '-' + selectedSizeKey).css('display', 'block');
+        
+        // Nếu slider tồn tại, hủy và khởi tạo lại
+        if (slider && typeof slider.destroy === 'function') slider.destroy();
+        $('.section-infomation .image-product>div').css('display', 'none');
+        $('.section-infomation .image-product>.image-gallery-' + colorKey+ '-'+selectedSizeKey).css('display', 'block');
+        
+        slider = displayGallery(colorKey+'-'+selectedSizeKey);
     }
-    var can_by = $(this).attr('can-buy');
-    $('#qty').val(can_by);
-    if(can_by == 0)
-      $('.form-payment .row>div>button').prop('disabled', true);
-    else
-      $('.form-payment .row>div>button').prop('disabled', false);
+
+    // Cập nhật giá trị có thể mua cho số lượng (can-buy)
+    var canBuy = $(this).attr('can-buy');
+    $('#qty').val(canBuy);
+
+    // Nếu không thể mua, vô hiệu hóa nút thanh toán
+    $('.form-payment .row>div>button').prop('disabled', canBuy == 0);
+
+    // Cập nhật số lượng tối đa có thể chọn
     var qty = $(this).attr('data-qty');
     $('#qty').attr('max', qty);
   });
-  $('button.add_to_cart').click(function() {
-    var product_id = $('.color-product .color-inner.active').attr('product-id');
-    var qty = $('.form-payment input.qty').val();
-    var data = {
-      id: product_id,
-      qty: qty
-    };
-    var url = $(this).attr('data-url');
-    $.ajax({
-      url: url,
-      type: 'POST',
-      data: data,
-      dataType: 'JSON',
-      success: function(data) {
-        $('#cart-sidebar').remove();
-        $('.mini-cart .top-cart-content').append(htmlCart(data.response, data.url));
-        $('.support-cart .count_item_pr').empty();
-        $('.support-cart .count_item_pr').append(data.response.totalQty);
-        Swal.fire({
-          title: 'Thành Công',
-          text: data.msg,
-          type: 'success'
-        })
-      },
-      error: function(data) {
-        var errors = data.responseJSON;
-        Swal.fire({
-          title: 'Thất bại',
-          text: errors.msg,
-          type: 'error'
-        })
+
+  $('.select-size .size-inner').click(function() {
+      var sizeKey = $(this).attr('data-key');
+      console.log('sizeKey', sizeKey)
+      var selectedColorKey = $('.select-color .color-inner.active').attr('data-key');  // Lấy key của size đã chọn
+      if (!$(this).hasClass("active")) {
+          // Chuyển đổi trạng thái giữa các kích thước
+          $('.select-size .size-inner').removeClass('active');
+          $(this).addClass('active');
+          
+          // Ẩn tất cả các sản phẩm và chỉ hiển thị sản phẩm của kích thước đã chọn trong màu đã chọn
+          $('.price-product>div').css('display', 'none');
+          console.log($('.price-product>.product-' + selectedColorKey + '-' + sizeKey))
+          $('.price-product>.product-' + selectedColorKey + '-' + sizeKey).css('display', 'block');
+          
+          // Nếu slider tồn tại, hủy và khởi tạo lại
+          if (slider && typeof slider.destroy === 'function') slider.destroy();
+          $('.section-infomation .image-product>div').css('display', 'none');
+          $('.section-infomation .image-product>.image-gallery-' + selectedColorKey + '-' + sizeKey).css('display', 'block');
+          
+          slider = displayGallery(selectedColorKey + '-' + sizeKey);
       }
-    });
+
+      // Cập nhật giá trị có thể mua cho số lượng (can-buy) khi chọn kích thước
+      var canBuy = $(this).attr('can-buy');
+      $('#qty').val(canBuy);
+
+      // Nếu không thể mua, vô hiệu hóa nút thanh toán
+      $('.form-payment .row>div>button').prop('disabled', canBuy == 0);
+
+      // Cập nhật số lượng tối đa có thể chọn
+      var qty = $(this).attr('data-qty');
+      $('#qty').attr('max', qty);
   });
 
+  $('button.add_to_cart').click(function() {
+    let product_detail_id = $('.color-product .color-inner.active').attr('product-id');
+    var qty = $('.form-payment input.qty').val();
+    
+    // Capture the selected color and size (if available)
+    var size = $('.color-product .size-inner.active').attr('product-size-value');
+    if(size) {
+        product_detail_id = $('.color-product .size-inner.active').attr('product-id');
+    }
+
+    // Prepare the data to send
+    var data = {
+        id: product_detail_id,
+        qty,
+    };
+    
+    var url = $(this).attr('data-url');
+    
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data) {
+            $('#cart-sidebar').remove();
+            $('.mini-cart .top-cart-content').append(htmlCart(data.response, data.url));
+            $('.support-cart .count_item_pr').empty();
+            $('.support-cart .count_item_pr').append(data.response.totalQty);
+            Swal.fire({
+                title: 'Thành Công',
+                text: data.msg,
+                type: 'success'
+            })
+        },
+        error: function(data) {
+            var errors = data.responseJSON;
+            Swal.fire({
+                title: 'Thất bại',
+                text: errors.msg,
+                type: 'error'
+            })
+        }
+    });
+});
+
+  $(document).on('error', 'img', function() {
+    $(this).attr('src', '/images/no-image.png');
+  });
 });
 
 function displayGallery(key) {
-  var slider = $('#imageGallery-' + key).lightSlider({
-      gallery:true,
-      item:1,
-      loop:true,
-      thumbItem:5,
-      slideMargin:0,
-      enableDrag: true,
-      controls: false,
-      slideMargin: 1,
-      currentPagerPosition:'middle',
-      onSliderLoad: function(el) {
-          el.lightGallery({
-              selector: '#imageGallery-' + key + ' .lslide',
-          });
-      },
-      onBeforeSlide: function (el) {
-        $('body').addClass('lg-on');
-      },
-      onAfterSlide: function (el) {
-        $('body').removeClass('lg-on');
-      }
-  });
-  return slider;
+  console.log(key)
+    var slider = $('#imageGallery-' + key).lightSlider({
+        gallery: true,
+        item: 1,
+        loop: true,
+        thumbItem: 5,
+        slideMargin: 0,
+        enableDrag: true,
+        controls: false,
+        slideMargin: 1,
+        currentPagerPosition: 'middle',
+        onSliderLoad: function(el) {
+            $(window).resize();
+            el.lightGallery({
+                selector: '#imageGallery-' + key + ' .lslide',
+            });
+        },
+        onBeforeSlide: function (el) {
+            $('body').addClass('lg-on');
+        },
+        onAfterSlide: function (el) {
+            $('body').removeClass('lg-on');
+        }
+    });
+    return slider;
 }
 function scrollToxx() {
   $('html, body').animate({ scrollTop: $('.tab-description').offset().top }, 'slow');

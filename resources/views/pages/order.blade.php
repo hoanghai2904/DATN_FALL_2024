@@ -42,6 +42,9 @@
             <li class="list-group-item">Số Điện Thoại: {{ $data['order']->user->phone }}</li>
             <li class="list-group-item">Địa Chỉ: {{ $data['order']->user->address }}</li>
           </ul>
+          @if($data['order']->status == 4 && !$data['order']->is_paid)
+            <button class="btn btn-success" onclick="handleReceiveOrder({{ $data['order']->id }})">Đã nhận hàng</button>
+          @endif
         </div>
         
         <!-- Thông tin mua hàng -->
@@ -53,6 +56,36 @@
             <li class="list-group-item">Số Điện Thoại: {{ $data['order']->phone }}</li>
             <li class="list-group-item">Địa Chỉ: {{ $data['order']->address }}</li>
             <li class="list-group-item">Phương Thức Thanh Toán: {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
+            <li class="list-group-item">
+              Trạng thái thanh toán: {{ $data['order']->is_paid ? 'Đã thanh toán' : "Chưa thanh toán" }}
+              @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1)
+                  <form id="payment-form-{{ $data['order']->id }}" action="{{ route('payment_now', $data['order']->id) }}" method="POST" style="display: none;">
+                      @csrf
+                      <input type="hidden" name="id" value="{{ $data['order']->id }}">
+                  </form>
+                  <button class="btn btn-primary ml-5" onclick="document.getElementById('payment-form-{{ $data['order']->id }}').submit();">Thanh toán ngay</button>
+              @endif
+            </li>
+            <li class="list-group-item">
+              Trạng thái đơn hàng:
+                @switch($data['order']?->status)
+                    @case(1)
+                          <span class="label label-warning">Chờ xác nhận</span>
+                        @break
+                    @case(2)
+                      <span class="label label-warning">Đã xác nhận</span>
+                      @break
+                    @case(3)
+                        <span class="label label-primary">Đang vận chuyển</span>
+                        @break
+                    @case(4)
+                        <span class="label label-success">Đã giao hàng</span>
+                        @break
+                    @case(5)
+                        <span class="label label-danger">Đã hủy</span>
+                        @break
+                @endswitch
+            </td>
           </ul>
         </div>
       </div>
@@ -100,6 +133,18 @@
           <th class="text-center">{{ $totalQuantity }}</th>
           <th colspan="2" class="text-center text-danger">{{ number_format($totalAmount, 0, ',', '.') }}₫</th>
         </tr>
+        <tr>
+          <th colspan="5" class="text-end">Phí giao hàng</th>
+          <th colspan="2" class="text-center text-danger">{{ number_format($data['order']?->fee, 0, ',', '.') }}₫</th>
+        </tr>
+        <tr>
+          <th colspan="5" class="text-end">
+            <strong>Tổng Thanh Toán</strong>
+          </th>
+          <th colspan="2" class="text-center text-danger">
+            <strong>{{ number_format($totalAmount + $data['order']?->fee, 0, ',', '.') }}₫</strong>
+          </th>
+        </tr>
       </tfoot>
     </table>
   </div>
@@ -133,6 +178,33 @@
 
 @section('js')
   <script>
+    const handleReceiveOrder = (id) => {
+      $.ajax({
+          url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+          method: 'POST',
+          data: {
+            id: id,
+            _token: `{{ csrf_token() }}`
+          },
+          success: function(response) {
+            if (response.status) {
+              Swal.fire(
+                'Thành công!',
+                response.message,
+                'success'
+              ).then(() => {
+                location.reload();
+              });
+            } else {
+              Swal.fire(
+                'Thất bại!',
+                response.message,
+                'error'
+              );
+            }
+          }
+        });
+    }
     $(document).ready(function(){
 
       $("#slide-advertise").owlCarousel({
