@@ -54,7 +54,7 @@ $(document).ready(function(){
 
   $('.select-color .color-inner').click(function() {
     var colorKey = $(this).attr('data-key');
-    var selectedSizeKey = $('.select-size .size-inner.active').attr('data-key');  // Lấy key của màu đã chọn
+    var selectedSizeKey = $('.select-size .size-inner.active').attr('data-key') ?? '0';  // Lấy key của màu đã chọn
     if (!$(this).hasClass("active")) {
         // Chuyển đổi trạng thái giữa các màu
         $('.select-color .color-inner').removeClass('active');

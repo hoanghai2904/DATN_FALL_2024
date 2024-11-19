@@ -473,7 +473,11 @@
 
   // Hiển thị cảnh báo nếu phát hiện trùng lặp
   if (isDuplicate) {
-    alert('Màu sắc và kích thước không được trùng nhau.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Lỗi',
+      text: 'Có màu sắc và kích thước bị trùng lặp: ' + color + ' - ' + size,
+    });
     currentField.val(''); // Xóa giá trị vừa nhập
   }
 });
