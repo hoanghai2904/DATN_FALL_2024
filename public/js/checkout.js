@@ -4,6 +4,61 @@ $(document).ready(function(){
     $(this).parent('li').addClass('active');
   });
 });
+$(document).ready(function() {
+    // Initial setup: set the shipping price based on the initially selected radio button
+    updateShippingPrice();
+
+    // Listen for changes in the selected radio button
+    $("input[name='shipping_method']").on("change", function() {
+        updateShippingPrice();
+    });
+
+    // Function to update the shipping price
+    function updateShippingPrice() {
+        var selectedPrice = parseInt($("input[name='shipping_method']:checked").val()); // Convert value to integer
+        // Update the displayed shipping price
+        $(".ship-price .price").text(formatCurrency(selectedPrice));
+
+        // Update the total price: Calculate new totalPrice = cart totalPrice + selected shipping fee
+        var currentTotalPrice = parseInt($(".total-price .price").attr("data-price")); // Get the current total price from the data attribute
+        var newTotalPrice = currentTotalPrice + selectedPrice; // Add shipping fee to current total price
+
+        // Update the total price display
+        $(".total-price .price").text(formatCurrency(newTotalPrice));
+        $(".total-price").attr("data-price", newTotalPrice); // Update the data-price attribute with the new total price
+        // call ajax to update fee
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var url = $("input[name='shipping_method']").attr('data-route-update-fee');
+        var data = {
+            _token: token,
+            fee: selectedPrice
+        };
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            error: function(data) {
+                var errors = data.responseJSON;
+                Swal.fire({
+                    title: 'Thất bại',
+                    text: errors.msg,
+                    type: 'error'
+                })
+            }
+        });
+    }
+
+    // Function to format the currency
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
+    }
+});
+
+
 // validate form
 
 $(document).ready(function(){
@@ -63,9 +118,11 @@ $(document).ready(function(){
       var token = $('meta[name="csrf-token"]').attr('content');
       form_checkout.append($('<input type="hidden" name="_token">').val(token));
 
-      var payment_method = $('input[type="radio"]:checked').val();
+      var payment_method = $('input[name="payment_method"]:checked').val();
       form_checkout.append($('<input type="hidden" name="payment_method">').val(payment_method));
 
+      var shipping_method = $('input[name="shipping_method"]:checked').val();
+      form_checkout.append($('<input type="hidden" name="shipping_method">').val(shipping_method));
       var buy_method = form_checkout.attr('buy-method');
       form_checkout.append($('<input type="hidden" name="buy_method">').val(buy_method));
 

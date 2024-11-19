@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +11,7 @@ use App\Models\ProductDetail;
 use App\Models\Producer;
 use App\Models\Product;
 use App\Models\Advertise;
+use App\Models\OrderDetail;
 use App\Models\ProductVote;
 
 class ProductsController extends Controller
@@ -141,11 +143,34 @@ class ProductsController extends Controller
 
     if(!$product) abort(404);
 
-    $product_details = ProductDetail::where([['product_id', $id], ['import_quantity', '>', 0]])->with([
-      'product_images' => function ($query) {
-        $query->select('id', 'product_detail_id', 'image_name');
-      }
-    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->get();
+    $product_details = ProductDetail::where([['product_id', $id], ['import_quantity', '>', 0]])
+    ->with([
+        'product_images' => function ($query) {
+            $query->select('id', 'product_detail_id', 'image_name');
+        },
+    ])
+    ->select('id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+    ->get()
+    ->groupBy('color')
+    ->map(function ($items) {
+        return [
+            'color' => $items->first()->color,
+            'details' => $items->map(function ($item) use ($items) {
+                return [
+                    'id' => $item->id,
+                    'size' => $item->size,
+                    'color' => $items->first()->color,
+                    'quantity' => $item->quantity,
+                    'sale_price' => $item->sale_price,
+                    'promotion_price' => $item->promotion_price,
+                    'promotion_start_date' => $item->promotion_start_date,
+                    'promotion_end_date' => $item->promotion_end_date,
+                    'product_images' => $item->product_images,
+                ];
+            })->values(),
+        ];
+    })
+    ->values();
 
     $suggest_products = Product::select('id','name', 'image', 'rate')
     ->whereHas('product_detail', function (Builder $query) {
@@ -161,8 +186,23 @@ class ProductsController extends Controller
     })->where('product_id', $id)->with(['user' => function($query) {
       $query->select('id', 'name', 'avatar_image');
     }])->latest()->get();
+    $canComment = false;
+    $user = auth()->user();
+    if($user) {
+      $hasCommented = ProductVote::where('product_id', $product->id)
+          ->where('user_id', $user->id)
+          ->exists();
 
-    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes]]);
+      $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
+                          $query->where('user_id', $user->id)
+                                ->where('status', OrderStatusEnum::DELIVERED);
+                      })
+                      ->where('product_detail_id', $product->id)
+                      ->exists();
+      // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
+        $canComment = $hasPurchased && !$hasCommented;
+    }
+    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
   }
 
   public function addVote(Request $request) {

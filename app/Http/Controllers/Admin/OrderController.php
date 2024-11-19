@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -11,7 +12,7 @@ class OrderController extends Controller
 {
   public function index()
   {
-    $orders = Order::select('id', 'user_id','status', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->where('status', '<>', 0)->with([
+    $orders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
         'user' => function ($query) {
           $query->select('id', 'name');
         },
@@ -24,7 +25,7 @@ class OrderController extends Controller
 
   public function show($id)
   {
-    $order = Order::select('id', 'user_id', 'payment_method_id', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
+    $order = Order::select('id', 'user_id', 'payment_method_id','fee','is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
         'user' => function ($query) {
           $query->select('id', 'name', 'email', 'phone', 'address');
         },
@@ -35,7 +36,7 @@ class OrderController extends Controller
           $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
           ->with([
             'product_detail' => function ($query) {
-              $query->select('id', 'product_id', 'color')
+              $query->select('id', 'product_id', 'color', 'size')
               ->with([
                 'product' => function ($query) {
                   $query->select('id', 'name', 'image', 'sku_code');
@@ -53,14 +54,17 @@ class OrderController extends Controller
     $orderAction = Order::find($id);
     if($orderAction){
       switch ($action) {
-        case 'process':
-          $orderAction->status= 2;
+        case 'confirmed':
+          $orderAction->status= OrderStatusEnum::CONFIRMED;
           break;
-        case 'success':
-          $orderAction->status= 3;
+        case 'delivering':
+          $orderAction->status= OrderStatusEnum::DELIVERING;
+          break;
+        case 'delivered':
+          $orderAction->status= OrderStatusEnum::DELIVERED;
           break;
         case 'cancel':
-          $orderAction->status= -1;
+          $orderAction->status= OrderStatusEnum::CANCELLED;
           break;
       }
       $orderAction->save();

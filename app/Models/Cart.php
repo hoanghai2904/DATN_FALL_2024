@@ -10,6 +10,7 @@ class Cart
   public $items = NULL;
   public $totalQty = 0;
   public $totalPrice = 0;
+  public $fee = 3000;
 
   public function __construct($oldCart)
   {
@@ -17,6 +18,7 @@ class Cart
       $this->items = $oldCart->items;
       $this->totalQty = $oldCart->totalQty;
       $this->totalPrice = $oldCart->totalPrice;
+      $this->fee = $oldCart->fee;
     }
   }
 
@@ -65,12 +67,12 @@ class Cart
       foreach($this->items as $key => $item) {
         $product = ProductDetail::where('id',$key)->with(['product' => function($query) {
           $query->select('id', 'name', 'image', 'sku_code');
-        }])->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
+        }])->select('id', 'product_id', 'color','size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
         $this->items[$key]['item'] = $product;
-        if(($product->promotion_price > 0) && ($product->promotion_start_date <= date('Y-m-d')) && ($product->promotion_end_date >= date('Y-m-d')))
-          $this->items[$key]['price'] = $product->promotion_price;
+        if(($product?->promotion_price > 0) && ($product?->promotion_start_date <= date('Y-m-d')) && ($product?->promotion_end_date >= date('Y-m-d')))
+          $this->items[$key]['price'] = $product?->promotion_price;
         else
-          $this->items[$key]['price'] = $product->sale_price;
+          $this->items[$key]['price'] = $product?->sale_price;
         $this->totalPrice = $this->totalPrice + $this->items[$key]['price'] * $this->items[$key]['qty'];
       }
       return true;
@@ -89,5 +91,10 @@ class Cart
     } else {
       return false;
     }
+  }
+
+  public function updateFee($fee) {
+    $this->fee = $fee;
+    return true;
   }
 }

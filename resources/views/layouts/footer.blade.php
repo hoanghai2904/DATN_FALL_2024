@@ -40,17 +40,20 @@
                             <ul>
                                 <li class="clearfix">
                                     <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5" title="{{ __('footer.visa') }}">
-                                        <div class="payment visa"><img src="{{ asset('images/visa.png') }}"></div>
+                                        <div class="payment visa"><img src="{{ asset('images/visa.png') }}" alt="visa"></div>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5"
                                         title="{{ __('footer.mastercard') }}">
-                                        <div class="payment"><img src="{{ asset('images/mastercard.png') }}"></div>
+                                        <div class="payment"><img src="{{ asset('images/mastercard.png') }}" alt="mastercard"></div>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5" title="{{ __('footer.jcb') }}">
-                                        <div class="payment"><img src="{{ asset('images/jcb.png') }}"></div>
+                                        <div class="payment"><img src="{{ asset('images/jcb.png') }}" alt="jcb"></div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5" title="{{ __('footer.vnpay') }}">
+                                        <div class="payment"><img src="{{ asset('images/vnpay.jpg') }}" style="height: 45.83px; object-fit:contain" alt="vnpay"></div>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-3 padding-lr5" title="{{ __('footer.cod') }}">
-                                        <div class="payment"><img src="{{ asset('images/cod.png') }}"></div>
+                                        <div class="payment"><img src="{{ asset('images/cod.png') }}" alt="cod"></div>
                                     </div>
                                 </li>
                                 <li>

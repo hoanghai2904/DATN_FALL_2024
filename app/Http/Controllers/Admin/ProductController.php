@@ -247,6 +247,7 @@ class ProductController extends Controller
         $new_product_detail = new ProductDetail;
         $new_product_detail->product_id = $product->id;
         $new_product_detail->color = $product_detail['color'];
+        $new_product_detail->size = $product_detail['size'];
         $new_product_detail->import_quantity = $product_detail['quantity'];
         $new_product_detail->quantity = $product_detail['quantity'];
         $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
@@ -301,7 +302,7 @@ class ProductController extends Controller
         $query->select('id', 'product_id', 'content', 'start_date', 'end_date');
       },
       'product_details' => function ($query) {
-        $query->select('id', 'product_id', 'color', 'import_quantity', 'import_price', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('import_quantity', '>', 0)
+        $query->select('id', 'product_id', 'color','size', 'import_quantity', 'import_price', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('import_quantity', '>', 0)
         ->with([
           'product_images' => function ($query) {
             $query->select('id', 'product_detail_id', 'image_name');

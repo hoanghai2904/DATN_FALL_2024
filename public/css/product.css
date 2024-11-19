@@ -183,46 +183,57 @@
   font-size: 16px;
   font-weight: 600;
 }
+.section-product .color-product .select-size,
 .section-product .color-product .select-color {
   margin-top: 15px;
 }
+.section-product .color-product .select-size img,
 .section-product .color-product .select-color img {
   width: 100%;
   object-fit: cover;
   display: block;
 }
+.section-product .color-product .select-size .select-inner,
 .section-product .color-product .select-color .select-inner {
   display: flex;
   align-items: center;
 }
+.section-product .color-product .select-size .image-color,
 .section-product .color-product .select-color .image-color {
   margin-right: 5px;
   width: 30px;
 }
+.section-product .color-product .select-size .image-name,
 .section-product .color-product .select-color .image-name {
   text-transform: uppercase;
   font-size: 13px;
   font-weight: 600;
 }
+.section-product .color-product .select-size>.row,
 .section-product .color-product .select-color>.row {
   margin-left: -5px;
   margin-right: -5px;
 }
+.section-product .color-product .select-size>.row>div,
 .section-product .color-product .select-color>.row>div {
   padding-left: 5px;
   padding-right: 5px;
 }
+.section-product .color-product .select-size .size-inner,
 .section-product .color-product .select-color .color-inner {
-  padding: 2px;
+  padding: 2px 6px;
   position: relative;
   border: #ccc 1px solid;
 }
+.section-product .color-product .select-size .size-inner.active,
 .section-product .color-product .select-color .color-inner.active {
   border: #f30 1px solid;
 }
+.section-product .color-product .select-size .size-inner:hover,
 .section-product .color-product .select-color .color-inner:hover {
   cursor: pointer;
 }
+.section-product .color-product .select-size .size-inner .crossed-out,
 .section-product .color-product .select-color .color-inner  .crossed-out {
   position: absolute;
   top: 0;
@@ -231,15 +242,18 @@
   height: 100%;
   background-color: #ffffffaa;
 }
+.section-product .color-product .select-size .size-inner .crossed-out:hover,
 .section-product .color-product .select-color .color-inner  .crossed-out:hover {
   cursor: not-allowed;
 }
+.section-product .color-product .select-size .size-inner .image-check,
 .section-product .color-product .select-color .color-inner .image-check {
   position: absolute;
   right: 0;
   bottom: 0;
   display: none;
 }
+.section-product .color-product .select-size .size-inner.active .image-check,
 .section-product .color-product .select-color .color-inner.active .image-check {
   display: block;
 }

@@ -28,11 +28,12 @@
                     @foreach ($cart->items as $key => $item)
                         <li class="item productid-{{ $key }}">
                             <a class="product-image"
-                                href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
+                                href="{{ route('product_page', ['id' => $item['item']?->product?->id]) }}"
                                 title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">
                                 <img alt="{{ $item['item']->product->name . ' - ' . $item['item']->color }}"
                                     src="{{ Helper::get_image_product_url($item['item']->product->image) }}"
-                                    width="80">
+                                    width="80"
+                                    onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
                             </a>
                             <div class="detail-item">
                                 <div class="product-details">
