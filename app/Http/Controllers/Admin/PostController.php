@@ -105,5 +105,48 @@ class PostController extends Controller
     ]]);
   }
 
+  public function delete(Request $request)
+  {
+    $post = Post::where('id', $request->post_id)->first();
 
+    if(!$post) {
+
+      $data['type'] = 'error';
+      $data['title'] = 'Thất Bại';
+      $data['content'] = 'Bạn không thể xóa bài viết không tồn tại!';
+    } else {
+      Storage::disk('public')->delete('images/posts/' . $post->image);
+      if($post->content != null) {
+        $dom = new \DomDocument();
+
+        // conver utf-8 to html entities
+        $content = mb_convert_encoding($post->content, 'HTML-ENTITIES', "UTF-8");
+
+        $dom->loadHtml($content, LIBXML_HTML_NODEFDTD | LIBXML_NOERROR);
+
+        $images = $dom->getElementsByTagName('img');
+
+        foreach($images as $img){
+
+            $src = $img->getAttribute('src');
+            $src = mb_convert_encoding($src, "UTF-8", 'HTML-ENTITIES');
+
+            if(Str::startsWith($src, '/storage/images/posts/')){
+
+                list(, $src) = explode('/storage/', $src);
+
+                Storage::disk('public')->delete($src);
+            }
+        }
+      }
+
+      $post->delete();
+
+      $data['type'] = 'success';
+      $data['title'] = 'Thành Công';
+      $data['content'] = 'Xóa bài viết thành công!';
+    }
+
+    return response()->json($data, 200);
+  }
 }
