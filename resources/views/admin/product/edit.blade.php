@@ -174,7 +174,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label for="size_{{ $product_detail->id }}">Size</label>
-                    <input type="text" name="old_product_details[{{ $product_detail->id }}][size]" class="form-control size" id="size_{{ $product_detail->id }}" placeholder="Size" autocomplete="off" value="{{ $product_detail->size }}">
+                    <input type="text" name="old_product_details[{{ $product_detail->id }}][size]" class="form-control color" id="size_{{ $product_detail->id }}" placeholder="Size" autocomplete="off" value="{{ $product_detail->size }}">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -256,7 +256,7 @@
 
 @section('embed-js')
 <!-- include tinymce js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
+<script src="https://c dnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
 <!-- include jquery.repeater -->
 <script src="{{ asset('AdminLTE/bower_components/jquery.repeatable.js') }}"></script>
 <!-- include Bootstrap File Input -->

@@ -98,4 +98,8 @@ Route::namespace('Pages')->group(function () {
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');
   Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
+
+  Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
+  Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
+
 });

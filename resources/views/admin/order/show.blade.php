@@ -161,7 +161,7 @@
                             <tr>
                                 @if (Str::contains($order->payment_method->name, 'Online Payment'))
                                 <th>Đã Thanh Toán:</th>
-                                    <td><span style="color: #f30;">{{ number_format($price, 0, ',', '.') }} VNĐ</span></td>
+                                <td><span style="color: #f30;">{{ number_format($price + ($order->fee ?? 0) - ($order->discount ?? 0), 0, ',', '.') }} VNĐ</span></td>
                                 {{-- @else
                                     <td><span style="color: #f30;">0 VNĐ</span></td> --}}
                                 @endif
@@ -170,11 +170,15 @@
                                 <th>Phí Vận Chuyển:</th>
                                 <td><span style="color: #f30;">{{ number_format($order?->fee, 0, ',', '.') }} VNĐ</span></td>
                             </tr>
+                            <tr>
+                                <th>Giảm Giá:</th>
+                                <td><span style="color: #f30;">{{ number_format($order?->discount, 0, ',', '.') }} VNĐ</span>
+                                </td>
                             @if (Str::contains($order->payment_method->name, 'COD'))
                                 <tr>
                                     <th>Tổng Số Tiền Phải Thanh Toán:</th>
                                     @php
-                                        $totalPayment = $price + $order->fee;
+                                        $totalPayment = $price + $order->fee - $order->discount;
                                     @endphp
                                     <td><span style="color: #f30;">{{ number_format($totalPayment, 0, ',', '.') }} VNĐ</span></td>
                                 </tr>

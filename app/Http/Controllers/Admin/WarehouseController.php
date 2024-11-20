@@ -102,6 +102,6 @@ class WarehouseController extends Controller
         }
         $product_details = $product_details->get();
                                    
-        return view('admin.warehouse.orderDetail')->with('product_details', $product_details->get());
+        return view('admin.warehouse.orderDetail')->with('product_details', $product_details);
     }
 }

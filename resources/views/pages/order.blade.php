@@ -42,7 +42,9 @@
             <li class="list-group-item">Số Điện Thoại: {{ $data['order']->user->phone }}</li>
             <li class="list-group-item">Địa Chỉ: {{ $data['order']->user->address }}</li>
           </ul>
-          @if($data['order']->status == 4 && !$data['order']->is_paid)
+          @if($data['order']->status == 4 && !$data['order']->is_paid && $data['order']->payment_method_id == 1 ||
+              $data['order']->status == 4 && $data['order']->is_paid && $data['order']->payment_method_id != 1
+          )
             <button class="btn btn-success" onclick="handleReceiveOrder({{ $data['order']->id }})">Đã nhận hàng</button>
           @endif
         </div>
@@ -138,11 +140,15 @@
           <th colspan="2" class="text-center text-danger">{{ number_format($data['order']?->fee, 0, ',', '.') }}₫</th>
         </tr>
         <tr>
+          <th colspan="5" class="text-end">Giảm giá</th>
+          <th colspan="2" class="text-center text-danger">{{ number_format($data['order']?->discount, 0, ',', '.') }}₫</th>
+        </tr>
+        <tr>
           <th colspan="5" class="text-end">
             <strong>Tổng Thanh Toán</strong>
           </th>
           <th colspan="2" class="text-center text-danger">
-            <strong>{{ number_format($totalAmount + $data['order']?->fee, 0, ',', '.') }}₫</strong>
+            <strong>{{ number_format($totalAmount + $data['order']?->fee - $data['order']?->discount, 0, ',', '.') }}₫</strong>
           </th>
         </tr>
       </tfoot>
