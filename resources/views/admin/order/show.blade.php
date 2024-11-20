@@ -54,23 +54,26 @@
                             Address: {{ $order->address }}
                         </address>
                     </div>
-                    <div class="col-md-3 col-sm-3 col-xs-3">
-                        Thông Tin Tài Khoản<br>
-                        <br>
-                        <address>
-                            <b>{{ $order->user->name }}</b><br>
-                            Phone: {{ $order->user->phone }}<br>
-                            Email: {{ $order->user->email }}<br>
-                            Address: {{ $order->user->address }}
-                        </address>
-                    </div>
+                    @if ($order->user)
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            Thông Tin Tài Khoản<br>
+                            <br>
+                            <address>
+                                <b>{{ $order->user->name }}</b><br>
+                                Phone: {{ $order->user->phone }}<br>
+                                Email: {{ $order->user->email }}<br>
+                                Address: {{ $order->user->address }}
+                            </address>
+                        </div>
+                    @endif
                     <div class="col-md-3 col-sm-3 col-xs-3">
                         Thông Tin Đơn Hàng<br>
                         <br>
                         <address>
                             <b>Đơn Hàng #{{ $order->order_code }}</b><br>
                             <b>Ngày Tạo:</b> {{ date_format($order->created_at, 'd/m/Y') }}<br>
-                            <b>Thanh Toán:</b> {{ $order->payment_method->name }}
+                            <b>Phương thức:</b> {{ $order->payment_method->name }}<br>
+                            <b>Thanh toán:</b> {{ $order->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}<br>
                         </address>
                     </div>
                 </div>
@@ -87,6 +90,7 @@
                                 <th>Mã Sản Phẩm</th>
                                 <th>Tên Sản Phẩm</th>
                                 <th>Phân loại</th>
+                                <th>Kích thước</th>
                                 <th style="text-align: center;">Số Lượng</th>
                                 <th>Đơn Giá</th>
                                 <th>Tổng Tiền</th>
@@ -101,6 +105,7 @@
                                     <td>{{ '#' . $order_detail->product_detail->product->sku_code }}</td>
                                     <td>{{ $order_detail->product_detail->product->name }}</td>
                                     <td>{{ $order_detail->product_detail->color }}</td>
+                                    <td>{{ $order_detail?->product_detail?->size ?? '---' }}</td>
                                     <td style="text-align: center;">{{ $order_detail->quantity }}</td>
                                     <td><span style="color: #f30;">{{ number_format($order_detail->price, 0, ',', '.') }}
                                             VNĐ</span></td>
@@ -127,8 +132,8 @@
                     @if (Str::contains($order->payment_method->name, 'Online Payment'))
                         <div
                             style="width: fit-content; padding: 5px; border: 1px solid #e3e3e3; border-radius: 5px; box-shadow: 0px 0px 5px #e3e3e3;">
-                            <img style="width: 150px; height: 50px; object-fit: cover;"
-                                src="{{ asset('images/nganluong.png') }}" alt="Ngân Lượng">
+                            <img style="width: 150px; height: 50px; object-fit: contain;"
+                                src="{{ asset('images/vnpay.jpg') }}" alt="VNpay">
                         </div>
                     @else
                         <div
@@ -154,25 +159,26 @@
                                 <td><span style="color: #f30;">{{ number_format($price, 0, ',', '.') }} VNĐ</span></td>
                             </tr>
                             <tr>
-                                <th>Đã Thanh Toán:</th>
                                 @if (Str::contains($order->payment_method->name, 'Online Payment'))
+                                <th>Đã Thanh Toán:</th>
                                     <td><span style="color: #f30;">{{ number_format($price, 0, ',', '.') }} VNĐ</span></td>
-                                @else
-                                    <td><span style="color: #f30;">0 VNĐ</span></td>
+                                {{-- @else
+                                    <td><span style="color: #f30;">0 VNĐ</span></td> --}}
                                 @endif
                             </tr>
                             <tr>
                                 <th>Phí Vận Chuyển:</th>
-                                <td><span style="color: #f30;">0 VNĐ</span></td>
+                                <td><span style="color: #f30;">{{ number_format($order?->fee, 0, ',', '.') }} VNĐ</span></td>
                             </tr>
-                            <tr>
-                                <th>Tổng Số Tiền Phải Thanh Toán:</th>
-                                @if (Str::contains($order->payment_method->name, 'Online Payment'))
-                                    <td><span style="color: #f30;">0 VNĐ</span></td>
-                                @else
-                                    <td><span style="color: #f30;">{{ number_format($price, 0, ',', '.') }} VNĐ</span></td>
-                                @endif
-                            </tr>
+                            @if (Str::contains($order->payment_method->name, 'COD'))
+                                <tr>
+                                    <th>Tổng Số Tiền Phải Thanh Toán:</th>
+                                    @php
+                                        $totalPayment = $price + $order->fee;
+                                    @endphp
+                                    <td><span style="color: #f30;">{{ number_format($totalPayment, 0, ',', '.') }} VNĐ</span></td>
+                                </tr>
+                            @endif
                         </table>
                     </div>
                 </div>

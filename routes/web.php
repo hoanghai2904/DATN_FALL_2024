@@ -57,9 +57,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('product/image/delete', 'ProductController@delete_image')->name('product.delete_image');
 
   Route::get('orders', 'OrderController@index')->name('order.index');
+  Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
   Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
-  Route::get('active/{action}/{id}', 'OrderController@actionTransaction')->name('orderTransaction');
-
+  
   Route::get('statistic', 'StatisticController@index')->name('statistic');
   Route::post('statistic/change', 'StatisticController@edit')->name('statistic.edit');
 
@@ -76,6 +76,10 @@ Route::namespace('Pages')->group(function () {
   Route::get('post/{id}', 'PostController@show')->name('post_page');
   Route::get('orders', 'OrderController@index')->name('orders_page');
   Route::get('order/{id}', 'OrderController@show')->name('order_page');
+  Route::post('cancel-order/{id}', 'OrderController@cancelOrder')->name(name: 'cancelOrder');
+  Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
+  Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
+
 
   Route::get('user/profile', 'UserController@show')->name('show_user');
   Route::get('user/edit', 'UserController@edit')->name('edit_user');
@@ -89,6 +93,7 @@ Route::namespace('Pages')->group(function () {
   Route::post('cart/remove', 'CartController@removeCart')->name('remove_cart');
   Route::post('minicart/update', 'CartController@updateMiniCart')->name('update_minicart');
   Route::post('cart/update', 'CartController@updateCart')->name('update_cart');
+  Route::post('update-fee', 'CartController@updateFee')->name('update_fee');
   Route::get('cart', 'CartController@showCart')->name('show_cart');
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');

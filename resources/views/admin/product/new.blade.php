@@ -103,7 +103,7 @@
   </div>
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">Thông Tin Mầu Sắc Và Giá Sản Phẩm</h3>
+      <h3 class="box-title">Thông Tin Màu Sắc Và Giá Sản Phẩm</h3>
       <div class="box-tools">
         <!-- This will cause the box to collapse when clicked -->
         <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
@@ -447,6 +447,66 @@
       }
     });
   });
+
+  $(document).on('change', 'input.color, input.size', function() {
+  var currentField = $(this);
+  var fieldGroup = currentField.closest('.field-group');
+  var color = fieldGroup.find('input.color').val().trim();
+  var size = fieldGroup.find('input.size').val().trim();
+  var isDuplicate = false;
+
+  // Duyệt qua tất cả các nhóm field để kiểm tra trùng lặp
+  $('#product-details .field-group').each(function() {
+    var otherFieldGroup = $(this);
+    if (otherFieldGroup.is(fieldGroup)) {
+      return; // Bỏ qua nhóm hiện tại
+    }
+
+    var otherColor = otherFieldGroup.find('input.color').val().trim();
+    var otherSize = otherFieldGroup.find('input.size').val().trim();
+
+    if (color === otherColor && size === otherSize) {
+      isDuplicate = true;
+      return false; // Dừng vòng lặp
+    }
+  });
+
+  // Hiển thị cảnh báo nếu phát hiện trùng lặp
+  if (isDuplicate) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Lỗi',
+      text: 'Có màu sắc và kích thước bị trùng lặp: ' + color + ' - ' + size,
+    });
+    currentField.val(''); // Xóa giá trị vừa nhập
+  }
+});
+
+$("#productForm").on('submit', function(e) {
+  var isValid = true;
+  var values = [];
+
+  // Duyệt qua tất cả các nhóm field
+  $('#product-details .field-group').each(function() {
+    var color = $(this).find('input.color').val().trim();
+    var size = $(this).find('input.size').val().trim();
+
+    if (color && size) {
+      var key = color + '|' + size;
+      if (values.includes(key)) {
+        isValid = false;
+        alert('Có màu sắc và kích thước bị trùng lặp: ' + color + ' - ' + size);
+        return false; // Dừng vòng lặp
+      }
+      values.push(key);
+    }
+  });
+
+  if (!isValid) {
+    e.preventDefault(); // Ngăn chặn gửi biểu mẫu
+  }
+});
+
 </script>
 <script type="text/template" id="product-detail">
 <div class="field-group">
@@ -468,18 +528,24 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
+            <label for="size_{?}">Size</label>
+            <input type="text" name="product_details[{?}][size]" class="form-control size" id="size_{?}" placeholder="Size" autocomplete="off">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
             <label for="quantity_{?}">Số Lượng <span class="text-red">*</span></label>
             <input type="number" min="1" name="product_details[{?}][quantity]" class="form-control" id="quantity_{?}" placeholder="Số lượng" required autocomplete="off">
           </div>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="import_price_{?}">Giá Nhập (VNĐ) <span class="text-red">*</span></label>
             <input type="text" name="product_details[{?}][import_price]" class="form-control currency" id="import_price_{?}" placeholder="Giá nhập" required autocomplete="off">
           </div>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label for="sale_price_{?}">Giá Bán (VNĐ) <span class="text-red">*</span></label>
