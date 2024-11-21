@@ -285,6 +285,13 @@ class CartController extends Controller
         ]]);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
@@ -332,7 +339,7 @@ class CartController extends Controller
     } elseif(Str::contains($payment_method->name, 'Online Payment')) {
       if($request->buy_method == 'buy_now'){
         $order = new Order;
-        $order->user_id = Auth::user()->id;
+        $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
         $order->order_code = 'PSO'.str_pad(rand(0, pow(10, 5) - 1), 5, '0', STR_PAD_LEFT);
         $order->name = $request->name;
@@ -400,6 +407,13 @@ class CartController extends Controller
         // return redirect()->away($url);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;
