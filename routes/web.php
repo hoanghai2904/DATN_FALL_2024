@@ -56,6 +56,13 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('product_detail/delete', 'ProductController@delete_product_detail')->name('product.delete_product_detail');
   Route::post('product/image/delete', 'ProductController@delete_image')->name('product.delete_image');
 
+  Route::get('coupons', 'CouponController@index')->name('coupon.index');
+  Route::get('coupon/new', 'CouponController@new')->name('coupon.new');
+  Route::post('coupon/save', 'CoupCouponController@save')->name('coupon.save');
+  Route::post('coupon/delete', 'CouponController@delete')->name('coupon.delete');
+  Route::get('coupon/{id}/edit', 'CouponController@edit')->name('coupon.edit');
+  Route::post('coupon/{id}/update', 'CouponController@update')->name('coupon.update');
+
   Route::get('orders', 'OrderController@index')->name('order.index');
   Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
   Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
