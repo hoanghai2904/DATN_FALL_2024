@@ -253,8 +253,19 @@ class CartController extends Controller
         $order->phone = $request->phone;
         $order->address = $request->address;
         $order->fee = $request?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->status = OrderStatusEnum::PENDING;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         $order_details = new OrderDetail;
         $order_details->order_id = $order->id;
@@ -284,9 +295,20 @@ class CartController extends Controller
         $order->phone = $request->phone;
         $order->address = $request->address;
         $order->fee = $cart?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->status = OrderStatusEnum::PENDING;
 
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         foreach ($cart->items as $key => $item) {
           $order_details = new OrderDetail;
@@ -319,7 +341,18 @@ class CartController extends Controller
         $order->address = $request->address;
         $order->status = OrderStatusEnum::PENDING;
         $order->fee = $request?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         $order_details = new OrderDetail;
         $order_details->order_id = $order->id;
@@ -381,6 +414,15 @@ class CartController extends Controller
         $order->coupon_id = $request->coupon_id ?? NULL;
         $order->discount = $request->discount_amount ?? 0;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         foreach ($cart->items as $key => $item) {
           $order_details = new OrderDetail;

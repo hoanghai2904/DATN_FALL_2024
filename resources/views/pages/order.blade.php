@@ -36,15 +36,13 @@
         <!-- Thông tin tài khoản -->
         <div class="col-md-6 mb-3">
           <h6>Thông Tin Tài Khoản</h6>
-          <ul class="list-group">
-            <li class="list-group-item">Tên: {{ $data['order']->user->name }}</li>
-            <li class="list-group-item">Email: {{ $data['order']->user->email }}</li>
-            <li class="list-group-item">Số Điện Thoại: {{ $data['order']->user->phone }}</li>
-            <li class="list-group-item">Địa Chỉ: {{ $data['order']->user->address }}</li>
+          <ul class="list-group order-info">
+            <li class="list-group-item"><span>Tên:</span> {{ $data['order']->user->name }}</li>
+            <li class="list-group-item"><span>Email:</span> {{ $data['order']->user->email }}</li>
+            <li class="list-group-item"><span>Số Điện Thoại:</span> {{ $data['order']->user->phone }}</li>
+            <li class="list-group-item"><span>Địa Chỉ:</span> {{ $data['order']->user->address }}</li>
           </ul>
-          @if($data['order']->status == 4 && !$data['order']->is_paid && $data['order']->payment_method_id == 1 ||
-              $data['order']->status == 4 && $data['order']->is_paid && $data['order']->payment_method_id != 1
-          )
+          @if($data['order']->status == 4 && !$data['order']->is_received)
             <button class="btn btn-success" onclick="handleReceiveOrder({{ $data['order']->id }})">Đã nhận hàng</button>
           @endif
         </div>
@@ -52,12 +50,12 @@
         <!-- Thông tin mua hàng -->
         <div class="col-md-6 mb-3">
           <h6>Thông Tin Mua Hàng</h6>
-          <ul class="list-group">
-            <li class="list-group-item">Tên: {{ $data['order']->name }}</li>
-            <li class="list-group-item">Email: {{ $data['order']->email }}</li>
-            <li class="list-group-item">Số Điện Thoại: {{ $data['order']->phone }}</li>
-            <li class="list-group-item">Địa Chỉ: {{ $data['order']->address }}</li>
-            <li class="list-group-item">Phương Thức Thanh Toán: {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
+          <ul class="list-group order-info">
+            <li class="list-group-item"><span>Tên:</span> {{ $data['order']->name }}</li>
+            <li class="list-group-item"><span>Email:</span> {{ $data['order']->email }}</li>
+            <li class="list-group-item"><span>Số Điện Thoại:</span> {{ $data['order']->phone }}</li>
+            <li class="list-group-item"><span>Địa Chỉ:</span> {{ $data['order']->address }}</li>
+            <li class="list-group-item"><span>Phương Thức Thanh Toán:</span> {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
             <li class="list-group-item">
               Trạng thái thanh toán: {{ $data['order']->is_paid ? 'Đã thanh toán' : "Chưa thanh toán" }}
               @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1)
@@ -69,7 +67,7 @@
               @endif
             </li>
             <li class="list-group-item">
-              Trạng thái đơn hàng:
+              <span>Trạng thái đơn hàng:</span>
                 @switch($data['order']?->status)
                     @case(1)
                           <span class="label label-warning">Chờ xác nhận</span>
@@ -87,6 +85,8 @@
                         <span class="label label-danger">Đã hủy</span>
                         @break
                 @endswitch
+            </li>
+            <li class="list-group-item"><span>Trạng thái nhận hàng:</span> {{ $data['order']->is_received ? 'Đã nhận hàng' : 'Chưa nhận hàng' }}
             </td>
           </ul>
         </div>
@@ -148,7 +148,7 @@
             <strong>Tổng Thanh Toán</strong>
           </th>
           <th colspan="2" class="text-center text-danger">
-            <strong>{{ number_format($totalAmount + $data['order']?->fee - $data['order']?->discount, 0, ',', '.') }}₫</strong>
+            <strong class="final-total">{{ number_format($totalAmount + $data['order']?->fee - $data['order']?->discount, 0, ',', '.') }}₫</strong>
           </th>
         </tr>
       </tfoot>
@@ -177,6 +177,12 @@
       animation-name: zoomIn;
       -webkit-animation-duration: .6s;
       animation-duration: .6s;
+    }
+    .order-info span {
+      font-weight: bold;
+    }
+    .final-total {
+      font-size: 20px;
     }
   </style>
 </style>

@@ -17,35 +17,39 @@ $(document).ready(function() {
                 var coupons = response.coupons;
                 var couponForm = $('#coupon-form');
                 couponForm.empty();
-                coupons.forEach(function(coupon, index) {
-                    var columnClass = 'col-md-12';
-                    var formattedMaxDiscount = new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(coupon.max_discount_amount);
-                    var formattedMinOrderAmount = new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(coupon.min_order_amount);
-                    var isChecked = coupon.id == selectedCouponId ? 'checked' : '';
-                    couponForm.append(`
-                        <div class="coupon-card">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="coupon" id="coupon-${coupon.id}" value="${coupon.id}" data-discount="${coupon.discount_percentage}" data-code="${coupon.code}" ${isChecked}>
-                                        <label class="form-check-label" for="coupon-${coupon.id}">
-                                            ${coupon.code} - Giảm ${coupon.discount_percentage}%
-                                        </label>
-                                    </div>
-                                    <p class="card-text"><span>Giảm tối đa:</span> ${formattedMaxDiscount}</p>
-                                    <p class="card-text"><span>Đơn hàng tối thiểu</span>: ${formattedMinOrderAmount}</p>
-                                    <p class="card-text"><span>Thời gian áp dụng</span>: ${coupon.start_date} ~ ${coupon.end_date}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `);
-                });
+                if (coupons.length === 0) {
+                    couponForm.append("<p>Chưa lưu coupon nào</p>");
+                } else {
+                  coupons.forEach(function(coupon, index) {
+                      var columnClass = 'col-md-12';
+                      var formattedMaxDiscount = new Intl.NumberFormat('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND'
+                      }).format(coupon.max_discount_amount);
+                      var formattedMinOrderAmount = new Intl.NumberFormat('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND'
+                      }).format(coupon.min_order_amount);
+                      var isChecked = coupon.id == selectedCouponId ? 'checked' : '';
+                      couponForm.append(`
+                          <div class="coupon-card">
+                              <div class="card mb-3">
+                                  <div class="card-body">
+                                      <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="coupon" id="coupon-${coupon.id}" value="${coupon.id}" data-discount="${coupon.discount_percentage}" data-code="${coupon.code}" ${isChecked}>
+                                          <label class="form-check-label" for="coupon-${coupon.id}">
+                                              ${coupon.code} - Giảm ${coupon.discount_percentage}%
+                                          </label>
+                                      </div>
+                                      <p class="card-text"><span>Giảm tối đa:</span> ${formattedMaxDiscount}</p>
+                                      <p class="card-text"><span>Đơn hàng tối thiểu</span>: ${formattedMinOrderAmount}</p>
+                                      <p class="card-text"><span>Thời gian áp dụng</span>: ${coupon.start_date} ~ ${coupon.end_date}</p>
+                                  </div>
+                              </div>
+                          </div>
+                      `);
+                  });
+                }
                 $('#couponModal').modal('show');
             }
         });

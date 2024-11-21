@@ -256,7 +256,7 @@
 
 @section('embed-js')
 <!-- include tinymce js -->
-<script src="https://c dnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
 <!-- include jquery.repeater -->
 <script src="{{ asset('AdminLTE/bower_components/jquery.repeatable.js') }}"></script>
 <!-- include Bootstrap File Input -->
@@ -779,6 +779,12 @@ $("#productForm").on('submit', function(e) {
           <div class="form-group">
             <label for="color_{?}">Mầu Sắc <span class="text-red">*</span></label>
             <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="color_{?}">Size</label>
+            <input type="text" name="product_details[{?}][size]" class="form-control size" id="size_{?}" placeholder="Size" required autocomplete="off">
           </div>
         </div>
         <div class="col-md-4">

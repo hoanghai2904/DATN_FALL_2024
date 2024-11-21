@@ -69,6 +69,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
 
 Route::namespace('Pages')->group(function () {
   Route::get('/', 'HomePage')->name('home_page');
+  Route::get('coupons', 'CouponController@index')->name('coupon_page');
   Route::get('about', 'AboutPage')->name('about_page');
   Route::get('contact', 'ContactPage')->name('contact_page');
   Route::get('search', 'SearchController')->name('search');
@@ -101,5 +102,5 @@ Route::namespace('Pages')->group(function () {
 
   Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
   Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
-
+  Route::post('/save-coupon', 'CouponController@saveCoupon')->name('save.coupon');
 });
