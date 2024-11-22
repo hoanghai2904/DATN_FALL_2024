@@ -16,4 +16,15 @@ final class OrderStatusEnum extends Enum
     const DELIVERING = 3;
     const DELIVERED = 4;
     const CANCELLED = 5;
+
+    public static function getStatus()
+    {
+        return [
+            self::PENDING => 'Chờ xác nhận',
+            self::CONFIRMED => 'Đã xác nhận',
+            self::DELIVERING => 'Đang giao hàng',
+            self::DELIVERED => 'Đã giao hàng',
+            self::CANCELLED => 'Đã hủy',
+        ];
+    }
 }

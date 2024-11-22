@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -277,6 +278,11 @@ class CartController extends Controller
         $product = ProductDetail::find($request->product_id);
         $product->quantity = $product->quantity - $request->totalQty;
         $product->save();
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
 
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -329,6 +335,11 @@ class CartController extends Controller
           $product->quantity = $product->quantity - $item['qty'];
           $product->save();
         }
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
         Session::forget('cart');
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -367,6 +378,12 @@ class CartController extends Controller
         $order_details->quantity = $request->totalQty;
         $order_details->price = $request->price;
         $order_details->save();
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
+
         $totalPayment = $request->price * $request->totalQty + $order->fee;
         $vnpUrl = $this->createVNPayUrl(
       $order->order_code,
@@ -446,6 +463,11 @@ class CartController extends Controller
           $order_details->price = $item['price'];
           $order_details->save();
         }
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
         $totalPayment = $cart->totalPrice + $order->fee - $request->discount_amount;
         $vnpUrl = $this->createVNPayUrl(
     $order->order_code,
