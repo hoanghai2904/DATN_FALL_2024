@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Coupon;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CouponController extends Controller
@@ -21,27 +22,30 @@ class CouponController extends Controller
 
     public function save(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'code' => 'required|unique:coupons',
             'description' => 'required',
             'discount_percentage' => 'required|numeric',
             'max_discount_amount' => 'required|numeric',
             'min_order_amount' => 'nullable|numeric',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
+            'start_end_date' => 'nullable',
         ]);
+        $validated['max_discount_amount'] = str_replace('.', '', $validated['max_discount_amount']);
+        if (isset($validated['min_order_amount'])) {
+            $validated['min_order_amount'] = str_replace('.', '', $validated['min_order_amount']);
+        }
+        if ($validated['start_end_date'] != null) {
+            $dates = explode(' - ', $validated['start_end_date']);
+            $start_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
+            $end_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+            unset($validated['start_end_date']);
+        } else {
+            $start_date = null;
+            $end_date = null;
+        }
 
-        $coupon = new Coupon();
-        $coupon->name = $request->input('name');
-        $coupon->code = $request->input('code');
-        $coupon->description = $request->input('description');
-        $coupon->discount_percentage = $request->input('discount_percentage');
-        $coupon->max_discount_amount = $request->input('max_discount_amount');
-        $coupon->min_order_amount = $request->input('min_order_amount');
-        $coupon->start_date = $request->input('start_date');
-        $coupon->end_date = $request->input('end_date');
-        $coupon->save();
+        Coupon::create(array_merge($validated, ['start_date' => $start_date, 'end_date' => $end_date]));
 
         return redirect()->route('admin.coupon.index')->with(['alert' => [
             'type' => 'success',
@@ -52,7 +56,22 @@ class CouponController extends Controller
 
     public function delete(Request $request)
     {
-        $coupon = Coupon::find($request->input('id'));
+        $coupon = Coupon::find($request->input('coupon_id'));
+        if (!$coupon) {
+            return response()->json([
+                'type' => 'error',
+                'title' => 'Thất Bại',
+                'content' => 'Mã giảm giá không tồn tại.'
+            ]);
+        }
+        $orders = Order::where('coupon_id', operator: $coupon->id)->get();
+        if ($orders->count() > 0) {
+            return response()->json([
+                'type' => 'error',
+                'title' => 'Thất Bại',
+                'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
+            ]);
+        }
         $coupon->delete();
 
         return response()->json([
@@ -71,32 +90,53 @@ class CouponController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'code' => 'required|unique:coupons,code,' . $id,
-            'description' => 'required',
-            'discount_percentage' => 'required|numeric',
-            'max_discount_amount' => 'required|numeric',
-            'min_order_amount' => 'nullable|numeric',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
-        ]);
-
-        $coupon = Coupon::find($id);
-        $coupon->name = $request->input('name');
-        $coupon->code = $request->input('code');
-        $coupon->description = $request->input('description');
-        $coupon->discount_percentage = $request->input('discount_percentage');
-        $coupon->max_discount_amount = $request->input('max_discount_amount');
-        $coupon->min_order_amount = $request->input('min_order_amount');
-        $coupon->start_date = $request->input('start_date');
-        $coupon->end_date = $request->input('end_date');
-        $coupon->save();
-
-        return redirect()->route('admin.coupon.index')->with(['alert' => [
-            'type' => 'success',
-            'title' => 'Thành Công',
-            'content' => 'Cập nhật mã giảm giá thành công.'
-        ]]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required',
+                'code' => 'required|unique:coupons,code,' . $id,
+                'description' => 'required',
+                'discount_percentage' => 'required|numeric',
+                'max_discount_amount' => 'required|numeric',
+                'min_order_amount' => 'nullable|numeric',
+                'start_end_date' => 'nullable',
+            ]);
+            $validated['max_discount_amount'] = str_replace('.', '', $validated['max_discount_amount']);
+            if (isset($validated['min_order_amount'])) {
+                $validated['min_order_amount'] = str_replace('.', '', $validated['min_order_amount']);
+            }
+            $coupon = Coupon::find($id);
+            if (!$coupon) {
+                return redirect()->route('admin.coupon.index')->with(['alert' => [
+                    'type' => 'error',
+                    'title' => 'Thất Bại',
+                    'content' => 'Mã giảm giá không tồn tại.'
+                ]]);
+            }
+            $orders = Order::where('coupon_id', $id)->get();
+            if ($orders->count() > 0) {
+                return redirect()->route('admin.coupon.index')->with(['alert' => [
+                    'type' => 'error',
+                    'title' => 'Thất Bại',
+                    'content' => 'Mã giảm giá đang được sử dụng, không thể cập nhật.'
+                ]]);
+            }
+            if ($validated['start_end_date'] != null) {
+                $dates = explode(' - ', $validated['start_end_date']);
+                $start_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
+                $end_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
+                unset($validated['start_end_date']);
+            } else {
+                $start_date = null;
+                $end_date = null;
+            }
+            $coupon->update(array_merge($validated, ['start_date' => $start_date, 'end_date' => $end_date]));
+            return redirect()->route('admin.coupon.index')->with(['alert' => [
+                'type' => 'success',
+                'title' => 'Thành Công',
+                'content' => 'Cập nhật mã giảm giá thành công.'
+            ]]);
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 }

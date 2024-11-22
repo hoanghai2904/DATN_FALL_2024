@@ -58,10 +58,17 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
 
   Route::get('coupons', 'CouponController@index')->name('coupon.index');
   Route::get('coupon/new', 'CouponController@new')->name('coupon.new');
-  Route::post('coupon/save', 'CoupCouponController@save')->name('coupon.save');
+  Route::post('coupon/save', 'CouponController@save')->name('coupon.save');
   Route::post('coupon/delete', 'CouponController@delete')->name('coupon.delete');
   Route::get('coupon/{id}/edit', 'CouponController@edit')->name('coupon.edit');
   Route::post('coupon/{id}/update', 'CouponController@update')->name('coupon.update');
+
+  Route::get('producers', 'ProducerController@index')->name('producer.index');
+  Route::get('producer/new', 'ProducerController@new')->name('producer.new');
+  Route::post('producer/save', 'ProducerController@save')->name('producer.save');
+  Route::post('producer/delete', 'ProducerController@delete')->name('producer.delete');
+  Route::get('producer/{id}/edit', 'ProducerController@edit')->name('producer.edit');
+  Route::post('producer/{id}/update', 'ProducerController@update')->name('producer.update');
 
   Route::get('orders', 'OrderController@index')->name('order.index');
   Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -277,6 +278,11 @@ class CartController extends Controller
         $product = ProductDetail::find($request->product_id);
         $product->quantity = $product->quantity - $request->totalQty;
         $product->save();
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
 
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -285,6 +291,13 @@ class CartController extends Controller
         ]]);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
@@ -322,6 +335,11 @@ class CartController extends Controller
           $product->quantity = $product->quantity - $item['qty'];
           $product->save();
         }
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
         Session::forget('cart');
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -332,7 +350,7 @@ class CartController extends Controller
     } elseif(Str::contains($payment_method->name, 'Online Payment')) {
       if($request->buy_method == 'buy_now'){
         $order = new Order;
-        $order->user_id = Auth::user()->id;
+        $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
         $order->order_code = 'PSO'.str_pad(rand(0, pow(10, 5) - 1), 5, '0', STR_PAD_LEFT);
         $order->name = $request->name;
@@ -360,6 +378,12 @@ class CartController extends Controller
         $order_details->quantity = $request->totalQty;
         $order_details->price = $request->price;
         $order_details->save();
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
+
         $totalPayment = $request->price * $request->totalQty + $order->fee;
         $vnpUrl = $this->createVNPayUrl(
       $order->order_code,
@@ -400,6 +424,13 @@ class CartController extends Controller
         // return redirect()->away($url);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;
@@ -432,6 +463,11 @@ class CartController extends Controller
           $order_details->price = $item['price'];
           $order_details->save();
         }
+        $dataSend = [
+          'order' => $order,
+          'order_details' => $order_details
+        ];
+        SendOrderMail::dispatch($dataSend);
         $totalPayment = $cart->totalPrice + $order->fee - $request->discount_amount;
         $vnpUrl = $this->createVNPayUrl(
     $order->order_code,

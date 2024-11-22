@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Quản Lý Mã giảm giá')
+@section('title', 'Quản Lý Danh Mục')
 
 @section('embed-css')
 <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
@@ -8,11 +8,11 @@
 
 @section('custom-css')
 <style>
-  #coupon-table td,
-  #coupon-table th {
+  #producer-table td,
+  #producer-table th {
     vertical-align: middle !important;
   }
-  #coupon-table span.status-label {
+  #producer-table span.status-label {
     display: block;
     width: 85px;
     text-align: center;
@@ -53,7 +53,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li class="active">Quản Lý mã giảm giá</li>
+  <li class="active">Quản Lý danh mục</li>
 </ol>
 @endsection
 
@@ -76,7 +76,7 @@
                 <a href="{{ route('admin.coupon.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
-                <a href="{{ route('admin.coupon.new') }}" class="btn btn-success btn-flat" title="Thêm Mới">
+                <a href="{{ route('admin.producer.new') }}" class="btn btn-success btn-flat" title="Thêm Mới">
                   <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> Thêm Mới</span>
                 </a>
               </div>
@@ -84,50 +84,28 @@
           </div>
         </div>
         <div class="box-body">
-          <table id="coupon-table" class="table table-hover" style="width:100%; min-width: 768px;">
+          <table id="producer-table" class="table table-hover" style="width:100%; min-width: 768px;">
             <thead>
               <tr>
                 <th data-width="10px">ID</th>
                 <th data-orderable="false">Tên</th>
-                <th data-orderable="false">Mã</th>
-                <th data-orderable="false">Giảm giá (%)</th>
-                <th data-orderable="false">Giảm tối đa (đ)</th>
-                <th data-orderable="false">Đơn hàng tối thiểu</th>
-                <th data-orderable="false">Thời gian áp dụng</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($coupons as $coupon)
+              @foreach($producers as $producer)
                 <tr>
                   <td class="text-center">
-                    {{ $coupon->id }}
+                    {{ $producer->id }}
                   </td>
                   <td>
-                    {{ $coupon?->name }}
+                    {{ $producer?->name }}
                   </td>
                   <td>
-                    {{ $coupon?->code }}
-                  </td>
-                  <td>
-                    {{ $coupon?->discount_percentage }}
-                  </td>
-                  <td>
-                    {{ $coupon?->max_discount_amount }}
-                  </td>
-                  <td>
-                    {{ $coupon?->min_order_amount }}
-                  </td>
-                  <td>
-                    @if ($coupon->start_date && $coupon->end_date)
-                      {{ $coupon->start_date }} ~ {{ $coupon->end_date }}
-                    @endif
-                  </td>
-                  <td>
-                    <a href="{{ route('admin.coupon.edit', ['id' => $coupon->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+                    <a href="{{ route('admin.producer.edit', ['id' => $producer->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                       <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <a href="javascript:void(0);" data-id="{{ $coupon->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.coupon.delete') }}">
+                    <a href="javascript:void(0);" data-id="{{ $producer->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.producer.delete') }}">
                       <i class="fa fa-trash"></i>
                     </a>
                   </td>
@@ -159,7 +137,7 @@
 @section('custom-js')
 <script>
   $(function () {
-    var table = $('#coupon-table').DataTable({
+    var table = $('#producer-table').DataTable({
       "language": {
         "zeroRecords":    "Không tìm thấy kết quả phù hợp",
         "info":           "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> mã giảm giá",
@@ -188,13 +166,13 @@
 
     $(".deleteDialog").click(function() {
 
-      var coupon_id = $(this).attr('data-id');
+      var producer_id = $(this).attr('data-id');
       var url = $(this).attr('data-url');
 
       Swal.fire({
         type: 'question',
         title: 'Thông báo',
-        text: 'Bạn có chắc muốn xóa mã giảm giá này?',
+        text: 'Bạn có chắc muốn danh mục này?',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
@@ -207,7 +185,7 @@
               'Content-Type': 'application/json',
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            body: JSON.stringify({'coupon_id': coupon_id}),
+            body: JSON.stringify({'producer_id': producer_id}),
           })
           .then(response => {
             if (!response.ok) {
