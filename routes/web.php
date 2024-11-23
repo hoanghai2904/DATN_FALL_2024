@@ -100,7 +100,7 @@ Route::namespace('Pages')->group(function () {
   Route::get('user/edit', 'UserController@edit')->name('edit_user');
   Route::post('user/save', 'UserController@save')->name('save_user');
   //page products
-  Route::get('products', 'ProductsController@index')->name('products_page');
+Route::get('products', 'ProductsController@index')->name('products_page');
   Route::get('producer/{id}', 'ProductsController@getProducer')->name('producer_page');
   Route::get('product/{id}', 'ProductsController@getProduct')->name('product_page');
   Route::post('vote', 'ProductsController@addVote')->name('add_vote');
@@ -117,4 +117,10 @@ Route::namespace('Pages')->group(function () {
   Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
   Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
   Route::post('/save-coupon', 'CouponController@saveCoupon')->name('save.coupon');
+
+  Route::post('send-contact', 'ContactController@sendContact')->name('send_contact');
+
+  Route::post('/toggle-wishlist', 'ProductsController@toggleWishlist')->name('toggle_wishlist');
+  Route::get('show-wishlist', 'ProductsController@showWishlist')->name('show_wishlist');
+
 });

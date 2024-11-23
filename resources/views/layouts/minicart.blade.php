@@ -40,7 +40,6 @@
                                     <a href="javascript:;" data-id="{{ $key }}" title="Xóa"
                                         class="remove-item-cart fa fa-remove" data-url="{{ route('remove_cart') }}"
                                         onclick="removeItem($(this));">
-                                        <i class="fas fa-times"></i>
                                     </a>
                                     <p class="product-name">
                                         <a href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
