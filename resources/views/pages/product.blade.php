@@ -25,7 +25,6 @@
         </div>
       </div>
     </section>
-
     <section class="section-product">
       <div class="section-header">
         <h2 class="section-title">{{ $data['product']->name }}</h2>
@@ -42,88 +41,178 @@
               <div class="row">
                 <div class="col-md-6 col-sm-6">
                   <div class="image-product">
-                    @foreach($data['product_details'] as $key => $product)
-                      @if($key == 0)
-                      <div class="image-gallery-{{ $key }}">
-                      @else
-                      <div class="image-gallery-{{ $key }}" style="display: none;">
-                      @endif
-
-                      @if($product->product_images->isNotEmpty())
-                        <ul id="imageGallery-{{ $key }}">
-                          @foreach($product->product_images as $image)
-                            <li data-thumb="{{ Helper::get_image_product_url($image->image_name) }}" data-src="{{ Helper::get_image_product_url($image->image_name) }}">
-                              <img src="{{ Helper::get_image_product_url($image->image_name) }}" style="background-size: 100%;"/>
-                            </li>
-                          @endforeach
-                        </ul>
-                      @else
-                        <div><img src="{{ Helper::get_image_product_url('not-image.jpg') }}"></div>
-                      @endif
-                      </div>
-                    @endforeach
-                  </div>
-                </div>
-
-                <div class="col-md-6 col-sm-6">
-                  <div class="price-product">
-                    @foreach($data['product_details'] as $key => $product)
-                      @if($key)
-                      <div class="product-{{ $key }}" style="display: none;">
-                      @else
-                      <div class="product-{{ $key }}">
-                      @endif
-                        @if($product->promotion_price != null && $product->promotion_start_date <= date('Y-m-d') && $product->promotion_end_date >= date('Y-m-d'))
-                          <div class="sale-price">{{ number_format($product->promotion_price,0,',','.') }} <span>VNĐ</span></div>
-                          <div class="promotion-price">
-                            <div class="old-price">Giá cũ: <del>{{ number_format($product->sale_price,0,',','.') }}</del> <span>VNĐ</span></div>
-                            <div class="save-price">Giảm: <span>{{ number_format($product->sale_price - $product->promotion_price,0,',','.') }}</span> <span>VNĐ</span></div>
-                          </div>
-                        @else
-                          <div class="sale-price">{{ number_format($product->sale_price,0,',','.') }} <span>VNĐ</span></div>
-                        @endif
-                        @if($product->quantity > 0)
-                          <div class="status">Tình trạng: <span style="color: #1a2;">Còn hàng</span></div>
-                        @else
-                          <div class="status">Tình trạng: <span style="color: #f30;">Hết hàng</span></div>
-                        @endif
-                      </div>
-                    @endforeach
-                  </div>
-                  <div class="color-product">
-                    <div class="title">Màu sắc:</div>
-                    <div class="select-color">
-                      <div class="row">
-                        @foreach($data['product_details'] as $key => $product)
-                          <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <div class="color-inner {{ $key == 0 ? 'active' : '' }}" product-id="{{ $product->id }}" data-key="{{ $key }}" can-buy="{{ $product->quantity > 0 ? '1' : '0'}}" data-qty="{{ $product->quantity }}">
-                              <div class="select-inner">
-                                @if($product->product_images->isNotEmpty())
-                                  <div class="image-color"><img src="{{ Helper::get_image_product_url($product->product_images[0]->image_name) }}"></div>
-                                @else
-                                  <div class="image-color"><img src="{{ Helper::get_image_product_url('not-image.jpg') }}"></div>
-                                @endif
-                                <div class="image-name">{{ $product->color }}</div>
+                    @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                        @foreach($data['product_details'] as $colorKey => $product)
+                          @foreach($product['details'] as $sizeKey => $size)
+                              <div class="image-gallery-{{ $colorKey }}-{{ $sizeKey }}" data-key="{{ $colorKey }}-{{ $sizeKey }}" style="{{ $colorKey == 0 && $sizeKey == 0 ? '' : 'display: none;' }}">
+                                  @if(!empty($size['product_images']))
+                                      <ul id="imageGallery-{{ $colorKey }}-{{ $sizeKey }}" class="image-gallery-list">
+                                          @foreach($size['product_images'] as $image)
+                                              <li data-thumb="{{ Helper::get_image_product_url($image['image_name']) }}" 
+                                                  data-src="{{ Helper::get_image_product_url($image['image_name']) }}">
+                                                  <img src="{{ Helper::get_image_product_url($image['image_name']) }}" 
+                                                      alt="" 
+                                                      onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}'; this.parentElement.setAttribute('data-thumb', '{{ asset('images/no_image.png') }}');" />
+                                              </li>
+                                          @endforeach
+                                      </ul>
+                                  @else
+                                      <div><img src="{{ asset('images/no_image.png') }}" alt=""></div>
+                                  @endif
                               </div>
-                              @if($product->quantity <= 0)
-                              <div class="crossed-out"></div>
-                              @endif
-                              <div class="image-check"><img src="{{ asset('images/select-pro.png') }}"></div>
-                            </div>
-                          </div>
-                        @endforeach
-                      </div>
+                          @endforeach
+                      @endforeach
+                    @else
+                        <div><img src="{{ asset('images/no_image.png') }}" alt=""></div>
+                    @endif
+                  </div>
+
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="price-product">
+                      @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                          @foreach($data['product_details'] as $key => $product)
+                              @foreach($product['details'] as $index => $size)
+                                  <div class="product-{{ $key }}-{{ $index }}" style="{{ $key == 0 && $index == 0 ? '' : 'display: none;' }}">
+                                      @if($size['promotion_price'] && $size['promotion_start_date'] <= now()->format('Y-m-d') && $size['promotion_end_date'] >= now()->format('Y-m-d'))
+                                          <div class="sale-price">{{ number_format($size['promotion_price'], 0, ',', '.') }} <span>VNĐ</span></div>
+                                          <div class="promotion-price">
+                                              <div class="old-price">Giá cũ: <del>{{ number_format($size['sale_price'], 0, ',', '.') }}</del> <span>VNĐ</span></div>
+                                              <div class="save-price">Giảm: <span>{{ number_format($size['sale_price'] - $size['promotion_price'], 0, ',', '.') }}</span> <span>VNĐ</span></div>
+                                          </div>
+                                      @else
+                                          <div class="sale-price">{{ number_format($size['sale_price'], 0, ',', '.') }} <span>VNĐ</span></div>
+                                      @endif
+
+                                      <div class="status">
+                                          Tình trạng: 
+                                          <span style="color: {{ $size['quantity'] > 0 ? '#1a2' : '#f30' }};">
+                                              {{ $size['quantity'] > 0 ? 'Còn hàng' : 'Hết hàng' }}
+                                          </span>
+                                      </div>
+                                      <div class="status">
+                                          Số lượng trong kho: 
+                                          <span style="color: {{ $size['quantity'] > 1 ? '#1a2' : '#f30' }};">
+                                              {{ $size['quantity'] }}
+                                          </span>
+                                      </div>
+                                  </div>
+                              @endforeach
+                          @endforeach
+                      @else
+                          <div>Không có thông tin sản phẩm.</div>
+                      @endif
+                  </div>
+
+                  <div class="color-product">
+                    <div class="title">Phân loại:</div>
+                    <div class="select-color">
+                        <div class="row">
+                            @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                              @foreach($data['product_details'] as $key => $product)
+                                  <div class="col">
+                                      @if($product['details']->isNotEmpty())
+                                          @php
+                                              $firstSize = $product['details']->first();
+                                          @endphp
+                                          <div class="color-inner {{ $key == 0 ? 'active' : '' }}" 
+                                              product-id="{{ $firstSize['id'] }}" 
+                                              data-key="{{ $key }}" 
+                                              can-buy="{{ $firstSize['quantity'] > 0 ? '1' : '0' }}" 
+                                              data-qty="{{ $firstSize['quantity'] }}"
+                                              product-color-value="{{ $product['color'] }}"
+                                              >
+                                              <div class="select-inner">
+                                                  <div class="image-name">{{ $product['color'] }}</div>
+                                              </div>
+                                              @if($firstSize['quantity'] <= 0)
+                                                  <div class="crossed-out"></div>
+                                              @endif
+                                              <div class="image-check"><img src="{{ asset('images/select-pro.png') }}" alt=""></div>
+                                          </div>
+                                      @else
+                                          <div class="color-inner {{ $key == 0 ? 'active' : '' }}" data-key="{{ $key }}">
+                                              <div class="select-inner">
+                                                  <div class="image-name">{{ $product['color'] }}</div>
+                                              </div>
+                                              <div class="crossed-out"></div>
+                                              <div class="image-check"><img src="{{ asset('images/select-pro.png') }}" alt=""></div>
+                                          </div>
+                                      @endif
+                                  </div>
+                                @endforeach
+                            @else
+                                <div>Không có thông tin phân loại.</div>
+                            @endif
+                        </div>
                     </div>
                   </div>
-                  @if($data['product']->promotions->isNotEmpty())
-                    <div class="promotions">
-                      <div class="title">Khuyến mại đặc biệt</div>
-                      <ul class="content">
-                        @foreach($data['product']->promotions as $promotion)
-                          <li>{{ $promotion->content }}</li>
-                        @endforeach
-                      </ul>
-                    </div>
+                  @if(isset($data['product']->promotions) && $data['product']->promotions->isNotEmpty())
+                      <div class="promotions">
+                          <div class="title">Khuyến mại đặc biệt</div>
+                          <ul class="content">
+                              @foreach($data['product']->promotions as $promotion)
+                                  <li>{{ $promotion->content }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
+                  <!-- Phần Size -->
+                  @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                    @php
+                      $hasSize = false;
+                      foreach ($data['product_details'] as $product) {
+                          if ($product['details']->contains(function ($detail) {
+                              return !is_null($detail['size']);
+                          })) {
+                              $hasSize = true;
+                              break;
+                          }
+                      }
+                    @endphp
+                    @if($hasSize)
+                      <div class="color-product">
+                        <div class="title">Kích thước:</div>
+                        <div class="select-size">
+                          <div class="row">
+                              @foreach($data['product_details'] as $key => $product)
+                              
+                                @if($product['details']->isNotEmpty())
+                                    @foreach($product['details'] as $sizeKey => $size)
+                                      <div class="col">
+                                          <div class="size-inner {{$key== 0 && $sizeKey == 0 ? 'active' : '' }}" 
+                                              product-id="{{ $size['id'] }}" 
+                                              data-key="{{ $sizeKey }}" 
+                                              can-buy="{{ $size['quantity'] > 0 ? '1' : '0' }}" 
+                                              data-qty="{{ $size['quantity'] }}"
+                                              product-size-value="{{ $size['size'] }}"
+                                              style="{{ $key== 0 ? '' : 'display: none;' }}"
+                                              data-color-key="{{ $key }}"
+                                              >
+                                              <div class="select-inner">
+                                                  <div class="image-name">{{ $size['size'] }}</div>
+                                              </div>
+                                              @if($size['quantity'] <= 0)
+                                                  <div class="crossed-out"></div>
+                                              @endif
+                                              <div class="image-check"><img src="{{ asset('images/select-pro.png') }}" alt=""></div>
+                                          </div>
+                                        </div>
+                                      @endforeach
+                                  @else
+                                      <div class="size-inner {{ $key == 0 ? 'active' : '' }}" data-key="{{ $key }}">
+                                          <div class="select-inner">
+                                              <div class="image-name">{{ $product['size'] }}</div>
+                                          </div>
+                                          <div class="crossed-out"></div>
+                                          <div class="image-check"><img src="{{ asset('images/select-pro.png') }}" alt=""></div>
+                                      </div>
+                                  @endif
+                              @endforeach
+                          </div>
+                        </div>
+                      </div>
+                    @endif
                   @endif
                   <div class="form-payment">
                     <form action="{{ route('show_checkout') }}" method="POST" accept-charset="utf-8">
@@ -135,7 +224,16 @@
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                           <div class="form-center">
                             <button type="button" onclick="minusInput();" class="btn-minus btn-cts">–</button>
-                            <input type="text" class="qty input-text" id="qty" name="quantity" size="4" value="{{ $data['product_details'][0]->quantity <= 0 ? 0 : 1 }}" min="0" max="{{ $data['product_details'][0]->quantity }}" disabled>
+                            <input type="text" 
+                                  class="qty input-text" 
+                                  id="qty" 
+                                  name="quantity" 
+                                  size="4" 
+                                  value="{{ isset($data['product_details'][0]['details']) && $data['product_details'][0]['details']->contains(fn($size) => $size['quantity'] > 0) ? 1 : 0 }}" 
+                                  min="1" 
+                                  max="{{ isset($data['product_details'][0]['details']) ? $data['product_details'][0]['details']->sum('quantity') : 0 }}" 
+                                  disabled
+                            >
                             <button type="button" onclick="plusInput();" class="btn-plus btn-cts">+</button>
                           </div>
                         </div>
@@ -144,6 +242,26 @@
                         </div>
                       </div>
                     </form>
+                      @php
+                        $wishlist = session('wishlist', collect());
+                        $wishlistProductDetailIds = $wishlist->pluck('product_detail_id')->toArray();
+                        $isInWishlist = false;
+                    
+                        foreach ($data['product_details'] as $product) {
+                            foreach ($product['details'] as $detail) {
+                                if (in_array($detail['id'], $wishlistProductDetailIds)) {
+                                    $isInWishlist = true;
+                                    break 2; // Exit both loops
+                                }
+                            }
+                        }
+                      @endphp
+                    
+                    <script>
+                        var wishlistProductDetailIds = @json($wishlistProductDetailIds);
+                    </script>
+                    
+                    <i class="fa fa-heart wishlist-icon {{ $isInWishlist ? 'wishlist-added' : '' }}" data-product-id="{{ $data['product']->id }}" data-url="{{ route('toggle_wishlist') }}"></i>
                   </div>
                 </div>
               </div>
@@ -151,10 +269,10 @@
             <div class="col-md-3">
               <div class="online_support">
                 <h2 class="title">CHÚNG TÔI LUÔN SẴN SÀNG<br>ĐỂ GIÚP ĐỠ BẠN</h2>
-                <img src="{{ asset('images/support_online.jpg') }}">
+                <img src="{{ asset('images/support_online.jpg') }}" alt="">
                 <h3 class="sub_title">Để được hỗ trợ tốt nhất. Hãy gọi</h3>
                 <div class="phone">
-                  <a href="tel:18006750" title="1800 6750">1800 6750</a>
+                  <a href="tel:18006750" title="1800 6750">0377887668</a>
                 </div>
                 <div class="or"><span>HOẶC</span></div>
                 <h3 class="title">Chat hỗ trợ trực tuyến</h3>
@@ -170,7 +288,7 @@
                 <div class="tab-header">
                   <ul class="nav nav-tabs nav-tab-custom">
                     <li class="active"><a data-toggle="tab" href="#description">Mô Tả</a></li>
-                    <li><a data-toggle="tab" href="#vote">Nhận Xét Và Đánh Giá</a></li>
+                    <li><a data-toggle="tab" href="#vote">Bình Luận Sản Phẩm</a></li>
                   </ul>
                 </div>
                 <div class="tab-content">
@@ -187,9 +305,9 @@
                   </div>
                   <div id="vote" class="tab-pane fade">
                     <div class="content-vote">
-                      @if(Auth::check())
+                      @if($data['canComment'])
                       <div class="section-rating">
-                        <div class="rating-title">Đánh giá sản phẩm</div>
+                        <div class="rating-title">Bình Luận</div>
                         <div class="rating-content">
                           <div class="rating-product"></div>
                           <div class="rating-form">
@@ -198,7 +316,7 @@
                               <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                               <input type="hidden" name="product_id" value="{{ $data['product']->id }}">
                               <textarea name="content" placeholder="Nội dung..." rows="3"></textarea>
-                              <button type="submit" class="btn btn-default">Gửi đánh giá</button>
+                              <button type="submit" class="btn btn-default">Gửi bình luận</button>
                             </form>
                           </div>
                         </div>
@@ -220,7 +338,7 @@
                             <div class="vote-inner">
                               @foreach($data['product_votes'] as $vote)
                                 <div class="vote-content">
-                                  <div class="vote-content-left"><img src="{{ Helper::get_image_avatar_url($vote->user->avatar_image) }}"></div>
+                                  <div class="vote-content-left"><img src="{{ Helper::get_image_avatar_url($vote->user->avatar_image) }}" alt=""></div>
                                   <div class="vote-content-right">
                                     <div class="name">
                                       {{ $vote->user->name }}
@@ -255,7 +373,9 @@
                       <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
                         <div class="product-content">
                           <div class="image">
-                            <img src="{{ Helper::get_image_product_url($product->image) }}">
+                            <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" alt=""
+                            onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';"
+                            />
                           </div>
                           <div class="content">
                             <h3 class="title">{{ $product->name }}</h3>
@@ -290,18 +410,17 @@
         </div>
         <div class="modal-body">
           <div class="content">
-            @if($data['product']->product_introduction)
+            {{-- @if($data['product']->product_introduction)
               {!! $data['product']->information_details !!}
             @else
               <p class="text-center"><strong>Đang cập nhật ...</strong></p>
-            @endif
+            @endif --}}
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -343,6 +462,19 @@
           '{{ session('alert')['type'] }}'
         );
       @endif
+      @if(session('wishlist_alert'))
+            Swal.fire(
+                '{{ session('wishlist_alert')['title'] }}',
+                '{{ session('wishlist_alert')['content'] }}',
+                '{{ session('wishlist_alert')['type'] }}'
+            );
+            var icon = $('.wishlist-icon');
+            if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
+                icon.addClass('wishlist-added');
+            } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
+                icon.removeClass('wishlist-added');
+            }
+        @endif
     });
   </script>
 @endsection

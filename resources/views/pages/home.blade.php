@@ -19,7 +19,7 @@
         <div class="col-md-4">
           <div class="new-posts">
             <div class="posts-header">
-              <h3 class="posts-title">TIN TỨC LEGO</h3>
+              <h3 class="posts-title">TIN TỨC THÚ CƯNG</h3>
             </div>
             <div class="posts-content">
               @foreach($data['posts'] as $post)
@@ -27,7 +27,12 @@
                   <a href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">
                     <div class="row">
                       <div class="col-md-4 col-sm-3 col-xs-3 col-xs-responsive">
-                        <div class="post-item-image" style="background-image: url('{{ Helper::get_image_post_url($post->image) }}'); padding-top: 50%;"></div>
+                        <div class="post-item-image">
+                          <img loading="lazy" src="{{ Helper::get_image_post_url($post->image) }}" 
+                              alt="Post Image" 
+                              style="width: 100%; height: 50px; object-fit: contain;"
+                              onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
+                        </div>
                       </div>
                       <div class="col-md-8 col-sm-9 col-xs-9 col-xs-responsive">
                         <div class="post-item-content">
@@ -54,7 +59,11 @@
           @if($product->rate >= 3.5)
             <div class="item-product">
               <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                <div class="image-product" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%; background-size: 100%;">
+                <div class="image-product">
+                  <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" 
+                        alt="Product Image" 
+                        style="width: 100%; height: 284px;"
+                        onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
                   {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
                 </div>
                 <div class="content-product">
@@ -78,7 +87,7 @@
     <section class="section-products">
       <div class="section-header">
         <div class="section-header-left">
-          <h2 class="section-title">ĐIỆN THOẠI</h2>
+          <h2 class="section-title">Sản Phẩm</h2>
         </div>
         <div class="section-header-right">
           <ul>
@@ -89,66 +98,38 @@
         </div>
       </div>
       <div class="section-content">
-        <div class="row">
+        <div class="product-container">
           @foreach($data['products'] as $key => $product)
-            @if($key == 0)
-              <div class="col-md-2 col-md-40">
-                <div class="item-product">
-                  <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                    <div class="row">
-                      <div class="col-md-6 col-sm-6 col-xs-6">
-                        <div class="image-product" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%; background-size: 100%;">
-                          {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                        </div>
-                        <div class="content-product">
-                          <h3 class="title">{{ $product->name }}</h3>
-                          <div class="start-vote">
-                            {!! Helper::get_start_vote($product->rate) !!}
-                          </div>
-                          <div class="price">
-                            {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                          </div>
-                        </div>
-                      </div>
+            <div>
+              <div class="item-product">
+                <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
+                  <div class="image-product">
+                    <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" 
+                        alt="Product Image" 
+                        style="width: 100%; height: 284px;"
+                        onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
+                    {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
+                  </div>
+                  <div class="content-product">
+                    <h3 class="title">{{ $product->name }}</h3>
+                    <div class="start-vote">
+                      {!! Helper::get_start_vote($product->rate) !!}
                     </div>
-                  </a>
-                </div>
-              </div>
-            @else
-              <div class="col-md-2 col-md-20">
-                <div class="item-product">
-                  <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                    <div class="row">
-                      <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="image-product" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%;background-size: 100%;">
-                          {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                        </div>
-                        <div class="content-product">
-                          <h3 class="title">{{ $product->name }}</h3>
-                          <div class="start-vote">
-                            {!! Helper::get_start_vote($product->rate) !!}
-                          </div>
-                          <div class="price">
-                            {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                          </div>
-                        </div>
-                      </div>
+                    <div class="price">
+                      {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
                     </div>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </div>
-            @endif
+            </div>
           @endforeach
         </div>
       </div>
+      <div style="display: flex; justify-content:center">
+        {{ $data['products']->links() }}
+      </div>
     </section>
   </div>
-@endsection
-
-@section('css')
-  <style>
-
-  </style>
 @endsection
 
 @section('js')

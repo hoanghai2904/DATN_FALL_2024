@@ -56,10 +56,24 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('product_detail/delete', 'ProductController@delete_product_detail')->name('product.delete_product_detail');
   Route::post('product/image/delete', 'ProductController@delete_image')->name('product.delete_image');
 
-  Route::get('orders', 'OrderController@index')->name('order.index');
-  Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
-  Route::get('active/{action}/{id}', 'OrderController@actionTransaction')->name('orderTransaction');
+  Route::get('coupons', 'CouponController@index')->name('coupon.index');
+  Route::get('coupon/new', 'CouponController@new')->name('coupon.new');
+  Route::post('coupon/save', 'CouponController@save')->name('coupon.save');
+  Route::post('coupon/delete', 'CouponController@delete')->name('coupon.delete');
+  Route::get('coupon/{id}/edit', 'CouponController@edit')->name('coupon.edit');
+  Route::post('coupon/{id}/update', 'CouponController@update')->name('coupon.update');
 
+  Route::get('producers', 'ProducerController@index')->name('producer.index');
+  Route::get('producer/new', 'ProducerController@new')->name('producer.new');
+  Route::post('producer/save', 'ProducerController@save')->name('producer.save');
+  Route::post('producer/delete', 'ProducerController@delete')->name('producer.delete');
+  Route::get('producer/{id}/edit', 'ProducerController@edit')->name('producer.edit');
+  Route::post('producer/{id}/update', 'ProducerController@update')->name('producer.update');
+
+  Route::get('orders', 'OrderController@index')->name('order.index');
+  Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
+  Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
+  
   Route::get('statistic', 'StatisticController@index')->name('statistic');
   Route::post('statistic/change', 'StatisticController@edit')->name('statistic.edit');
 
@@ -69,6 +83,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
 
 Route::namespace('Pages')->group(function () {
   Route::get('/', 'HomePage')->name('home_page');
+  Route::get('coupons', 'CouponController@index')->name('coupon_page');
   Route::get('about', 'AboutPage')->name('about_page');
   Route::get('contact', 'ContactPage')->name('contact_page');
   Route::get('search', 'SearchController')->name('search');
@@ -76,12 +91,16 @@ Route::namespace('Pages')->group(function () {
   Route::get('post/{id}', 'PostController@show')->name('post_page');
   Route::get('orders', 'OrderController@index')->name('orders_page');
   Route::get('order/{id}', 'OrderController@show')->name('order_page');
+  Route::post('cancel-order/{id}', 'OrderController@cancelOrder')->name(name: 'cancelOrder');
+  Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
+  Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
+
 
   Route::get('user/profile', 'UserController@show')->name('show_user');
   Route::get('user/edit', 'UserController@edit')->name('edit_user');
   Route::post('user/save', 'UserController@save')->name('save_user');
   //page products
-  Route::get('products', 'ProductsController@index')->name('products_page');
+Route::get('products', 'ProductsController@index')->name('products_page');
   Route::get('producer/{id}', 'ProductsController@getProducer')->name('producer_page');
   Route::get('product/{id}', 'ProductsController@getProduct')->name('product_page');
   Route::post('vote', 'ProductsController@addVote')->name('add_vote');
@@ -89,8 +108,19 @@ Route::namespace('Pages')->group(function () {
   Route::post('cart/remove', 'CartController@removeCart')->name('remove_cart');
   Route::post('minicart/update', 'CartController@updateMiniCart')->name('update_minicart');
   Route::post('cart/update', 'CartController@updateCart')->name('update_cart');
+  Route::post('update-fee', 'CartController@updateFee')->name('update_fee');
   Route::get('cart', 'CartController@showCart')->name('show_cart');
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');
   Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
+
+  Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
+  Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
+  Route::post('/save-coupon', 'CouponController@saveCoupon')->name('save.coupon');
+
+  Route::post('send-contact', 'ContactController@sendContact')->name('send_contact');
+
+  Route::post('/toggle-wishlist', 'ProductsController@toggleWishlist')->name('toggle_wishlist');
+  Route::get('show-wishlist', 'ProductsController@showWishlist')->name('show_wishlist');
+
 });

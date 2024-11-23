@@ -372,7 +372,7 @@ updateStatusForm.addEventListener('submit', event => {
     .then(data => {
         if (data.success) {
             Swal.fire({
-                icon: 'success',
+                type: 'success',
                 title: 'Thành công!',
                 text: data.message,
                 timer: 2000,
@@ -383,7 +383,7 @@ updateStatusForm.addEventListener('submit', event => {
             });
         } else {
             Swal.fire({
-                icon: 'error',
+                type: 'error',
                 title: 'Thất bại!',
                 text: data.message,
             });

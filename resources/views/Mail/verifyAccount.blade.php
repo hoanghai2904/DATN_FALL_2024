@@ -45,7 +45,7 @@
             <td align="center" valign="top" style="padding: 20px;">
                 <div class="email-container">
                     <h3>Xin chào: {{$account->full_name}}</h3>
-                    <p>Cám ơn bạn đã đăng ký tài khoản của ứng dụng shop chúng tôi.</p>
+                    <p>Cám ơn bạn đã đăng ký tài khoản của shop chúng tôi.</p>
                     <p>Click vào nút bên dưới để xác nhận đăng ký:</p>
                     <a href="{{ route('account.verify', $account->verification_token) }}" class="btn-confirm">Xác nhận</a>
                 </div>

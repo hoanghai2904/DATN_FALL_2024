@@ -35,14 +35,15 @@
               <div class="note">
                 <div class="note-icon"><i class="fas fa-info-circle"></i></div>
                 <div class="note-content">
-                  <p>website <strong>VDO</strong> là một sản phẩm của đồ án tốt nghiệp đề tài: <i> Xây dựng Website bán hàng điện tử trực tuyến Paddy chạy được trên cả máy tính và thiết bị di động</i>. Được thực hiện bởi sinh viên . Mọi hoạt động mua sắm trên website đều không có giá trị !</p>
+                  <p>website <strong>Shop Pet</strong> là một sản phẩm của đồ án tốt nghiệp đề tài: <i> Xây dựng Website bán hàng trực tuyến Paddy chạy được trên cả máy tính </i>. Được thực hiện bởi sinh viên . Mọi hoạt động mua sắm trên website đều không có giá trị !</p>
                 </div>
               </div>
               <div class="content">
-                <p>Paddy Pet Shop là shop thú cưng bán lẻ cung cấp các sản phẩm chất lượng cao cho thú cưng gồm thức ăn, snack, phụ kiện, thời trang, mỹ phẩm chăm sóc, đồ dùng vệ sinh... từ các thương hiệu lớn và uy tín trên thế giới.</p>
-                <p>Năm 2020, Cửa hàng thú cưng Paddy chính thức khai trương cửa hàng đầu tiên cùng với hệ thống kênh bán hàng online vận hành ổn định giúp mang đến sự tiện lợi cho khách hàng khi mua sắm.</p>
-                <p>Paddy đang cung cấp hơn 2.000 sản phẩm cho thú cưng, tự hào là điểm hẹn mua sắm lý tưởng, chuyên cung cấp những sản phẩm chất lượng đạt tiêu chuẩn với giá cả hợp lý từ các thương hiệu lớn như Royal Canin, Nutrience, Taste of the Wild, Zenith, Bowwow, Nekko, Ganador, Minino, Kit Cat, The Pet...</p>
-                <p></p>
+                <h3 class="text-center" style="font-weight: 800">Chào mừng đến với PAWS ON CHICON!</h3>
+                <p>Paddy.vn là nhà bán lẻ chuyên cung cấp các sản phẩm chất lượng cao cho chó mèo, bao gồm thức ăn, snack, phụ kiện, thời trang, mỹ phẩm chăm sóc và đồ dùng vệ sinh từ các thương hiệu uy tín trên thế giới.</p>
+                <p>Vào năm 2024, Paddy đã khai trương cửa hàng đầu tiên của mình, đồng thời cũng thành công trong việc vận hành hệ thống kênh bán hàng online trên Website và các sàn thương mại điện tử như Shopee, Lazada, Tiktok. Hiện tại, Paddy đang có 3 cửa hàng tại khu vực thành phố Hồ Chí Minh cung cấp hơn 2.000 sản phẩm chất lượng đạt tiêu chuẩn từ các thương hiệu lớn như Royal Canin, Nutrience, Taste of the Wild, Zenith, Bowwow, Nekko, Ganador, Minino, Kit Cat, The Pet...</p>
+                <p>Với mong muốn không chỉ mang lại sản phẩm giá cả hợp lý, đảm bảo chất lượng cho khách hàng mà còn giúp họ cảm thấy thoải mái và tiện lợi khi mua sắm sản phẩm cho thú cưng, Paddy luôn nỗ lực để duy trì và nâng cao chất lượng dịch vụ của mình. Từ việc tư vấn khách hàng tận tình chu đáo đến giao hàng nhanh chóng và xử lý các vấn đề kịp thời - tất cả những điều này đã giúp Paddy xây dựng được lòng tin từ phía khách hàng và dần trở thành người bạn đồng hành tin cậy của các chủ nuôi thú cưng...</p>
+              <img style="width: 100%" src="{{ asset('images/about.webp') }}" alt="">
               </div>
             </div>
           </div>
@@ -53,7 +54,7 @@
                 <img src="{{ asset('images/support_online.jpg') }}">
                 <h3 class="sub_title">Để được hỗ trợ tốt nhất. Hãy gọi</h3>
                 <div class="phone">
-                  <a href="tel:18006750" title="1800 6750">1800 6750</a>
+                  <a href="tel:(+84) 377.887.668" title="(+84) 377.887.668">0377887668</a>
                 </div>
                 <div class="or"><span>HOẶC</span></div>
                 <h3 class="title">Chat hỗ trợ trực tuyến</h3>

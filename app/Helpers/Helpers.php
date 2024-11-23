@@ -86,4 +86,19 @@ class Helpers
     $param = request()->route()->parameter('id');
     return ($name_route == $route) && ($param == $id) ? 'active' : null;
   }
+
+  public static function get_shipping_methods() {
+    return [
+      [
+        'id' => 1,
+        'name' => 'Giao hàng tiêu chuẩn',
+        'price' => 30000
+      ],
+      [
+        'id' => 2,
+        'name' => 'Giao hàng hỏa tốc',
+        'price' => 50000
+      ],
+    ];
+  }
 }

@@ -74,13 +74,13 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard')->with(['alert' => [
                 'type' => 'success',
                 'title' => 'Đăng nhập thành công',
-                'content' => 'Chào mừng bạn đến với trang quản trị website PhoneStore'
+                'content' => 'Chào mừng bạn đến với trang quản trị website Shop Paws'
             ]]);
         } else {
             return redirect()->route('home_page')->with(['alert' => [
                 'type' => 'success',
                 'title' => 'Đăng nhập thành công',
-                'content' => 'Chào mừng bạn đến với website PhoneStore của chúng tôi'
+                'content' => 'Chào mừng bạn đến với website Shop Paws của chúng tôi'
             ]]);
         }
     }

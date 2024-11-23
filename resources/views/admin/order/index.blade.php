@@ -91,8 +91,9 @@
                 <th data-orderable="false">Email</th>
                 <th data-orderable="false" data-width="70px">Điện Thoại</th>
                 <th data-orderable="false">Phương Thức Thanh Toán</th>
-                <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
-                <th data-width="66px">Trạng Thái</th>
+                <th class="sort">Trạng thái thanh toán</th>
+                <th data-width="60px" data-type="date-euro">Ngày đặt hàng</th>
+                <th data-width="66px">Trạng thái đơn hàng</th>
                 <th data-orderable="false" data-width="130px">Tác Vụ</th>
               </tr>
             </thead>
@@ -103,48 +104,72 @@
                   <td class="text-center">{{ $order->id }}</td>
                   <td>{{ '#'.$order->order_code }}</td>
                   <td>
-                    <a href="{{ route('admin.user_show', ['id' => $order->user->id]) }}" class="text-left" title="{{ $order->user->name }}">{{ $order->user->name }}</a>
+                    @if ($order->user)
+                      <a href="{{ route('admin.user_show', ['id' => $order->user->id]) }}" class="text-left" title="{{ $order->user->name }}">{{ $order->user->name }}</a>
+                    @else
+                      <span>---</span>
+                    @endif
                   </td>
                   <td>{{ $order->name }}</td>
                   <td>{{ $order->email }}</td>
                   <td>{{ $order->phone }}</td>
-                  <td>{{ $order->payment_method->name }}</td>
+                  <td>{{ $order->payment_method?->name }}</td>
+                  <td>{{ $order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</td>
                   <td> {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y')}}</td>
+                  @php
+                      $statusLabels = [
+                          1 => ['label' => 'label-default', 'text' => 'Chờ xác nhận'],
+                          2 => ['label' => 'label-info', 'text' => 'Đã xác nhận'],
+                          3 => ['label' => 'label-info', 'text' => 'Đang Vận Chuyển'],
+                          4 => ['label' => 'label-success', 'text' => 'Đã Giao Hàng'],
+                          5 => ['label' => 'label-danger', 'text' => 'Hủy'],
+                      ];
+                  @endphp
                   <td>
-                
-                   @if($order->status == 1)
-                   <span class="label label-default" style="font-size:13px">Đang Xử Lý</span>
-                   @elseif ($order->status == 2)
-                   <span class="label label-info" style="font-size:13px">Đang Vận Chuyển</span>
-                   @elseif ($order->status == 3)
-                   <span class="label label-success" style="font-size:13px">Đã Giao Hàng</span>
-                   @else
-                   <span class="label label-danger" style="font-size:13px">Hủy</span>
-                   @endif
+                      @if(isset($statusLabels[$order->status]))
+                          <span class="label {{ $statusLabels[$order->status]['label'] }}" style="font-size:13px; display: inline-block; width: 100%">
+                              {{ $statusLabels[$order->status]['text'] }}
+                          </span>
+                      @endif
                   </td>
                   <td>
-                  <div class="btn-group">
-                  <button type="button" class="btn btn-success btn-xs" style=" height: 30px;">Action  </button>
-                  <button type="button" style="height: 30px;" class="btn btn-success btn-xs dropdown-toggle"
-                  data-toggle="dropdown" aria-expanded='false'>
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle-dropdown</span>
-                    </button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                      <a href="{{route('admin.orderTransaction',['process',$order->id])}}"><i class="fa fa-ban"> </i>Đang Vận Chuyển</a>
-                    </li>
-                    <li>
-                      <a href="{{route('admin.orderTransaction',['success',$order->id])}}" ><i class="fa fa-ban"> </i>Đã Giao Hàng</a>
-                    </li>
-                    <li>
-                      <a href="{{route('admin.orderTransaction',['cancel',$order->id])}}" ><i class="fa fa-ban"> </i>Hủy</a>
-                    </li>
-                  </ul>
                     <a href="{{ route('admin.order.show', ['id' => $order->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chi Tiết">
                       <i class="fa fa-eye" aria-hidden="true"></i>
                     </a>
-                    </div>
+                    @if ($order->status === 1 || $order->status === 2 || $order->status === 3)
+                      <div class="btn-group">
+                        <button type="button" style="height: 30px;" class="btn btn-success btn-xs dropdown-toggle"
+                        data-toggle="dropdown" aria-expanded='true'>
+                          Thao tác
+                          <span class="caret"></span>
+                          <span class="sr-only">Toggle-dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          @if ($order->status === 1 && $order->payment_method_id == 1 || 
+                            $order->status === 1 && $order->payment_method_id == 2 && $order->is_paid)
+                            <li>
+                              <a href="{{route('admin.orderTransaction',['confirmed',$order->id])}}"></i>Đã xác nhận</a>
+                            </li>
+                          @endif
+                          @if ($order->status === 2)
+                            <li>
+                              <a href="{{route('admin.orderTransaction',['delivering',$order->id])}}"></i>Đang Vận Chuyển</a>
+                            </li>
+                          @endif
+                          @if ($order->status === 3)
+                            <li>
+                              <a href="{{route('admin.orderTransaction',['delivered',$order->id])}}" ></i>Đã Giao Hàng</a>
+                            </li>
+                          @endif
+                          @if ($order->status === 1)
+                            <li>
+                              <a href="{{route('admin.orderTransaction',['cancel',$order->id])}}" ></i>Hủy</a>
+                            </li>
+                          @endif
+                        </ul>
+                      </div>
+                      @else
+                    @endif
                   </td>
                 </tr>
               @endforeach
