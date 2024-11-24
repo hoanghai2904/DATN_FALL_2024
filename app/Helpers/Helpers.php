@@ -44,14 +44,7 @@ class Helpers
     }
     return $output;
   }
-  public static function get_real_price($price, $promotion_price, $promotion_start_date, $promotion_end_date) {
-    $output = '';
-    if($promotion_price != null && $promotion_start_date <= date('Y-m-d') && $promotion_end_date >= date('Y-m-d'))
-      $output = '<strong>'.number_format($promotion_price,0,',','.').'₫</strong><del>'.number_format($price,0,',','.').'₫</del>';
-    else
-      $output = '<strong>'.number_format($price,0,',','.').'₫</strong>';
-    return $output;
-  }
+ 
   public static function get_image_avatar_url($image = null) {
     if($image != null)
       return asset('storage/images/avatars/'.$image);
