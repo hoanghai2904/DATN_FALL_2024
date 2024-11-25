@@ -14,7 +14,8 @@ use App\Models\Order;
 
 class DashboardController extends Controller
 {
-  public function index() {
+  public function index()
+  {
 
     $count['user'] = User::where([['active', true], ['admin', false]])->count();
     $count['post'] = Post::count();

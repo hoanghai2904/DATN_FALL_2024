@@ -8,7 +8,7 @@
         <div class="container">
             <div class="row py-5">
                 <div class="col-lg-8 col-md-7 col-sm-6 col-xs-12">
-                    <div>
+                    <div class="checkout-info">
                         <div>
                             <div class="col-title">
                                 <h3>Thông Tin Mua Hàng</h3>
@@ -137,11 +137,21 @@
                             <div class="section-price">
                                 <div class="temp-total-price">
                                     <div class="title">Tạm Tính</div>
-                                    <div class="price">{{ number_format($cart->totalPrice, 0, ',', '.') }}₫</div>
+                                    <div class="price" data-temp-total-price="{{$cart->totalPrice}}">{{ number_format($cart->totalPrice, 0, ',', '.') }}₫</div>
                                 </div>
                                 <div class="ship-price">
                                     <div class="title">Phí Vận Chuyển</div>
                                     <div class="price">0₫</div>
+                                </div>
+                                @if (Auth::check())
+                                    <div class="apply-coupon">
+                                        <button type="button" class="btn btn-primary" id="apply-coupon-btn" data-url="{{ route('user_coupons') }}">Áp Dụng Mã Giảm Giá</button>
+                                    </div>
+                                @endif
+                                <div class="discount-info" style="display: none;">
+                                    <div class="title">Giảm Giá</div>
+                                    <div class="applied-coupon"></div>
+                                    <div class="discount-amount" data-discount-amount="0"></div>
                                 </div>
                                 <div class="total-price">
                                     <div class="title">Tổng Cộng</div>
@@ -152,6 +162,28 @@
                             <div class="btn-order">
                                 <button type="submit" class="btn btn-default">Đặt Hàng</button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Coupon Modal -->
+            <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="couponModalLabel">Chọn Mã Giảm Giá</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="coupon-form" class="coupon-list">
+                                <!-- Coupons will be loaded here via AJAX -->
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-primary" id="apply-coupon" data-validate-url="{{ route('validate_coupon') }}">Áp Dụng</button>
                         </div>
                     </div>
                 </div>

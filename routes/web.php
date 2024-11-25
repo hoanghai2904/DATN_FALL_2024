@@ -56,6 +56,13 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('product_detail/delete', 'ProductController@delete_product_detail')->name('product.delete_product_detail');
   Route::post('product/image/delete', 'ProductController@delete_image')->name('product.delete_image');
 
+  Route::get('coupons', 'CouponController@index')->name('coupon.index');
+  Route::get('coupon/new', 'CouponController@new')->name('coupon.new');
+  Route::post('coupon/save', 'CouponController@save')->name('coupon.save');
+  Route::post('coupon/delete', 'CouponController@delete')->name('coupon.delete');
+  Route::get('coupon/{id}/edit', 'CouponController@edit')->name('coupon.edit');
+  Route::post('coupon/{id}/update', 'CouponController@update')->name('coupon.update');
+
   Route::get('orders', 'OrderController@index')->name('order.index');
   Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
   Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
@@ -69,6 +76,7 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
 
 Route::namespace('Pages')->group(function () {
   Route::get('/', 'HomePage')->name('home_page');
+  Route::get('coupons', 'CouponController@index')->name('coupon_page');
   Route::get('about', 'AboutPage')->name('about_page');
   Route::get('contact', 'ContactPage')->name('contact_page');
   Route::get('search', 'SearchController')->name('search');
@@ -98,4 +106,8 @@ Route::namespace('Pages')->group(function () {
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');
   Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
+
+  Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
+  Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
+  Route::post('/save-coupon', 'CouponController@saveCoupon')->name('save.coupon');
 });

@@ -78,13 +78,13 @@
               <div class="input-groups">
                  
                 <form action="{{route('admin.orderDetails')}}" method="GET">
-                <div><input type="date" class="form-control pull-right" id="reservation" name="date_to" autocomplete="off" ></div>
-                <div><input type="date" class="form-control pull-right" id="reservation" name="date_from" autocomplete="off" ></div>
-                  
-                <!-- /.input group -->
-                <div class="input-group-ass">
-                  <button type="submit" class="btn btn-success">Tìm</button>
-                  </div>
+                  <div><input type="date" class="form-control pull-right" id="reservation" name="date_to" autocomplete="off" ></div>
+                  <div><input type="date" class="form-control pull-right" id="reservation" name="date_from" autocomplete="off" ></div>
+                    
+                  <!-- /.input group -->
+                  <div class="input-group-ass">
+                    <button type="submit" class="btn btn-success">Tìm</button>
+                    </div>
                   </form>
               </div>
             </div>
@@ -105,8 +105,7 @@
             </thead>
             <tbody>
            
-            @foreach($product_details as $key=>$product_dt)
-
+              @foreach($product_details as $key=>$product_dt)
                 <tr>
                   <td class="text-center">{{$key+1}}</td>
                   <td>
