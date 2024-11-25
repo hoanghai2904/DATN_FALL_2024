@@ -41,5 +41,24 @@
     <script src="{{ asset('AdminLTE/bower_components/jquery-validate/jquery.validate.js') }}"></script>
 @endsection
 @section('custom-js')
-
+    <script>
+        $(document).ready(function() {
+            $('#producer-form').validate({
+                rules: {
+                    name: {
+                        required: true
+                    },
+                },
+                messages: {
+                    name: {
+                        required: "Tên là bắt buộc."
+                    },
+                },
+                errorPlacement: function(error, element) {
+                    error.addClass('text-red');
+                    error.insertAfter(element);
+                }
+            });
+        });
+    </script>
 @endsection
