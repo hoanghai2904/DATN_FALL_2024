@@ -163,6 +163,7 @@ class OrderController extends Controller
       } else {
         if($order->status == OrderStatusEnum::DELIVERED) {
           $order->is_paid = true;
+          $order->is_received = true;
           $order->save();
           return response()->json(['status' => 'success', 'message' => 'Nhận hàng thành công!']);
         } else {

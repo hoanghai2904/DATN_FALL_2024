@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendOrderMail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -147,6 +148,15 @@ class CartController extends Controller
     $cart = new Cart($oldCart);
     $cart->update();
     Session::put('cart', $cart);
+    if($cart->items == null) {
+      return redirect()->route('home_page')->with([
+        'alert' => [
+          'type' => 'warning',
+          'title' => 'Thông Báo',
+          'content' => 'Giỏ hàng của bạn đang trống!'
+        ]
+      ]);
+    }
         // Retrieve user address if logged in
     $user_address = null;
     if (Auth::check()) {
@@ -240,12 +250,26 @@ class CartController extends Controller
       return $vnp_Url;
   }
 
+  public function prepareDataSend($order)
+  {
+      // Ensure the order object includes the order_details and payment_method relationships
+      $order->load(['order_details.product_detail.product', 'payment_method']);
+
+      // Convert the order object to an array
+      $dataSend = $order->toArray();
+
+      // Add the payment method name to the dataSend array
+      $dataSend['payment_method_name'] = $order->payment_method->name;
+
+      return $dataSend;
+  }
+
   public function payment(Request $request) {
     $payment_method = PaymentMethod::select('id', 'name')->where('id', $request->payment_method)->first();
     if(Str::contains($payment_method->name, 'COD')) {
       if($request->buy_method == 'buy_now'){
         $order = new Order;
-        $order->user_id = Auth::user()->id;
+        $order->user_id = Auth::user()?->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
         $order->order_code = 'PSO'.str_pad(rand(0, pow(10, 5) - 1), 5, '0', STR_PAD_LEFT);
         $order->name = $request->name;
@@ -253,8 +277,19 @@ class CartController extends Controller
         $order->phone = $request->phone;
         $order->address = $request->address;
         $order->fee = $request?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->status = OrderStatusEnum::PENDING;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         $order_details = new OrderDetail;
         $order_details->order_id = $order->id;
@@ -266,6 +301,8 @@ class CartController extends Controller
         $product = ProductDetail::find($request->product_id);
         $product->quantity = $product->quantity - $request->totalQty;
         $product->save();
+        $dataSend = $this->prepareDataSend($order);
+        SendOrderMail::dispatch($dataSend);
 
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -274,6 +311,13 @@ class CartController extends Controller
         ]]);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
@@ -284,9 +328,20 @@ class CartController extends Controller
         $order->phone = $request->phone;
         $order->address = $request->address;
         $order->fee = $cart?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->status = OrderStatusEnum::PENDING;
 
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         foreach ($cart->items as $key => $item) {
           $order_details = new OrderDetail;
@@ -300,6 +355,10 @@ class CartController extends Controller
           $product->quantity = $product->quantity - $item['qty'];
           $product->save();
         }
+
+        $dataSend = $this->prepareDataSend($order);
+
+        SendOrderMail::dispatch($dataSend);
         Session::forget('cart');
         return redirect()->route('home_page')->with(['alert' => [
           'type' => 'success',
@@ -310,7 +369,7 @@ class CartController extends Controller
     } elseif(Str::contains($payment_method->name, 'Online Payment')) {
       if($request->buy_method == 'buy_now'){
         $order = new Order;
-        $order->user_id = Auth::user()->id;
+        $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
         $order->order_code = 'PSO'.str_pad(rand(0, pow(10, 5) - 1), 5, '0', STR_PAD_LEFT);
         $order->name = $request->name;
@@ -319,7 +378,18 @@ class CartController extends Controller
         $order->address = $request->address;
         $order->status = OrderStatusEnum::PENDING;
         $order->fee = $request?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if ($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         $order_details = new OrderDetail;
         $order_details->order_id = $order->id;
@@ -328,9 +398,10 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
+        $totalPayment = $request->price * $request->totalQty + $order->fee;
         $vnpUrl = $this->createVNPayUrl(
       $order->order_code,
-      $order_details->price * $order_details->quantity,
+      $totalPayment,
           "Thanh toán đơn hàng tại " . config('app.name'),
           $request->ip()
         );
@@ -367,6 +438,13 @@ class CartController extends Controller
         // return redirect()->away($url);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
+        if(!$cart) {
+          return redirect()->route('home_page')->with(['alert' => [
+            'type' => 'warning',
+            'title' => 'Thông Báo',
+            'content' => 'Giỏ hàng của bạn đang trống!'
+          ]]);
+        }
 
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;
@@ -378,7 +456,18 @@ class CartController extends Controller
         $order->address = $request->address;
         $order->status = OrderStatusEnum::PENDING;
         $order->fee = $cart?->fee ?? 30000;
+        $order->coupon_id = $request->coupon_id ?? NULL;
+        $order->discount = $request->discount_amount ?? 0;
         $order->save();
+        if ($order->coupon_id) {
+          $user = Auth::user();
+          $user_coupon = $user->userCoupons()->where('coupon_id', $order->coupon_id)->first();
+          if($user_coupon) {
+            $user_coupon->is_used = 1;
+            $user_coupon->used_at = now();
+            $user_coupon->save();
+          }
+        }
 
         foreach ($cart->items as $key => $item) {
           $order_details = new OrderDetail;
@@ -388,13 +477,15 @@ class CartController extends Controller
           $order_details->price = $item['price'];
           $order_details->save();
         }
-        $totalPayment = $cart->totalPrice + $order->fee;
+
+        $totalPayment = $cart->totalPrice + $order->fee - $request->discount_amount;
         $vnpUrl = $this->createVNPayUrl(
     $order->order_code,
             $totalPayment,
             "Thanh toán giỏ hàng tại " . config('app.name'),
             $request->ip()
         );
+        session()->forget('cart');
 
         return redirect()->away($vnpUrl);
 
@@ -434,7 +525,6 @@ class CartController extends Controller
   public function responsePayment(Request $request)
   {
     // Khóa bí mật từ VNPay (cần khai báo trong file .env)
-
     $vnp_HashSecret = env('VNP_HASHSECRET');
 
     // Lấy toàn bộ tham số trả về từ VNPay
@@ -484,6 +574,9 @@ class CartController extends Controller
                         $product_detail->save();
                     }
                 }
+                $dataSend = $this->prepareDataSend($order);
+                SendOrderMail::dispatch($dataSend);
+
                 Session::forget('cart');
 
                 return redirect()->route('home_page')->with(['alert' => [
@@ -542,6 +635,8 @@ class CartController extends Controller
 
     // Add the fee from the order
     $totalPrice += $order->fee;
+    // Add the discount from the order
+    $totalPrice -= $order->discount;
 
     $vnpUrl = $this->createVNPayUrl(
         $order->order_code,

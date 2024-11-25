@@ -42,6 +42,7 @@
                       <th class="text-center">Phương Thức<br>Thanh Toán</th>
                       <th class="text-center">Đơn Giá tạm tính</th>
                       <th class="text-center">Phí giao hàng</th>
+                      <th class="text-center">Giảm giá</th>
                       <th class="text-center">Tổng tiền thanh toán</th>
                       <th class="text-center">Trạng thái thanh toán</th>
                       <th class="text-center">Trạng Thái đơn hàng</th>
@@ -63,7 +64,8 @@
                         <td class="text-center">{{ $order->payment_method->name }}</td>
                         <td class="text-center" style="color: #f30;">{{ number_format($price,0,',','.') }}₫</td>
                         <td class="text-center">{{ number_format($order->fee,0,',','.') }}₫</td>
-                        <td class="text-center" style="color: #f30;">{{ number_format($price + $order->fee,0,',','.') }}₫</td>
+                        <td class="text-center">{{ number_format($order->discount,0,',','.') }}₫</td>
+                        <td class="text-center" style="color: #f30;">{{ number_format($price + $order->fee - $order->discount,0,',','.') }}₫</td>
                         <td>{{$order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán'}}</td>
                         <td class="text-center">
                           @switch($order->status)

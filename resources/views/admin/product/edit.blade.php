@@ -174,7 +174,7 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label for="size_{{ $product_detail->id }}">Size</label>
-                    <input type="text" name="old_product_details[{{ $product_detail->id }}][size]" class="form-control size" id="size_{{ $product_detail->id }}" placeholder="Size" autocomplete="off" value="{{ $product_detail->size }}">
+                    <input type="text" name="old_product_details[{{ $product_detail->id }}][size]" class="form-control color" id="size_{{ $product_detail->id }}" placeholder="Size" autocomplete="off" value="{{ $product_detail->size }}">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -779,6 +779,12 @@ $("#productForm").on('submit', function(e) {
           <div class="form-group">
             <label for="color_{?}">Mầu Sắc <span class="text-red">*</span></label>
             <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="color_{?}">Size</label>
+            <input type="text" name="product_details[{?}][size]" class="form-control size" id="size_{?}" placeholder="Size" required autocomplete="off">
           </div>
         </div>
         <div class="col-md-4">

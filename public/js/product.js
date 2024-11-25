@@ -52,6 +52,27 @@ $(document).ready(function(){
   if($('.color-product .color-inner.active').attr('can-buy') == 0)
     $('.form-payment .row>div>button').prop('disabled', true);
 
+  function updateWishlistIcon() {
+        let product_detail_id = $('.color-product .color-inner.active').attr('product-id');
+        
+        // Capture the selected color and size (if available)
+        var size = $('.color-product .size-inner.active').attr('product-size-value');
+        if(size) {
+            product_detail_id = $('.color-product .size-inner.active').attr('product-id');
+        }
+        console.log
+
+        // Check if the product detail is in the wishlist
+        if (wishlistProductDetailIds.includes(parseInt(product_detail_id))) {
+            $('i.wishlist-icon').addClass('wishlist-added');
+        } else {
+            $('i.wishlist-icon').removeClass('wishlist-added');
+        }
+    }
+
+    // Initial check on page load
+    updateWishlistIcon();
+
   $('.select-color .color-inner').click(function() {
     var colorKey = $(this).attr('data-key');
     var selectedSizeKey = $('.select-size .size-inner.active').attr('data-key') ?? '0';  // Lấy key của màu đã chọn
@@ -96,6 +117,9 @@ $(document).ready(function(){
     // Cập nhật số lượng tối đa có thể chọn
     var qty = $(this).attr('data-qty');
     $('#qty').attr('max', qty);
+
+     // Update wishlist icon
+        updateWishlistIcon();
   });
 
   $('.select-size .size-inner').click(function() {
@@ -130,6 +154,9 @@ $(document).ready(function(){
       // Cập nhật số lượng tối đa có thể chọn
       var qty = $(this).attr('data-qty');
       $('#qty').attr('max', qty);
+
+       // Update wishlist icon
+        updateWishlistIcon();
   });
 
   $('button.add_to_cart').click(function() {
@@ -175,15 +202,62 @@ $(document).ready(function(){
             })
         }
     });
+    
 });
 
   $(document).on('error', 'img', function() {
     $(this).attr('src', '/images/no-image.png');
   });
+
+  $('.wishlist-icon').click(function() {
+    let product_detail_id = $('.color-product .color-inner.active').attr('product-id');
+    
+    // Capture the selected color and size (if available)
+    var size = $('.color-product .size-inner.active').attr('product-size-value');
+    if(size) {
+        product_detail_id = $('.color-product .size-inner.active').attr('product-id');
+    }
+
+    // Prepare the data to send
+    var data = {
+        product_id: product_detail_id,
+    };
+    
+    var url = $(this).attr('data-url');
+    
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data) {
+            if (data.status === 'added') {
+                $('i.wishlist-icon').addClass('wishlist-added');
+            } else if (data.status === 'removed') {
+                $('i.wishlist-icon').removeClass('wishlist-added');
+            }
+            $('.mini-wishlist .count_item_pr').text(data.response.length);
+            Swal.fire({
+                title: 'Thành Công',
+                text: data.msg,
+                type: 'success'
+            }).then(() => {
+                    location.reload(); // Reload the page after the alert is closed
+                });
+        },
+        error: function(data) {
+            var errors = data.responseJSON;
+            Swal.fire({
+                title: 'Thất bại',
+                text: errors.msg,
+                type: 'error'
+            })
+        }
+    });
+  })
 });
 
 function displayGallery(key) {
-  console.log(key)
     var slider = $('#imageGallery-' + key).lightSlider({
         gallery: true,
         item: 1,

@@ -21,10 +21,18 @@
 .col-title h3 {
   margin: 0;
   padding: 0;
-  font-size: 18px;
-  font-weight: 600;
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 1.2;
   text-align: center;
+}
+.checkout-info {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 .form-checkout .form-group input,
 .form-checkout .form-group textarea {
@@ -154,6 +162,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+  margin-top: 20px
 }
 .col-order .col-content .section-price .total-price .title {
   font-size: 22px;
@@ -282,6 +291,29 @@
   }
   .col-order {
     margin-left: -15px;
+  }
+}
+.coupon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.coupon-list .coupon-card {
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.coupon-list .coupon-card .card-text span {
+  font-weight: bold;
+}
+.discount-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-bottom: 1px #e1e1e1 solid;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  & .title {
+    font-weight: bold;
   }
 }
 @media only screen and (max-width: 320px){

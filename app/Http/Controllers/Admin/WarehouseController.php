@@ -101,6 +101,6 @@ class WarehouseController extends Controller
             $product_details->whereDate('order_details.created_at', '<=', date($request['date_from']));
         }
                                    
-        return view('admin.warehouse.orderDetail')->with('product_details', $product_details->get());
+        return view('admin.warehouse.orderDetail')->with('product_details', $product_details);
     }
 }

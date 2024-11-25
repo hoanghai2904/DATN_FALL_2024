@@ -732,6 +732,14 @@
 #more-infomation .modal-body>.content {
   overflow-x: hidden;
 }
+.wishlist-icon {
+  font-size: 35px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.wishlist-icon.wishlist-added {
+  color: red;
+}
 @media only screen and (max-width: 1199px){
   .section-product .form-payment .row>div:nth-child(3) button,
   .section-product .form-payment .row>div:nth-child(1) button {

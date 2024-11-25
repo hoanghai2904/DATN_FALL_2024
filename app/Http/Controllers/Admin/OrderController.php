@@ -25,7 +25,7 @@ class OrderController extends Controller
 
   public function show($id)
   {
-    $order = Order::select('id', 'user_id', 'payment_method_id','fee','is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
+    $order = Order::select('id', 'user_id', 'discount', 'payment_method_id','fee','is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
         'user' => function ($query) {
           $query->select('id', 'name', 'email', 'phone', 'address');
         },
