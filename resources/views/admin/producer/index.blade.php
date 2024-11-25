@@ -4,7 +4,51 @@
     <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 @section('custom-css')
+    <style>
+        #producer-table td,
+        #producer-table th {
+            vertical-align: middle !important;
+        }
 
+        #producer-table span.status-label {
+            display: block;
+            width: 85px;
+            text-align: center;
+            padding: 2px 0px;
+        }
+
+        #search-input span.input-group-addon {
+            padding: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 34px;
+            border: none;
+            background: none;
+        }
+
+        #search-input span.input-group-addon i {
+            font-size: 18px;
+            line-height: 34px;
+            width: 34px;
+            color: #f30;
+        }
+
+        #search-input input {
+            position: static;
+            width: 100%;
+            font-size: 15px;
+            line-height: 22px;
+            padding: 5px 5px 5px 34px;
+            float: none;
+            height: unset;
+            border-color: #fbfbfb;
+            box-shadow: none;
+            background-color: #e8f0fe;
+            border-radius: 5px;
+        }
+    </style>
 @endsection
 @section('breadcrumb')
     <ol class="breadcrumb">
