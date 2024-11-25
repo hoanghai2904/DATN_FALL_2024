@@ -78,4 +78,13 @@ class User extends Authenticatable
     {
         $this->notify(new ActiveAccountNotification($token));
     }
+
+    public function userCoupons() {
+        return $this->hasMany(UserCoupon::class);
+    }
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'user_coupons');
+    }
 }
