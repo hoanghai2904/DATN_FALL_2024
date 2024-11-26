@@ -18,31 +18,30 @@ class Order extends Model
   }
   protected $guarded = [''];
 
-  protected $status = [
-    '1' => [
-        'class' => 'default',
-        'name'  => 'Đang Xử Lý'
-    ],
+  // protected $status = [
+  //   '1' => [
+  //       'class' => 'default',
+  //       'name'  => 'Đang Xử Lý'
+  //   ],
 
-    '2' => [
-      'class' => 'info',
-      'name'  => 'Đang Vận Chuyển'
-    ],
+  //   '2' => [
+  //     'class' => 'info',
+  //     'name'  => 'Đang Vận Chuyển'
+  //   ],
 
-    '3' => [
-      'class' => 'success',
-      'name'  => 'Đã Giao Hàng'
-    ],
+  //   '3' => [
+  //     'class' => 'success',
+  //     'name'  => 'Đã Giao Hàng'
+  //   ],
 
-    '-1' => [
-      'class' => 'danger',
-      'name'  => 'Hủy'
-    ],
+  //   '-1' => [
+  //     'class' => 'danger',
+  //     'name'  => 'Hủy'
+  //   ],
 
-  ];
+  // ];
 
-  public function getStatus(){
-    return Arr::get($this->status,"[N\A]");
-  }
-  
+  // public function getStatus(){
+  //   return Arr::get($this->status,"[N\A]");
+  // }
 }

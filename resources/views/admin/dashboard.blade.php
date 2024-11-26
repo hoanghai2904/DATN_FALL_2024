@@ -9,9 +9,7 @@
         <div class="col">
 
             <div class="h-100">
-
                 <!--end row-->
-
                 <div class="row">
                     <div class="col-xl-3 col-md-6">
                         <!-- card -->

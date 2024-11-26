@@ -1,7 +1,7 @@
 <header id="header" class="header">
   <div class="container">
     <div class="row display-flex">
-      <div class="col-md-2 margin-auto trigger-menu">
+      <div class="col-md-1 margin-auto trigger-menu">
 
         <button type="button" class="navbar-toggle collapsed visible-xs" id="trigger-mobile">
           <span class="sr-only">Toggle navigation</span>
@@ -14,7 +14,7 @@
           <a class="logo-wrapper" href="{{ route('home_page') }}" title="{{ config('app.name') }}"><img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}"></a>
         </div>
       </div>
-      <div class="col-md-3 margin-auto">
+      <div class="col-md-2 margin-auto">
         <div class="search">
           <form class="search-bar" action="{{ route('search') }}" method="get" accept-charset="utf-8">
             <input class="input-search" type="search" name="search_key" placeholder="{{ __('Tìm Kiếm') }}" autocomplete="off">
@@ -30,13 +30,17 @@
                   <span class="fas fa-home"></span>
                   {{ __('Trang Chủ') }}</a>
               </li>
+              <li class="nav-item {{ Helper::check_active(['coupon_page']) }}"><a href="{{ route('coupon_page') }}" title="{{ __('Mã giảm giá') }}">
+                  <span class="fas fa-ticket"></span>
+                  {{ __('Mã giảm giá') }}</a>
+              </li>
               <li class="nav-item {{ Helper::check_active(['about_page']) }}"><a href="{{ route('about_page') }}" title="{{ __('Giới Thiệu') }}">
                   <span class="fas fa-info"></span>
                   {{ __('Giới Thiệu') }}</a>
               </li>
               <li class="nav-item dropdown {{ Helper::check_active(['products_page', 'producer_page', 'product_page']) }}">
                 <a href="{{ route('products_page') }}" title="{{ __('Sản Phẩm') }}">
-                  <span class="fas fa-mobile-alt"></span>
+                  <span class="fa-solid fa-bone"></span>
                   {{ __('Sản Phẩm') }} <i class="fas fa-angle-down"></i>
                 </a>
                 <div class="dropdown-menu">

@@ -63,9 +63,22 @@
                   </select>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                  <label for="price-range">Khoảng Giá</label>
+                  <div id="price-range"></div>
+                  <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
+                  <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
+                  <div class="price-range-values">
+                    <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-2">
+          </div>
+            <div class="btn-group-filter">
               <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
+              <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
             </div>
           </div>
         </form>
@@ -75,7 +88,7 @@
     <section class="section-products">
       <div class="section-header">
         <div class="section-header-left">
-          <h2 class="section-title">ĐIỆN THOẠI</h2>
+          <h2 class="section-title">SẢN PHẨM</h2>
         </div>
         <div class="section-header-right">
           <ul>
@@ -93,29 +106,31 @@
             <div class="content">Product Item Not Found</div>
           </div>
         @else
-          <div class="row">
+        <div class="product-container">
             @foreach($data['products'] as $key => $product)
-              <div class="col-md-2 col-md-20">
-                <div class="item-product">
-                  <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                    <div class="row">
-                      <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="image-product" style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%;background-size: 100%;">
-                          {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
+              <div class="item-product">
+                <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                      <div class="image-product">
+                        <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" 
+                          alt="Product Image" 
+                          style="width: 100%; height: 280px;"
+                          onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
+                        {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
+                      </div>
+                      <div class="content-product">
+                        <h3 class="title">{{ $product->name }}</h3>
+                        <div class="start-vote">
+                          {!! Helper::get_start_vote($product->rate) !!}
                         </div>
-                        <div class="content-product">
-                          <h3 class="title">{{ $product->name }}</h3>
-                          <div class="start-vote">
-                            {!! Helper::get_start_vote($product->rate) !!}
-                          </div>
-                          <div class="price">
-                            {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                          </div>
+                        <div class="price">
+                          {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
                         </div>
                       </div>
                     </div>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </div>
             @endforeach
           </div>
@@ -130,6 +145,7 @@
 @endsection
 
 @section('css')
+  <link rel="stylesheet" href="{{ asset('common/noUiSlider/dist/nouislider.min.css') }}">
   <style>
     .slide-advertise-inner {
       background-repeat: no-repeat;
@@ -142,33 +158,126 @@
       -webkit-animation-duration: .6s;
       animation-duration: .6s;
     }
+    .price-range-values {
+      margin-top: 12px;
+    }
+    .btn-group-filter {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
   </style>
 @endsection
 
 @section('js')
-  <script>
-    $(document).ready(function(){
+<script src="{{ asset('common/noUiSlider/dist/nouislider.min.js') }}"></script>
+<script>
+  $(document).ready(function(){
 
-      $("#slide-advertise").owlCarousel({
-        items: 2,
-        autoplay: true,
-        loop: true,
-        margin: 10,
-        autoplayHoverPause: true,
-        nav: true,
-        dots: false,
-        responsive:{
-          0:{
-            items: 1,
-          },
-          992:{
-            items: 2,
-            animateOut: 'zoomInRight',
-            animateIn: 'zoomOutLeft',
-          }
+    $("#slide-advertise").owlCarousel({
+      items: 2,
+      autoplay: true,
+      loop: true,
+      margin: 10,
+      autoplayHoverPause: true,
+      nav: true,
+      dots: false,
+      responsive:{
+        0:{
+          items: 1,
         },
-        navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-      });
+        992:{
+          items: 2,
+          animateOut: 'zoomInRight',
+          animateIn: 'zoomOutLeft',
+        }
+      },
+      navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
     });
-  </script>
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    var priceRange = document.getElementById('price-range');
+    var priceMin = $('#price_min');
+    var priceMax = $('#price_max');
+    var priceRangeMin = $('#price-range-min');
+    var priceRangeMax = $('#price-range-max');
+    var priceAbove1M = $('#price_above_1m');
+
+    noUiSlider.create(priceRange, {
+      start: [priceMin.val() || 0, priceMax.val() || 20000000],
+      connect: true,
+      range: {
+        'min': 0,
+        '10%': 100000,
+        '30%': 500000,
+        '50%': 1000000,
+        '70%': 5000000,
+        '90%': 10000000,
+        'max': 20000000
+      },
+      snap: true,
+      format: {
+        to: function (value) {
+          return Math.round(value);
+        },
+        from: function (value) {
+          return Number(value);
+        }
+      }
+    });
+
+    priceRange.noUiSlider.on('update', function (values, handle) {
+      priceMin.val(values[0]);
+      priceMax.val(values[1]);
+      priceRangeMin.text(new Intl.NumberFormat().format(values[0]));
+      priceRangeMax.text(new Intl.NumberFormat().format(values[1]));
+    });
+
+    // Update the slider values on page load
+    priceRange.noUiSlider.set([priceMin.val() || 0, priceMax.val() || 20000000]);
+
+    // Handle the checkbox state
+    priceAbove1M.change(function() {
+      if ($(this).is(':checked')) {
+        priceRange.setAttribute('disabled', true);
+        priceMin.val(1000001);
+        priceMax.val(20000000); // Set a high value to cover all prices above 1 million
+        priceRangeMin.text('1,000,001');
+        priceRangeMax.text('20,000,000+');
+      } else {
+        priceRange.removeAttribute('disabled');
+        priceRange.noUiSlider.set([priceMin.val() || 0, priceMax.val() || 20000000]);
+      }
+    });
+
+    // Initialize the checkbox state
+    if (priceAbove1M.is(':checked')) {
+      priceRange.setAttribute('disabled', true);
+      priceMin.val(1000001);
+      priceMax.val(20000000);
+      priceRangeMin.text('1,000,001');
+      priceRangeMax.text('20,000,000+');
+    }
+
+    $('#clear-filters').click(function() {
+      // Reset input fields
+      $('input[name="name"]').val('');
+      $('select[name="price"]').prop('selectedIndex', 0);
+      $('select[name="type"]').prop('selectedIndex', 0);
+      $('#price_min').val('');
+      $('#price_max').val('');
+      $('#price-range-min').text('');
+      $('#price-range-max').text('');
+
+      // Reset the price range slider
+      if (priceRange.noUiSlider) {
+        priceRange.noUiSlider.set([0, 20000000]);
+      }
+
+      window.location.href = "{{ route('products_page') }}";
+    });
+  });
+</script>
 @endsection

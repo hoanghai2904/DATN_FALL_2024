@@ -87,12 +87,13 @@
                 <th data-width="10px">STT</th>
                 <th data-orderable="false" data-width="75px">Hình Ảnh</th>
                 <th data-orderable="false" data-width="85px">Mã Sản Phẩm</th>
-                <th data-orderable="false">Tên Sản Phẩm</th>
-                <th data-width="66px">Màu sắc</th>
-                <th data-width="100px">Số Lượng Nhập</th>
-                <th data-width="66px">Đã Bán</th>
-                <th data-width="66px">Còn Lại</th>
-                <th data-width="70px" data-type="date-euro">Ngày Nhập</th>
+                <th data-width="180px" data-orderable="false">Tên Sản Phẩm</th>
+                <th>Màu sắc</th>
+                <th>Size</th>
+                <th>Số Lượng Nhập</th>
+                <th>Đã Bán</th>
+                <th>Còn Lại</th>
+                <th data-type="date-euro">Ngày Nhập</th>
               </tr>
             </thead>
             <tbody>
@@ -105,6 +106,7 @@
                   <td>{{ $product_dt->sku_code }}</td>
                   <td>{{ $product_dt->name }}</td>
                   <td>{{$product_dt->color}}</td>
+                  <td>{{$product_dt?->size ?? '---'}}</td>
                   <td>{{$product_dt->quantity}}</td>
                   <td>{{$product_dt->orderDetailQuantity ? $product_dt->orderDetailQuantity : 0}}</td>
                   <td>{{$product_dt->conlai ? $product_dt->conlai : $product_dt->quantity}}</td>

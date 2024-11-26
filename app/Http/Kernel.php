@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin'=>AdminAuthenticate::class,
         'user'=>UserAuthenticate::class,
+        'check.pending.order' => \App\Http\Middleware\CheckPendingOrder::class,
     ];
 }

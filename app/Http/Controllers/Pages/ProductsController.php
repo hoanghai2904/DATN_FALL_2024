@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,112 +11,146 @@ use App\Models\ProductDetail;
 use App\Models\Producer;
 use App\Models\Product;
 use App\Models\Advertise;
+use App\Models\OrderDetail;
 use App\Models\ProductVote;
 
 class ProductsController extends Controller
 {
   public function index(Request $request) {
-
-    if($request->has('type') && $request->input('type') == 'promotion') {
-      $query_products = Product::whereHas('product_detail', function (Builder $query) {
-        $query->where([
-          ['quantity', '>', 0],
-          ['promotion_price', '>', 0],
-          ['promotion_start_date', '<=', date('Y-m-d')],
-          ['promotion_end_date', '>=', date('Y-m-d')]
-        ]);
-      });
-    } else {
-      $query_products = Product::whereHas('product_detail', function (Builder $query) {
-        $query->where('quantity', '>', 0);
-      });
-    }
-
-    $query_products->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
-    }]);
-
-    if($request->has('name') && $request->input('name') != null)
-      $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
-
-    if($request->has('price') && $request->input('price') != null) {
-      $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))->where('quantity', '>', 0)->groupBy('product_id');
-
-      $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
-        $join->on('products.id', '=', 'min_price_query.product_id');
-      })->select('id','name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
-    } else {
-      $query_products->select('id','name', 'image', 'rate')->latest();
-    }
-
-    if($request->has('type') && $request->input('type') == 'vote')
-      $query_products->orderBy('rate', 'desc');
-
-    $products = $query_products->paginate(15);
-
-    $advertises = Advertise::where([
-      ['start_date', '<=', date('Y-m-d')],
-      ['end_date', '>=', date('Y-m-d')],
-      ['at_home_page', '=', false]
-    ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
-
-    $producers = Producer::select('id', 'name')->get();
-
-    return view('pages.products')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products]]);
+      if ($request->has('type') && $request->input('type') == 'promotion') {
+          $query_products = Product::whereHas('product_detail', function (Builder $query) {
+              $query->where([
+                  ['quantity', '>', 0],
+                  ['promotion_price', '>', 0],
+                  ['promotion_start_date', '<=', date('Y-m-d')],
+                  ['promotion_end_date', '>=', date('Y-m-d')]
+              ]);
+          });
+      } else {
+          $query_products = Product::whereHas('product_detail', function (Builder $query) {
+              $query->where('quantity', '>', 0);
+          });
+      }
+  
+      $query_products->with(['product_detail' => function($query) {
+          $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+                ->where('quantity', '>', 0)
+                ->orderBy('sale_price', 'ASC');
+      }]);
+  
+      if ($request->has('name') && $request->input('name') != null) {
+          $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
+      }
+  
+      if ($request->has('price') && $request->input('price') != null) {
+          $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))
+                                          ->where('quantity', '>', 0)
+                                          ->groupBy('product_id');
+  
+          $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
+              $join->on('products.id', '=', 'min_price_query.product_id');
+          })->select('id', 'name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
+      } else {
+          $query_products->select('id', 'name', 'image', 'rate')->latest();
+      }
+  
+      if ($request->has('price_min') && $request->input('price_min') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '>=', $request->input('price_min'));
+          });
+      }
+  
+      if ($request->has('price_max') && $request->input('price_max') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '<=', $request->input('price_max'));
+          });
+      }
+  
+      if ($request->has('type') && $request->input('type') == 'vote') {
+          $query_products->orderBy('rate', 'desc');
+      }
+  
+      $products = $query_products->paginate(15);
+  
+      $advertises = Advertise::where([
+          ['start_date', '<=', date('Y-m-d')],
+          ['end_date', '>=', date('Y-m-d')],
+          ['at_home_page', '=', false]
+      ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+  
+      $producers = Producer::select('id', 'name')->get();
+  
+      return view('pages.products')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products]]);
   }
 
   public function getProducer(Request $request, $id) {
-
-    if($request->has('type') && $request->input('type') == 'promotion') {
-      $query_products = Product::whereHas('product_detail', function (Builder $query) {
-        $query->where([
-          ['quantity', '>', 0],
-          ['promotion_price', '>', 0],
-          ['promotion_start_date', '<=', date('Y-m-d')],
-          ['promotion_end_date', '>=', date('Y-m-d')]
-        ]);
-      });
-    } else {
-      $query_products = Product::whereHas('product_detail', function (Builder $query) {
-        $query->where('quantity', '>', 0);
-      });
-    }
-
-    $query_products->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
-    }]);
-
-    if($request->has('name') && $request->input('name') != null)
-      $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
-
-
-    if($request->has('price') && $request->input('price') != null) {
-      $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))->where('quantity', '>', 0)->groupBy('product_id');
-
-      $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
-        $join->on('products.id', '=', 'min_price_query.product_id');
-      })->select('id','name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
-    } else {
-      $query_products->select('id','name', 'image', 'rate')->latest();
-    }
-
-    if($request->has('type') && $request->input('type') == 'vote')
-      $query_products->orderBy('rate', 'desc');
-
-    $products = $query_products->where('producer_id', $id)->paginate(15);
-
-    $advertises = Advertise::where([
-      ['start_date', '<=', date('Y-m-d')],
-      ['end_date', '>=', date('Y-m-d')],
-      ['at_home_page', '=', false]
-    ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
-
-    $producers = Producer::where('id', '<>', $id)->select('id', 'name')->get();
-    $producer = Producer::select('id', 'name')->find($id);
-
-    if(!$producer) abort(404);
-
-    return view('pages.producer')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products], 'producer' => $producer]);
+      if ($request->has('type') && $request->input('type') == 'promotion') {
+          $query_products = Product::whereHas('product_detail', function (Builder $query) {
+              $query->where([
+                  ['quantity', '>', 0],
+                  ['promotion_price', '>', 0],
+                  ['promotion_start_date', '<=', date('Y-m-d')],
+                  ['promotion_end_date', '>=', date('Y-m-d')]
+              ]);
+          });
+      } else {
+          $query_products = Product::whereHas('product_detail', function (Builder $query) {
+              $query->where('quantity', '>', 0);
+          });
+      }
+  
+      $query_products->with(['product_detail' => function($query) {
+          $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+                ->where('quantity', '>', 0)
+                ->orderBy('sale_price', 'ASC');
+      }]);
+  
+      if ($request->has('name') && $request->input('name') != null) {
+          $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
+      }
+  
+      if ($request->has('price') && $request->input('price') != null) {
+          $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))
+                                          ->where('quantity', '>', 0)
+                                          ->groupBy('product_id');
+  
+          $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
+              $join->on('products.id', '=', 'min_price_query.product_id');
+          })->select('id', 'name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
+      } else {
+          $query_products->select('id', 'name', 'image', 'rate')->latest();
+      }
+  
+      if ($request->has('price_min') && $request->input('price_min') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '>=', $request->input('price_min'));
+          });
+      }
+  
+      if ($request->has('price_max') && $request->input('price_max') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '<=', $request->input('price_max'));
+          });
+      }
+  
+      if ($request->has('type') && $request->input('type') == 'vote') {
+          $query_products->orderBy('rate', 'desc');
+      }
+  
+      $products = $query_products->where('producer_id', $id)->paginate(15);
+  
+      $advertises = Advertise::where([
+          ['start_date', '<=', date('Y-m-d')],
+          ['end_date', '>=', date('Y-m-d')],
+          ['at_home_page', '=', false]
+      ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+  
+      $producers = Producer::where('id', '<>', $id)->select('id', 'name')->get();
+      $producer = Producer::select('id', 'name')->find($id);
+  
+      if (!$producer) abort(404);
+  
+      return view('pages.producer')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products], 'producer' => $producer]);
   }
 
   public function getProduct(Request $request, $id) {
@@ -141,11 +176,34 @@ class ProductsController extends Controller
 
     if(!$product) abort(404);
 
-    $product_details = ProductDetail::where([['product_id', $id], ['import_quantity', '>', 0]])->with([
-      'product_images' => function ($query) {
-        $query->select('id', 'product_detail_id', 'image_name');
-      }
-    ])->select('id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->get();
+    $product_details = ProductDetail::where([['product_id', $id], ['import_quantity', '>', 0]])
+    ->with([
+        'product_images' => function ($query) {
+            $query->select('id', 'product_detail_id', 'image_name');
+        },
+    ])
+    ->select('id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+    ->get()
+    ->groupBy('color')
+    ->map(function ($items) {
+        return [
+            'color' => $items->first()->color,
+            'details' => $items->map(function ($item) use ($items) {
+                return [
+                    'id' => $item->id,
+                    'size' => $item->size,
+                    'color' => $items->first()->color,
+                    'quantity' => $item->quantity,
+                    'sale_price' => $item->sale_price,
+                    'promotion_price' => $item->promotion_price,
+                    'promotion_start_date' => $item->promotion_start_date,
+                    'promotion_end_date' => $item->promotion_end_date,
+                    'product_images' => $item->product_images,
+                ];
+            })->values(),
+        ];
+    })
+    ->values();
 
     $suggest_products = Product::select('id','name', 'image', 'rate')
     ->whereHas('product_detail', function (Builder $query) {
@@ -161,8 +219,23 @@ class ProductsController extends Controller
     })->where('product_id', $id)->with(['user' => function($query) {
       $query->select('id', 'name', 'avatar_image');
     }])->latest()->get();
+    $canComment = false;
+    $user = auth()->user();
+    if($user) {
+      $hasCommented = ProductVote::where('product_id', $product->id)
+          ->where('user_id', $user->id)
+          ->exists();
 
-    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes]]);
+      $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
+                          $query->where('user_id', $user->id)
+                                ->where('status', OrderStatusEnum::DELIVERED);
+                      })
+                      ->where('product_detail_id', $product->id)
+                      ->exists();
+      // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
+        $canComment = $hasPurchased && !$hasCommented;
+    }
+    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
   }
 
   public function addVote(Request $request) {
@@ -182,4 +255,66 @@ class ProductsController extends Controller
         'content' => 'Cảm ơn bạn đã đóng góp về sản phẩm này. Chúng tôi luôn luôn trân trong những đóng góp của bạn.'
     ]]);
   }
+
+   public function toggleWishlist(Request $request)
+    {
+        $productDetail = ProductDetail::where('id', $request->product_id)
+            ->with(['product' => function($query) {
+                $query->select('id', 'name', 'image', 'sku_code');
+            }])
+            ->select('id', 'product_id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+            ->first();
+
+        if (!$productDetail) {
+            $data['msg'] = 'Sản phẩm không tồn tại!';
+            return response()->json($data, 404);
+        }
+
+        $wishlist = session()->has('wishlist') ? session('wishlist') : collect();
+
+        $wishlistItem = [
+            'product_id' => $productDetail->product_id,
+            'product_detail_id' => $productDetail->id
+        ];
+
+        if ($wishlist->contains(function ($item) use ($wishlistItem) {
+            return $item['product_detail_id'] === $wishlistItem['product_detail_id'];
+        })) {
+            $wishlist = $wishlist->reject(function ($item) use ($wishlistItem) {
+                return $item['product_detail_id'] === $wishlistItem['product_detail_id'];
+            });
+            session(['wishlist' => $wishlist]);
+            $data['msg'] = 'Đã xóa khỏi danh sách yêu thích';
+            $data['status'] = 'removed';
+        } else {
+            $wishlist->push($wishlistItem);
+            session(['wishlist' => $wishlist]);
+            $data['msg'] = 'Đã thêm vào danh sách yêu thích';
+            $data['status'] = 'added';
+        }
+
+        $data['response'] = session('wishlist');
+
+        return response()->json($data, 200);
+    }
+
+    public function showWishlist()
+    {
+        $advertises = Advertise::where([
+            ['start_date', '<=', date('Y-m-d')],
+            ['end_date', '>=', date('Y-m-d')],
+            ['at_home_page', '=', false]
+        ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+
+        $wishlist = session()->has('wishlist') ? session('wishlist') : collect();
+
+        // Retrieve product details for each wishlist item
+        $wishlistItems = $wishlist->map(function ($item) {
+            return ProductDetail::with(['product', 'product_images' => function ($query) {
+                $query->select('id', 'product_detail_id', 'image_name')->limit(1);
+            }])->find($item['product_detail_id']);
+        });
+
+        return view('pages.wishlist')->with(['wishlistItems' => $wishlistItems, 'advertises' => $advertises]);
+    }
 }
