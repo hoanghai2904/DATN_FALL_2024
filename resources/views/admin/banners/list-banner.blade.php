@@ -159,6 +159,7 @@
                         <div class="swiper-slide" id="bannerSlide{{ $banner->id }}" data-status="{{ $banner->status }}">
                             <img src="{{ asset('storage/' . $banner->banner) }}" alt="Banner {{ $banner->id }}" class="img-fluid" />
                         </div>
+                        
                     @endforeach
                     
                     </div>
