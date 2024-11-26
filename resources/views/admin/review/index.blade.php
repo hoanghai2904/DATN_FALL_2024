@@ -4,7 +4,7 @@
 @section('title')
     Review
 @endsection
-@push('style')
+{{-- @push('style')
     <style>
         .comment-text {
             max-width: 200px;
@@ -42,7 +42,7 @@
             /* Chia nhỏ từ khi cần */
         }
     </style>
-@endpush
+@endpush --}}
 {{-- section: định nghĩa nội dung của section --}}
 @section('content')
     <div class="row">
