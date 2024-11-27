@@ -24,117 +24,138 @@
                             data-dot="<button>{{ $advertise->title }}</button>"></div>
                     @endforeach
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <select name='price'>
-                        <option value='' {{ Request::input('price') == null ? 'selected' : '' }}>
-                            Giá Sản Phẩm
-                        </option>
-                        <option value='asc' {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
-                            Giá từ thấp tới cao
-                        </option>
-                        <option value='desc' {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
-                            Giá từ cao tới thấp
-                        </option>
-                    </select>
-                </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <select name='type'>
-                        <option value='' {{ Request::input('type') == null ? 'selected' : '' }}>
-                            Loại Sản Phẩm
-                        </option>
-                        <option value='promotion' {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
-                            Sản phẩm khuyến mại
-                        </option>
-                        <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
-                            Sản phẩm đánh giá cao
-                        </option>
-                    </select>
-                </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                    <label for="price-range">Khoảng Giá</label>
-                    <div id="price-range"></div>
-                    <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
-                    <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
-                    <div class="price-range-values">
-                        <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
-                    </div>
-                </div>
-            </div>
-    </div>
-    </div>
-    <div class="btn-group-filter">
-        <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
-        <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
-    </div>
-    </form>
-    </div>
-    </section>
+        </section>
 
-    <section class="section-products">
-        <div class="section-header">
-            <div class="section-header-left">
-                <h2 class="section-title">{{ $producer->name }}</h2>
+        <section class="section-filter">
+
+            <div class="section-content">
+                <form action="{{ route('producer_page', ['id' => $producer->id]) }}" method="GET" accept-charset="utf-8">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-xs-6">
+
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-6">
+                                    <select name='price'>
+                                        <option value='' {{ Request::input('price') == null ? 'selected' : '' }}>
+                                            Giá Sản Phẩm
+                                        </option>
+                                        <option value='asc' {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
+                                            Giá từ thấp tới cao
+                                        </option>
+                                        <option value='desc' {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
+                                            Giá từ cao tới thấp
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-6">
+                                    <select name='type'>
+                                        <option value='' {{ Request::input('type') == null ? 'selected' : '' }}>
+                                            Loại Sản Phẩm
+                                        </option>
+                                        <option value='promotion'
+                                            {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
+                                        <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
+                                            Sản phẩm đánh giá cao
+                                        </option>
+                                        <option value='in_stock'
+                                            {{ Request::input('stock') == 'in_stock' ? 'selected' : '' }}>Còn hàng</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-6">
+                                    <label for="price-range">Khoảng Giá</label>
+                                    <div id="price-range"></div>
+                                    <input type="hidden" id="price_min" name="price_min"
+                                        value="{{ Request::input('price_min') }}">
+                                    <input type="hidden" id="price_max" name="price_max"
+                                        value="{{ Request::input('price_max') }}">
+                                    <div class="price-range-values">
+                                        <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 btn-group-filter">
+                            <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
+                            <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="section-header-right">
-                <ul>
-                    @foreach ($data['producers'] as $producer)
-                        <li><a href="{{ route('producer_page', ['id' => $producer->id]) }}"
-                                title="{{ $producer->name }}">{{ $producer->name }}</a></li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-        <div class="section-content">
-            @if ($data['products']->isEmpty())
-                <div class="empty-content">
-                    <div class="icon"><i class="fab fa-searchengin"></i></div>
-                    <div class="title">Oooops!</div>
-                    <div class="content">Product Item Not Found</div>
+        </section>
+
+        <section class="section-products">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <h2 class="section-title">{{ $producer->name }}</h2>
                 </div>
-            @else
-                <div class="product-container">
-                    @foreach ($data['products'] as $key => $product)
-                        <div class="item-product">
-                            <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                                <div class="row">
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
-                                        <div class="image-product">
-                                            <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}"
-                                                alt="Product Image" style="width: 100%; height: 280px;"
-                                                onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
-                                            {!! Helper::get_promotion_percent(
-                                                $product->product_detail->sale_price,
-                                                $product->product_detail->promotion_price,
-                                                $product->product_detail->promotion_start_date,
-                                                $product->product_detail->promotion_end_date,
-                                            ) !!}
-                                        </div>
-                                        <div class="content-product">
-                                            <h3 class="title">{{ $product->name }}</h3>
-                                            <div class="start-vote">
-                                                {!! Helper::get_start_vote($product->rate) !!}
-                                            </div>
-                                            <div class="price">
-                                                {!! Helper::get_real_price(
+                <div class="section-header-right">
+                    <ul>
+                        @foreach ($data['producers'] as $producer)
+                            <li><a href="{{ route('producer_page', ['id' => $producer->id]) }}"
+                                    title="{{ $producer->name }}">{{ $producer->name }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+            <div class="section-content">
+                @if ($data['products']->isEmpty())
+                    <div class="empty-content">
+                        <div class="icon"><i class="fab fa-searchengin"></i></div>
+                        <div class="title">Oooops!</div>
+                        <div class="content">Product Item Not Found</div>
+                    </div>
+                @else
+                    <div class="row">
+                        @foreach ($data['products'] as $key => $product)
+                            <div class="col-md-2 col-md-20">
+                                <div class="item-product">
+                                    <a href="{{ route('product_page', ['id' => $product->id]) }}"
+                                        title="{{ $product->name }}">
+                                        title="{{ $product->name }}">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <img loading="lazy"
+                                                    src="{{ Helper::get_image_product_url($product->image) }}"
+                                                    alt="Product Image" style="width: 100%; height: 280px;"
+                                                    onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
+                                                {!! Helper::get_promotion_percent(
                                                     $product->product_detail->sale_price,
                                                     $product->product_detail->promotion_price,
                                                     $product->product_detail->promotion_start_date,
                                                     $product->product_detail->promotion_end_date,
                                                 ) !!}
                                             </div>
+                                            <div class="content-product">
+                                                <h3 class="title">{{ $product->name }}</h3>
+                                                <div class="start-vote">
+                                                    {!! Helper::get_start_vote($product->rate) !!}
+                                                </div>
+                                                <div class="price">
+                                                    {!! Helper::get_real_price(
+                                                        $product->product_detail->sale_price,
+                                                        $product->product_detail->promotion_price,
+                                                        $product->product_detail->promotion_start_date,
+                                                        $product->product_detail->promotion_end_date,
+                                                    ) !!}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
+                                </div>
+                                </a>
+                            </div>
+                    </div>
+                @endforeach
+            </div>
             @endif
-        </div>
-        <div class="section-footer text-center">
-            {{ $data['products']->appends(Request::query())->links() }}
-        </div>
+    </div>
+    <div class="section-footer text-center">
+        {{ $data['products']->appends(Request::query())->links() }}
+    </div>
     </section>
     </div>
 
