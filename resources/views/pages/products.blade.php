@@ -25,71 +25,52 @@
                 </div>
             </div>
         </section>
-
+        {{--  --}}
         <section class="section-filter">
             <div class="section-header">
                 <h2 class="section-title">Tìm Kiếm Và Sắp Xếp</h2>
             </div>
             <div class="section-content">
                 <form action="{{ route('products_page') }}" method="GET" accept-charset="utf-8">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-                                    <select name='price'>
-                                        <option value='' {{ Request::input('price') == null ? 'selected' : '' }}>
-                                            Giá Sản Phẩm
-                                        </option>
-                                        <option value='asc' {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
-                                            Giá từ thấp tới cao
-                                        </option>
-                                        <option value='desc' {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
-                                            Giá từ cao tới thấp
-                                        </option>
-                                    </select>
-
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-                                    <select name='type'>
-                                        <option value='' {{ Request::input('type') == null ? 'selected' : '' }}>
-                                            Loại sản phẩm
-                                        </option>
-                                        <option value='promotion'
-                                            {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
-                                            Sản phẩm khuyến mại
-                                        </option>
-                                        <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
-                                            Sản phẩm đánh giá cao
-                                        </option>
-                                    </select>
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6 col-xs-6">
-                                            <label for="price-range">Khoảng Giá</label>
-                                            <div id="price-range"></div>
-                                            <input type="hidden" id="price_min" name="price_min"
-                                                value="{{ Request::input('price_min') }}">
-                                            <input type="hidden" id="price_max" name="price_max"
-                                                value="{{ Request::input('price_max') }}">
-                                            <div class="price-range-values">
-                                                <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" btn-group-filter">
-                                <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
-                                <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
-                            </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <select name="price" class="form-control">
+                                <option value="" {{ Request::input('price') == null ? 'selected' : '' }}>
+                                    Giá Sản Phẩm
+                                </option>
+                                <option value="asc" {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
+                                    Giá từ thấp tới cao
+                                </option>
+                                <option value="desc" {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
+                                    Giá từ cao tới thấp
+                                </option>
+                            </select>
                         </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <select name="type" class="form-control">
+                                <option value="" {{ Request::input('type') == null ? 'selected' : '' }}>
+                                    Loại sản phẩm
+                                </option>
+                                <option value="promotion" {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
+                                    Sản phẩm khuyến mại
+                                </option>
+                                <option value="vote" {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
+                                    Sản phẩm đánh giá cao
+                                </option>
+                            </select>
+                        </div>
+                        <div class="" style="display:flex">
+                            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Lọc Sản Phẩm</button>
+                            <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </section>
 
+
+
+        {{--  --}}
         <section class="section-products">
             <div class="section-header">
                 <div class="section-header-left">
@@ -174,6 +155,21 @@
             animation-name: zoomIn;
             -webkit-animation-duration: .6s;
             animation-duration: .6s;
+        }
+
+
+
+        .section-filter .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+
+        }
+
+        .section-filter .btn {
+            font-size: 15px;
+            padding: 6px 20px;
+            min-width: 120px;
         }
     </style>
 @endsection
