@@ -76,23 +76,5 @@ class CouponController extends Controller
         return response()->json(['success' => true,'coupon_id' => $couponId, 'discount_amount' => $discountAmount, 'final_price' => $finalPrice]);
     }
 
-    public function saveCoupon(Request $request)
-    {
-        if (!Auth::check()) {
-            return response()->json(['status' => 'not_logged_in']);
-        }
 
-        $user = Auth::user();
-        $couponId = $request->input('coupon_id');
-
-        // Check if the coupon is already saved
-        if ($user->coupons()->where('coupon_id', $couponId)->exists()) {
-            return response()->json(['status' => 'already_saved']);
-        }
-
-        // Save the coupon
-        $user->coupons()->attach($couponId);
-
-        return response()->json(['status' => 'success']);
-    }
 }
