@@ -100,7 +100,6 @@ class WarehouseController extends Controller
         if ($request['date_from']) {
             $product_details->whereDate('order_details.created_at', '<=', date($request['date_from']));
         }
-        $product_details = $product_details->get();
                                    
         return view('admin.warehouse.orderDetail')->with('product_details', $product_details);
     }

@@ -145,8 +145,12 @@
                           <span class="sr-only">Toggle-dropdown</span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
+<<<<<<< HEAD
+                          @if ($order->status === 1 && $order->is_paid && $order->payment_method_id == 2 || $order->status == 1 && $order->payment_method_id == 1 )
+=======
                           @if ($order->status === 1 && $order->payment_method_id == 1 || 
                             $order->status === 1 && $order->payment_method_id == 2 && $order->is_paid)
+>>>>>>> 5edb25a7770d3720cb05c38220e7afe8f0b38d66
                             <li>
                               <a href="{{route('admin.orderTransaction',['confirmed',$order->id])}}"></i>Đã xác nhận</a>
                             </li>
