@@ -104,7 +104,8 @@ Route::get('products', 'ProductsController@index')->name('products_page');
   Route::get('producer/{id}', 'ProductsController@getProducer')->name('producer_page');
   Route::get('product/{id}', 'ProductsController@getProduct')->name('product_page');
   Route::post('vote', 'ProductsController@addVote')->name('add_vote');
-
+  Route::post('cart/add', 'CartController@addCart')->name('add_cart');
+  Route::post('cart/remove', 'CartController@removeCart')->name('remove_cart');
   Route::post('minicart/update', 'CartController@updateMiniCart')->name('update_minicart');
   Route::post('cart/update', 'CartController@updateCart')->name('update_cart');
   Route::post('update-fee', 'CartController@updateFee')->name('update_fee');
