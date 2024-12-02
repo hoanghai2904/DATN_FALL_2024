@@ -32,25 +32,7 @@
         <div class="row" style="margin-bottom: 16px;">
           <div class="col-md-9">
             <div class="section-content">
-              <form id="contact-form" action="{{ route('send_contact') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                  <label for="name">Tên <span class="text-red">*</span></label>
-                  <input type="text" class="form-control" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email <span class="text-red">*</span></label>
-                  <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                  <label for="message">Nội Dung <span class="text-red">*</span></label>
-                  <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" id="submit-button">
-                  <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                  Gửi
-                </button>
-              </form>
+            
             </div>
           </div>
           <div class="col-md-3">
