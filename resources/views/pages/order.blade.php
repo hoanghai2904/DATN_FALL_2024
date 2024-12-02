@@ -100,6 +100,7 @@
       <thead class="table-dark">
         <tr>
           <th class="text-center">STT</th>
+          <th class="text-center">STT</th>
           <th class="text-center">Mã Sản Phẩm</th>
           <th class="text-center">Tên Sản Phẩm</th>
           <th class="text-center">Màu Sắc</th>
