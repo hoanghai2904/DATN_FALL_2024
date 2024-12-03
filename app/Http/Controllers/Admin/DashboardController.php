@@ -11,12 +11,14 @@ use App\Models\User;
 use App\Models\Post;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Producer;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-  public function index()
+  public function dashboardData()
   {
-  public function dashboardData() {
     $carbon = new Carbon('first day of this month');
 
     $count_products = 0;
@@ -30,14 +32,14 @@ class DashboardController extends Controller
       $data['labels'][] = $date;
 
       $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
-      ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
-      ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::DELIVERED);
-      })->with([
-        'product_detail' => function ($query) {
-          $query->select('id', 'import_price');
-        }
-      ])->get();
+        ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
+        ->whereHas('order', function (Builder $query) {
+          $query->where('status', '=', OrderStatusEnum::DELIVERED);
+        })->with([
+          'product_detail' => function ($query) {
+            $query->select('id', 'import_price');
+          }
+        ])->get();
 
       $revenue = 0;
       $profit = 0;
@@ -103,9 +105,9 @@ class DashboardController extends Controller
   public function orderGroupByStatus()
   {
     $data = Order::select('status')
-    ->selectRaw('count(id) as count')
-    ->groupBy('status')
-    ->get();
+      ->selectRaw('count(id) as count')
+      ->groupBy('status')
+      ->get();
 
     // Map the status counts to their corresponding status names
     $statusCounts = $data->map(function ($item) {
@@ -131,7 +133,8 @@ class DashboardController extends Controller
 
     return $orders;
   }
-  public function index() {
+  public function index()
+  {
 
     $count['user'] = User::where([['active', true], ['admin', false]])->count();
     $count['post'] = Post::count();
@@ -139,6 +142,9 @@ class DashboardController extends Controller
       $query->where('quantity', '>', 0);
     })->count();
     $count['order'] = Order::where('status', OrderStatusEnum::DELIVERED)->count();
-    return view('admin.index')->with(['count' => $count]);
+    $data = $this->dashboardData();
+    $orderStatuses = $this->orderGroupByStatus();
+    $orders = $this->lastestOrder();
+    return view('admin.index')->with(['count' => $count, 'data' => $data, 'orderStatuses' => $orderStatuses, 'orders' => $orders]);
   }
 }
