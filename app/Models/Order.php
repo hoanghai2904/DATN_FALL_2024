@@ -2,57 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Order extends Model
 {
-    use HasFactory;
+  public function user() {
+    return $this->belongsTo('App\Models\User');
+  }
+  public function payment_method() {
+    return $this->belongsTo('App\Models\PaymentMethod');
+  }
+  public function order_details() {
+    return $this->hasMany('App\Models\OrderDetail');
+  }
+  protected $guarded = [''];
 
-    protected $fillable = [
-        'user_id',
-        'order_code',
-        'user_name',
-        'user_email',
-        'user_phone',
-        'user_address',
-        'user_note',
-        'total_amount',
-        'discount',
-        'shipping_fee',
-        'payment_status',
-        'order_status',
-        'payment_method',
-       
-    ];
+  // protected $status = [
+  //   '1' => [
+  //       'class' => 'default',
+  //       'name'  => 'Đang Xử Lý'
+  //   ],
 
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+  //   '2' => [
+  //     'class' => 'info',
+  //     'name'  => 'Đang Vận Chuyển'
+  //   ],
 
-    public function payment()
-    {
-        return $this->hasOne(Payment::class);
-    }
+  //   '3' => [
+  //     'class' => 'success',
+  //     'name'  => 'Đã Giao Hàng'
+  //   ],
 
-    public function shipment()
-    {
-        return $this->hasOne(Shipment::class);
-    }
+  //   '-1' => [
+  //     'class' => 'danger',
+  //     'name'  => 'Hủy'
+  //   ],
 
-    public function statusLogs()
-    {
-        return $this->hasMany(OrderStatusLog::class);
-    }
+  // ];
 
-    public function address()
-    {
-        return $this->hasOne(UserAddress::class); // Thêm quan hệ với địa chỉ
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+  // public function getStatus(){
+  //   return Arr::get($this->status,"[N\A]");
+  // }
 }

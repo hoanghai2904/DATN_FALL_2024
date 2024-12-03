@@ -13,3 +13,4 @@ class HomeController extends Controller
         return view('Client.main',compact('products'));
     }
 }
+

@@ -1,147 +1,148 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\Product;
-use App\Models\User;
+use App\Enums\OrderStatusEnum;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
+
+use App\Models\User;
+use App\Models\Post;
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\Producer;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
-    {
-        // Lấy người dùng không có vai trò
-        $totalCustomers = User::doesntHave('roles')->count();
+  public function dashboardData() {
+    $carbon = new Carbon('first day of this month');
 
-        // Lấy khách hàng tuần trước và tuần này
-        $customersLastWeek = User::doesntHave('roles')
-            ->whereBetween('created_at', [now()->subDays(30), now()->subDays(7)])
-            ->count();
+    $count_products = 0;
+    $total_revenue = 0;
+    $total_profit = 0;
 
-        $customersThisWeek = User::doesntHave('roles')
-            ->whereBetween('created_at', [now()->subDays(7), now()])
-            ->count();
+    for ($i = 0; $i < $carbon->daysInMonth; $i++) {
 
-        // Tính phần trăm thay đổi khách hàng
-        $customerChange = $customersLastWeek > 0
-            ? (($customersThisWeek - $customersLastWeek) / $customersLastWeek) * 100
-            : 0;
+      $date = $carbon->copy()->addDay($i)->format('d/m/Y');
 
-        // Tổng thu nhập và thu nhập từng tuần
-        $totalEarnings = Order::where('order_status', 'Đã giao')->sum('total_amount');
+      $data['labels'][] = $date;
 
-        $earningsLastWeek = Order::where('order_status', 'Đã giao')
-            ->whereBetween('created_at', [now()->subDays(30), now()->subDays(7)])
-            ->sum('total_amount');
+      $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
+      ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
+      ->whereHas('order', function (Builder $query) {
+        $query->where('status', '=', OrderStatusEnum::DELIVERED);
+      })->with([
+        'product_detail' => function ($query) {
+          $query->select('id', 'import_price');
+        }
+      ])->get();
 
-        $earningsThisWeek = Order::where('order_status', 'Đã giao')
-            ->whereBetween('created_at', [now()->subDays(7), now()])
-            ->sum('total_amount');
+      $revenue = 0;
+      $profit = 0;
 
-        // Tính phần trăm thay đổi thu nhập
-        $earningsChange = $earningsLastWeek > 0
-            ? (($earningsThisWeek - $earningsLastWeek) / $earningsLastWeek) * 100
-            : 0;
+      foreach ($order_details as $order_detail) {
+        $revenue = $revenue + $order_detail->price * $order_detail->quantity;
+        $profit = $profit + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
+        $count_products = $count_products + $order_detail->quantity;
+      }
 
-        // Thống kê đơn hàng
-        $totalOrders = Order::count();
-        $totalOrdersDone = Order::where('order_status', 'Đã giao')->count();
-        $ordersLastWeek = Order::whereBetween('created_at', [now()->subDays(30), now()->subDays(7)])->count();
-        $ordersThisWeek = Order::whereBetween('created_at', [now()->subDays(7), now()])->count();
-
-        $orderChange = $ordersLastWeek > 0
-            ? (($ordersThisWeek - $ordersLastWeek) / $ordersLastWeek) * 100
-            : 0;
-        //
-        $ordersData  = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-
-            $incomeData = Order::where('order_status', 'Đã giao')
-            ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-        
-
-        $canceledData  = Order::where('order_status', 'Đã hủy')
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
-        $orders = array_replace(array_fill(1, 12, 0), $ordersData);
-        $income = array_replace(array_fill(1, 12, 0), $incomeData);
-        $canceled = array_replace(array_fill(1, 12, 0), $canceledData);
-
-        // Lấy các sản phẩm bán chạy nhất dựa trên tổng số lượng đã bán
-        
-        $perPage = 5; // Số sản phẩm hiển thị mỗi trang
-        $bestSellingProducts = Product::with(['orderItems' => function($query) {
-            $query->whereHas('order', function($orderQuery) {
-                $orderQuery->where('order_status', 'Đã giao'); // Chỉ lấy đơn hàng đã giao
-            });
-        }])
-        ->where('status', 1) // Lọc sản phẩm đang hoạt động
-        ->selectRaw('products.*, SUM(order_items.qty) as total_sold') // Tính tổng số lượng đã bán
-        ->join('order_items', 'products.id', '=', 'order_items.product_id') // Kết nối với bảng order_items
-        ->join('orders', 'order_items.order_id', '=', 'orders.id') // Kết nối với bảng orders
-        ->where('orders.order_status', 'Đã giao') // Chỉ lấy các đơn hàng đã giao
-        ->groupBy(
-            'products.id',
-            'products.category_id',
-            'products.brand_id',
-            'products.thumbnail',
-            'products.name',
-            'products.slug',
-            'products.sku',
-            'products.qty',
-            'products.description',
-            'products.content',
-            'products.price',
-            'products.price_sale',
-            'products.status',
-            'products.product_type',
-            'products.created_at',
-            'products.updated_at',
-            'products.deleted_at'
-        )
-        ->distinct() // Thêm dòng này để loại bỏ các bản ghi trùng lặp
-        ->orderBy('total_sold', 'desc') // Sắp xếp theo số lượng đã bán
-        ->paginate($perPage); // Phân trang kết quả
-    
-           
-        // Lấy danh sách các đơn hàng cùng với thông tin khách hàng, sắp xếp giảm dần
-        $ordersview = Order::with('user') // 'user' là quan hệ giữa Order và User
-            ->orderBy('created_at', 'desc') // Sắp xếp giảm dần theo ngày tạo
-            ->paginate(6); // Số lượng đơn hàng hiển thị mỗi trang
-
-        //hủy đơn 
-        $canceledOrderCount = Order::where('order_status', 'Đã hủy')->count();
-        $cancelPercentage = $totalOrders > 0 
-    ? ($canceledOrderCount / $totalOrders) * 100 
-    : 0;
-        // Truyền dữ liệu qua view
-        return view('admin.dashboard', compact(
-            'totalCustomers',
-            'customerChange',
-            'totalEarnings',
-            'earningsChange',
-            'totalOrders',
-            'orderChange',
-            'totalOrdersDone',
-            'orders',
-            'income',
-            'canceled',
-            'bestSellingProducts',
-            'ordersview',
-            'canceledOrderCount',
-            'cancelPercentage'
-           
-        ));
+      $total_revenue = $total_revenue + $revenue;
+      $total_profit = $total_profit + $profit;
+      $data['revenues'][] = $revenue;
     }
+
+    $data['count_products'] = $count_products;
+    $data['total_revenue'] = $total_revenue;
+    $data['total_profit'] = $total_profit;
+    $data['count_orders'] = Order::where('status', '=', OrderStatusEnum::DELIVERED)
+      ->whereYear('created_at', $carbon->year)
+      ->whereMonth('created_at', $carbon->month)->count();
+
+    $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')->whereYear('created_at', $carbon->year)->whereMonth('created_at', $carbon->month)
+      ->whereHas('order', function (Builder $query) {
+        $query->where('status', '=', OrderStatusEnum::DELIVERED);
+      })->with([
+        'order' => function ($query) {
+          $query->select('id', 'order_code');
+        },
+        'product_detail' => function ($query) {
+          $query->select('id', 'product_id', 'color', 'import_price')->with([
+            'product' => function ($query) {
+              $query->select('id', 'producer_id', 'name', 'sku_code')->with([
+                'producer' => function ($query) {
+                  $query->select('id', 'name');
+                }
+              ]);
+            }
+          ]);
+        }
+      ])->latest()->get();
+
+    $data['order_details'] = $order_details;
+
+    $producers = Producer::select('name')->has('products')->get();
+
+    foreach ($producers as $producer) {
+      $data['producer'][$producer->name]['quantity'] = 0;
+      $data['producer'][$producer->name]['revenue'] = 0;
+      $data['producer'][$producer->name]['profit'] = 0;
+    }
+
+    foreach ($order_details as $order_detail) {
+      $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] = $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] + $order_detail->quantity;
+
+      $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] = $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] + $order_detail->quantity * $order_detail->price;
+
+      $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] = $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
+    }
+    return $data;
+  }
+
+  public function orderGroupByStatus()
+  {
+    $data = Order::select('status')
+    ->selectRaw('count(id) as count')
+    ->groupBy('status')
+    ->get();
+
+    // Map the status counts to their corresponding status names
+    $statusCounts = $data->map(function ($item) {
+      return [
+        'status' => OrderStatusEnum::getStatus()[$item->status],
+        'count' => $item->count
+      ];
+    });
+
+    return $statusCounts;
+  }
+
+  public function lastestOrder()
+  {
+    $orders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name');
+      }
+    ])->latest()->limit(5)->get();
+
+    return $orders;
+  }
+  public function index() {
+
+    $count['user'] = User::where([['active', true], ['admin', false]])->count();
+    $count['post'] = Post::count();
+    $count['product'] = Product::whereHas('product_details', function (Builder $query) {
+      $query->where('quantity', '>', 0);
+    })->count();
+    $count['order'] = Order::where('status', OrderStatusEnum::DELIVERED)->count();
+    $data = $this->dashboardData();
+    $orderStatuses = $this->orderGroupByStatus();
+    $orders = $this->lastestOrder();
+    return view('admin.index')->with(['count' => $count, 'data' => $data, 'orderStatuses' => $orderStatuses, 'orders' => $orders]);
+  }
 }
