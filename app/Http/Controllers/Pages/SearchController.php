@@ -32,16 +32,6 @@ class SearchController extends Controller
             ->whereHas('product_detail', function (Builder $query) {
                 $query->where('quantity', '>', 0);
             })
-            ->with(['product_detail' => function($query) {
-              $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
-            }])->latest()->limit(19)->get();
 
-            $posts = Post::select('id', 'title', 'image', 'created_at')
-            ->where('title', 'LIKE', '%' . $request->search_key . '%')->get();
-
-            return view('pages.search')->with(['data' => ['advertises' => $advertises, 'posts' => $posts, 'products' => $products]]);
-        } else {
-            return redirect()->route('home_page');
-        }
     }
 }
