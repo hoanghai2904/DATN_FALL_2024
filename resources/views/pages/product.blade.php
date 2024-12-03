@@ -90,6 +90,12 @@
                                               {{ $size['quantity'] > 0 ? 'Còn hàng' : 'Hết hàng' }}
                                           </span>
                                       </div>
+                                      <div class="status">
+                                          Số lượng trong kho: 
+                                          <span style="color: {{ $size['quantity'] > 1 ? '#1a2' : '#f30' }};">
+                                              {{ $size['quantity'] }}
+                                          </span>
+                                      </div>
                                   </div>
                               @endforeach
                           @endforeach
@@ -236,6 +242,26 @@
                         </div>
                       </div>
                     </form>
+                      @php
+                        $wishlist = session('wishlist', collect());
+                        $wishlistProductDetailIds = $wishlist->pluck('product_detail_id')->toArray();
+                        $isInWishlist = false;
+                    
+                        foreach ($data['product_details'] as $product) {
+                            foreach ($product['details'] as $detail) {
+                                if (in_array($detail['id'], $wishlistProductDetailIds)) {
+                                    $isInWishlist = true;
+                                    break 2; // Exit both loops
+                                }
+                            }
+                        }
+                      @endphp
+                    
+                    <script>
+                        var wishlistProductDetailIds = @json($wishlistProductDetailIds);
+                    </script>
+                    
+                    <i class="fa fa-heart wishlist-icon {{ $isInWishlist ? 'wishlist-added' : '' }}" data-product-id="{{ $data['product']->id }}" data-url="{{ route('toggle_wishlist') }}"></i>
                   </div>
                 </div>
               </div>
@@ -347,7 +373,9 @@
                       <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
                         <div class="product-content">
                           <div class="image">
-                            <img src="{{ Helper::get_image_product_url($product->image) }}" alt="">
+                            <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" alt=""
+                            onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';"
+                            />
                           </div>
                           <div class="content">
                             <h3 class="title">{{ $product->name }}</h3>
@@ -434,6 +462,19 @@
           '{{ session('alert')['type'] }}'
         );
       @endif
+      @if(session('wishlist_alert'))
+            Swal.fire(
+                '{{ session('wishlist_alert')['title'] }}',
+                '{{ session('wishlist_alert')['content'] }}',
+                '{{ session('wishlist_alert')['type'] }}'
+            );
+            var icon = $('.wishlist-icon');
+            if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
+                icon.addClass('wishlist-added');
+            } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
+                icon.removeClass('wishlist-added');
+            }
+        @endif
     });
   </script>
 @endsection

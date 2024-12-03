@@ -20,7 +20,7 @@
 @endsection
 
 @section('content')
-<form action="{{ route('admin.coupon.update', ['id' => $coupon?->id]) }}" method="POST" accept-charset="utf-8">
+<form id="coupon-form" action="{{ route('admin.coupon.update', ['id' => $coupon?->id]) }}" method="POST" accept-charset="utf-8">
   @csrf
   <div class="box box-primary">
     <div class="box-body">

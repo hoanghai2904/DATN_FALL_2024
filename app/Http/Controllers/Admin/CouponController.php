@@ -35,7 +35,7 @@ class CouponController extends Controller
         if (isset($validated['min_order_amount'])) {
             $validated['min_order_amount'] = str_replace('.', '', $validated['min_order_amount']);
         }
-        if($validated['start_end_date'] != null) {
+        if ($validated['start_end_date'] != null) {
             $dates = explode(' - ', $validated['start_end_date']);
             $start_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
             $end_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
@@ -59,7 +59,7 @@ class CouponController extends Controller
         $coupon = Coupon::find($request->input('coupon_id'));
         if (!$coupon) {
             return response()->json([
-                'type' => 'danger',
+                'type' => 'error',
                 'title' => 'Thất Bại',
                 'content' => 'Mã giảm giá không tồn tại.'
             ]);
@@ -67,7 +67,7 @@ class CouponController extends Controller
         $orders = Order::where('coupon_id', operator: $coupon->id)->get();
         if ($orders->count() > 0) {
             return response()->json([
-                'type' => 'danger',
+                'type' => 'error',
                 'title' => 'Thất Bại',
                 'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
             ]);
@@ -107,7 +107,7 @@ class CouponController extends Controller
             $coupon = Coupon::find($id);
             if (!$coupon) {
                 return redirect()->route('admin.coupon.index')->with(['alert' => [
-                    'type' => 'danger',
+                    'type' => 'error',
                     'title' => 'Thất Bại',
                     'content' => 'Mã giảm giá không tồn tại.'
                 ]]);
@@ -115,7 +115,7 @@ class CouponController extends Controller
             $orders = Order::where('coupon_id', $id)->get();
             if ($orders->count() > 0) {
                 return redirect()->route('admin.coupon.index')->with(['alert' => [
-                    'type' => 'danger',
+                    'type' => 'error',
                     'title' => 'Thất Bại',
                     'content' => 'Mã giảm giá đang được sử dụng, không thể cập nhật.'
                 ]]);
@@ -136,7 +136,6 @@ class CouponController extends Controller
                 'content' => 'Cập nhật mã giảm giá thành công.'
             ]]);
         } catch (\Exception $e) {
-            dd($e);
             throw $e;
         }
     }

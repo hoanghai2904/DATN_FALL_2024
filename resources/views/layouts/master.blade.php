@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   @if(Request::route()->getName() != 'show_cart')
   <link rel="stylesheet" href="{{ asset('css/minicart.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/wishlist.css') }}">
   @endif
   @yield('css')
 </head>
@@ -75,6 +76,7 @@
     @if(Request::route()->getName() != 'show_cart')
     <!-- MiniCart display -->
     @include('layouts.minicart')
+    @include('layouts.wishlist')
     @endif
 
     <!-- Footer -->

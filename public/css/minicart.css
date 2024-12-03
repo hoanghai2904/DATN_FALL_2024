@@ -185,6 +185,7 @@ ul#cart-sidebar {
 }
 .top-cart-content li {
   list-style: none;
+  padding-top: 20px;
 }
 .top-cart-content li.item {
   border-top: 1px solid #eee;
