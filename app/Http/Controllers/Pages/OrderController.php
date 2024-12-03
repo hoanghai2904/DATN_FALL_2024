@@ -28,7 +28,7 @@ class OrderController extends Controller
         'order_details' => function($query) {
           $query->select('id', 'order_id', 'quantity', 'price');
         }
-      ])->orderBy('created_at', 'DESC')->get();
+      ])->orderBy('created_at', 'DESC')->paginate(10);
       if($orders->isNotEmpty()) {
         return view('pages.orders')->with('data',['orders' => $orders, 'advertises' => $advertises]);
       } else {

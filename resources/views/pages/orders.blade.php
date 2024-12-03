@@ -31,7 +31,7 @@
       </div>
       <div class="section-content">
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-12">
             <div class="orders-table">
               <div class="table-responsive">
                 <table class="table table-striped table-hover">
@@ -46,6 +46,7 @@
                       <th class="text-center">Tổng tiền thanh toán</th>
                       <th class="text-center">Trạng thái thanh toán</th>
                       <th class="text-center">Trạng Thái đơn hàng</th>
+                      <th class="text-center">Trạng Thái nhận hàng</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -53,13 +54,15 @@
                       @php
                         $qty = 0;
                         $price = 0;
+                        $currentPage = $data['orders']->currentPage();
+                        $perPage = $data['orders']->perPage();
                         foreach($order->order_details as $order_detail) {
                           $qty = $qty + $order_detail->quantity;
                           $price = $price + $order_detail->price * $order_detail->quantity;
                         }
                       @endphp
                       <tr>
-                        <td class="text-center">{{ $key + 1 }}</td>
+                        <td class="text-center">{{ ($currentPage - 1) * $perPage + $key + 1 }}</td>
                         <td class="text-center"><a href="{{ route('order_page', ['id' => $order->id]) }}" title="Chi tiết đơn hàng: {{ $order->order_code }}">{{ $order->order_code }}</a></td>
                         <td class="text-center">{{ $order->payment_method->name }}</td>
                         <td class="text-center" style="color: #f30;">{{ number_format($price,0,',','.') }}₫</td>
@@ -67,27 +70,45 @@
                         <td class="text-center">{{ number_format($order->discount,0,',','.') }}₫</td>
                         <td class="text-center" style="color: #f30;">{{ number_format($price + $order->fee - $order->discount,0,',','.') }}₫</td>
                         <td>{{$order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán'}}</td>
-                        <td class="text-center">
+                        <td>
                           @switch($order->status)
                               @case(1)
                                   <div style="display:flex">
                                     <span class="label label-warning">Chờ xác nhận</span>
-                                    <button class="btn btn-danger" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
+                                    <button class="btn btn-danger" style="margin-left: 4px;" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
                                   </div>
                                   @break
                               @case(2)
-                                <span class="label label-warning">Đã xác nhận</span>
+                                <div style="display:flex">
+                                  <span class="label label-warning">Đã xác nhận</span>
+                                  <span style="flex:1"></span>
+                                </div>
                                 @break
                               @case(3)
-                                  <span class="label label-primary">Đang vận chuyển</span>
+                                  <div style="display:flex">
+                                    <span class="label label-primary">Đang vận chuyển</span>
+                                    <span style="flex:1"></span>
+                                  </div>
                                   @break
                               @case(4)
-                                  <span class="label label-success">Đã giao hàng</span>
+                                  <div style="display:flex">
+                                    <span class="label label-success">Đã giao hàng</span>
+                                    <span style="flex:1"></span>
+                                  </div>
                                   @break
                               @case(5)
-                                  <span class="label label-danger">Đã hủy</span>
+                                  <div style="display:flex">
+                                    <span class="label label-danger">Đã hủy</span>
+                                    <span style="flex:1"></span>
+                                  </div>
                                   @break
                           @endswitch
+                        </td>
+                        <td>
+                          {{ $order->is_received ? 'Đã nhận hàng' : 'Chưa nhận hàng' }}
+                          @if (!$order->is_received && $order->status == 4)
+                            <button class="btn btn-success" onclick="handleReceiveOrder({{ $order->id }})">Đã nhận hàng</button>
+                          @endif
                         </td>
                       </tr>
                     @endforeach
@@ -96,7 +117,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-2">
+          {{-- <div class="col-md-2">
             <div class="online_support">
               <h2 class="title">CHÚNG TÔI LUÔN SẴN SÀNG<br>ĐỂ GIÚP ĐỠ BẠN</h2>
               <img src="{{ asset('images/support_online.jpg') }}">
@@ -108,7 +129,10 @@
               <h3 class="title">Chat hỗ trợ trực tuyến</h3>
               <h3 class="sub_title">Chúng tôi luôn trực tuyến 24/7.</h3>
             </div>
-          </div>
+          </div> --}}
+        </div>
+        <div style="display: flex; justify-content:center">
+          {{ $data['orders']->links() }}
         </div>
       </div>
     </section>
@@ -171,6 +195,33 @@
                 }
               }
             });
+          }
+        });
+    }
+    const handleReceiveOrder = (id) => {
+      $.ajax({
+          url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+          method: 'POST',
+          data: {
+            id: id,
+            _token: `{{ csrf_token() }}`
+          },
+          success: function(response) {
+            if (response.status) {
+              Swal.fire(
+                'Thành công!',
+                response.message,
+                'success'
+              ).then(() => {
+                location.reload();
+              });
+            } else {
+              Swal.fire(
+                'Thất bại!',
+                response.message,
+                'error'
+              );
+            }
           }
         });
     }
