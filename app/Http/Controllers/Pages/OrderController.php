@@ -124,7 +124,7 @@ class OrderController extends Controller
           'content' => 'Bạn không có quyền truy cập vào trang này!'
         ]]);
       } else {
-        if($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::NOT_PAID) {
+        if($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::FAILED) {
           $order->status = OrderStatusEnum::CANCELLED;
           $order->save();
           return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
@@ -161,9 +161,10 @@ class OrderController extends Controller
           'content' => 'Bạn không có quyền truy cập vào trang này!'
         ]]);
       } else {
-        if($order->status == OrderStatusEnum::DELIVERED) {
+        if($order->status == OrderStatusEnum::DELIVERING) {
           $order->is_paid = true;
           $order->is_received = true;
+          $order->status = OrderStatusEnum::COMPLETED;
           $order->save();
           return response()->json(['status' => 'success', 'message' => 'Nhận hàng thành công!']);
         } else {

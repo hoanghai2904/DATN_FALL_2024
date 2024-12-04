@@ -71,6 +71,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('producer/{id}/update', 'ProducerController@update')->name('producer.update');
 
   Route::get('orders', 'OrderController@index')->name('order.index');
+  Route::get('processing', 'OrderController@processing')->name('order.processing');
+  Route::get('completed', 'OrderController@completed')->name('order.completed');
   Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
   Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
   
