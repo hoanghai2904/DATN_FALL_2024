@@ -42,6 +42,11 @@
 
 @section('css')
   <style>
+    .card-item:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
     .section-coupon {
       padding: 20px;
       background: #fff;

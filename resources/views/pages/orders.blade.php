@@ -46,7 +46,7 @@
                       <th class="text-center">Tổng tiền thanh toán</th>
                       <th class="text-center">Trạng thái thanh toán</th>
                       <th class="text-center">Trạng Thái đơn hàng</th>
-                      <th class="text-center">Trạng Thái nhận hàng</th>
+                      {{-- <th class="text-center">Trạng Thái nhận hàng</th> --}}
                     </tr>
                   </thead>
                   <tbody>
@@ -74,42 +74,42 @@
                           @switch($order->status)
                               @case(1)
                                   <div style="display:flex">
-                                    <span class="label label-warning">Chờ xác nhận</span>
-                                    <button class="btn btn-danger" style="margin-left: 4px;" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
+                                    <span class="label label-warning" style="margin-right:10px" >Chờ xác nhận</span>
+                                    <button class="btn btn-danger" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
                                   </div>
                                   @break
                               @case(2)
-                                <div style="display:flex">
-                                  <span class="label label-warning">Đã xác nhận</span>
-                                  <span style="flex:1"></span>
+                                <div style="display:flex" >
+                                  <span class="label label-warning" style="margin-right:10px">Đã xác nhận</span>
+                                    <button class="btn btn-danger" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
                                 </div>
                                 @break
                               @case(3)
-                                  <div style="display:flex">
-                                    <span class="label label-primary">Đang vận chuyển</span>
-                                    <span style="flex:1"></span>
+                                  <div style="display:flex" >
+                                    <span class="label label-primary" style="margin-right:10px">Đang chuẩn bị</span>
+                                      <button class="btn btn-danger" onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
                                   </div>
                                   @break
                               @case(4)
-                                  <div style="display:flex">
-                                    <span class="label label-success">Đã giao hàng</span>
-                                    <span style="flex:1"></span>
+                                  <div style="display:flex" >
+                                    <span class="label label-info" style="margin-right:10px">Đang giao</span>
+                                    <button class="btn btn-success" onclick="handleReceiveOrder({{ $order->id}})">Đã nhận</button>
                                   </div>
                                   @break
-                              @case(5)
-                                  <div style="display:flex">
-                                    <span class="label label-danger">Đã hủy</span>
-                                    <span style="flex:1"></span>
-                                  </div>
+                              @case(6)
+                                  <span class="label label-success">Thành công</span>
+                                  @break
+                              @case(8)
+                                  <span class="label label-danger">Đã hủy</span>
                                   @break
                           @endswitch
                         </td>
-                        <td>
+                        {{-- <td>
                           {{ $order->is_received ? 'Đã nhận hàng' : 'Chưa nhận hàng' }}
                           @if (!$order->is_received && $order->status == 4)
                             <button class="btn btn-success" onclick="handleReceiveOrder({{ $order->id }})">Đã nhận hàng</button>
                           @endif
-                        </td>
+                        </td> --}}
                       </tr>
                     @endforeach
                   </tbody>
@@ -248,4 +248,57 @@
       });
     });
   </script>
+
+<script>
+  const handleReceiveOrder = (id) => {
+    $.ajax({
+        url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+        method: 'POST',
+        data: {
+          id: id,
+          _token: `{{ csrf_token() }}`
+        },
+        success: function(response) {
+          if (response.status) {
+            Swal.fire(
+              'Thành công!',
+              response.message,
+              'success'
+            ).then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire(
+              'Thất bại!',
+              response.message,
+              'error'
+            );
+          }
+        }
+      });
+  }
+  $(document).ready(function(){
+
+    $("#slide-advertise").owlCarousel({
+      items: 2,
+      autoplay: true,
+      loop: true,
+      margin: 10,
+      autoplayHoverPause: true,
+      nav: true,
+      dots: false,
+      responsive:{
+        0:{
+          items: 1,
+        },
+        992:{
+          items: 2,
+          animateOut: 'zoomInRight',
+          animateIn: 'zoomOutLeft',
+        }
+      },
+      navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+    });
+  });
+</script>
 @endsection

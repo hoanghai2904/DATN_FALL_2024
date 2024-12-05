@@ -307,7 +307,7 @@
                     <div class="content-vote">
                       @if($data['canComment'])
                       <div class="section-rating">
-                        <div class="rating-title">Bình Luận</div>
+                        <div class="rating-title">Đánh Giá</div>
                         <div class="rating-content">
                           <div class="rating-product"></div>
                           <div class="rating-form">
@@ -316,7 +316,7 @@
                               <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                               <input type="hidden" name="product_id" value="{{ $data['product']->id }}">
                               <textarea name="content" placeholder="Nội dung..." rows="3"></textarea>
-                              <button type="submit" class="btn btn-default">Gửi bình luận</button>
+                              <button type="submit" class="btn btn-default">Gửi Đánh Giá</button>
                             </form>
                           </div>
                         </div>

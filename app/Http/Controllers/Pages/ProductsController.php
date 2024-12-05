@@ -70,7 +70,7 @@ class ProductsController extends Controller
           $query_products->orderBy('rate', 'desc');
       }
   
-      $products = $query_products->paginate(15);
+      $products = $query_products->paginate(16);
   
       $advertises = Advertise::where([
           ['start_date', '<=', date('Y-m-d')],
@@ -228,7 +228,7 @@ class ProductsController extends Controller
 
       $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
                         $query->where('user_id', $user->id)
-                              ->where('status', OrderStatusEnum::DELIVERED)
+                              ->where('status', OrderStatusEnum::COMPLETED)
                               ->where('is_paid', true)
                               ->where('is_received', true);
                     }) ->whereHas('product_detail', function ($query) use ($product) {
