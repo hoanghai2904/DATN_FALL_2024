@@ -231,17 +231,21 @@ class ProductsController extends Controller
                 ->where('user_id', $user->id)
                 ->exists();
 
-            $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
-                $query->where('user_id', $user->id)
-                    ->where('status', OrderStatusEnum::DELIVERED);
-            })
-                ->where('product_detail_id', $product->id)
-                ->exists();
-            // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
-            $canComment = $hasPurchased && !$hasCommented;
-        }
-        return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
+      $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
+                        $query->where('user_id', $user->id)
+                              ->where('status', OrderStatusEnum::DELIVERED)
+                              ->where('is_paid', true)
+                              ->where('is_received', true);
+                    }) ->whereHas('product_detail', function ($query) use ($product) {
+                        $query->where('product_id', $product->id);
+                    })
+                    ->exists();
+                   
+      // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
+        $canComment = $hasPurchased && !$hasCommented;
     }
+    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
+  }
 
     public function addVote(Request $request)
     {
