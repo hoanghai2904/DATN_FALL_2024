@@ -20,66 +20,9 @@ class CouponController extends Controller
         return view('admin.coupon.new');
     }
 
-    public function save(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required',
-            'code' => 'required|unique:coupons',
-            'description' => 'required',
-            'discount_percentage' => 'required|numeric',
-            'max_discount_amount' => 'required|numeric',
-            'min_order_amount' => 'nullable|numeric',
-            'start_end_date' => 'nullable',
-        ]);
-        $validated['max_discount_amount'] = str_replace('.', '', $validated['max_discount_amount']);
-        if (isset($validated['min_order_amount'])) {
-            $validated['min_order_amount'] = str_replace('.', '', $validated['min_order_amount']);
-        }
-        if ($validated['start_end_date'] != null) {
-            $dates = explode(' - ', $validated['start_end_date']);
-            $start_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
-            $end_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
-            unset($validated['start_end_date']);
-        } else {
-            $start_date = null;
-            $end_date = null;
-        }
+    
 
-        Coupon::create(array_merge($validated, ['start_date' => $start_date, 'end_date' => $end_date]));
-
-        return redirect()->route('admin.coupon.index')->with(['alert' => [
-            'type' => 'success',
-            'title' => 'Thành Công',
-            'content' => 'Thêm mã giảm giá thành công.'
-        ]]);
-    }
-
-    public function delete(Request $request)
-    {
-        $coupon = Coupon::find($request->input('coupon_id'));
-        if (!$coupon) {
-            return response()->json([
-                'type' => 'error',
-                'title' => 'Thất Bại',
-                'content' => 'Mã giảm giá không tồn tại.'
-            ]);
-        }
-        $orders = Order::where('coupon_id', operator: $coupon->id)->get();
-        if ($orders->count() > 0) {
-            return response()->json([
-                'type' => 'error',
-                'title' => 'Thất Bại',
-                'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
-            ]);
-        }
-        $coupon->delete();
-
-        return response()->json([
-            'type' => 'success',
-            'title' => 'Thành Công',
-            'content' => 'Xóa mã giảm giá thành công.'
-        ]);
-    }
+   
 
     public function edit($id)
     {
