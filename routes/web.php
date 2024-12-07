@@ -85,6 +85,7 @@ Route::namespace('Pages')->group(function () {
   Route::get('orders', 'OrderController@index')->name('orders_page');
   Route::get('order/{id}', 'OrderController@show')->name('order_page');
   Route::post('cancel-order/{id}', 'OrderController@cancelOrder')->name(name: 'cancelOrder');
+  Route::post('order/return/{id}', 'OrderController@returnOrder')->name('returnOrder');
   Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
   Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
 

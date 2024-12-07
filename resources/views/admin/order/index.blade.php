@@ -161,7 +161,7 @@
                                                         @if (
                                                             ($order->status === 1 && $order->payment_method_id == 1) ||
                                                                 ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
-                                                            >>>>>>>>> Temporary merge branch 2
+                                                            >>>>>>> 5edb25a7770d3720cb05c38220e7afe8f0b38d66
                                                             <li>
                                                                 <a
                                                                     href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}"></i>Đã
