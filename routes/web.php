@@ -72,6 +72,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   Route::post('producer/{id}/update', 'ProducerController@update')->name('producer.update');
 
   Route::get('orders', 'OrderController@index')->name('order.index');
+  Route::get('processing', 'OrderController@processing')->name('order.processing');
+  Route::get('completed', 'OrderController@completed')->name('order.completed');
   Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
   Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
   
@@ -93,6 +95,7 @@ Route::namespace('Pages')->group(function () {
   Route::get('orders', 'OrderController@index')->name('orders_page');
   Route::get('order/{id}', 'OrderController@show')->name('order_page');
   Route::post('cancel-order/{id}', 'OrderController@cancelOrder')->name(name: 'cancelOrder');
+  Route::post('order/return/{id}', 'OrderController@returnOrder')->name('returnOrder');
   Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
   Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
 
