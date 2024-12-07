@@ -171,10 +171,6 @@
                                                             <a
                                                                 href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác nhận</a>
                                                         </li>
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                        </li>
                                                     @endif
 
                                                     @if ($order->status === 2)
@@ -213,6 +209,12 @@
                                                             <a
                                                                 href="{{ route('admin.orderTransaction', ['completed', $order->id]) }}">Đơn
                                                                 hàng thành công</a>
+                                                        </li>
+                                                    @endif
+                                                    @if ($order->status === 1)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
                                                         </li>
                                                     @endif
 
