@@ -176,8 +176,6 @@
                                             <td>
                                                 @php
                                                     $statusLabels = [
-                                                        1 => ['label' => 'label-warning', 'text' => 'Chờ xác nhận'],
-                                                        2 => ['label' => 'label-info', 'text' => 'Xác nhận'],
                                                         3 => ['label' => 'label-primary', 'text' => 'Đang chuẩn bị'],
                                                         4 => ['label' => 'label-info', 'text' => 'Đang Vận Chuyển'],
                                                         5 => ['label' => 'label-success', 'text' => 'Đã Giao Hàng'],
