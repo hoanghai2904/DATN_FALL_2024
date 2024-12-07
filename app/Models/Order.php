@@ -2,21 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Order extends Model
 {
-    protected $fillable = [
-        'user_id', 'voucher_id', 'user_name', 'user_email', 'user_phone', 
-        'user_address', 'user_note', 'status_order', 'shipping_fee', 
-        'total_price', 'discount_price', 'payment_method'
-    ];
+  public function user() {
+    return $this->belongsTo('App\Models\User');
+  }
+  public function payment_method() {
+    return $this->belongsTo('App\Models\PaymentMethod');
+  }
+  public function order_details() {
+    return $this->hasMany('App\Models\OrderDetail');
+  }
+  // protected $guarded = [''];
 
-    // Quan hệ 1-nhiều với OrderItem
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class, 'order_id');
-    }
-    
+  // protected $status = [
+  //   '1' => [
+  //       'class' => 'default',
+  //       'name'  => 'Đang Xử Lý'
+  //   ],
+
+  //   '2' => [
+  //     'class' => 'info',
+  //     'name'  => 'Đang Vận Chuyển'
+  //   ],
+
+  //   '3' => [
+  //     'class' => 'success',
+  //     'name'  => 'Đã Giao Hàng'
+  //   ],
+
+  //   '-1' => [
+  //     'class' => 'danger',
+  //     'name'  => 'Hủy'
+  //   ],
+
+  // ];
+
+  // public function getStatus(){
+  //   return Arr::get($this->status,"[N\A]");
+  // }
 }

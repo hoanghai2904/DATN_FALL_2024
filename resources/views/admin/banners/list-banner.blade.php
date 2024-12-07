@@ -6,25 +6,30 @@
 @endsection
 @push('style')
 <style>
-    #bannerCarousel {
-        max-width: 100%; /* Adjust the width to your preference */
-      
-    }
-    #bannerCarousel img {
-        max-height: 400px; /* Adjust the height to your preference */
-        object-fit: fill; /* Ensures the images fit within the container without distortion */
-    }
+.swiper-slide {
+    transition: transform 0.3s ease;
+}
+
+.swiper-slide img {
+    border-radius: 10px; /* Thêm bo góc cho hình ảnh */
+    width: 100%;  /* Chiều rộng ảnh trong slide */
+    height: 450px; /* Chiều cao ảnh trong slide */
+}
 </style>
 @endpush
 
 @section('content')
     <div class="row">
         <div class="col-xl-12">
-            <a href="{{ route('admin.banners.addBanner') }}">
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{{ route('admin.banners.addBanner') }}">
+                    <button class="btn btn-success">Thêm mới</button>
+                </a>
+            </div>
+            {{-- <a href="{{ route('admin.banners.addBanner') }}">
                 <button class="btn btn-success">Thêm mới</button>
-            </a>
-            <br>
-            <br>
+            </a> --}}
+    
             <div class="card">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Danh sách @yield('title')</h4>
@@ -33,10 +38,39 @@
                 <div class="alert alert-info" role="alert">
                     {{ session('message') }}
                 </div>
+                
             @endif
                 <!-- end card header -->
 
                 <div class="card-body">
+                    <form action="{{ route('admin.banners.listBanner') }}" method="GET">
+                        @csrf
+                        <div class="row mb-2 ">
+                            {{-- <div class="col-lg-4">
+                                <div class="d-flex justify-content-start">
+                                    <div class="search-box ms-2 w-100">
+                                        <input type="text" name="query" class="form-control search"
+                                            placeholder="Search...">
+                                        <i class="ri-search-line search-icon"></i>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <div class="col-lg-3" data-select2-id="select2-data-2">
+                                <select class="js-example-basic-single select2-hidden-accessible" name="status"
+                                    aria-hidden="true">
+                                    <option value="" disabled selected>Tìm theo trạng thái</option>
+                                    <option value="active" data-select2-id="select2-data-75-jxz2">active</option>
+                                    <option value="inactive" data-select2-id="select2-data-76-uypr">inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 d-flex justify-content-start">
+                                <button type="submit" class="btn btn-info" data-bs-toggle="offcanvas"
+                                        href="#offcanvasExample"><i class="ri-filter-3-line align-bottom me-1"></i>Tìm
+                                        kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
                     <div class="live-preview">
                         <div class="table-responsive table-card">
                             <table class="table align-middle table-nowrap table-striped-columns mb-0">
@@ -50,7 +84,7 @@
                                                 <label class="form-check-label" for="cardtableCheck"></label>
                                             </div>
                                         </th>
-                                        <th scope="col">ID</th>
+                                        {{-- <th scope="col">ID</th> --}}
                                         <th scope="col">Hình ảnh</th>
                                         <th scope="col">Liên Kết</th>
                                         <th scope="col">Liên Kết</th>
@@ -68,18 +102,34 @@
                                                     <label class="form-check-label" for="itemCheck{{ $item }}"></label>
                                                 </div>
                                             </td>
-                                            <td>{{ $item + 1 }}</td>
+                                            {{-- <td>{{ $item + 1 }}</td> --}}
                                             <td class="text-center"> <!-- Thêm text-center để căn giữa hình ảnh -->
-                                                <img src="{{ Storage::url($value->banner) }}" alt="" width="250px" height="100px">
+                                                <img src="{{ asset('storage/' . $value->banner) }}" alt="" width="250px" height="100px">
                                             </td>
                                             <td><a href="{{ $value->url }}" target="_blank">Đường Link</a></td>
                                             <td>
-                                                <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
-                                                    <input type="checkbox" class="form-check-input" id="customSwitch{{ $value->id }}" 
-                                                           {{ $value->status ? 'checked' : '' }} onchange="toggleStatus({{ $value->id }})">
-                                                </div>
+                                                @if ($value->status == 1)
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" checked data-id="{{ $value->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @else
+                                                    <div class="form-check form-switch form-switch-lg p-3" dir="ltr">
+                                                        <input type="checkbox" data-id="{{ $value->id }}"
+                                                            class="form-check-input change-status" id="customSwitchsizemd">
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.banners.updateBanner', $value->id) }}" style="margin-right: 10px;">
+                                                    <i class="ri-edit-fill align-bottom text-muted"></i> 
+                                                </a>
+                                                <a href="{{ route('admin.banners.deleteBanner', $value->id) }}" class="delete-item">
+                                                    <i class="ri-delete-bin-fill align-bottom text-muted"></i> 
+                                                </a>
                                             </td>
                                             
+<<<<<<< HEAD
                                             <td>
                                                 
                                                 <a href="{{ route('admin.banners.updateBanner', $value->id) }}" class="btn btn-warning btn-sm">Chỉnh sửa</a>
@@ -92,10 +142,15 @@
                                                     </button>
                                                 </form>
                                             </td>
+=======
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="mt-4">
+                                {{ $listBanner->links() }}
+                            </div>
                         </div>
                     </div>
                 </div><!-- end card-body -->
@@ -104,90 +159,135 @@
         </div><!-- end col -->
     </div>
     <!-- end row -->
-    {{-- <div class="card mt-4">
-        <div class="card-header">
-            <h4 class="card-title">Slideshow Banners</h4>
-        </div>
-        <div class="card-body">
-            <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @foreach ($listBanner as $key => $banner)
-                        <div class="carousel-item {{ $key === 0 ? 'active' : 'inactive' }}">
-                            <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
+
+    {{-- slide show --}}
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Effect Coverflow Swiper</h4>
+            </div><!-- end card header -->
+            <div class="card-body">
+                <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
+    
+                <!-- Swiper -->
+                <div class="swiper effect-coverflow-swiper rounded pb-5">
+                    <div class="swiper-wrapper">
+                        @foreach ($listBanner as $banner)
+                        <div class="swiper-slide" id="bannerSlide{{ $banner->id }}" data-status="{{ $banner->status }}">
+                            <img src="{{ asset('storage/' . $banner->banner) }}" alt="Banner {{ $banner->id }}" class="img-fluid" />
                         </div>
                     @endforeach
+                    
+                    </div>
+                    <div class="swiper-pagination swiper-pagination-dark"></div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </div>
-    </div> --}}
-
-    <div class="card mt-4">
-        <div class="card-header">
-            
-            <h4 class="card-title">Slideshow Banners</h4>
-        </div>
-        <div class="card-body">
-            <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @php
-                        $activeSet = false; // Biến để đánh dấu banner đầu tiên được hiển thị
-                    @endphp
-                    @foreach ($listBanner as $key => $banner)
-                        @if ($banner->status) <!-- Kiểm tra trạng thái của banner -->
-                            <div class="carousel-item {{ !$activeSet ? 'active' : '' }}">
-                                <img src="{{ Storage::url($banner->banner) }}" class="d-block w-100" alt="Banner {{ $key + 1 }}">
-                            </div>
-                            @php
-                                $activeSet = true; // Đặt trạng thái active cho banner đầu tiên
-                            @endphp
-                        @endif
-                    @endforeach
-                </div>
-    
-                <!-- Nếu có ít nhất 1 banner, hiển thị điều khiển carousel -->
-                @if ($activeSet)
-                    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                @endif
-            </div>
-        </div>
+            </div><!-- end card-body -->
+        </div><!-- end card -->
     </div>
     
+    
+    
+    
 @endsection
+
 @push('script')
+<!-- Thêm CSS Swiper -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<!-- Thêm JavaScript Swiper -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const statusSelect = document.getElementById('inputState');
-        const slideshowCard = document.getElementById('slideshowCard');
-
-        // Function to toggle the slideshow visibility
-        function toggleSlideshow() {
-            if (statusSelect.value === "0") { // Inactive
-                slideshowCard.style.display = 'none'; // Hide slideshow
-            } else {
-                slideshowCard.style.display = 'block'; // Show slideshow
-            }
-        }
-
-        // Initial check on page load
-        toggleSlideshow();
-
-        // Event listener for the status select change
-        statusSelect.addEventListener('change', toggleSlideshow);
+    // slide show banner
+    document.addEventListener('DOMContentLoaded', function() {
+        const swiper = new Swiper('.effect-coverflow-swiper', {
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            loop: true, // Thêm tùy chọn này để vòng lặp
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
     });
 </script>
+<<<<<<< HEAD
+=======
+
+{{-- <script>
+    // slide show banner
+    document.addEventListener('DOMContentLoaded', function() {
+        const swiper = new Swiper('.effect-coverflow-swiper', {
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    });
+</script> --}}
+<script>
+    // status
+    document.addEventListener("DOMContentLoaded", function() {
+    const slides = document.querySelectorAll('.swiper-slide');
+
+    slides.forEach(slide => {
+        const status = slide.getAttribute('data-status');
+        
+        if (status == 0) {
+            slide.style.display = 'none';  // Ẩn banner
+        } else {
+            slide.style.display = 'block';  // Hiện banner
+        }
+    });
+});
+
+</script>
+<script>
+    const notyf = new Notyf();
+    $(document).ready(function() {
+        $('body').on('click', '.change-status', function() {
+            let isChecked = $(this).is(':checked');
+            let id = $(this).data('id');
+            console.log(isChecked, id);
+
+
+            $.ajax({
+                url: "{{ route('admin.banners.change-status') }}",
+                method: 'PUT',
+                data: {
+                    status: isChecked,
+                    id: id
+                },
+                success: function(data) {
+                    // toastr.success(data.message)
+                    notyf.success(data.message);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            })
+
+        })
+    })
+</script>
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
 @endpush

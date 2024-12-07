@@ -1,31 +1,69 @@
-<div class="page-content">
-    <div class="container-fluid">
+<aside class="main-sidebar">
 
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">@yield('title')</h4>
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
 
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            {{-- <li class="breadcrumb-item"><a href="javascript: void(0);">@yield('title')</a></li> --}}
-                            {{-- <li class="breadcrumb-item active">@yield('title')</li> --}}
-                        </ol>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel">
+      <div class="pull-left image">
+        <img src="{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}" class="img-circle" alt="{{ Auth::user()->name }}">
+      </div>
+      <div class="pull-left info">
+        <p>{{ Auth::user()->name }}</p>
+        <!-- Status -->
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+      </div>
     </div>
-    <!-- container-fluid -->
-{{--    <div class="d-sm-flex align-items-center justify-content-between mb-4">--}}
-{{--        <h1 class="h3 mb-0 text-gray-800">@yield('title')</h1>--}}
-{{--        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i--}}
-{{--                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>--}}
-{{--    </div>--}}
 
-    {{-- Main content --}}
-    @yield('content')
-    {{-- End main content --}}
-</div>
-<!-- End Page-content -->
+    <!-- search form (Optional) -->
+    <form action="#" method="get" class="sidebar-form" id="sidebar-search-form">
+      <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search...">
+        <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+      </div>
+    </form>
+    <!-- /.search form -->
+
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu" data-widget="tree">
+      <li class="header">MAIN NAVIGATION</li>
+      <!-- Optionally, you can add icons to the links -->
+      <li class="{{ Helper::check_active(['admin.dashboard']) }}"><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+      <li class="{{ Helper::check_active(['admin.advertise.index', 'admin.advertise.new', 'admin.advertise.edit']) }}"><a href="{{ route('admin.advertise.index') }}"><i class="fa fa-sliders" aria-hidden="true"></i> <span>Quản Lý Quảng Cáo</span></a></li>
+      <li class="{{ Helper::check_active(['admin.users', 'admin.user_show']) }}"><a href="{{ route('admin.users') }}"><i class="fa fa-users"></i> <span>Quản Lý Tài Khoản</span></a></li>
+      <li class="{{ Helper::check_active(['admin.post.index', 'admin.post.new', 'admin.post.edit']) }}"><a href="{{ route('admin.post.index') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> <span>Quản Lý Bài Viết</span></a></li>
+      <li class="{{ Helper::check_active(['admin.producer.index', 'admin.producer.new', 'admin.producer.edit']) }}"><a href="{{ route('admin.producer.index') }}"><i class="fa fa-list" aria-hidden="true"></i> <span>Quản Lý Danh mục</span></a></li>
+      <li class="{{ Helper::check_active(['admin.product.index', 'admin.product.new', 'admin.product.edit']) }}"><a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> <span>Quản Lý Sản Phẩm</span></a></li>
+      {{-- <li class="{{ Helper::check_active(['admin.order.index', 'admin.order.show']) }}"><a href="{{ route('admin.order.index') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Quản Lý Đơn Hàng</span></a></li> --}}
+     
+      <li class="treeview {{ Helper::check_active(['admin.order.index', 'admin.order.show', 'admin.order.processing', 'admin.order.completed']) }}">
+        <a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Quản Lý Đơn Hàng</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li class="{{ Helper::check_active(['admin.order.index', 'admin.order.show']) }}">
+            <a href="{{ route('admin.order.index') }}"><i class="fa fa-circle-o"></i> Tất cả Đơn Hàng</a>
+          </li>
+          <li class="{{ Helper::check_active(['admin.order.processing']) }}">
+            <a href="{{ route('admin.order.processing') }}"><i class="fa fa-circle-o"></i> Đơn Hàng Đang Xử Lí</a>
+          </li>
+          <li class="{{ Helper::check_active(['admin.order.completed']) }}">
+            <a href="{{ route('admin.order.completed') }}"><i class="fa fa-circle-o"></i> Đơn Hàng Đã Hoàn Thành</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="{{ Helper::check_active(['admin.coupon.index', 'admin.coupon.show']) }}"><a href="{{ route('admin.coupon.index') }}"><i class="fa fa-ticket" aria-hidden="true"></i> <span>Quản Lý mã giảm giá</span></a></li>
+      <li class="{{ Helper::check_active(['admin.warehouse.index']) }}"><a href="{{route('admin.warehouse')}}"><i class="fa fa-archive" aria-hidden="true"></i><span>Kho Hàng</span></a></li>
+      <li class="{{ Helper::check_active(['admin.warehouse.orderDetail']) }}"><a href="{{route('admin.orderDetails')}}"><i class="fa fa-archive" aria-hidden="true"></i><span>Thống Kê Đơn Hàng</span></a></li>
+      {{-- <li class="{{ Helper::check_active(['admin.statistic']) }}"><a href="{{ route('admin.statistic') }}"><i class="fa fa-line-chart" aria-hidden="true"></i> <span>Thống Kê Doanh Thu</span></a></li> --}}
+    </ul>
+    <!-- /.sidebar-menu -->
+  </section>
+  <!-- /.sidebar -->
+</aside>

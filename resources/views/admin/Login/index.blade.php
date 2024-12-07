@@ -57,7 +57,11 @@
                                         height="20">
                                 </a>
                             </div>
+<<<<<<< HEAD
                             <p class="mt-3 fs-15 fw-medium">Premium Admin & Dashboard</p>
+=======
+                            <p class="mt-3 fs-15 fw-medium">Admin & Dashboard</p>
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                         </div>
                     </div>
                 </div>
@@ -69,8 +73,13 @@
 
                             <div class="card-body p-4">
                                 <div class="text-center mt-2">
+<<<<<<< HEAD
                                     <h5 class="text-primary">Welcome Back !</h5>
                                     <p class="text-muted">Sign in to continue</p>
+=======
+                                    <h5 class="text-primary">Đăng Nhập</h5>
+                                  
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                                 </div>
                                 <div class="p-2 mt-4">
                                     <form action="{{ route('admin.Check_login') }}" method="POST">
@@ -79,6 +88,7 @@
                                             <label for="username" class="form-label">Email</label>
                                             <input type="text" class="form-control" id="username" name="email"
                                                 placeholder="Enter username">
+<<<<<<< HEAD
                                         </div>
                                         @if (
                                             $errors->has('email') &&
@@ -87,6 +97,17 @@
                                             <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}
                                             </div>
                                         @endif
+=======
+                                                @if (
+                                                    $errors->has('email') &&
+                                                        $errors->first('email') !==
+                                                            'Tài khoản của bạn chưa được xác minh email. Vui lòng kiểm tra email để xác minh tài khoản.')
+                                                    <div style="color: red; font-size: 12px;">{{ $errors->first('email') }}
+                                                    </div>
+                                                @endif
+                                        </div>
+                                       
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                                         <div class="mb-3">
 
                                             <label class="form-label" for="password-input">Mật khẩu</label>
@@ -97,6 +118,7 @@
                                                     class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
                                                     type="button" id="password-addon"><i
                                                         class="ri-eye-fill align-middle"></i></button>
+<<<<<<< HEAD
                                             </div>
                                         </div>
                                         @if ($errors->has('password'))
@@ -110,6 +132,23 @@
                                             <a href="auth-pass-reset-basic.html" class="text-muted">Quên mật khẩu?</a>
                                         </div>
                                     </form>
+=======
+                                                        @if ($errors->has('password'))
+                                                        <div style="color: red; font-size: 12px;">{{ $errors->first('password') }}
+                                                        </div>
+                                                    @endif
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="mt-4">
+                                            <button class="btn btn-success w-100" type="submit">Đăng nhập</button>
+                                        </div>
+                                       
+                                    </form>
+                                    <div class="float-end pt-2">
+                                        <a href="{{route('admin.forgotPass')}}" class="text-muted">Quên mật khẩu?</a>
+                                    </div>
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                                 </div>
                             </div>
                             <!-- end card body -->
@@ -123,18 +162,27 @@
             <!-- end container -->
         </div>
         <!-- end auth page content -->
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
         <!-- footer -->
         <footer class="footer">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-center">
+<<<<<<< HEAD
                             <p class="mb-0 text-muted">&copy;
                                 <script>
                                     document.write(new Date().getFullYear())
                                 </script> Velzon. Crafted with <i class="mdi mdi-heart text-danger"></i>
                                 by Themesbrand
+=======
+                            <p class="mb-0 text-muted">
+                        Tạo bởi <i class="mdi mdi-heart text-danger"></i> Pet Shop &copy; <script>document.write(new Date().getFullYear())</script>
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
                             </p>
                         </div>
                     </div>
@@ -144,7 +192,45 @@
         <!-- end Footer -->
     </div>
     <!-- end auth-page-wrapper -->
+<<<<<<< HEAD
 
+=======
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+      // Lấy thông báo từ session và kiểm tra xem có giá trị không
+      const successMessage = @json(session('success', '')); // Trả về chuỗi rỗng nếu không có giá trị
+      const errorMessage = @json(session('error', ''));
+  
+      if (successMessage) {
+          Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: successMessage,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'OK'
+          }).then(() => {
+              console.log('Thông báo thành công đã được hiển thị.');
+              // Thực hiện logic khác nếu cần thiết
+          });
+      }
+  
+      if (errorMessage) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Lỗi!',
+              text: errorMessage,
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Thử lại'
+          }).then(() => {
+              console.log('Thông báo lỗi đã được hiển thị.');
+              // Thực hiện thêm logic nếu cần thiết
+          });
+      }
+  });
+  
+  
+      </script>
+>>>>>>> 1a9bff7e643d48fb179836b504e2e50cad27a7bc
     <!-- JAVASCRIPT -->
     <script src="{{ asset('theme/admin/assets') }}/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('theme/admin/assets') }}/libs/simplebar/simplebar.min.js"></script>

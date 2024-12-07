@@ -17,6 +17,7 @@ return new class extends Migration
             // unique dữ liệu ko được phép trùng nhau
             $table->string('logo', 100);
             $table->string('slug', 100);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
