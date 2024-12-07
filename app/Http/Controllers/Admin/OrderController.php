@@ -76,6 +76,12 @@ class OrderController extends Controller
               case 'cancel':
                   $orderAction->status = OrderStatusEnum::CANCELLED;
                   break;
+              case 'returned':
+                  $orderAction->status = OrderStatusEnum::RETURNED;
+                  break;
+              case 'cancelReturn':
+                  $orderAction->status = OrderStatusEnum::CANCELLED_RETURNED;
+                  break;
               default:
                   return redirect()->back()->with('error', 'Lỗi');
           }
@@ -105,7 +111,18 @@ class OrderController extends Controller
       }
     ])->where('status', 3)->latest()->get();
 
-  return view('admin.order.processing',compact('orders','preOrders'));
+    $returnOrder = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone','return_reason' ,'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status','>', 8)->latest()->get();
+
+    // dd($returnOrder);
+
+  return view('admin.order.processing',compact('orders','preOrders','returnOrder'));
   }
   public function completed(){
     $deliveringOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
