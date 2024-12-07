@@ -76,13 +76,16 @@
                       <span class="label label-warning">Đã xác nhận</span>
                       @break
                     @case(3)
-                        <span class="label label-primary">Đang vận chuyển</span>
+                        <span class="label label-primary">Đang chuẩn bị</span>
                         @break
                     @case(4)
-                        <span class="label label-success">Đã giao hàng</span>
+                        <span class="label label-success">Đang giao hàng</span>
                         @break
-                    @case(5)
+                    @case(8)
                         <span class="label label-danger">Đã hủy</span>
+                        @break
+                    @case(6)
+                        <span class="label label-success">Đã nhận được hàng</span>
                         @break
                 @endswitch
             </li>

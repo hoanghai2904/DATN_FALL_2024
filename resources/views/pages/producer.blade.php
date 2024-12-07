@@ -27,66 +27,66 @@
             </div>
         </section>
 
-        <section class="section-filter">
-
-            <div class="section-content">
-                <form action="{{ route('producer_page', ['id' => $producer->id]) }}" method="GET" accept-charset="utf-8">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-                                    <select name='price'>
-                                        <option value='' {{ Request::input('price') == null ? 'selected' : '' }}>
-                                            Giá Sản Phẩm
-                                        </option>
-                                        <option value='asc' {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
-                                            Giá từ thấp tới cao
-                                        </option>
-                                        <option value='desc' {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
-                                            Giá từ cao tới thấp
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 col-sm-6 col-xs-6">
-                                    <select name='type'>
-                                        <option value='' {{ Request::input('type') == null ? 'selected' : '' }}>
-                                            Loại Sản Phẩm
-                                        </option>
-                                        <option value='promotion'
-                                            {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
-                                        <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
-                                            Sản phẩm đánh giá cao
-                                        </option>
-                                        <option value='in_stock'
-                                            {{ Request::input('stock') == 'in_stock' ? 'selected' : '' }}>Còn hàng</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                    <label for="price-range">Khoảng Giá</label>
-                                    <div id="price-range"></div>
-                                    <input type="hidden" id="price_min" name="price_min"
-                                        value="{{ Request::input('price_min') }}">
-                                    <input type="hidden" id="price_max" name="price_max"
-                                        value="{{ Request::input('price_max') }}">
-                                    <div class="price-range-values">
-                                        <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 btn-group-filter">
-                            <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
-                            <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
-                        </div>
-                    </div>
-                </form>
+    <section class="section-filter">
+      <div class="section-header">
+        <h2 class="section-title">Tìm Kiếm Và Sắp Xếp</h2>
+      </div>
+      <div class="section-content">
+        <form action="{{ route('producer_page', ['id' => $producer->id]) }}" method="GET" accept-charset="utf-8">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                  <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ Request::input('name') }}">
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                  <select name='price'>
+                    <option value='' {{ Request::input('price') == null ? 'selected' : '' }}>
+                      Giá Sản Phẩm
+                    </option>
+                    <option value='asc' {{ Request::input('price') == 'asc' ? 'selected' : '' }}>
+                      Giá từ thấp tới cao
+                    </option>
+                    <option value='desc' {{ Request::input('price') == 'desc' ? 'selected' : '' }}>
+                      Giá từ cao tới thấp
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                  <select name='type'>
+                    <option value='' {{ Request::input('type') == null ? 'selected' : '' }}>
+                      Loại Sản Phẩm
+                    </option>
+                    <option value='promotion' {{ Request::input('type') == 'promotion' ? 'selected' : '' }}>
+                      Sản phẩm khuyến mại
+                    </option>
+                    <option value='vote' {{ Request::input('type') == 'vote' ? 'selected' : '' }}>
+                      Sản phẩm đánh giá cao
+                    </option>
+                  </select>
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-right: 10px">
+                  {{-- <label for="price-range">Khoảng Giá</label> --}}
+                  <div id="price-range"></div>
+                  <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
+                  <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
+                  <div class="price-range-values">
+                    <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                
+              </div>
             </div>
-        </section>
+          </div>
+          <div class="btn-group-filter">
+            <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
+            <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
+          </div>
+        </form>
+      </div>
+    </section>
 
         <section class="section-products">
             <div class="section-header">
@@ -162,31 +162,35 @@
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('common/noUiSlider/dist/nouislider.min.css') }}">
-    <style>
-        .slide-advertise-inner {
-            background-repeat: no-repeat;
-            background-size: cover;
-            padding-top: 21.25%;
-        }
+<link rel="stylesheet" href="{{ asset('common/noUiSlider/dist/nouislider.min.css') }}">
+  <style>
+    .price-range-values span {
+  font-size: 14px; /* Điều chỉnh kích thước chữ nhỏ hơn */
+  color: #555; /* Màu chữ trung tính */
+  font-weight: normal; /* Giảm độ đậm nếu cần */
+}
 
-        #slide-advertise.owl-carousel .owl-item.active {
-            -webkit-animation-name: zoomIn;
-            animation-name: zoomIn;
-            -webkit-animation-duration: .6s;
-            animation-duration: .6s;
-        }
-
-        .price-range-values {
-            margin-top: 12px;
-        }
-
-        .btn-group-filter {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-        }
-    </style>
+    .slide-advertise-inner {
+      background-repeat: no-repeat;
+      background-size: cover;
+      padding-top: 21.25%;
+    }
+    #slide-advertise.owl-carousel .owl-item.active {
+      -webkit-animation-name: zoomIn;
+      animation-name: zoomIn;
+      -webkit-animation-duration: .6s;
+      animation-duration: .6s;
+    }
+    .price-range-values {
+      margin-top: 12px;
+    }
+    .btn-group-filter {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+  </style>
 @endsection
 
 @section('js')

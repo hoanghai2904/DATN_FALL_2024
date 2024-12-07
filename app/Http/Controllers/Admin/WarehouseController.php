@@ -24,7 +24,7 @@ class WarehouseController extends Controller
             ->leftJoin('order_details', 'product_details.id', '=', 'order_details.product_detail_id')
             ->leftJoin('orders', function ($query) {
                 $query->on('order_details.order_id', '=', 'orders.id')
-                    ->where('orders.status', OrderStatusEnum::DELIVERED);
+                    ->where('orders.status', OrderStatusEnum::COMPLETED);
             })
             ->select(
                 'products.name',
@@ -36,8 +36,8 @@ class WarehouseController extends Controller
                 'product_details.product_id',
                 'product_details.color',
                 'product_details.created_at',
-                DB::raw('SUM(CASE WHEN orders.status = ' . OrderStatusEnum::DELIVERED . ' THEN order_details.quantity ELSE 0 END) as orderDetailQuantity'),
-                DB::raw('product_details.quantity - SUM(CASE WHEN orders.status = ' . OrderStatusEnum::DELIVERED . ' THEN order_details.quantity ELSE 0 END) AS conlai'),
+                DB::raw('SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN order_details.quantity ELSE 0 END) as orderDetailQuantity'),
+                DB::raw('product_details.quantity - SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN order_details.quantity ELSE 0 END) AS conlai'),
                 'order_details.product_detail_id',
                 'orders.status'
             )
@@ -66,7 +66,7 @@ class WarehouseController extends Controller
             ->join('order_details', 'product_details.id', '=', 'order_details.product_detail_id')
             ->join('orders', function ($query) {
                 $query->on('order_details.order_id', '=', 'orders.id')
-                    ->where('orders.status', OrderStatusEnum::DELIVERED);
+                    ->where('orders.status', OrderStatusEnum::COMPLETED);
             })
             ->select(
                 'products.name',

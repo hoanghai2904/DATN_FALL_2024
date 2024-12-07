@@ -37,52 +37,52 @@ class ProductsController extends Controller
             $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
                 ->where('quantity', '>', 0)
                 ->orderBy('sale_price', 'ASC');
-        }]);
-
-        if ($request->has('name') && $request->input('name') != null) {
-            $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
-        }
-
-        if ($request->has('price') && $request->input('price') != null) {
-            $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))
-                ->where('quantity', '>', 0)
-                ->groupBy('product_id');
-
-            $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
-                $join->on('products.id', '=', 'min_price_query.product_id');
-            })->select('id', 'name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
-        } else {
-            $query_products->select('id', 'name', 'image', 'rate')->latest();
-        }
-
-        if ($request->has('price_min') && $request->input('price_min') != null) {
-            $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
-                $query->where('sale_price', '>=', $request->input('price_min'));
-            });
-        }
-
-        if ($request->has('price_max') && $request->input('price_max') != null) {
-            $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
-                $query->where('sale_price', '<=', $request->input('price_max'));
-            });
-        }
-
-        if ($request->has('type') && $request->input('type') == 'vote') {
-            $query_products->orderBy('rate', 'desc');
-        }
-
-        $products = $query_products->paginate(15);
-
-        $advertises = Advertise::where([
-            ['start_date', '<=', date('Y-m-d')],
-            ['end_date', '>=', date('Y-m-d')],
-            ['at_home_page', '=', false]
-        ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
-
-        $producers = Producer::select('id', 'name')->get();
-
-        return view('pages.products')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products]]);
-    }
+      }]);
+  
+      if ($request->has('name') && $request->input('name') != null) {
+          $query_products->where('name', 'LIKE', '%' . $request->input('name') . '%');
+      }
+  
+      if ($request->has('price') && $request->input('price') != null) {
+          $min_price_query = ProductDetail::select('product_id', DB::raw('min(sale_price) as min_sale_price'))
+                                          ->where('quantity', '>', 0)
+                                          ->groupBy('product_id');
+  
+          $query_products->joinSub($min_price_query, 'min_price_query', function ($join) {
+              $join->on('products.id', '=', 'min_price_query.product_id');
+          })->select('id', 'name', 'image', 'rate')->orderBy('min_sale_price', $request->input('price'));
+      } else {
+          $query_products->select('id', 'name', 'image', 'rate')->latest();
+      }
+  
+      if ($request->has('price_min') && $request->input('price_min') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '>=', $request->input('price_min'));
+          });
+      }
+  
+      if ($request->has('price_max') && $request->input('price_max') != null) {
+          $query_products->whereHas('product_detail', function (Builder $query) use ($request) {
+              $query->where('sale_price', '<=', $request->input('price_max'));
+          });
+      }
+  
+      if ($request->has('type') && $request->input('type') == 'vote') {
+          $query_products->orderBy('rate', 'desc');
+      }
+  
+      $products = $query_products->paginate(16);
+  
+      $advertises = Advertise::where([
+          ['start_date', '<=', date('Y-m-d')],
+          ['end_date', '>=', date('Y-m-d')],
+          ['at_home_page', '=', false]
+      ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+  
+      $producers = Producer::select('id', 'name')->get();
+  
+      return view('pages.products')->with(['data' => ['advertises' => $advertises, 'producers' => $producers, 'products' => $products]]);
+  }
 
     public function getProducer(Request $request, $id)
     {
@@ -233,7 +233,7 @@ class ProductsController extends Controller
 
       $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
                         $query->where('user_id', $user->id)
-                              ->where('status', OrderStatusEnum::DELIVERED)
+                              ->where('status', OrderStatusEnum::COMPLETED)
                               ->where('is_paid', true)
                               ->where('is_received', true);
                     }) ->whereHas('product_detail', function ($query) use ($product) {

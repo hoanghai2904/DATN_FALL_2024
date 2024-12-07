@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $products = Product::all();
-        return view('Client.main', compact('products'));
+        return view('Client.main',compact('products'));
     }
 }
+
