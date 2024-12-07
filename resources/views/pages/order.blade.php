@@ -57,7 +57,7 @@
             <li class="list-group-item"><span>Địa Chỉ:</span> {{ $data['order']->address }}</li>
             <li class="list-group-item"><span>Phương Thức Thanh Toán:</span> {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
             <li class="list-group-item">
-              Trạng thái thanh toán: {{ $data['order']->is_paid ? 'Đã thanh toán' : "Chưa thanh toán" }}
+              <span>Trạng thái thanh toán:</span> {{ $data['order']->is_paid ? 'Đã thanh toán' : "Chưa thanh toán" }}
               @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1)
                   <form id="payment-form-{{ $data['order']->id }}" action="{{ route('payment_now', $data['order']->id) }}" method="POST" style="display: none;">
                       @csrf
@@ -76,13 +76,16 @@
                       <span class="label label-warning">Đã xác nhận</span>
                       @break
                     @case(3)
-                        <span class="label label-primary">Đang vận chuyển</span>
+                        <span class="label label-primary">Đang chuẩn bị</span>
                         @break
                     @case(4)
-                        <span class="label label-success">Đã giao hàng</span>
+                        <span class="label label-success">Đang giao hàng</span>
                         @break
-                    @case(5)
+                    @case(8)
                         <span class="label label-danger">Đã hủy</span>
+                        @break
+                    @case(6)
+                        <span class="label label-success">Đã nhận được hàng</span>
                         @break
                 @endswitch
             </li>
