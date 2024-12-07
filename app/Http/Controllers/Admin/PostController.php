@@ -15,7 +15,7 @@ class PostController extends Controller
 {
   public function index(Request $request)
   {
-    $posts = Post::select('id', 'title', 'image','status', 'created_at')->latest()->get();
+    $posts = Post::select('id', 'title', 'image', 'created_at')->latest()->get();
     return view('admin.post.index')->with('posts', $posts);
   }
   public function new(Request $request)

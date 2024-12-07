@@ -91,7 +91,6 @@
                 <th data-width="10px">ID</th>
                 <th data-orderable="false" data-width="100px">Hình Ảnh</th>
                 <th data-orderable="false">Tiêu Đề</th>
-                <th scope="col">Danh mục</th>
                 <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
               </tr>
