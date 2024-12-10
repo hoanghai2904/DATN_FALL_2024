@@ -35,11 +35,7 @@ class CouponController extends Controller
         if (isset($validated['min_order_amount'])) {
             $validated['min_order_amount'] = str_replace('.', '', $validated['min_order_amount']);
         }
-        if ($validated['start_end_date'] != null) {
-            $dates = explode(' - ', $validated['start_end_date']);
-            $start_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[0])->format('Y-m-d');
-            $end_date = \Carbon\Carbon::createFromFormat('d/m/Y', $dates[1])->format('Y-m-d');
-            unset($validated['start_end_date']);
+        
         } else {
             $start_date = null;
             $end_date = null;
@@ -69,7 +65,7 @@ class CouponController extends Controller
             return response()->json([
                 'type' => 'error',
                 'title' => 'Thất Bại',
-                'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
+                'content' => 'Mã đã được sử dụng'
             ]);
         }
         $coupon->delete();
