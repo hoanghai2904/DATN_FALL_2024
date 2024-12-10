@@ -21,7 +21,10 @@ class CheckPendingOrder
             $orderId = session('pending_order_id');
             $order = Order::find($orderId);
 
-           
+            if ($order) {
+                $order->order_details()->delete();
+                $order->delete();
+            }
 
             session()->forget('pending_order_id');
         }
