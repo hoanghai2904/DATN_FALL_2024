@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Log;
 
 class WarehouseController extends Controller
 {
-    public function index(){
-      $product_details = DB::table('product_details')
+    public function index()
+    {
+        $product_details = DB::table('product_details')
             ->join('products', 'product_details.product_id', '=', 'products.id')
             ->leftJoin('order_details', 'product_details.id', '=', 'order_details.product_detail_id')
             ->leftJoin('orders', function ($query) {
@@ -55,12 +56,12 @@ class WarehouseController extends Controller
                 'product_details.created_at'
             )
             ->get();
-        
-        return view('admin.warehouse.index')->with('product_details', $product_details);
 
+        return view('admin.warehouse.index')->with('product_details', $product_details);
     }
 
-    public function orderDetails(Request $request){
+    public function orderDetails(Request $request)
+    {
         $product_details = DB::table('product_details')
             ->join('products', 'product_details.product_id', '=', 'products.id')
             ->join('order_details', 'product_details.id', '=', 'order_details.product_detail_id')
@@ -100,7 +101,7 @@ class WarehouseController extends Controller
         if ($request['date_from']) {
             $product_details->whereDate('order_details.created_at', '<=', date($request['date_from']));
         }
-                                   
+
         return view('admin.warehouse.orderDetail')->with('product_details', $product_details);
     }
 }

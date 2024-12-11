@@ -126,9 +126,11 @@
                                                         @case(9)
                                                             <p class="label label-primary">Chờ xác nhận hoàn hàng</p>
                                                         @break
+
                                                         @case(10)
                                                             <p class="label label-success">Xác nhận hoàn hàng</p>
                                                         @break
+
                                                         @case(11)
                                                             <p class="label label-danger">Đơn hoàn bị từ chối</p>
                                                         @break
@@ -392,14 +394,14 @@
                 if (result.value) {
                     const returnReason = document.getElementById('returnReasonInput').value.trim();
                     console.log('Return reason:', returnReason); // Kiểm tra lý do đã nhập
-                    
+
                     if (!returnReason) {
                         Swal.fire(
                             'Lỗi!',
                             'Vui lòng nhập lý do hoàn hàng!',
                             'error'
                         );
-                        return; 
+                        return;
                     }
                     $.ajax({
                         url: "{{ route('returnOrder', ['id' => ':id']) }}".replace(':id', id),
