@@ -33,7 +33,7 @@ class HomePage extends Controller
               ->orderBy('sale_price', 'ASC');
     }])
     ->latest()
-    ->paginate(10);
+    ->paginate(12);
 
     $favorite_products = Product::select('id','name', 'image', 'rate')
     ->whereHas('product_detail', function (Builder $query) {

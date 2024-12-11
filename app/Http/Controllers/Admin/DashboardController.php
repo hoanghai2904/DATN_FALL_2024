@@ -33,7 +33,7 @@ class DashboardController extends Controller
       $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
       ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
       ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::DELIVERED);
+        $query->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'product_detail' => function ($query) {
           $query->select('id', 'import_price');
@@ -57,13 +57,13 @@ class DashboardController extends Controller
     $data['count_products'] = $count_products;
     $data['total_revenue'] = $total_revenue;
     $data['total_profit'] = $total_profit;
-    $data['count_orders'] = Order::where('status', '=', OrderStatusEnum::DELIVERED)
+    $data['count_orders'] = Order::where('status', '=', OrderStatusEnum::COMPLETED)
       ->whereYear('created_at', $carbon->year)
       ->whereMonth('created_at', $carbon->month)->count();
 
     $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')->whereYear('created_at', $carbon->year)->whereMonth('created_at', $carbon->month)
       ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::DELIVERED);
+        $query->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'order' => function ($query) {
           $query->select('id', 'order_code');
@@ -139,7 +139,7 @@ class DashboardController extends Controller
     $count['product'] = Product::whereHas('product_details', function (Builder $query) {
       $query->where('quantity', '>', 0);
     })->count();
-    $count['order'] = Order::where('status', OrderStatusEnum::DELIVERED)->count();
+    $count['order'] = Order::where('status', OrderStatusEnum::COMPLETED)->count();
     $data = $this->dashboardData();
     $orderStatuses = $this->orderGroupByStatus();
     $orders = $this->lastestOrder();

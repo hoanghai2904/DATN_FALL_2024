@@ -17,9 +17,9 @@ class OrderController extends Controller
           $query->select('id', 'name');
         },
         'payment_method' => function ($query) {
-          $query->select('id', 'name');
+          $query->select('id', 'name'); 
         }
-      ])->latest()->get();
+      ])->where('status', 1)->latest()->get();
     return view('admin.order.index')->with('orders', $orders);
   }
 
@@ -50,25 +50,108 @@ class OrderController extends Controller
     return view('admin.order.show')->with('order', $order);
   }
 
-  public function actionTransaction($action,$id){
-    $orderAction = Order::find($id);
-    if($orderAction){
-      switch ($action) {
-        case 'confirmed':
-          $orderAction->status= OrderStatusEnum::CONFIRMED;
-          break;
-        case 'delivering':
-          $orderAction->status= OrderStatusEnum::DELIVERING;
-          break;
-        case 'delivered':
-          $orderAction->status= OrderStatusEnum::DELIVERED;
-          break;
-        case 'cancel':
-          $orderAction->status= OrderStatusEnum::CANCELLED;
-          break;
+  public function actionTransaction($action, $id)
+  {
+      $orderAction = Order::find($id);
+      if ($orderAction) {
+          switch ($action) {
+              case 'confirmed':
+                  $orderAction->status = OrderStatusEnum::CONFIRMED;
+                  break;
+              case 'preparing':
+                  $orderAction->status = OrderStatusEnum::PREPARING;
+                  break;
+              case 'delivering':
+                  $orderAction->status = OrderStatusEnum::DELIVERING;
+                  break;
+              case 'delivered':
+                  $orderAction->status = OrderStatusEnum::DELIVERED;
+                  break;
+              case 'completed':
+                  $orderAction->status = OrderStatusEnum::COMPLETED;
+                  break;
+              case 'failed':
+                  $orderAction->status = OrderStatusEnum::FAILED;
+                  break;
+              case 'cancel':
+                  $orderAction->status = OrderStatusEnum::CANCELLED;
+                  break;
+              default:
+                  return redirect()->back()->with('error', 'Lỗi');
+          }
+          // Lưu vào CSDL
+          $orderAction->save();
       }
-      $orderAction->save();
-    }
-    return redirect()->back();
+  
+      return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');
+  }
+
+  public function processing(){
+    $orders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 2)->latest()->get();
+
+    $preOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 3)->latest()->get();
+
+  return view('admin.order.processing',compact('orders','preOrders'));
+  }
+  public function completed(){
+    $deliveringOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 4)->latest()->get();
+
+    $deliveredOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 5)->latest()->get();
+    $completedOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 6)->latest()->get();
+
+    $failedOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 7)->latest()->get();
+
+    $cancelledOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status', 8)->latest()->get();
+
+  return view('admin.order.completed',compact('deliveringOrders','deliveredOrders','completedOrders','failedOrders','cancelledOrders'));
   }
 }

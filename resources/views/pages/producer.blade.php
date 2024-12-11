@@ -32,7 +32,7 @@
       <div class="section-content">
         <form action="{{ route('producer_page', ['id' => $producer->id]) }}" method="GET" accept-charset="utf-8">
           <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
               <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-6">
                   <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ Request::input('name') }}">
@@ -63,10 +63,8 @@
                     </option>
                   </select>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                  <label for="price-range">Khoảng Giá</label>
+                <div class="col-md-2 col-sm-6 col-xs-6" style="margin-right: 10px">
+                  {{-- <label for="price-range">Khoảng Giá</label> --}}
                   <div id="price-range"></div>
                   <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
                   <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
@@ -74,6 +72,9 @@
                     <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
                   </div>
                 </div>
+              </div>
+              <div class="row">
+                
               </div>
             </div>
           </div>
@@ -147,6 +148,12 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('common/noUiSlider/dist/nouislider.min.css') }}">
   <style>
+    .price-range-values span {
+  font-size: 14px; /* Điều chỉnh kích thước chữ nhỏ hơn */
+  color: #555; /* Màu chữ trung tính */
+  font-weight: normal; /* Giảm độ đậm nếu cần */
+}
+
     .slide-advertise-inner {
       background-repeat: no-repeat;
       background-size: cover;
@@ -165,6 +172,7 @@
       display: flex;
       justify-content: center;
       gap: 12px;
+      justify-content: flex-start;
     }
   </style>
 @endsection

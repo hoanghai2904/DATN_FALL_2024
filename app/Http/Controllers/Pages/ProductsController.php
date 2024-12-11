@@ -70,7 +70,7 @@ class ProductsController extends Controller
           $query_products->orderBy('rate', 'desc');
       }
   
-      $products = $query_products->paginate(15);
+      $products = $query_products->paginate(16);
   
       $advertises = Advertise::where([
           ['start_date', '<=', date('Y-m-d')],
@@ -227,11 +227,15 @@ class ProductsController extends Controller
           ->exists();
 
       $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
-                          $query->where('user_id', $user->id)
-                                ->where('status', OrderStatusEnum::DELIVERED);
-                      })
-                      ->where('product_detail_id', $product->id)
-                      ->exists();
+                        $query->where('user_id', $user->id)
+                              ->where('status', OrderStatusEnum::COMPLETED)
+                              ->where('is_paid', true)
+                              ->where('is_received', true);
+                    }) ->whereHas('product_detail', function ($query) use ($product) {
+                        $query->where('product_id', $product->id);
+                    })
+                    ->exists();
+                   
       // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
         $canComment = $hasPurchased && !$hasCommented;
     }
