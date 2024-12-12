@@ -35,7 +35,7 @@
                                 <input type="url" class="form-control" placeholder="Nhập URL của banner" name="url" id="url" value="{{ $banner->url }}" required>
                                 @error('url')
                                 <p class="text-danger">{{ $message }}</p>
-                                <p class="text-danger">{{ $message }}</p>
+                           
                             @enderror
                             </div>
                         </div>

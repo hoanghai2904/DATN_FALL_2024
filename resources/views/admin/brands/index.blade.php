@@ -36,7 +36,7 @@
                 {{ session('message') }}
             </div>
             
-        @endif
+        @endif     <p class="text-danger">{{ $message }}</p>
             <div class="card-body">
                 {{-- <p class="text-muted mb-4">Use .<code>table-striped-columns</code> to add zebra-striping to any table column.</p> --}}
                 <div class="row mb-5 ">
