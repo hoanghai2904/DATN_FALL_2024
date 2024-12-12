@@ -8,7 +8,7 @@
 <div class="container">
     <div class="p-4" style="min-height: 800px;">
         <h3 class="text-center">Chi Tiết Banner</h3>
-
+        <h3 class="text-center">Chi Tiết Banner</h3>
         <p>
             <strong>Ảnh Banner:</strong>
             <br>
