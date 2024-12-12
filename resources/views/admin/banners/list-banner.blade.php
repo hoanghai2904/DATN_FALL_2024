@@ -148,6 +148,7 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title mb-0">Effect Coverflow Swiper</h4>
+                <h4 class="card-title mb-0">Effect Coverflow Swiper</h4>
             </div><!-- end card header -->
             <div class="card-body">
                 <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
