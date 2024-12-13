@@ -257,7 +257,7 @@
                                 <th style="text-align: center; vertical-align: middle;">STT</th>
                                 <th style="vertical-align: middle;">Mã Sản Phẩm</th>
                                 <th style="vertical-align: middle;">Tên Sản Phẩm</th>
-                                <th style="vertical-align: middle;">Mầu Sắc</th>
+                                <th style="vertical-align: middle;">Loại</th>
                                 <th style="vertical-align: middle;">Đơn Hàng</th>
                                 <th style="vertical-align: middle;">Ngày Xuất</th>
                                 <th style="text-align: center; vertical-align: middle;">Số Lượng</th>
@@ -271,8 +271,8 @@
                               <?php $price = 0; ?>
                               <?php $profit = 0; ?>
                               @foreach($data['order_details'] as $key => $order_detail)
-                                <?php $price = $price + $order_detail->price * $order_detail->quantity; ?>
-                                <?php $profit = $profit + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price); ?>
+                                <?php $price = $price + $order_detail->price * $order_detail->quantity- $order_detail->order->discount; ?>
+                                <?php $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount); ?>
                                 <tr>
                                   <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}</td>
                                   <td style="vertical-align: middle;">{{ '#'.$order_detail->product_detail->product->sku_code }}</td>
@@ -283,8 +283,8 @@
                                   <td style="text-align: center; vertical-align: middle;">{{ $order_detail->quantity }}</td>
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price),0,',','.') }} VNĐ</span></td>
+                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity - $order_detail->order->discount,0,',','.') }} VNĐ</span></td>
+                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
                                 </tr>
                               @endforeach
                               <tr>

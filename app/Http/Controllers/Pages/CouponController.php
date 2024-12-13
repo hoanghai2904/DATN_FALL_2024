@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advertise;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,11 @@ class CouponController extends Controller
 {
     public function index()
     {
+        $advertises = Advertise::where([
+            ['start_date', '<=', date('Y-m-d')],
+            ['end_date', '>=', date('Y-m-d')],
+            ['at_home_page', '=', false]
+          ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
         $coupons = Coupon::all();
         $savedCoupons = [];
 
@@ -21,7 +27,8 @@ class CouponController extends Controller
 
         return view('pages.coupon', [
             'coupons' => $coupons,
-            'savedCoupons' => $savedCoupons
+            'savedCoupons' => $savedCoupons,
+            'advertises' => $advertises
         ]);
     }
     public function getUserCoupons()

@@ -69,11 +69,11 @@
               <span class="text-red">{{ $message }}</span>
             @enderror
           </div>
-          <div class="col-md-7">
+          <div class="form-group">
             <!-- Date range -->
             <div class="form-group">
               <label for="start_end_date">Ngày Bắt Đầu - Ngày Kết Thúc</label>
-              <div class="input-group">
+              <div class="input-group" style="width: 50%">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
@@ -84,13 +84,14 @@
               @enderror
               <!-- /.input group -->
             </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
+              <a href="{{ route('admin.coupon.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+            </div>
             <!-- /.form group -->
           </div>
         </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
-          <a href="{{ route('admin.coupon.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
-        </div>
+       
       </div>
     </div>
   </div>

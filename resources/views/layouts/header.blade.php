@@ -93,6 +93,8 @@
                     @else
                     <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>
                     <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('show_user') }}"><i class="fas fa-user-cog"></i> Quản Lý Tài Khoản</a></li>
+                    <li class="{{ Helper::check_active(['edit_Password']) }}"><a href="{{ route('edit_Password') }}"><i class="fas fa-user-cog"></i> Đổi mật khẩu</a></li>
+                    
                     @endif
                     <li><a id="logout" action="#"><i class="fas fa-power-off"></i> {{ __('Đăng Xuất') }}</a></li>
                   </ul>
