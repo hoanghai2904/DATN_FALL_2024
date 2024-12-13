@@ -17,11 +17,12 @@
         <p>
             <strong>URL:</strong> 
             <a href="{{ $banner->url }}" target="_blank">Đường Dẫn Banner</a>
+            <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
             {{-- <a href="{{ $banner->url }}" target="_blank">{{ $banner->url }}</a> --}}
         </p>
 
         <p>
-            <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
+
             <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
         </p>
         <div class="text-center">
