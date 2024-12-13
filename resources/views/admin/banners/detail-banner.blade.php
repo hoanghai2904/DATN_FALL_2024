@@ -22,6 +22,7 @@
 
         <p>
             <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
+            <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
         </p>
         <div class="text-center">
             <a href="{{ route('admin.banners.listBanner') }}" class="btn btn-info mt-3">Quay lại</a>
