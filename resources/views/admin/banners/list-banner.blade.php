@@ -151,6 +151,7 @@
             </div><!-- end card header -->
             <div class="card-body">
                 <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
+                <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
     
                 <!-- Swiper -->
                 <div class="swiper effect-coverflow-swiper rounded pb-5">
