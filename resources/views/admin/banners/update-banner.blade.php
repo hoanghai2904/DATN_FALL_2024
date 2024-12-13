@@ -32,6 +32,7 @@
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label" for="url">URL</label>
+                                <label class="form-label" for="url">URL</label>
                                 <input type="url" class="form-control" placeholder="Nhập URL của banner" name="url" id="url" value="{{ $banner->url }}" required>
                                 @error('url')
                                 <p class="text-danger">{{ $message }}</p>
