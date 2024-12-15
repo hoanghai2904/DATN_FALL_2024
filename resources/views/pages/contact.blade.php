@@ -90,17 +90,29 @@
       background-size: cover;
       padding-top: 21.25%;
     }
+
     #slide-advertise.owl-carousel .owl-item.active {
-      -webkit-animation-name: zoomIn;
-      animation-name: zoomIn;
-      -webkit-animation-duration: .6s;
-      animation-duration: .6s;
+      animation: zoomIn 0.6s; /* Gộp các khai báo thành một dòng */
     }
-    .text-red {
-      color: red;
+
+    .text-danger {
+      color: red; /* Đồng bộ với class lỗi trong JavaScript */
+    }
+
+    /* Animation Keyframes */
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
   </style>
 @endsection
+
 
 @section('js')
 <script src="{{ asset('AdminLTE/bower_components/jquery-validate/jquery.validate.js') }}"></script>
