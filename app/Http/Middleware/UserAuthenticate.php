@@ -23,7 +23,7 @@ class UserAuthenticate
                 'title' => 'Từ chối truy cập!',
                 'content' => 'Bạn không có quyền truy cập. Hãy đăng nhập để truy cập trang này.'
             ]]);
-        } else if(Auth::user()->admin) {
+        } else if(Auth::user()->Role) {
             return redirect()->route('admin.dashboard');
         } else {
             return $next($request);

@@ -14,7 +14,7 @@ class OrderController extends Controller
 {
   public function index(Request $request)
   {
-    if(Auth::check() && Auth::user()->admin == 0) {
+    if(Auth::check() && Auth::user()->Role == 0) {
       $advertises = Advertise::where([
         ['start_date', '<=', date('Y-m-d')],
         ['end_date', '>=', date('Y-m-d')],
@@ -55,7 +55,7 @@ class OrderController extends Controller
 
   public function show($id)
   {
-    if(Auth::check() && Auth::user()->admin == 0) {
+    if(Auth::check() && Auth::user()->Role == 0) {
       $advertises = Advertise::where([
         ['start_date', '<=', date('Y-m-d')],
         ['end_date', '>=', date('Y-m-d')],
@@ -113,7 +113,7 @@ class OrderController extends Controller
 
   public function cancelOrder($id)
   {
-    if(Auth::check() && Auth::user()->admin == 0) {
+    if(Auth::check() && Auth::user()->Role == 0) {
       $order = Order::where('id', $id)->first();
       if(!$order) abort(404);
 
@@ -150,7 +150,7 @@ class OrderController extends Controller
 
   public function reciveOrder($id)
   {
-    if(Auth::check() && Auth::user()->admin == 0) {
+    if(Auth::check() && Auth::user()->Role == 0) {
       $order = Order::where('id', $id)->first();
       if(!$order) abort(404);
 

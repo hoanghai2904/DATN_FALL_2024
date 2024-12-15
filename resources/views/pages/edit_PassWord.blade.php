@@ -10,7 +10,7 @@
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
         <li class="breadcrumb-item"><a href="{{ route('show_user') }}">Tài Khoản</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Thay Đổi Mật KhẩuKhẩu</li>
+        <li class="breadcrumb-item active" aria-current="page">Thay Đổi Mật Khẩu</li>
       </ol>
     </nav>
   </section>
@@ -28,7 +28,7 @@
 
     <section class="section-user">
       <div class="section-header">
-        <h2 class="section-title">Đổi Mật KhẩuKhẩu</h2>
+        <h2 class="section-title">Đổi Mật Khẩu</h2>
       </div>
       <div class="section-content">
         <div class="row">

@@ -137,7 +137,7 @@ class DashboardController extends Controller
   }
   public function index() {
 
-    $count['user'] = User::where([['active', true], ['admin', false]])->count();
+    $count['user'] = User::where([['active', true], ['Role', false]])->count();
     $count['post'] = Post::count();
     $count['product'] = Product::whereHas('product_details', function (Builder $query) {
       $query->where('quantity', '>', 0);

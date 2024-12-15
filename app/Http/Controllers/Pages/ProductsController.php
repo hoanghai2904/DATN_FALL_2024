@@ -215,7 +215,7 @@ class ProductsController extends Controller
     }])->latest()->limit(3)->get();
 
     $product_votes = ProductVote::whereHas('user', function (Builder $query) {
-      $query->where([['active', true], ['admin', false]]);
+      $query->where([['active', true], ['Role', false]]);
     })->where('product_id', $id)->with(['user' => function($query) {
       $query->select('id', 'name', 'avatar_image');
     }])->latest()->get();
