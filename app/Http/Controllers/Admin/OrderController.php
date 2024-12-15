@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatusEnum;
+use App\Mail\OrderStatusChanged;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -57,18 +60,21 @@ class OrderController extends Controller
           switch ($action) {
               case 'confirmed':
                   $orderAction->status = OrderStatusEnum::CONFIRMED;
+                  $status = 'Đã xác nhận';
                   break;
               case 'preparing':
                   $orderAction->status = OrderStatusEnum::PREPARING;
                   break;
               case 'delivering':
                   $orderAction->status = OrderStatusEnum::DELIVERING;
+                  $status = 'Đang giao';
                   break;
               case 'delivered':
                   $orderAction->status = OrderStatusEnum::DELIVERED;
                   break;
               case 'completed':
                   $orderAction->status = OrderStatusEnum::COMPLETED;
+                  $status = 'Hoàn thành';
                   break;
               case 'failed':
                   $orderAction->status = OrderStatusEnum::FAILED;
@@ -87,6 +93,17 @@ class OrderController extends Controller
           }
           // Lưu vào CSDL
           $orderAction->save();
+          if ($orderAction->user && in_array($action, ['confirmed', 'delivering', 'completed'])) {
+            try {
+                // Gửi email cho người dùng
+                Mail::send(new OrderStatusChanged($orderAction, $status));
+                Log::info("Email sent to user: " . $orderAction->user->email);
+            } catch (\Exception $e) {
+                Log::error("Email sending failed: " . $e->getMessage());
+            }
+        } else {
+            Log::error('User not found for Order ID: ' . $orderAction->id);
+        }
       }
   
       return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');

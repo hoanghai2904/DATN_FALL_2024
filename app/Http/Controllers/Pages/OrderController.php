@@ -9,9 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Order;
 use App\Models\Advertise;
+use App\Mail\OrderStatusChanged;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
+  private function sendStatusChangeEmail(Order $order, $newStatus)
+    {
+        $user = $order->user;
+        Mail::to($user->email)->send(new OrderStatusChanged($order, $newStatus));
+    }
   public function index(Request $request)
   {
     if (Auth::check() && Auth::user()->admin == 0) {
@@ -143,6 +150,7 @@ class OrderController extends Controller
         if ($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::CONFIRMED || $order->status == OrderStatusEnum::PREPARING || $order->status == OrderStatusEnum::FAILED) {
           $order->status = OrderStatusEnum::CANCELLED;
           $order->save();
+          $this->sendStatusChangeEmail($order, OrderStatusEnum::CANCELLED);
           return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
         } else {
           return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
