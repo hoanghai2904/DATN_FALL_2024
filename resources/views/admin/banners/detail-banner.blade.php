@@ -21,6 +21,7 @@
         </p>
 
         <p>
+
             <strong>Trạng thái:</strong> {{ $banner->status ? 'Đang hoạt động' : 'Không hoạt động' }}
         </p>
         <div class="text-center">

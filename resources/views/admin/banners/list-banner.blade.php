@@ -151,7 +151,6 @@
             </div><!-- end card header -->
             <div class="card-body">
                 <p class="text-muted">Danh sách các banner được hiển thị với hiệu ứng coverflow.</p>
-    
                 <!-- Swiper -->
                 <div class="swiper effect-coverflow-swiper rounded pb-5">
                     <div class="swiper-wrapper">
@@ -159,7 +158,6 @@
                         <div class="swiper-slide" id="bannerSlide{{ $banner->id }}" data-status="{{ $banner->status }}">
                             <img src="{{ asset('storage/' . $banner->banner) }}" alt="Banner {{ $banner->id }}" class="img-fluid" />
                         </div>
-                        
                     @endforeach
                     
                     </div>
