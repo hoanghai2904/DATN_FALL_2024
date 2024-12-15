@@ -105,80 +105,73 @@
 @section('js')
 <script src="{{ asset('AdminLTE/bower_components/jquery-validate/jquery.validate.js') }}"></script>
 <script>
- $(document).ready(function() {
+  $(document).ready(function(){
 
-// Initialize Owl Carousel
-$("#slide-advertise").owlCarousel({
-  items: 2,
-  autoplay: true,
-  loop: true,
-  margin: 10,
-  autoplayHoverPause: true,
-  nav: true,
-  dots: false,
-  responsive: {
-    0: {
-      items: 1
-    },
-    992: {
+    $("#slide-advertise").owlCarousel({
       items: 2,
-      animateOut: 'zoomInRight',
-      animateIn: 'zoomOutLeft'
-    }
-  },
-  navText: [
-    '<i class="fas fa-angle-left"></i>', 
-    '<i class="fas fa-angle-right"></i>'
-  ]
-});
+      autoplay: true,
+      loop: true,
+      margin: 10,
+      autoplayHoverPause: true,
+      nav: true,
+      dots: false,
+      responsive:{
+        0:{
+          items: 1,
+        },
+        992:{
+          items: 2,
+          animateOut: 'zoomInRight',
+          animateIn: 'zoomOutLeft',
+        }
+      },
+      navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+    });
 
-// Initialize jQuery Validation for Contact Form
-$('#contact-form').validate({
-  rules: {
-    name: {
-      required: true,
-      minlength: 2
-    },
-    email: {
-      required: true,
-      email: true
-    },
-    message: {
-      required: true,
-      minlength: 10
-    }
-  },
-  messages: {
-    name: {
-      required: "Vui lòng nhập tên của bạn",
-      minlength: "Tên phải có ít nhất 2 ký tự"
-    },
-    email: {
-      required: "Vui lòng nhập địa chỉ email",
-      email: "Vui lòng nhập địa chỉ email hợp lệ"
-    },
-    message: {
-      required: "Vui lòng nhập nội dung",
-      minlength: "Nội dung phải có ít nhất 10 ký tự"
-    }
-  },
-  errorPlacement: function(error, element) {
-    error.addClass('text-danger'); // Thêm class phù hợp để hiển thị lỗi
-    error.insertAfter(element);
-  },
-  submitHandler: function(form) {
-    var submitButton = $('#submit-button');
-
-    // Disable button and show spinner
-    submitButton.prop('disabled', true);
-    submitButton.html('<span class="spinner-border spinner-border-sm"></span> Đang gửi...');
-
-    // Submit the form
-    form.submit();
-  }
-});
-
-});
-
+    $('#contact-form').validate({
+      rules: {
+        name: {
+          required: true,
+          minlength: 2
+        },
+        email: {
+          required: true,
+          email: true
+        },
+        message: {
+          required: true,
+          minlength: 10
+        }
+      },
+      messages: {
+        name: {
+          required: "Vui lòng nhập tên của bạn",
+          minlength: "Tên phải có ít nhất 2 ký tự"
+        },
+        email: {
+          required: "Vui lòng nhập địa chỉ email",
+          email: "Vui lòng nhập địa chỉ email hợp lệ"
+        },
+        message: {
+          required: "Vui lòng nhập nội dung",
+          minlength: "Nội dung phải có ít nhất 10 ký tự"
+        }
+      },
+      errorPlacement: function(error, element) {
+        error.addClass('text-red');
+        error.insertAfter(element);
+      },
+      submitHandler: function(form) {
+        var submitButton = $('#submit-button');
+        submitButton.prop('disabled', true);
+        submitButton.find('.spinner-border').removeClass('d-none');
+        submitButton.contents().filter(function() {
+          return this.nodeType === 3;
+        }).remove();
+        submitButton.append(' Đang gửi...');
+        form.submit();
+      }
+    });
+  });
 </script>
 @endsection
