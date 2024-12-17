@@ -40,7 +40,9 @@
                   <div class="title-post"><h3>{{ $data['post']->title }}</h3></div>
                   <div class="desc-post">
                     <span><i class="fas fa-user"></i> Admin</span>
-                    <span><i class="fas fa-clock"></i> {{ date_format($data['post']->created_at, 'd/m/Y') }}</span>
+                    <span><i class="fas fa-clock"></i> 
+                      {{ \Carbon\Carbon::parse($data['post']->created_at)->locale('vi_VN')->isoFormat('dddd-DD-Y') }}
+                  </span>                  
                   </div>
                 </div>
               </div>

@@ -1,17 +1,33 @@
 @extends('admin.layouts.master')
+@section('title', 'Tạo mới mã giảm giá')
+@section('embed-css')
 
-@section('title')
-    {{$title}}
 @endsection
 
+@section('breadcrumb')
+<ol class="breadcrumb">
+  <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
+  <li><a href="{{ route('admin.vouchers.index') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> Quản Lý Voucher</a></li>
+  <li class="active">Tạo Voucher Mới</li>
+</ol>
+@endsection
 @section('content')
-    <form id="createproduct-form" method="POST" action="{{ route('admin.vouchers.store') }}" autocomplete="off"
-        class="needs-validation" novalidate>
+@if ($errors->any())
+  <div class="callout callout-danger">
+    <h4>Warning!</h4>
+    <ul style="margin-bottom: 0;">
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
+    <form id="createproduct-form" method="POST" action="{{ route('admin.vouchers.store') }}" autocomplete="off" accept-charset="utf-8" enctype="multipart/form-data"
+        class="needs-validation">
         @csrf
-        <a class="btn btn-info" href="{{route('admin.vouchers.index')}}">Trở về</a>
         <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
+              <div class="box box-primary">
+                <div class="box-body">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
@@ -25,14 +41,14 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="code-input">Code</label>
                                     <input type="text" class="form-control" placeholder="Mã giảm giá..."
-                                        id="code-input" name="code" value="{{old('code')}}" readonly>
+                                        id="code-input" name="code" value="{{old('code')}}" >
                                 </div>
                             </div>
                             <!-- end col -->
                             <div class="col-lg-6">
-                                <div class="mb-3">
+                                <div class="md-4">
                                     <label class="form-label" for="meta-title-input">Loại giảm giá</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="discount_type">
+                                    <select class="form-control" aria-label="Default select example" name="discount_type">
                                         <option value="" disabled {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '' ? 'selected' : '' }}>Chọn loại giảm giá</option>
                                         <option value="0" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '0' ? 'selected' : '' }}>%</option>
                                         <option value="1" {{ old('discount_type', isset($voucher) ? $voucher->discount_type : '') == '1' ? 'selected' : '' }}>Đ</option>
@@ -42,7 +58,7 @@
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="meta-title-input">Trạng thái</label>
-                                    <select class="form-select mb-3" aria-label="Default select example" name="status">
+                                    <select class="form-control" aria-label="Default select example" name="status">
                                         <option value="" disabled {{ old('status', isset($voucher) ? $voucher->status : '') == '' ? 'selected' : '' }}>Chọn loại trạng thái</option>
                                         <option value="2" {{ old('status', isset($voucher) ? $voucher->status : '') == '2' ? 'selected' : '' }}>Hoạt Động</option>
                                         <option value="1" {{ old('status', isset($voucher) ? $voucher->status : '') == '1' ? 'selected' : '' }}>Ngưng</option>
@@ -55,7 +71,7 @@
                                     <input type="number" class="form-control" id="numberInput" name="discount" 
                                            placeholder="Nhập giá trị giảm giá" 
                                            value="{{ old('discount') }}" 
-                                           min="1000" oninput="formatNumber(this)">
+                                            oninput="formatNumber(this)">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -64,7 +80,7 @@
                                     <input type="number" class="form-control" id="numberInput" name="max_uses" 
                                            placeholder="Nhập giá trị giảm giá" 
                                            value="{{ old('discount') }}" 
-                                           min="1000" oninput="formatNumber(this)">
+                                           min="1" oninput="formatNumber(this)">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -90,16 +106,22 @@
                         </div>
                         <!-- end row -->
                     </div>
-                </div>
-                <div class="text-end mb-3">
-                    <button type="submit" class="btn btn-success w-sm">Submit</button>
+                    <div class="text-end mb-3">
+                        <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- end row -->
 
     </form>
-@push('script')
+    @endsection
+    @section('embed-js')
+
+<!-- include tinymce js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
+    @endsection
+    @section('custom-js')
     <script>
         function generateCode() {
             const nameInput = document.getElementById('name-input').value;
@@ -125,5 +147,4 @@
             }
         }
     </script>
-    @endpush
-@endsection
+    @endsection
