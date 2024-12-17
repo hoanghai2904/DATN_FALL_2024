@@ -746,7 +746,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($cancelledOrders as $order)
+                                    @foreach ($cancelOrders as $order)
                                         <tr>
                                             <td class="text-center">{{ $order->id }}</td>
                                             <td>{{ '#' . $order->order_code }}</td>

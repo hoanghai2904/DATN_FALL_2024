@@ -85,7 +85,7 @@
                                                                 <span class="label label-warning" style="margin-right:10px">Chờ xác
                                                                     nhận</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -94,7 +94,7 @@
                                                                 <span class="label label-warning" style="margin-right:10px">Đã xác
                                                                     nhận</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -103,7 +103,7 @@
                                                                 <span class="label label-primary" style="margin-right:10px">Đang
                                                                     chuẩn bị</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -125,14 +125,25 @@
                                                         @case(8)
                                                             <span class="label label-danger">Đã hủy</span>
                                                         @break
+
                                                         @case(9)
                                                             <p class="label label-primary">Chờ xác nhận hoàn hàng</p>
                                                         @break
+
                                                         @case(10)
                                                             <p class="label label-success">Xác nhận hoàn hàng</p>
                                                         @break
+
                                                         @case(11)
                                                             <p class="label label-danger">Đơn hoàn bị từ chối</p>
+                                                        @break
+
+                                                        @case(12)
+                                                            <p class="label label-danger">Chờ xác nhận hủy đơn</p>
+                                                        @break
+
+                                                        @case(13)
+                                                            <p class="label label-primary">Đơn hủy bị từ chối</p>
                                                         @break
                                                     @endswitch
                                                 </td>
@@ -232,9 +243,9 @@
 
 @section('js')
     <script>
-        const handleCancelOrder = (id) => {
-            Swal.fire({
-                title: 'Bạn có chắc chắn muốn huỷ đơn hàng này?',
+        const handleCancelOrder = (id, paymentMethodId) => {
+            let swalOptions = {
+                title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
                 text: "Hành động này không thể hoàn tác!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -242,36 +253,72 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Đồng ý',
                 cancelButtonText: 'Huỷ'
-            }).then((result) => {
+            };
+
+            if (paymentMethodId === 2) { // Thanh toán Online
+                swalOptions.html = `
+            <div>
+                <label for="cancelReasonInput">Lý do hủy đơn hàng và thông tin tài khoản:</label>
+                <textarea id="cancelReasonInput" class="swal2-textarea" placeholder="Nhập lý do hủy đơn hàng..."></textarea>
+            </div>
+        `;
+            }
+
+            Swal.fire(swalOptions).then((result) => {
                 if (result.value) {
+                    let data = {
+                        id: id,
+                        _token: `{{ csrf_token() }}`
+                    };
+
+                    if (paymentMethodId === 2) { // Với thanh toán Online, thêm lý do hủy
+                        const cancelReason = document.getElementById('cancelReasonInput')?.value.trim();
+                        if (!cancelReason) {
+                            Swal.fire(
+                                'Lỗi!',
+                                'Vui lòng nhập lý do hủy đơn hàng!',
+                                'error'
+                            );
+                            return;
+                        }
+                        data.cancel_reason = cancelReason;
+                    }
+
                     $.ajax({
                         url: "{{ route('cancelOrder', ['id' => ':id']) }}".replace(':id', id),
-                        method: "POST",
-                        data: {
-                            id: id,
-                            _token: "{{ csrf_token() }}"
-                        },
+                        method: 'POST',
+                        data: data,
                         success: function(response) {
-                            if (response.status === 'success') {
+                            if (response.status) {
                                 Swal.fire(
-                                    'Đã huỷ!',
-                                    response?.message,
+                                    'Thành công!',
+                                    response.message,
                                     'success'
                                 ).then(() => {
                                     location.reload();
                                 });
                             } else {
                                 Swal.fire(
-                                    'Huỷ thất bại!',
-                                    response?.message,
+                                    'Thất bại!',
+                                    response.message,
                                     'error'
                                 );
                             }
+                        },
+                        error: function() {
+                            Swal.fire(
+                                'Lỗi!',
+                                'Đã xảy ra lỗi trong quá trình xử lý.',
+                                'error'
+                            );
                         }
                     });
                 }
             });
-        }
+        };
+
+
+
         const handleReceiveOrder = (id) => {
             $.ajax({
                 url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
@@ -299,6 +346,7 @@
                 }
             });
         }
+
         $(document).ready(function() {
             $("#slide-advertise").owlCarousel({
                 items: 2,
