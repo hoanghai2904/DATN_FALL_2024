@@ -140,7 +140,7 @@
   </div>
   <div class="box box-primary">
     <div class="box-header with-border">
-      <h3 class="box-title">Thông Tin Màu Sắc Và Giá Sản Phẩm</h3>
+      <h3 class="box-title">Thông Tin Loại Và Giá Sản Phẩm</h3>
       <div class="box-tools">
         <!-- This will cause the box to collapse when clicked -->
         <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
@@ -167,7 +167,7 @@
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label for="color_{{ $product_detail->id }}">Mầu Sắc <span class="text-red">*</span></label>
+                    <label for="color_{{ $product_detail->id }}">Loại Sản Phẩm<span class="text-red">*</span></label>
                     <input type="text" name="old_product_details[{{ $product_detail->id }}][color]" class="form-control color" id="color_{{ $product_detail->id }}" placeholder="Mầu sắc" required autocomplete="off" value="{{ $product_detail->color }}">
                   </div>
                 </div>
@@ -231,8 +231,8 @@
   </div>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#product-information" data-toggle="tab">Cấu Hình Chi Tiết</a></li>
-      <li><a href="#product-introduction" data-toggle="tab">Bài Viết Sản Phẩm</a></li>
+      <li class="active"><a href="#product-information" data-toggle="tab">Mô tả sản phẩm</a></li>
+      <li><a href="#product-introduction" data-toggle="tab">Chi tiết Sản Phẩm</a></li>
     </ul>
     <div class="tab-content">
       <div class="active tab-pane" id="product-information">
@@ -777,7 +777,7 @@ $("#productForm").on('submit', function(e) {
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="color_{?}">Mầu Sắc <span class="text-red">*</span></label>
+            <label for="color_{?}">loại <span class="text-red">*</span></label>
             <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
           </div>
         </div>

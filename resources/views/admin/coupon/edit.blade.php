@@ -70,7 +70,7 @@
           </div>
           <div class="form-group">
               <label for="start_end_date">Ngày Bắt Đầu - Ngày Kết Thúc</label>
-              <div class="input-group">
+              <div class="input-group" style="width: 50%">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>

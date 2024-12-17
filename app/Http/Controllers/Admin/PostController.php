@@ -146,8 +146,9 @@ class PostController extends Controller
       $data['title'] = 'Thành Công';
       $data['content'] = 'Xóa bài viết thành công!';
     }
-
+    
     return response()->json($data, 200);
+    
   }
 
   public function edit($id)

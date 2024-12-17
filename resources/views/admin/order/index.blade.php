@@ -154,7 +154,7 @@
                                             class="btn btn-icon btn-sm btn-primary tip" title="Chi Tiết">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                         </a>
-                                        @if (($order->status === 1 || $order->status === 2 || $order->status === 3))
+                                        @if ($order->status === 1 || $order->status === 2 || $order->status === 3)
                                             <div class="btn-group">
                                                 <button type="button" style="height: 30px;"
                                                     class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown"
@@ -169,7 +169,18 @@
                                                             ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
                                                         <li>
                                                             <a
-                                                                href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác nhận</a>
+                                                                href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác
+                                                                nhận</a>
+                                                        </li>
+                                                        {{-- <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
+                                                        </li> --}}
+                                                    @endif
+                                                    @if ($order->status === 1)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}"></i>Hủy</a>
                                                         </li>
                                                     @endif
 
@@ -188,7 +199,8 @@
                                                     @if ($order->status === 3)
                                                         <li>
                                                             <a
-                                                                href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao Hàng</a>
+                                                                href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao
+                                                                Hàng</a>
                                                         </li>
                                                         <li>
                                                             <a

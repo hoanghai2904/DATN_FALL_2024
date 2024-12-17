@@ -88,11 +88,13 @@
                     <div class="avatar" style="background-image: url('{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}');"></div>
                   </a>
                   <ul class="dropdown-menu">
-                    @if(Auth::user()->admin)
+                    @if(Auth::user()->Role == 1 || Auth::user()->Role == 2 )
                     <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Quản Lý Website</a></li>
                     @else
                     <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>
                     <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('show_user') }}"><i class="fas fa-user-cog"></i> Quản Lý Tài Khoản</a></li>
+                    <li class="{{ Helper::check_active(['edit_Password']) }}"><a href="{{ route('edit_Password') }}"><i class="fas fa-user-cog"></i> Đổi mật khẩu</a></li>
+                    
                     @endif
                     <li><a id="logout" action="#"><i class="fas fa-power-off"></i> {{ __('Đăng Xuất') }}</a></li>
                   </ul>
@@ -156,7 +158,7 @@
       </div>
     </div>
     <div class="mb-menu-top-footer">
-      @if(Auth::user()->admin)
+      @if(Auth::user()->Role)
       <div class="mb-menu-action">
         <a href="{{ route('admin.dashboard') }}" class="btn btn-success">
           <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -218,7 +220,7 @@
             <span class="fas fa-id-card"></span>
             {{ __('header.Contact') }}</a>
         </li>
-        @if(Auth::check() && !Auth::user()->admin)
+        @if(Auth::check() && !Auth::user()->Role)
         <li class="mb-nav-item {{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><span class="fas fa-clipboard-list"></span> Đơn Hàng</a></li>
         @endif
       </ul>

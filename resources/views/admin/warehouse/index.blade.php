@@ -47,6 +47,25 @@
     background-color: #e8f0fe;
     border-radius: 5px;
   }
+  <style>
+  .badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+  }
+  .badge-danger {
+    background-color: #dc3545; /* Màu đỏ */
+    color: #fff;
+  }
+  .badge-success {
+    background-color: #28a745; /* Màu xanh */
+    color: #fff;
+  }
+</style>
+
 </style>
 @endsection
 
@@ -88,11 +107,12 @@
                 <th data-orderable="false" data-width="75px">Hình Ảnh</th>
                 <th data-orderable="false" data-width="85px">Mã Sản Phẩm</th>
                 <th data-width="180px" data-orderable="false">Tên Sản Phẩm</th>
-                <th>Màu sắc</th>
+                <th>Phân loại</th>
                 <th>Size</th>
                 <th>Số Lượng Nhập</th>
                 <th>Đã Bán</th>
                 <th>Còn Lại</th>
+                <th>Trạng thái</th>
                 <th data-type="date-euro">Ngày Nhập</th>
               </tr>
             </thead>
@@ -107,9 +127,16 @@
                   <td>{{ $product_dt->name }}</td>
                   <td>{{$product_dt->color}}</td>
                   <td>{{$product_dt?->size ?? '---'}}</td>
-                  <td>{{$product_dt->quantity}}</td>
+                  <td>{{$product_dt->import_quantity}}</td>
                   <td>{{$product_dt->orderDetailQuantity ? $product_dt->orderDetailQuantity : 0}}</td>
                   <td>{{$product_dt->conlai ? $product_dt->conlai : $product_dt->quantity}}</td>
+                  <td>
+                    @if(($product_dt->conlai ? $product_dt->conlai : $product_dt->quantity) == 0)
+                    <span class="badge badge-danger">Đã Hết Hàng</span>
+                  @else
+                    <span class="badge badge-success">Còn Hàng</span>
+                  @endif
+                  </td>
                   <td>{{ \Carbon\Carbon::parse($product_dt->created_at)->format('d/m/Y')}}</td>
                 </tr>
               @endforeach

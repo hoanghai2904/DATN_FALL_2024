@@ -184,62 +184,66 @@
     });
   });
 
-  $(document).ready(function(){
-
+  $(document).ready(function() {
     $(".deleteDialog").click(function() {
+        var post_id = $(this).attr('data-id');
+        var url = $(this).attr('data-url');
 
-      var product_id = $(this).attr('data-id');
-      var url = $(this).attr('data-url');
+        Swal.fire({
+            icon: 'question',
+            title: 'Thông báo',
+            text: 'Bạn có chắc muốn xóa sản phẩmphẩm này?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        body: JSON.stringify({
+                            'post_id': post_id
+                        }),
+                    })
+                    .then(response => {
+                        // Kiểm tra nếu phản hồi không phải JSON
+                        if (response.headers.get('content-type').includes('application/json')) {
+                            return response.json();  // Nếu là JSON, tiếp tục phân tích
+                        } else {
+                            throw new Error('Phản hồi từ server không phải JSON!');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(error.message);
 
-      Swal.fire({
-        type: 'question',
-        title: 'Thông báo',
-        text: 'Bạn có chắc muốn xóa sản phẩm này?',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-          return fetch(url, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        Swal.update({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: error.message,
+                            showConfirmButton: false,
+                            cancelButtonText: 'Ok',
+                        });
+                    });
             },
-            body: JSON.stringify({'product_id': product_id}),
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(response.statusText);
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    icon: result.value.icon || 'success',
+                    title: result.value.title || 'Thành công!',
+                    text: result.value.content || 'Sản phẩm đã được xóa thành công!',
+                }).then((result) => {
+                    if (result.value)
+                        location.reload(true);
+                });
             }
-            return response.json();
-          })
-          .catch(error => {
-            Swal.showValidationMessage(error);
-
-            Swal.update({
-              type: 'error',
-              title: 'Lỗi!',
-              text: '',
-              showConfirmButton: false,
-              cancelButtonText: 'Ok',
-            });
-          })
-        },
-      }).then((result) => {
-        if (result.value) {
-          Swal.fire({
-            type: result.value.type,
-            title: result.value.title,
-            text: result.value.content,
-          }).then((result) => {
-            if (result.value)
-              location.reload(true);
-          });
-        }
-      })
+        });
     });
-  });
+});
+
+
 </script>
 @endsection

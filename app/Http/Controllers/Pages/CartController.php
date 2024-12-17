@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Enums\OrderStatusEnum;
+use App\Events\OrderCreated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendOrderMail;
@@ -17,66 +18,37 @@ use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\NL_Checkout;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
   public function addCart(Request $request)
   {
-    DB::transaction(function () use ($request) {
-      $product = ProductDetail::where('id', $request->id)
-        ->lockForUpdate() // Khóa bản ghi để tránh tình trạng nhiều người cùng đặt
-        ->with([
-          'product' => function ($query) {
-            $query->select('id', 'name', 'image', 'sku_code');
-          }
-        ])
-        ->select('id', 'product_id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
-        ->first();
 
-      if (!$product) {
-        throw new \Exception('Sản phẩm không tồn tại!');
-      }
+    $product = ProductDetail::where('id', $request->id)
+      ->with([
+        'product' => function ($query) {
+          $query->select('id', 'name', 'image', 'sku_code');
+        }
+      ])->select('id', 'product_id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
 
-      // Kiểm tra số lượng yêu cầu có vượt quá tồn kho không
-      if ($request->qty > $product->quantity) {
-        throw new \Exception('Số lượng sản phẩm yêu cầu vượt quá số lượng trong kho!');
-      }
-
-      // Cập nhật số lượng tồn kho
-      $product->quantity -= $request->qty;
-      $product->save();
-
-      // Thêm sản phẩm vào giỏ hàng
-      $oldCart = Session::has('cart') ? Session::get('cart') : null;
-      $cart = new Cart($oldCart);
-
-      // Thêm sản phẩm vào giỏ hàng
-      $cart->add($product, $product->id, $request->qty);
-
-      // Lưu lại giỏ hàng vào session
-      Session::put('cart', $cart);
-
-      // Lưu thời gian thêm vào giỏ hàng
-      Session::put('cart_time', now());
-    });
-
-    return response()->json([
-      'msg' => 'Thêm giỏ hàng thành công',
-      'url' => route('home_page'),
-      'response' => Session::get('cart')
-    ], 200);
-  }
-
-  public function isCartExpired()
-  {
-    if (Session::has('cart_time')) {
-      $cartTime = Session::get('cart_time');
-      return $cartTime->diffInDays(now()) >= 2;
-      // return $cartTime->diffInMinutes(now()) >= 1; 
+    if (!$product) {
+      $data['msg'] = 'Product Not Found!';
+      return response()->json($data, 404);
     }
-    return false;
+
+    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
+    $cart = new Cart($oldCart);
+    if (!$cart->add($product, $product->id, $request->qty)) {
+      $data['msg'] = 'Số lượng sản phẩm trong giỏ vượt quá số lượng sản phẩm trong kho!';
+      return response()->json($data, 412);
+    }
+    Session::put('cart', value: $cart);
+
+    $data['msg'] = "Thêm giỏ hàng thành công";
+    $data['url'] = route('home_page');
+    $data['response'] = Session::get('cart');
+
+    return response()->json($data, 200);
   }
 
   public function updateFee(Request $request)
@@ -91,122 +63,35 @@ class CartController extends Controller
 
   public function removeCart(Request $request)
   {
-      // Kiểm tra xem có giỏ hàng trong session không
-      $oldCart = Session::has('cart') ? Session::get('cart') : null;
-  
-      // Nếu không có giỏ hàng, trả về lỗi
-      if (!$oldCart) {
-          return response()->json([
-              'msg' => 'Giỏ hàng của bạn đã hết hạn và đã bị xóa!',
-              'url' => route('home_page')
-          ], 200);
-      }
-  
-      $cart = new Cart($oldCart);
-  
-      if ($request->id) {
-          // Nếu có id, xóa sản phẩm cụ thể
-          $quantityInCart = $cart->items[$request->id]['qty'] ?? 0;
-  
-          if (!$cart->remove($request->id)) {
-              $data['msg'] = 'Sản phẩm không tồn tại trong giỏ hàng!';
-              return response()->json($data, 404);
-          }
-  
-          // Chỉ hoàn lại số lượng nếu tìm thấy sản phẩm trong giỏ hàng
-          if ($quantityInCart > 0) {
-              DB::transaction(function () use ($request, $quantityInCart) {
-                  $productDetail = ProductDetail::lockForUpdate()->find($request->id);
-  
-                  if ($productDetail) {
-                      $productDetail->quantity += $quantityInCart;
-                      $productDetail->save();
-  
-                      Log::info("Số lượng đã hoàn lại cho sản phẩm ID {$request->id}: {$quantityInCart}");
-                  } else {
-                      Log::error("Không tìm thấy sản phẩm ID {$request->id} để hoàn số lượng.");
-                  }
-              });
-          }
-      } else {
-          // Nếu không có id (trong trường hợp giỏ hàng hết hạn), kiểm tra giỏ hàng trước khi lặp
-          if (!empty($cart->items)) {
-              foreach ($cart->items as $item) {
-                  DB::transaction(function () use ($item) {
-                      $productDetail = ProductDetail::lockForUpdate()->find($item['item']['id']);
-  
-                      if ($productDetail) {
-                          $productDetail->quantity += $item['qty'];
-                          $productDetail->save();
-  
-                          Log::info("Số lượng đã hoàn lại cho sản phẩm ID {$item['item']['id']}: {$item['qty']}");
-                      } else {
-                          Log::error("Không tìm thấy sản phẩm ID {$item['item']['id']} để hoàn số lượng.");
-                      }
-                  });
-              }
-          } else {
-              return response()->json([
-                  'msg' => 'Giỏ hàng của bạn đã hết hạn và đã bị xóa!',
-                  'url' => route('home_page')
-              ], 200);
-          }
-      }
-  
-      // Xóa giỏ hàng trong session
-      Session::put('cart', $cart);
-  
-      $data['msg'] = "Sản phẩm trong giỏ hàng đã được xóa thành công.";
-      $data['url'] = route('home_page');
-      $data['response'] = Session::get('cart');
-  
-      return response()->json($data, 200);
-  }
-  
-  public function updateCart(Request $request)
-  {
-    $oldCart = Session::has('cart') ? Session::get('cart') : null;
 
-    if (!$oldCart) {
-      return response()->json([
-        'msg' => 'Giỏ hàng của bạn trống!',
-      ], 404);
-    }
-
+    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
     $cart = new Cart($oldCart);
 
-    DB::transaction(function () use ($request, $cart) {
-      $product = ProductDetail::where('id', $request->id)
-        ->lockForUpdate()
-        ->select('id', 'quantity')
-        ->first();
+    if (!$cart->remove($request->id)) {
+      $data['msg'] = 'Sản Phẩm không tồn tại!';
+      return response()->json($data, 404);
+    } else {
+      Session::put('cart', $cart);
 
-      if (!$product) {
-        throw new \Exception('Sản phẩm không tồn tại!');
-      }
+      $data['msg'] = "Xóa sản phẩm thành công";
+      $data['url'] = route('home_page');
+      $data['response'] = Session::get('cart');
 
-      $currentCartQty = $cart->items[$request->id]['qty'] ?? 0;
-      $requestedQty = $request->qty;
-      $stockAvailable = $product->quantity + $currentCartQty;
+      return response()->json($data, 200);
+    }
+  }
 
-      if ($requestedQty > $stockAvailable) {
-        throw new \Exception('Số lượng sản phẩm trong giỏ vượt quá số lượng sản phẩm trong kho!');
-      }
-
-      // Cập nhật số lượng tồn kho
-      $product->quantity = $stockAvailable - $requestedQty;
-      $product->save();
-
-      // Cập nhật giỏ hàng
-      if (!$cart->updateItem($request->id, $requestedQty)) {
-        throw new \Exception('Không thể cập nhật sản phẩm trong giỏ hàng!');
-      }
-    });
-
-    // Cập nhật session giỏ hàng
+  public function updateCart(Request $request)
+  {
+    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
+    $cart = new Cart($oldCart);
+    if (!$cart->updateItem($request->id, $request->qty)) {
+      $data['msg'] = 'Số lượng sản phẩm trong giỏ vượt quá số lượng sản phẩm trong kho!';
+      return response()->json($data, 412);
+    }
     Session::put('cart', $cart);
 
-    $response = [
+    $response = array(
       'id' => $request->id,
       'qty' => $cart->items[$request->id]['qty'],
       'price' => $cart->items[$request->id]['price'],
@@ -214,12 +99,9 @@ class CartController extends Controller
       'totalPrice' => $cart->totalPrice,
       'totalQty' => $cart->totalQty,
       'maxQty' => $cart->items[$request->id]['item']->quantity
-    ];
-
-    return response()->json([
-      'msg' => 'Cập nhật giỏ hàng thành công!',
-      'response' => $response
-    ], 200);
+    );
+    $data['response'] = $response;
+    return response()->json($data, 200);
   }
 
   public function updateMiniCart(Request $request)
@@ -246,36 +128,16 @@ class CartController extends Controller
 
   public function showCart()
   {
-    // Kiểm tra xem giỏ hàng đã hết hạn chưa
-    if ($this->isCartExpired()) {
-      // Gọi hàm removeCart để xóa tất cả sản phẩm trong giỏ hàng
-      $this->removeCart(new Request(['id' => null])); // Gọi removeCart, nhưng không có id vì giỏ hàng hết hạn
-      Session::forget('cart');  // Xóa giỏ hàng khỏi session
-      return redirect()->route('home_page')->with('msg', 'Giỏ hàng của bạn đã hết hạn và đã bị xóa!');
 
-      // return response()->json([
-      //   'msg' => 'Giỏ hàng của bạn đã hết hạn và đã bị xóa!',
-      //   'url' => route('home_page'),
-      //   'response' => Session::get('cart')
-      // ], 200);
-    }
-
-    // Lấy các quảng cáo phù hợp
     $advertises = Advertise::where([
       ['start_date', '<=', date('Y-m-d')],
       ['end_date', '>=', date('Y-m-d')],
       ['at_home_page', '=', false]
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
-    // Kiểm tra giỏ hàng trong session và khởi tạo nếu không có
-    $oldCart = Session::has('cart') ? Session::get('cart') : null;
+    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
     $cart = new Cart($oldCart);
-
-    // Trả về view giỏ hàng với thông tin quảng cáo
-    return view('pages.cart', [
-      'cart' => $cart,
-      'advertises' => $advertises
-    ]);
+    return view('pages.cart')->with(['cart' => $cart, 'advertises' => $advertises]);
   }
 
   public function showCheckout(Request $request)
@@ -448,9 +310,9 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
-        $product = ProductDetail::find($request->product_id);
-        $product->quantity = $product->quantity - $request->totalQty;
-        $product->save();
+        // $product = ProductDetail::find($request->product_id);
+        // $product->quantity = $product->quantity - $request->totalQty;
+        // $product->save();
         $dataSend = $this->prepareDataSend($order);
         SendOrderMail::dispatch($dataSend);
 
@@ -564,34 +426,6 @@ class CartController extends Controller
 
         return redirect()->away($vnpUrl);
 
-
-        // Tạo url thanh toán
-        // $receiver = env('RECEIVER');
-        // $order_code = $order->order_code;
-        // $return_url = route('payment_response');
-        // $cancel_url = route('payment_response');
-        // $notify_url = route('payment_response');
-        // $transaction_info = $order->id;
-        // $currency = "vnd";
-        // $quantity = $request->totalQty;
-        // $price = $order_details->price * $order_details->quantity;
-        // $tax =0;
-        // $discount =0;
-        // $fee_cal =0;
-        // $fee_shipping =0;
-        // $order_description ="Thanh toán đơn hàng ".config('app.name');
-        // $buyer_info = $request->name."*|*".$request->email."*|*".$request->phone."*|*".$request->address;
-        // $affiliate_code = "";
-
-        // $nl= new NL_Checkout();
-        // $nl->nganluong_url = env('NGANLUONG_URL');
-        // $nl->merchant_site_code = env('MERCHANT_ID');
-        // $nl->secure_pass = env('MERCHANT_PASS');
-
-        // $url= $nl->buildCheckoutUrlExpand($return_url, $receiver, $transaction_info, $order_code, $price, $currency, $quantity, $tax, $discount , $fee_cal,    $fee_shipping, $order_description, $buyer_info , $affiliate_code);
-        // $url .='&cancel_url='. $cancel_url . '&notify_url='.$notify_url;
-
-        // return redirect()->away($url);
       } elseif ($request->buy_method == 'buy_cart') {
         $cart = Session::get('cart');
         if (!$cart) {
@@ -634,6 +468,10 @@ class CartController extends Controller
           $order_details->quantity = $item['qty'];
           $order_details->price = $item['price'];
           $order_details->save();
+
+          $product = ProductDetail::find($item['item']->id);
+          $product->quantity = $product->quantity - $item['qty'];
+          $product->save();
         }
 
         $totalPayment = $cart->totalPrice + $order->fee - $request->discount_amount;
@@ -646,36 +484,6 @@ class CartController extends Controller
         session()->forget('cart');
 
         return redirect()->away($vnpUrl);
-
-
-        // Tạo url thanh toán
-        // $receiver = env('RECEIVER');
-        // $order_code = $order->order_code;
-        // $return_url = route('payment_response');
-        // $cancel_url = route('payment_response');
-        // $notify_url = route('payment_response');
-        // $transaction_info = $order->id;
-        // $currency = "vnd";
-        // $quantity = $cart->totalQty;
-        // $price = $cart->totalPrice;
-        // $tax =0;
-        // $discount =0;
-        // $fee_cal =0;
-        // $fee_shipping =0;
-        // $order_description ="Thanh toán đơn hàng ".config('app.name');
-        // $buyer_info = $request->name."*|*".$request->email."*|*".$request->phone."*|*".$request->address;
-        // $affiliate_code = "";
-
-        // $nl= new NL_Checkout();
-        // $nl->nganluong_url = env('NGANLUONG_URL');
-        // $nl->merchant_site_code = env('MERCHANT_ID');
-        // $nl->secure_pass = env('MERCHANT_PASS');
-
-        // $url= $nl->buildCheckoutUrlExpand($return_url, $receiver, $transaction_info, $order_code, $price, $currency, $quantity, $tax, $discount , $fee_cal,    $fee_shipping, $order_description, $buyer_info , $affiliate_code);
-        // $url .='&cancel_url='. $cancel_url . '&notify_url='.$notify_url;
-
-        // Session::forget('cart');
-        // return redirect()->away($url);
       }
     }
   }
@@ -727,10 +535,10 @@ class CartController extends Controller
           // Cập nhật số lượng sản phẩm
           foreach ($order->order_details as $order_detail) {
             $product_detail = ProductDetail::where('id', $order_detail->product_detail_id)->first();
-            if ($product_detail) {
-              $product_detail->quantity -= $order_detail->quantity;
-              $product_detail->save();
-            }
+            // if ($product_detail) {
+            //   $product_detail->quantity -= $order_detail->quantity;
+            //   $product_detail->save();
+            // }
           }
           $dataSend = $this->prepareDataSend($order);
           SendOrderMail::dispatch($dataSend);
@@ -817,55 +625,4 @@ class CartController extends Controller
     return redirect()->away($vnpUrl);
   }
 
-
-  // public function responsePayment(Request $request) {
-  //   if ($request->filled('payment_id')) {
-
-  //     // Lấy các tham số để chuyển sang Ngânlượng thanh toán:
-  //     $transaction_info =$request->transaction_info;
-  //     $order_code =$request->order_code;
-  //     $price =$request->price;
-  //     $payment_id =$request->payment_id;
-  //     $payment_type =$request->payment_type;
-  //     $error_text =$request->error_text;
-  //     $secure_code =$request->secure_code;
-
-  //     //Khai báo đối tượng của lớp NL_Checkout
-  //     $nl= new NL_Checkout();
-  //     $nl->merchant_site_code = env('MERCHANT_ID');
-  //     $nl->secure_pass = env('MERCHANT_PASS');
-
-  //     //Tạo link thanh toán đến nganluong.vn
-  //     $checkpay= $nl->verifyPaymentUrl($transaction_info, $order_code, $price, $payment_id, $payment_type, $error_text, $secure_code);
-
-  //     if ($checkpay) {
-  //       $order = Order::where([['id', $transaction_info],['order_code', $order_code]])->first();
-  //       $order->status = 1;
-  //       $order->save();
-
-  //       foreach ($order->order_details as $order_detail) {
-  //         $product_detail = ProductDetail::where('id', $order_detail->product_detail_id)->first();
-  //         $product_detail->quantity = $product_detail->quantity - $order_detail->quantity;
-  //         $product_detail->save();
-  //       }
-  //       return redirect()->route('home_page')->with(['alert' => [
-  //         'type' => 'success',
-  //         'title' => 'Thanh toán thành công!',
-  //         'content' => 'Cảm ơn bạn đã tin tưởng và lựa chọn chúng tối.'
-  //       ]]);
-  //     }else{
-  //       return redirect()->route('home_page')->with(['alert' => [
-  //         'type' => 'error',
-  //         'title' => 'Thanh toán không thành công!',
-  //         'content' => $error_text
-  //       ]]);
-  //     }
-  //   } else {
-  //     return redirect()->route('home_page')->with(['alert' => [
-  //       'type' => 'error',
-  //       'title' => 'Thanh toán không thành công!',
-  //       'content' => 'Bạn đã hủy hoặc đã xẩy ra lỗi trong quá trình thanh toán.'
-  //     ]]);
-  //   }
-  // }
 }

@@ -120,7 +120,7 @@
 @endsection
 
 @section('js')
-  <script>
+  {{-- <script>
     $(document).ready(function(){
 
       $("#slide-advertise").owlCarousel({
@@ -144,5 +144,5 @@
         navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
       });
     });
-  </script>
+  </script> --}}
 @endsection

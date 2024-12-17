@@ -14,23 +14,48 @@
   </section>
 
   <div class="site-about">
+
+    <section class="section-advertise">
+      <div class="content-advertise">
+          <div id="slide-advertise" class="owl-carousel">
+              @foreach($advertises as $advertise)
+                  <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
+              @endforeach
+          </div>
+      </div>
+  </section>
+
+    
     <section class="section-coupon">
       <div class="coupon-card">
         @foreach($coupons as $coupon)
             <div class="card-item mb-3">
-                <div class="card-body">
-                    <h2>
-                        {{ $coupon->code }} - Giảm {{ $coupon->discount_percentage }}%
-                    </h2>
-                    <p class="card-text"><span>Giảm tối đa:</span> {{ number_format($coupon->max_discount_amount, 0, ',', '.') }}</p>
-                    <p class="card-text"><span>Đơn hàng tối thiểu</span>: {{ number_format($coupon->min_order_amount, 0, ',', '.') }}</p>
-                    <p class="card-text"><span>Thời gian áp dụng</span>: {{ $coupon->start_date }} ~ {{ $coupon->end_date }}</p>
-                    @if(in_array($coupon->id, $savedCoupons))
+              <div class="card-body">
+                <h2>
+                    {{ $coupon->code }} - Giảm {{ $coupon->discount_percentage }}%
+                </h2>
+                <p class="card-text"><span>Giảm tối đa:</span> {{ number_format($coupon->max_discount_amount, 0, ',', '.') }}</p>
+                <p class="card-text"><span>Đơn hàng tối thiểu:</span> {{ number_format($coupon->min_order_amount, 0, ',', '.') }}</p>
+                <p class="card-text"><span>Thời gian áp dụng:</span> {{ $coupon->start_date }} ~ {{ $coupon->end_date }}</p>
+            
+                @php
+                    $currentDate = now();
+                @endphp
+            
+                @if ($coupon->end_date < $currentDate)
+                    <!-- Hiển thị nhãn "Đã hết hạn" -->
+                    <label class="text-danger">Đã hết hạn</label>
+                @else
+                    @if (in_array($coupon->id, $savedCoupons))
+                        <!-- Hiển thị nhãn "Đã lưu" nếu đã lưu -->
                         <label>Đã lưu</label>
                     @else
-                        <button class="btn btn-primary save-coupon" data-coupon-id="{{ $coupon->id }}">Lưu</button>
+                        <!-- Hiển thị nút "Lưu" nếu chưa lưu -->
+                        <button id="submit-button" class="btn btn-primary save-coupon" data-coupon-id="{{ $coupon->id }}">Lưu</button>
                     @endif
-                </div>
+                @endif
+            </div>
+            
             </div>
         @endforeach
     </div>
@@ -42,6 +67,11 @@
 
 @section('css')
   <style>
+    .card-item:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
     .section-coupon {
       padding: 20px;
       background: #fff;
@@ -60,6 +90,37 @@
     .coupon-card .card-item h2 {
       font-weight: bold;
     }
+
+    /* QC */
+    .slide-advertise-inner {
+      background-repeat: no-repeat;
+      background-size: cover;
+      padding-top: 21.25%;
+    }
+    #slide-advertise.owl-carousel .owl-item.active {
+      -webkit-animation-name: zoomIn;
+      animation-name: zoomIn;
+      -webkit-animation-duration: .6s;
+      animation-duration: .6s;
+    }
+
+    /* css button save */
+    #submit-button {
+      width: 80px;
+      border: none;
+    box-shadow: none;
+    background: #f30;
+    color: #fff;
+    font-weight: 600;
+    text-shadow: none;  
+}
+#submit-button:hover {
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+}
   </style>
 @endsection
 

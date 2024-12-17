@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="{{ asset('common/css/owl.theme.default.min.css') }}">
   <link rel="stylesheet" href="{{ asset('common/css/sweetalert2.min.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
 
 
   <!-- Custom CSS -->
@@ -87,7 +88,7 @@
     <script src="{{ asset('common/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('common/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('common/js/sweetalert2.min.js') }}"></script>
-
+   
     <!-- Custom Scripts -->
     <script src="{{ asset('js/custom.js') }}"></script>
     @if(Request::route()->getName() != 'show_cart')

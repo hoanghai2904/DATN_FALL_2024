@@ -202,7 +202,7 @@ body {
   margin-bottom: 0;
 }
 .header .logo img {
-	width: 100%;
+	/* width: 100%; */
 	max-width: 100px;
 }
 .header .search .search-bar {
@@ -1507,7 +1507,7 @@ body {
 }
 /*user */
 .site-user .user-avatar {
-  border: 1px solid #ededed;
+  /* border: 1px solid #ededed; */
   margin-bottom: 20px;
 }
 .site-user .user-avatar img {
