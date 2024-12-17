@@ -17,7 +17,7 @@ class UserController extends Controller
   public function show()
   {
     if(Auth::check()) {
-      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+      if (Auth::user()->Role) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -47,7 +47,7 @@ class UserController extends Controller
   public function edit()
   {
     if(Auth::check()) {
-      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+      if (Auth::user()->Role ) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -162,7 +162,7 @@ class UserController extends Controller
 
   public function changePass(){
     if(Auth::check()) {
-      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+      if (Auth::user()->Role) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -195,7 +195,7 @@ class UserController extends Controller
   {
       if (Auth::check()) {
           // Kiểm tra xem người dùng có phải là admin không
-          if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+          if (Auth::user()->Role) {
               return redirect()->route('admin.dashboard')->with(['alert' => [
                   'type' => 'warning',
                   'title' => 'Cảnh Báo',
