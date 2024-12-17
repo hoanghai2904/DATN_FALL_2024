@@ -386,14 +386,14 @@
                 if (result.value) {
                     const returnReason = document.getElementById('returnReasonInput').value.trim();
                     console.log('Return reason:', returnReason); // Kiểm tra lý do đã nhập
-                    
+
                     if (!returnReason) {
                         Swal.fire(
                             'Lỗi!',
                             'Vui lòng nhập lý do hoàn hàng!',
                             'error'
                         );
-                        return; 
+                        return;
                     }
                     $.ajax({
                         url: "{{ route('returnOrder', ['id' => ':id']) }}".replace(':id', id),

@@ -1,29 +1,30 @@
-
 @extends('layouts.master')
 
 @section('title', 'Tin Tức')
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Tin Tức</li>
-      </ol>
-    </nav>
-  </section>
-
-  <div class="site-posts">
-    <section class="section-advertise">
-      <div class="content-advertise">
-        <div id="slide-advertise" class="owl-carousel">
-          @foreach($data['advertises'] as $advertise)
-            <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-          @endforeach
-        </div>
-      </div>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tin Tức</li>
+            </ol>
+        </nav>
     </section>
+
+    <div class="site-posts">
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
     <section class="section-posts">
       <div class="row">
@@ -106,19 +107,20 @@
 @endsection
 
 @section('css')
-  <style>
-    .slide-advertise-inner {
-      background-repeat: no-repeat;
-      background-size: cover;
-      padding-top: 21.25%;
-    }
-    #slide-advertise.owl-carousel .owl-item.active {
-      -webkit-animation-name: zoomIn;
-      animation-name: zoomIn;
-      -webkit-animation-duration: .6s;
-      animation-duration: .6s;
-    }
-  </style>
+    <style>
+        .slide-advertise-inner {
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 21.25%;
+        }
+
+        #slide-advertise.owl-carousel .owl-item.active {
+            -webkit-animation-name: zoomIn;
+            animation-name: zoomIn;
+            -webkit-animation-duration: .6s;
+            animation-duration: .6s;
+        }
+    </style>
 @endsection
 
 @section('js')

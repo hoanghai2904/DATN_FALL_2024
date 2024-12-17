@@ -17,7 +17,7 @@ class AdminAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with(['alert' => [
                 'type' => 'warning',
                 'title' => 'Từ chối truy cập!',

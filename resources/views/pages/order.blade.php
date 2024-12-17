@@ -3,27 +3,29 @@
 @section('title', $data['order']->order_code)
 
 @section('content')
-<section class="bread-crumb">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ route('home_page') }}">Trang Chủ</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('orders_page') }}">Đơn Hàng</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ $data['order']->order_code }}</li>
-    </ol>
-  </nav>
-</section>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">Trang Chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('orders_page') }}">Đơn Hàng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $data['order']->order_code }}</li>
+            </ol>
+        </nav>
+    </section>
 
-<div class="container my-4">
-  <!-- Section quảng cáo -->
-  <section class="section-advertise">
-    <div class="content-advertise">
-      <div id="slide-advertise" class="owl-carousel">
-        @foreach($data['advertises'] as $advertise)
-          <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-        @endforeach
-      </div>
-    </div>
-  </section>
+    <div class="container my-4">
+        <!-- Section quảng cáo -->
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
   <!-- Thông tin đơn hàng -->
   <div class="card my-4">
@@ -167,87 +169,90 @@
 @endsection
 
 @section('css')
-<style>
-  .carousel-item {
-    height: 300px;
-  }
-  .carousel-item img {
-    object-fit: cover;
-  }
+    <style>
+        .carousel-item {
+            height: 300px;
+        }
 
-  <style>
-    .slide-advertise-inner {
-      background-repeat: no-repeat;
-      background-size: cover;
-      padding-top: 21.25%;
-    }
-    #slide-advertise.owl-carousel .owl-item.active {
-      -webkit-animation-name: zoomIn;
-      animation-name: zoomIn;
-      -webkit-animation-duration: .6s;
-      animation-duration: .6s;
-    }
-    .order-info span {
-      font-weight: bold;
-    }
-    .final-total {
-      font-size: 20px;
-    }
-  </style>
-</style>
+        .carousel-item img {
+            object-fit: cover;
+        }
+
+        <style>.slide-advertise-inner {
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 21.25%;
+        }
+
+        #slide-advertise.owl-carousel .owl-item.active {
+            -webkit-animation-name: zoomIn;
+            animation-name: zoomIn;
+            -webkit-animation-duration: .6s;
+            animation-duration: .6s;
+        }
+
+        .order-info span {
+            font-weight: bold;
+        }
+
+        .final-total {
+            font-size: 20px;
+        }
+    </style>
+    </style>
 @endsection
 
 @section('js')
-  <script>
-    const handleReceiveOrder = (id) => {
-      $.ajax({
-          url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
-          method: 'POST',
-          data: {
-            id: id,
-            _token: `{{ csrf_token() }}`
-          },
-          success: function(response) {
-            if (response.status) {
-              Swal.fire(
-                'Thành công!',
-                response.message,
-                'success'
-              ).then(() => {
-                location.reload();
-              });
-            } else {
-              Swal.fire(
-                'Thất bại!',
-                response.message,
-                'error'
-              );
-            }
-          }
-        });
-    }
-    $(document).ready(function(){
+    <script>
+        const handleReceiveOrder = (id) => {
+            $.ajax({
+                url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+                method: 'POST',
+                data: {
+                    id: id,
+                    _token: `{{ csrf_token() }}`
+                },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire(
+                            'Thành công!',
+                            response.message,
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Thất bại!',
+                            response.message,
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+        $(document).ready(function() {
 
-      $("#slide-advertise").owlCarousel({
-        items: 2,
-        autoplay: true,
-        loop: true,
-        margin: 10,
-        autoplayHoverPause: true,
-        nav: true,
-        dots: false,
-        responsive:{
-          0:{
-            items: 1,
-          },
-          992:{
-            items: 2,
-            animateOut: 'zoomInRight',
-            animateIn: 'zoomOutLeft',
-          }
-        },
-        navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-      });
-    });
-  </script>
-@endsection 
+            $("#slide-advertise").owlCarousel({
+                items: 2,
+                autoplay: true,
+                loop: true,
+                margin: 10,
+                autoplayHoverPause: true,
+                nav: true,
+                dots: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    992: {
+                        items: 2,
+                        animateOut: 'zoomInRight',
+                        animateIn: 'zoomOutLeft',
+                    }
+                },
+                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+            });
+        });
+    </script>
+@endsection

@@ -46,7 +46,7 @@ class ProducerController extends Controller
                 'content' => 'Danh mục không tồn tại.'
             ]);
         }
-        if($producer->products()->count() > 0) {
+        if ($producer->products()->count() > 0) {
             return response()->json([
                 'type' => 'error',
                 'title' => 'Thất Bại',
@@ -75,7 +75,7 @@ class ProducerController extends Controller
             $validated = $request->validate([
                 'name' => 'required',
             ]);
-            
+
             $producer = Producer::find($id);
             if (!$producer) {
                 return redirect()->route('admin.producer.index')->with(['alert' => [

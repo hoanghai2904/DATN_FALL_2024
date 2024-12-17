@@ -4,105 +4,127 @@
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('products_page') }}">Sản Phẩm</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('producer_page', ['id' => $data['product']->producer_id]) }}">{{ $data['product']->producer->name }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{{ $data['product']->name }}</li>
-      </ol>
-    </nav>
-  </section>
-
-  <div class="site-product">
-    <section class="section-advertise">
-      <div class="content-advertise">
-        <div id="slide-advertise" class="owl-carousel">
-          @foreach($data['advertises'] as $advertise)
-            <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-          @endforeach
-        </div>
-      </div>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('products_page') }}">Sản Phẩm</a></li>
+                <li class="breadcrumb-item"><a
+                        href="{{ route('producer_page', ['id' => $data['product']->producer_id]) }}">{{ $data['product']->producer->name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $data['product']->name }}</li>
+            </ol>
+        </nav>
     </section>
-    <section class="section-product">
-      <div class="section-header">
-        <h2 class="section-title">{{ $data['product']->name }}</h2>
-        <div class="section-sub-title">
-          <div class="sku-code">Mã sản phẩm: <i>{{ $data['product']->sku_code }}</i></div>
-          <div class="start-vote">{!! Helper::get_start_vote($data['product']->rate) !!}</div>
-          <div class="rate-link" onclick="scrollToxx();"><span>Đánh giá sản phẩm</span></div>
-        </div>
-      </div>
-      <div class="section-content">
-        <div class="section-infomation">
-          <div class="row">
-            <div class="col-md-9">
-              <div class="row">
-                <div class="col-md-6 col-sm-6">
-                  <div class="image-product">
-                    @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
-                        @foreach($data['product_details'] as $colorKey => $product)
-                          @foreach($product['details'] as $sizeKey => $size)
-                              <div class="image-gallery-{{ $colorKey }}-{{ $sizeKey }}" data-key="{{ $colorKey }}-{{ $sizeKey }}" style="{{ $colorKey == 0 && $sizeKey == 0 ? '' : 'display: none;' }}">
-                                  @if(!empty($size['product_images']))
-                                      <ul id="imageGallery-{{ $colorKey }}-{{ $sizeKey }}" class="image-gallery-list">
-                                          @foreach($size['product_images'] as $image)
-                                              <li data-thumb="{{ Helper::get_image_product_url($image['image_name']) }}" 
-                                                  data-src="{{ Helper::get_image_product_url($image['image_name']) }}">
-                                                  <img src="{{ Helper::get_image_product_url($image['image_name']) }}" 
-                                                      alt="" 
-                                                      onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}'; this.parentElement.setAttribute('data-thumb', '{{ asset('images/no_image.png') }}');" />
-                                              </li>
-                                          @endforeach
-                                      </ul>
-                                  @else
-                                      <div><img src="{{ asset('images/no_image.png') }}" alt=""></div>
-                                  @endif
-                              </div>
-                          @endforeach
-                      @endforeach
-                    @else
-                        <div><img src="{{ asset('images/no_image.png') }}" alt=""></div>
-                    @endif
-                  </div>
 
+    <div class="site-product">
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
                 </div>
-                <div class="col-md-6 col-sm-6">
-                    <div class="price-product">
-                      @if(isset($data['product_details']) && $data['product_details']->isNotEmpty())
-                          @foreach($data['product_details'] as $key => $product)
-                              @foreach($product['details'] as $index => $size)
-                                  <div class="product-{{ $key }}-{{ $index }}" style="{{ $key == 0 && $index == 0 ? '' : 'display: none;' }}">
-                                      @if($size['promotion_price'] && $size['promotion_start_date'] <= now()->format('Y-m-d') && $size['promotion_end_date'] >= now()->format('Y-m-d'))
-                                          <div class="sale-price">{{ number_format($size['promotion_price'], 0, ',', '.') }} <span>VNĐ</span></div>
-                                          <div class="promotion-price">
-                                              <div class="old-price">Giá cũ: <del>{{ number_format($size['sale_price'], 0, ',', '.') }}</del> <span>VNĐ</span></div>
-                                              <div class="save-price">Giảm: <span>{{ number_format($size['sale_price'] - $size['promotion_price'], 0, ',', '.') }}</span> <span>VNĐ</span></div>
-                                          </div>
-                                      @else
-                                          <div class="sale-price">{{ number_format($size['sale_price'], 0, ',', '.') }} <span>VNĐ</span></div>
-                                      @endif
+            </div>
+        </section>
+        <section class="section-product">
+            <div class="section-header">
+                <h2 class="section-title">{{ $data['product']->name }}</h2>
+                <div class="section-sub-title">
+                    <div class="sku-code">Mã sản phẩm: <i>{{ $data['product']->sku_code }}</i></div>
+                    <div class="start-vote">{!! Helper::get_start_vote($data['product']->rate) !!}</div>
+                    <div class="rate-link" onclick="scrollToxx();"><span>Đánh giá sản phẩm</span></div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="section-infomation">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="image-product">
+                                        @if (isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                                            @foreach ($data['product_details'] as $colorKey => $product)
+                                                @foreach ($product['details'] as $sizeKey => $size)
+                                                    <div class="image-gallery-{{ $colorKey }}-{{ $sizeKey }}"
+                                                        data-key="{{ $colorKey }}-{{ $sizeKey }}"
+                                                        style="{{ $colorKey == 0 && $sizeKey == 0 ? '' : 'display: none;' }}">
+                                                        @if (!empty($size['product_images']))
+                                                            <ul id="imageGallery-{{ $colorKey }}-{{ $sizeKey }}"
+                                                                class="image-gallery-list">
+                                                                @foreach ($size['product_images'] as $image)
+                                                                    <li data-thumb="{{ Helper::get_image_product_url($image['image_name']) }}"
+                                                                        data-src="{{ Helper::get_image_product_url($image['image_name']) }}">
+                                                                        <img src="{{ Helper::get_image_product_url($image['image_name']) }}"
+                                                                            alt=""
+                                                                            onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}'; this.parentElement.setAttribute('data-thumb', '{{ asset('images/no_image.png') }}');" />
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <div><img src="{{ asset('images/no_image.png') }}"
+                                                                    alt=""></div>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <div><img src="{{ asset('images/no_image.png') }}" alt=""></div>
+                                        @endif
+                                    </div>
 
-                                      <div class="status">
-                                          Tình trạng: 
-                                          <span style="color: {{ $size['quantity'] > 0 ? '#1a2' : '#f30' }};">
-                                              {{ $size['quantity'] > 0 ? 'Còn hàng' : 'Hết hàng' }}
-                                          </span>
-                                      </div>
-                                      <div class="status">
-                                          Số lượng trong kho: 
-                                          <span style="color: {{ $size['quantity'] > 1 ? '#1a2' : '#f30' }};">
-                                              {{ $size['quantity'] }}
-                                          </span>
-                                      </div>
-                                  </div>
-                              @endforeach
-                          @endforeach
-                      @else
-                          <div>Không có thông tin sản phẩm.</div>
-                      @endif
-                  </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="price-product">
+                                        @if (isset($data['product_details']) && $data['product_details']->isNotEmpty())
+                                            @foreach ($data['product_details'] as $key => $product)
+                                                @foreach ($product['details'] as $index => $size)
+                                                    <div class="product-{{ $key }}-{{ $index }}"
+                                                        style="{{ $key == 0 && $index == 0 ? '' : 'display: none;' }}">
+                                                        @if (
+                                                            $size['promotion_price'] &&
+                                                                $size['promotion_start_date'] <= now()->format('Y-m-d') &&
+                                                                $size['promotion_end_date'] >= now()->format('Y-m-d'))
+                                                            <div class="sale-price">
+                                                                {{ number_format($size['promotion_price'], 0, ',', '.') }}
+                                                                <span>VNĐ</span></div>
+                                                            <div class="promotion-price">
+                                                                <div class="old-price">Giá cũ:
+                                                                    <del>{{ number_format($size['sale_price'], 0, ',', '.') }}</del>
+                                                                    <span>VNĐ</span></div>
+                                                                <div class="save-price">Giảm:
+                                                                    <span>{{ number_format($size['sale_price'] - $size['promotion_price'], 0, ',', '.') }}</span>
+                                                                    <span>VNĐ</span></div>
+                                                            </div>
+                                                        @else
+                                                            <div class="sale-price">
+                                                                {{ number_format($size['sale_price'], 0, ',', '.') }}
+                                                                <span>VNĐ</span></div>
+                                                        @endif
+
+                                                        <div class="status">
+                                                            Tình trạng:
+                                                            <span
+                                                                style="color: {{ $size['quantity'] > 0 ? '#1a2' : '#f30' }};">
+                                                                {{ $size['quantity'] > 0 ? 'Còn hàng' : 'Hết hàng' }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="status">
+                                                            Số lượng trong kho:
+                                                            <span
+                                                                style="color: {{ $size['quantity'] > 1 ? '#1a2' : '#f30' }};">
+                                                                {{ $size['quantity'] }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <div>Không có thông tin sản phẩm.</div>
+                                        @endif
+                                    </div>
 
                   <div class="color-product">
                     <div class="title">Phân loại:</div>
@@ -402,79 +424,80 @@
   <div id="more-infomation" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
-      <!-- Modal content -->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
-          <h4 class="modal-title">Thông Số Kĩ Thuật Chi Tiết</h4>
-        </div>
-        <div class="modal-body">
-          <div class="content">
-            {{-- @if($data['product']->product_introduction)
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    <h4 class="modal-title">Thông Số Kĩ Thuật Chi Tiết</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="content">
+                        {{-- @if ($data['product']->product_introduction)
+
               {!! $data['product']->information_details !!}
             @else
               <p class="text-center"><strong>Đang cập nhật ...</strong></p>
             @endif --}}
-          </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
 
 @endsection
 
 @section('css')
-  <link type="text/css" rel="stylesheet" href="{{ asset('common/lightGallery/dist/css/lightgallery.css') }}" />
-  <link type="text/css" rel="stylesheet" href="{{ asset('common/lightslider/dist/css/lightslider.css') }}" />
-  <link rel="stylesheet" href="{{ asset('css/product.css') }}">
+    <link type="text/css" rel="stylesheet" href="{{ asset('common/lightGallery/dist/css/lightgallery.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('common/lightslider/dist/css/lightslider.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/product.css') }}">
 @endsection
 
 @section('js')
-  <script src="{{ asset('common/Rate/rater.js') }}"></script>
-  <script src="{{ asset('common/lightGallery/dist/js/lightgallery.js') }}"></script>
-  <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
-  <script src="{{ asset('js/product.js') }}"></script>
-  <script>
-     $(document).ready(function() {
+    <script src="{{ asset('common/Rate/rater.js') }}"></script>
+    <script src="{{ asset('common/lightGallery/dist/js/lightgallery.js') }}"></script>
+    <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
+    <script src="{{ asset('js/product.js') }}"></script>
+    <script>
+        $(document).ready(function() {
 
-      $(".section-rating .rating-form form").submit( function(eventObj) {
-        $("<input />").attr("type", "hidden")
-          .attr("name", "rate")
-          .attr("value", $(".rating-product").rate("getValue"))
-          .appendTo(".section-rating .rating-form form");
-        return true;
-      });
-      @if(session('vote_alert'))
-        scrollToxx();
-        Swal.fire(
-          '{{ session('vote_alert')['title'] }}',
-          '{{ session('vote_alert')['content'] }}',
-          '{{ session('vote_alert')['type'] }}'
-        );
-      @endif
-      @if(session('alert'))
-        Swal.fire(
-          '{{ session('alert')['title'] }}',
-          '{{ session('alert')['content'] }}',
-          '{{ session('alert')['type'] }}'
-        );
-      @endif
-      @if(session('wishlist_alert'))
-            Swal.fire(
-                '{{ session('wishlist_alert')['title'] }}',
-                '{{ session('wishlist_alert')['content'] }}',
-                '{{ session('wishlist_alert')['type'] }}'
-            );
-            var icon = $('.wishlist-icon');
-            if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
-                icon.addClass('wishlist-added');
-            } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
-                icon.removeClass('wishlist-added');
-            }
-        @endif
-    });
-  </script>
+            $(".section-rating .rating-form form").submit(function(eventObj) {
+                $("<input />").attr("type", "hidden")
+                    .attr("name", "rate")
+                    .attr("value", $(".rating-product").rate("getValue"))
+                    .appendTo(".section-rating .rating-form form");
+                return true;
+            });
+            @if (session('vote_alert'))
+                scrollToxx();
+                Swal.fire(
+                    '{{ session('vote_alert')['title'] }}',
+                    '{{ session('vote_alert')['content'] }}',
+                    '{{ session('vote_alert')['type'] }}'
+                );
+            @endif
+            @if (session('alert'))
+                Swal.fire(
+                    '{{ session('alert')['title'] }}',
+                    '{{ session('alert')['content'] }}',
+                    '{{ session('alert')['type'] }}'
+                );
+            @endif
+            @if (session('wishlist_alert'))
+                Swal.fire(
+                    '{{ session('wishlist_alert')['title'] }}',
+                    '{{ session('wishlist_alert')['content'] }}',
+                    '{{ session('wishlist_alert')['type'] }}'
+                );
+                var icon = $('.wishlist-icon');
+                if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
+                    icon.addClass('wishlist-added');
+                } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
+                    icon.removeClass('wishlist-added');
+                }
+            @endif
+        });
+    </script>
 @endsection

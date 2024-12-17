@@ -58,10 +58,9 @@ class WarehouseController extends Controller
             )
             ->orderBy('product_details.created_at', 'DESC') // Sắp xếp theo ngày tạo mới nhất
             ->get();
-        
+
         return view('admin.warehouse.index')->with('product_details', $product_details);
     }
-    
 
     public function orderDetails(Request $request){
         $product_details = DB::table('product_details')
@@ -103,7 +102,7 @@ class WarehouseController extends Controller
         if ($request['date_from']) {
             $product_details->whereDate('order_details.created_at', '<=', date($request['date_from']));
         }
-                                   
+
         return view('admin.warehouse.orderDetail')->with('product_details', $product_details);
     }
 }
