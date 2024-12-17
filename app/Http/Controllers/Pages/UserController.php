@@ -47,7 +47,7 @@ class UserController extends Controller
   public function edit()
   {
     if(Auth::check()) {
-      if (Auth::user()->Role ) {
+      if (Auth::user()->Role) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -77,7 +77,7 @@ class UserController extends Controller
   public function save(Request $request)
   {
     if(Auth::check()) {
-      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+      if (Auth::user()->Role) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',

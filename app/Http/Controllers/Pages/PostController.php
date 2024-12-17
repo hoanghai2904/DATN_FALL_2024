@@ -60,3 +60,4 @@ class PostController extends Controller
     return view('pages.post')->with(['data' => ['advertises' => $advertises, 'post' => $post, 'suggest_products' => $suggest_products, 'suggest_posts' => $suggest_posts]]);
   }
 }
+

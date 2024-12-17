@@ -4,25 +4,27 @@
 
 @section('content')
 
-<section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Danh Sách Yêu Thích</li>
-        </ol>
-    </nav>
-</section>
-
-<div class="site-wishlist">
-    <section class="section-advertise">
-        <div class="content-advertise">
-            <div id="slide-advertise" class="owl-carousel">
-                @foreach($advertises as $advertise)
-                    <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-                @endforeach
-            </div>
-        </div>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Danh Sách Yêu Thích</li>
+            </ol>
+        </nav>
     </section>
+
+    <div class="site-wishlist">
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($advertises as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
     <section class="section-wishlist">
         <div class="section-header">

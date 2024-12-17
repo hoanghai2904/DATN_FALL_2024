@@ -17,7 +17,8 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-  public function dashboardData() {
+  public function dashboardData()
+  {
     $carbon = new Carbon('first day of this month');
 
     $count_products = 0;
@@ -107,9 +108,9 @@ class DashboardController extends Controller
   public function orderGroupByStatus()
   {
     $data = Order::select('status')
-    ->selectRaw('count(id) as count')
-    ->groupBy('status')
-    ->get();
+      ->selectRaw('count(id) as count')
+      ->groupBy('status')
+      ->get();
 
     // Map the status counts to their corresponding status names
     $statusCounts = $data->map(function ($item) {
@@ -135,7 +136,8 @@ class DashboardController extends Controller
 
     return $orders;
   }
-  public function index() {
+  public function index()
+  {
 
     $count['user'] = User::where([['active', true], ['Role', false]])->count();
     $count['post'] = Post::count();

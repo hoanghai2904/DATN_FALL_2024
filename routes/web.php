@@ -32,19 +32,20 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::get('user/{id}/show', 'UserController@show')->name('user_show')->middleware('manage');
     Route::get('user/{id}/send', 'UserController@send')->name('user_send')->middleware('manage');
 
-    Route::get('posts', 'PostController@index')->name('post.index');
-    Route::get('post/new', 'PostController@new')->name('post.new');
-    Route::post('post/save', 'PostController@save')->name('post.save');
-    Route::post('post/delete', 'PostController@delete')->name('post.delete')->middleware('manage');
-    Route::get('post/{id}/edit', 'PostController@edit')->name('post.edit');
-    Route::post('post/{id}/update', 'PostController@update')->name('post.update');
-
-    Route::get('advertises', 'AdvertiseController@index')->name('advertise.index');
-    Route::get('advertise/new', 'AdvertiseController@new')->name('advertise.new');
-    Route::post('advertise/save', 'AdvertiseController@save')->name('advertise.save');
-    Route::post('advertise/delete', 'AdvertiseController@delete')->name('advertise.delete')->middleware('manage');
-    Route::get('advertise/{id}/edit', 'AdvertiseController@edit')->name('advertise.edit');
-    Route::post('advertise/{id}/update', 'AdvertiseController@update')->name('advertise.update');
+  Route::get('posts', 'PostController@index')->name('post.index');
+  Route::get('post/new', 'PostController@new')->name('post.new');
+  Route::post('post/save', 'PostController@save')->name('post.save');
+  Route::post('post/delete', 'PostController@delete')->name('post.delete');
+  Route::get('post/{id}/edit', 'PostController@edit')->name('post.edit');
+  Route::post('post/{id}/update', 'PostController@update')->name('post.update');
+  Route::post('/update-post-status/{id}', 'PostController@updateStatus')->name('post.updateStatus');
+  
+  Route::get('advertises', 'AdvertiseController@index')->name('advertise.index');
+  Route::get('advertise/new', 'AdvertiseController@new')->name('advertise.new');
+  Route::post('advertise/save', 'AdvertiseController@save')->name('advertise.save');
+  Route::post('advertise/delete', 'AdvertiseController@delete')->name('advertise.delete');
+  Route::get('advertise/{id}/edit', 'AdvertiseController@edit')->name('advertise.edit');
+  Route::post('advertise/{id}/update', 'AdvertiseController@update')->name('advertise.update');
 
     Route::get('products', 'ProductController@index')->name('product.index');
     Route::get('product/new', 'ProductController@new')->name('product.new');
@@ -95,6 +96,7 @@ Route::namespace('Pages')->group(function () {
   Route::get('orders', 'OrderController@index')->name('orders_page');
   Route::get('order/{id}', 'OrderController@show')->name('order_page');
   Route::post('cancel-order/{id}', 'OrderController@cancelOrder')->name(name: 'cancelOrder');
+  Route::post('order/return/{id}', 'OrderController@returnOrder')->name('returnOrder');
   Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
   Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
 

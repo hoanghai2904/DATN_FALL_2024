@@ -4,14 +4,14 @@
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Mã giảm giá</li>
-      </ol>
-    </nav>
-  </section>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Mã giảm giá</li>
+            </ol>
+        </nav>
+    </section>
 
   <div class="site-about">
 
@@ -61,7 +61,7 @@
     </div>
     </section>
 
-  </div>
+    </div>
 
 @endsection
 
@@ -125,58 +125,58 @@
 @endsection
 
 @section('js')
-  <script>
-    $(document).ready(function(){
+    <script>
+        $(document).ready(function() {
 
-      $("#slide-advertise").owlCarousel({
-        items: 2,
-        autoplay: true,
-        loop: true,
-        margin: 10,
-        autoplayHoverPause: true,
-        nav: true,
-        dots: false,
-        responsive:{
-          0:{
-            items: 1,
-          },
-          992:{
-            items: 2,
-            animateOut: 'zoomInRight',
-            animateIn: 'zoomOutLeft',
-          }
-        },
-        navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-      });
-
-      $('.save-coupon').on('click', function() {
-            var couponId = $(this).data('coupon-id');
-            $.ajax({
-                url: '{{ route("save.coupon") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    coupon_id: couponId
+            $("#slide-advertise").owlCarousel({
+                items: 2,
+                autoplay: true,
+                loop: true,
+                margin: 10,
+                autoplayHoverPause: true,
+                nav: true,
+                dots: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    992: {
+                        items: 2,
+                        animateOut: 'zoomInRight',
+                        animateIn: 'zoomOutLeft',
+                    }
                 },
-                success: function(response) {
-                  if (response.status === 'success') {
-                      Swal.fire({
-                          title: 'Thành Công',
-                          text: 'Coupon đã được lưu',
-                          type: 'success'
-                      }).then(() => {
-                          location.reload();
-                      });
-                  } else if (response.status === 'not_logged_in') {
-                      Swal.fire({
-                          title: 'Lỗi',
-                          text: 'Bạn cần đăng nhập để lưu coupon',
-                          type: 'error'
-                      });
-                  }
-                }
+                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+            });
+
+            $('.save-coupon').on('click', function() {
+                var couponId = $(this).data('coupon-id');
+                $.ajax({
+                    url: '{{ route('save.coupon') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        coupon_id: couponId
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Thành Công',
+                                text: 'Coupon đã được lưu',
+                                type: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else if (response.status === 'not_logged_in') {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: 'Bạn cần đăng nhập để lưu coupon',
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
             });
         });
-    });
-  </script>
+    </script>
 @endsection

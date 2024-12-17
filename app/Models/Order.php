@@ -18,7 +18,7 @@ class Order extends Model
   public function order_details() {
     return $this->hasMany('App\Models\OrderDetail');
   }
-  protected $guarded = [''];
+  // protected $guarded = [''];
 
   // protected $status = [
   //   '1' => [

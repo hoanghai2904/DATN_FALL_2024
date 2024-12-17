@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatusEnum;
+use App\Mail\OrderStatusChanged;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -90,18 +93,21 @@ class OrderController extends Controller
           switch ($action) {
               case 'confirmed':
                   $orderAction->status = OrderStatusEnum::CONFIRMED;
+                  $status = 'Đã xác nhận';
                   break;
               case 'preparing':
                   $orderAction->status = OrderStatusEnum::PREPARING;
                   break;
               case 'delivering':
                   $orderAction->status = OrderStatusEnum::DELIVERING;
+                  $status = 'Đang giao';
                   break;
               case 'delivered':
                   $orderAction->status = OrderStatusEnum::DELIVERED;
                   break;
               case 'completed':
                   $orderAction->status = OrderStatusEnum::COMPLETED;
+                  $status = 'Hoàn thành';
                   break;
               case 'failed':
                   $orderAction->status = OrderStatusEnum::FAILED;
@@ -109,11 +115,28 @@ class OrderController extends Controller
               case 'cancel':
                   $orderAction->status = OrderStatusEnum::CANCELLED;
                   break;
+              case 'returned':
+                  $orderAction->status = OrderStatusEnum::RETURNED;
+                  break;
+              case 'cancelReturn':
+                  $orderAction->status = OrderStatusEnum::CANCELLED_RETURNED;
+                  break;
               default:
                   return redirect()->back()->with('error', 'Lỗi');
           }
           // Lưu vào CSDL
           $orderAction->save();
+          if ($orderAction->user && in_array($action, ['confirmed', 'delivering', 'completed'])) {
+            try {
+                // Gửi email cho người dùng
+                Mail::send(new OrderStatusChanged($orderAction, $status));
+                Log::info("Email sent to user: " . $orderAction->user->email);
+            } catch (\Exception $e) {
+                Log::error("Email sending failed: " . $e->getMessage());
+            }
+        } else {
+            Log::error('User not found for Order ID: ' . $orderAction->id);
+        }
       }
   
       return redirect()->back()->with('success', 'Cập nhật trạng thái thành công!');
@@ -138,7 +161,18 @@ class OrderController extends Controller
       }
     ])->where('status', 3)->latest()->get();
 
-  return view('admin.order.processing',compact('orders','preOrders'));
+    $returnOrder = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone','return_reason' ,'created_at')->with([
+      'user' => function ($query) {
+        $query->select('id', 'name');
+      },
+      'payment_method' => function ($query) {
+        $query->select('id', 'name'); 
+      }
+    ])->where('status','>', 8)->latest()->get();
+
+    // dd($returnOrder);
+
+  return view('admin.order.processing',compact('orders','preOrders','returnOrder'));
   }
   public function completed(){
     $deliveringOrders = Order::select('id', 'user_id','status','is_paid', 'payment_method_id','status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([

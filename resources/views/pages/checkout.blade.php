@@ -42,8 +42,7 @@
                                     <div class="form-group">
                                         <label for="address">Địa Chỉ <span class="text-danger">*</span></label>
                                         <input name="address" type="text" class="form-control" id="address"
-                                            autocomplete="address" value="{{ Auth::user()->address ?? null }}"
-                                            required>
+                                            autocomplete="address" value="{{ Auth::user()->address ?? null }}" required>
                                         <div class="messages"></div>
                                     </div>
 
@@ -69,12 +68,12 @@
                                                 <label>
                                                     <input type="radio" value="{{ $shipping_method['price'] }}"
                                                         name="shipping_method"
-                                                        data-route-update-fee="{{route('update_fee')}}"
+                                                        data-route-update-fee="{{ route('update_fee') }}"
                                                         @if ($key == 0) checked @endif>
                                                     {{ $shipping_method['name'] }}
                                                 </label>
                                                 <div class="box-content">
-                                                    <p>{{ number_format($shipping_method["price"], 0, ',', '.') }}₫</p>
+                                                    <p>{{ number_format($shipping_method['price'], 0, ',', '.') }}₫</p>
                                                 </div>
                                             </li>
                                         @endforeach
@@ -121,8 +120,7 @@
                                     <div class="item" data-product="{{ $item['item']->id }}"
                                         data-price="{{ $item['price'] }}">
                                         <div class="image-item">
-                                            <img
-                                                src="{{ Helper::get_image_product_url($item['item']->product->image) }}"
+                                            <img src="{{ Helper::get_image_product_url($item['item']->product->image) }}"
                                                 onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
                                             <span>{{ $item['qty'] }}</span>
                                         </div>
@@ -137,7 +135,8 @@
                             <div class="section-price">
                                 <div class="temp-total-price">
                                     <div class="title">Tạm Tính</div>
-                                    <div class="price" data-temp-total-price="{{$cart->totalPrice}}">{{ number_format($cart->totalPrice, 0, ',', '.') }}₫</div>
+                                    <div class="price" data-temp-total-price="{{ $cart->totalPrice }}">
+                                        {{ number_format($cart->totalPrice, 0, ',', '.') }}₫</div>
                                 </div>
                                 <div class="ship-price">
                                     <div class="title">Phí Vận Chuyển</div>
@@ -145,7 +144,8 @@
                                 </div>
                                 @if (Auth::check())
                                     <div class="apply-coupon">
-                                        <button type="button" class="btn btn-primary" id="apply-coupon-btn" data-url="{{ route('user_coupons') }}">Áp Dụng Mã Giảm Giá</button>
+                                        <button type="button" class="btn btn-primary" id="apply-coupon-btn"
+                                            data-url="{{ route('user_coupons') }}">Áp Dụng Mã Giảm Giá</button>
                                     </div>
                                 @endif
                                 <div class="discount-info" style="display: none;">
@@ -167,12 +167,14 @@
                 </div>
             </div>
             <!-- Coupon Modal -->
-            <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+            <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <div style="display: flex; justify-content: space-between;">
-                                <h5 class="modal-title" id="couponModalLabel" style="font-weight: bold;">Chọn Mã Giảm Giá</h5>
+                                <h5 class="modal-title" id="couponModalLabel" style="font-weight: bold;">Chọn Mã Giảm Giá
+                                </h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -185,7 +187,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                            <button type="button" class="btn btn-primary" id="apply-coupon" data-validate-url="{{ route('validate_coupon') }}">Áp Dụng</button>
+                            <button type="button" class="btn btn-primary" id="apply-coupon"
+                                data-validate-url="{{ route('validate_coupon') }}">Áp Dụng</button>
                         </div>
                     </div>
                 </div>
