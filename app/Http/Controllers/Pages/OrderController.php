@@ -385,9 +385,9 @@ class OrderController extends Controller
               $orderCreatedAt = Carbon::parse($order->created_at);
   
               // Kiểm tra nếu đơn hàng đã tồn tại hơn 1 phút, chưa thanh toán và có phương thức thanh toán trực tuyến (payment_method_id = 2)
-              if ($orderCreatedAt->diffInMinutes(Carbon::now()) >= 1 && !$order->is_paid && $order->payment_method_id == 2) {
+              if ($orderCreatedAt->diffInHours(Carbon::now()) >= 24 && !$order->is_paid && $order->payment_method_id == 2) {
                   // Cập nhật trạng thái đơn hàng thành "Đã hủy"
-                  $order->status = 8;
+                  $order->status = OrderStatusEnum::CANCELLED;
                   $order->save();
   
                   // Hoàn lại số lượng sản phẩm trong kho
