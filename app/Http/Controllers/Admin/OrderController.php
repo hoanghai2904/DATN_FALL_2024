@@ -23,33 +23,66 @@ class OrderController extends Controller
     return view('admin.order.index')->with('orders', $orders);
   }
 
+  // public function show($id)
+  // {
+  //   $order = Order::select('id', 'user_id', 'discount', 'payment_method_id','fee','is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
+  //       'user' => function ($query) {
+  //         $query->select('id', 'name', 'email', 'phone', 'address');
+  //       },
+  //       'payment_method' => function ($query) {
+  //         $query->select('id', 'name', 'describe');
+  //       },
+  //       'order_details' => function($query) {
+  //         $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+  //         ->with([
+  //           'product_detail' => function ($query) {
+  //             $query->select('id', 'product_id', 'color', 'size')
+  //             ->with([
+  //               'product' => function ($query) {
+  //                 $query->select('id', 'name', 'image', 'sku_code');
+  //               }
+  //             ]);
+  //           }
+  //         ]);
+  //       }
+  //     ])->first();
+  //   if(!$order) abort(404);
+  //   return view('admin.order.show')->with('order', $order);
+  // }
   public function show($id)
   {
-    $order = Order::select('id', 'user_id', 'discount', 'payment_method_id','fee','is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')->where([['status', '<>', 0], ['id', $id]])->with([
-        'user' => function ($query) {
-          $query->select('id', 'name', 'email', 'phone', 'address');
-        },
-        'payment_method' => function ($query) {
-          $query->select('id', 'name', 'describe');
-        },
-        'order_details' => function($query) {
-          $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+      $order = Order::withTrashed() // Lấy cả đơn hàng đã bị xóa mềm
+          ->select('id', 'user_id', 'discount', 'payment_method_id', 'fee', 'is_paid', 'order_code', 'name', 'email', 'phone', 'address', 'created_at')
+          ->where([['status', '<>', 0], ['id', $id]])
           ->with([
-            'product_detail' => function ($query) {
-              $query->select('id', 'product_id', 'color', 'size')
-              ->with([
-                'product' => function ($query) {
-                  $query->select('id', 'name', 'image', 'sku_code');
-                }
-              ]);
-            }
-          ]);
-        }
-      ])->first();
-    if(!$order) abort(404);
-    return view('admin.order.show')->with('order', $order);
+              'user' => function ($query) {
+                  $query->select('id', 'name', 'email', 'phone', 'address');
+              },
+              'payment_method' => function ($query) {
+                  $query->select('id', 'name', 'describe');
+              },
+              'order_details' => function($query) {
+                  $query->withTrashed() // Áp dụng cho order_details
+                      ->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+                      ->with([
+                          'product_detail' => function ($query) {
+                              $query->withTrashed() // Áp dụng cho product_detail
+                                  ->select('id', 'product_id', 'color', 'size')
+                                  ->with([
+                                      'product' => function ($query) {
+                                          $query->withTrashed() // Áp dụng cho product
+                                              ->select('id', 'name', 'image', 'sku_code');
+                                      }
+                                  ]);
+                          }
+                      ]);
+              }
+          ])->first();
+          
+      if(!$order) abort(404);
+      return view('admin.order.show')->with('order', $order);
   }
-
+  
   public function actionTransaction($action, $id)
   {
       $orderAction = Order::find($id);

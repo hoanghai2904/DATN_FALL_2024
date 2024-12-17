@@ -154,40 +154,60 @@
                                                     <span class="sr-only">Toggle-dropdown</span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <<<<<<< HEAD @if (
-                                                        ($order->status === 1 && $order->is_paid && $order->payment_method_id == 2) ||
-                                                            ($order->status == 1 && $order->payment_method_id == 1))
-                                                        =======
-                                                        @if (
-                                                            ($order->status === 1 && $order->payment_method_id == 1) ||
-                                                                ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
-                                                            >>>>>>> 5edb25a7770d3720cb05c38220e7afe8f0b38d66
-                                                            <li>
-                                                                <a
-                                                                    href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}"></i>Đã
-                                                                    xác nhận</a>
-                                                            </li>
-                                                        @endif
-                                                        @if ($order->status === 2)
-                                                            <li>
-                                                                <a
-                                                                    href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}"></i>Đang
-                                                                    Vận Chuyển</a>
-                                                            </li>
-                                                        @endif
-                                                        @if ($order->status === 3)
-                                                            <li>
-                                                                <a
-                                                                    href="{{ route('admin.orderTransaction', ['delivered', $order->id]) }}"></i>Đã
-                                                                    Giao Hàng</a>
-                                                            </li>
-                                                        @endif
-                                                        @if ($order->status === 1)
-                                                            <li>
-                                                                <a
-                                                                    href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}"></i>Hủy</a>
-                                                            </li>
-                                                        @endif
+                                                    @if (
+                                                        ($order->status === 1 && $order->payment_method_id == 1) ||
+                                                            ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác
+                                                                nhận</a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if ($order->status === 2)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['preparing', $order->id]) }}">Đang
+                                                                chuẩn bị</a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if ($order->status === 3)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao
+                                                                Hàng</a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if ($order->status === 4)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['delivered', $order->id]) }}">Đã
+                                                                Giao Hàng</a>
+                                                        </li>
+                                                    @endif
+
+                                                    @if ($order->status === 5)
+                                                        <li>
+                                                            <a
+                                                                href="{{ route('admin.orderTransaction', ['completed', $order->id]) }}">Đơn
+                                                                hàng thành công</a>
+                                                        </li>
+                                                    @endif
+
                                                 </ul>
                                             </div>
                                         @else

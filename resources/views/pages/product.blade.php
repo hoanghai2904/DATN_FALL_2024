@@ -89,19 +89,23 @@
                                                                 $size['promotion_end_date'] >= now()->format('Y-m-d'))
                                                             <div class="sale-price">
                                                                 {{ number_format($size['promotion_price'], 0, ',', '.') }}
-                                                                <span>VNĐ</span></div>
+                                                                <span>VNĐ</span>
+                                                            </div>
                                                             <div class="promotion-price">
                                                                 <div class="old-price">Giá cũ:
                                                                     <del>{{ number_format($size['sale_price'], 0, ',', '.') }}</del>
-                                                                    <span>VNĐ</span></div>
+                                                                    <span>VNĐ</span>
+                                                                </div>
                                                                 <div class="save-price">Giảm:
                                                                     <span>{{ number_format($size['sale_price'] - $size['promotion_price'], 0, ',', '.') }}</span>
-                                                                    <span>VNĐ</span></div>
+                                                                    <span>VNĐ</span>
+                                                                </div>
                                                             </div>
                                                         @else
                                                             <div class="sale-price">
                                                                 {{ number_format($size['sale_price'], 0, ',', '.') }}
-                                                                <span>VNĐ</span></div>
+                                                                <span>VNĐ</span>
+                                                            </div>
                                                         @endif
 
                                                         <div class="status">

@@ -10,13 +10,14 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Models\User;
 use App\Models\Advertise;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
   public function show()
   {
     if(Auth::check()) {
-      if (Auth::user()->admin) {
+      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -46,7 +47,7 @@ class UserController extends Controller
   public function edit()
   {
     if(Auth::check()) {
-      if (Auth::user()->admin) {
+      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -76,7 +77,7 @@ class UserController extends Controller
   public function save(Request $request)
   {
     if(Auth::check()) {
-      if (Auth::user()->admin) {
+      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
         return redirect()->route('admin.dashboard')->with(['alert' => [
           'type' => 'warning',
           'title' => 'Cảnh Báo',
@@ -157,4 +158,109 @@ class UserController extends Controller
       ]]);
     }
   }
+
+
+  public function changePass(){
+    if(Auth::check()) {
+      if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+        return redirect()->route('admin.dashboard')->with(['alert' => [
+          'type' => 'warning',
+          'title' => 'Cảnh Báo',
+          'content' => 'Bạn không có quyền truy cập vào trang này!'
+        ]]);
+      } else {
+        $advertises = Advertise::where([
+          ['start_date', '<=', date('Y-m-d')],
+          ['end_date', '>=', date('Y-m-d')],
+          ['at_home_page', '=', false]
+        ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+
+        $user = User::select('id', 'name', 'email', 'phone', 'address', 'avatar_image')
+        ->where('id', Auth::user()->id)->first();
+
+      return view('pages.edit_PassWord')->with('data',['user' => $user, 'advertises' => $advertises]);
+    
+      }
+    } else {
+      return redirect()->route('login')->with(['alert' => [
+        'type' => 'warning',
+        'title' => 'Cảnh Báo',
+        'content' => 'Bạn phải đăng nhập để sử dụng chức năng này!'
+      ]]);
+    }
+  }
+
+
+  public function savePass(Request $request)
+  {
+      if (Auth::check()) {
+          // Kiểm tra xem người dùng có phải là admin không
+          if (Auth::user()->Role != 1 && Auth::user()->Role != 2) {
+              return redirect()->route('admin.dashboard')->with(['alert' => [
+                  'type' => 'warning',
+                  'title' => 'Cảnh Báo',
+                  'content' => 'Bạn không có quyền thực hiện chức năng này!'
+              ]]);
+          }
+  
+          // Kiểm tra xem người dùng có phải là chính người đang cập nhật thông tin không
+          if (Auth::user()->id != $request->user_id) {
+              return back()->with(['alert' => [
+                  'type' => 'info',
+                  'title' => 'Thông Báo',
+                  'content' => 'Đã xảy ra lỗi trong quá trình cập nhật thông tin. Vui lòng nhập lại!'
+              ]]);
+          }
+  
+          // Xác thực dữ liệu đầu vào
+          $validator = Validator::make($request->all(), [
+              'old_password' => 'required|string',
+              'new_password' => 'required|string|min:8',  // Kiểm tra mật khẩu mới
+              'confirm_password' => 'required|string|same:new_password', // Kiểm tra mật khẩu xác nhận
+          ], [
+              'old_password.required' => 'Mật khẩu cũ không được để trống!',
+              'new_password.required' => 'Mật khẩu mới không được để trống!',
+              'new_password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự!',
+              'confirm_password.required' => 'Xác nhận mật khẩu không được để trống!',
+              'confirm_password.same' => 'Mật khẩu xác nhận không khớp!',
+          ]);
+  
+          // Nếu có lỗi xác thực
+          if ($validator->fails()) {
+              return back()->withErrors($validator)->withInput();
+          }
+  
+          // Kiểm tra mật khẩu cũ có chính xác không
+          if (!Hash::check($request->old_password, Auth::user()->password)) {
+              return back()->with(['alert' => [
+                  'type' => 'error',
+                  'title' => 'Cảnh Báo',
+                  'content' => 'Mật khẩu hiện tại không chính xác!'
+              ]]);
+          }
+  
+          // Cập nhật mật khẩu mới
+          $user = Auth::user();
+          $user->password = Hash::make($request->new_password);
+          $user->save();
+  
+          // Đăng xuất người dùng
+          Auth::logout();
+  
+          // Trả về thông báo thành công và chuyển hướng về trang đăng nhập
+          return redirect()->route('login')->with(['alert' => [
+              'type' => 'success',
+              'title' => 'Thành Công',
+              'content' => 'Mật khẩu đã được thay đổi thành công. Bạn đã được đăng xuất.'
+          ]]);
+      } else {
+          return redirect()->route('login')->with(['alert' => [
+              'type' => 'warning',
+              'title' => 'Cảnh Báo',
+              'content' => 'Bạn phải đăng nhập để sử dụng chức năng này!'
+          ]]);
+      }
+  }
+  
+
 }

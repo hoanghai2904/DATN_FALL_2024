@@ -88,7 +88,7 @@
 
                                                         @case(2)
                                                             <div style="display:flex">
-                                                                <span class="label label-info" style="margin-right:10px">Đã xác
+                                                                <span class="label label-warning" style="margin-right:10px">Đã xác
                                                                     nhận</span>
                                                                 <button class="btn btn-danger"
                                                                     onclick="handleCancelOrder({{ $order->id }})">Huỷ</button>
@@ -106,12 +106,11 @@
 
                                                         @case(4)
                                                             <div style="display:flex">
-                                                                <button class="btn btn-success" style="margin-right: 10px;"
+                                                                <span class="label label-info" style="margin-right:10px">Đang
+                                                                    giao</span>
+                                                                <button class="btn btn-success"
                                                                     onclick="handleReceiveOrder({{ $order->id }})">Đã
                                                                     nhận</button>
-                                                                <button class="btn btn-warning"
-                                                                    onclick="handleRequestReturn({{ $order->id }})">Hoàn
-                                                                    hàng</button>
                                                             </div>
                                                         @break
 
@@ -121,18 +120,6 @@
 
                                                         @case(8)
                                                             <span class="label label-danger">Đã hủy</span>
-                                                        @break
-
-                                                        @case(9)
-                                                            <p class="label label-primary">Chờ xác nhận hoàn hàng</p>
-                                                        @break
-
-                                                        @case(10)
-                                                            <p class="label label-success">Xác nhận hoàn hàng</p>
-                                                        @break
-
-                                                        @case(11)
-                                                            <p class="label label-danger">Đơn hoàn bị từ chối</p>
                                                         @break
                                                     @endswitch
                                                 </td>

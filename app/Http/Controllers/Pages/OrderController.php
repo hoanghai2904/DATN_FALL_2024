@@ -104,7 +104,6 @@ class OrderController extends Controller
       } else {
         return view('pages.order')->with('data', ['order' => $order, 'advertises' => $advertises]);
       }
-
     } else if (Auth::check()) {
       return redirect()->route('admin.dashboard')->with([
         'alert' => [
@@ -148,7 +147,6 @@ class OrderController extends Controller
           return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
         }
       }
-
     } else if (Auth::check()) {
       return redirect()->route('admin.dashboard')->with([
         'alert' => [
@@ -194,7 +192,6 @@ class OrderController extends Controller
           return response()->json(['status' => 'error', 'message' => 'Không thể nhận hàng khi đơn hàng chưa được giao!']);
         }
       }
-
     } else if (Auth::check()) {
       return redirect()->route('admin.dashboard')->with([
         'alert' => [
@@ -266,5 +263,4 @@ class OrderController extends Controller
       ]);
     }
   }
-
 }

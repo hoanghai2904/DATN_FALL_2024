@@ -549,13 +549,13 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="color_{?}">Mầu Sắc <span class="text-red">*</span></label>
+            <label for="color_{?}">loại sản phẩm<span class="text-red">*</span></label>
             <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="size_{?}">Size</label>
+            <label for="size_{?}">Size/Số</label>
             <input type="text" name="product_details[{?}][size]" class="form-control size" id="size_{?}" placeholder="Size" autocomplete="off">
           </div>
         </div>

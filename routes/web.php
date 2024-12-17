@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CouponController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -63,7 +64,16 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::get('coupon/{id}/edit', 'CouponController@edit')->name('coupon.edit');
     Route::post('coupon/{id}/update', 'CouponController@update')->name('coupon.update');
 
+    Route::get('producers', 'ProducerController@index')->name('producer.index');
+    Route::get('producer/new', 'ProducerController@new')->name('producer.new');
+    Route::post('producer/save', 'ProducerController@save')->name('producer.save');
+    Route::post('producer/delete', 'ProducerController@delete')->name('producer.delete');
+    Route::get('producer/{id}/edit', 'ProducerController@edit')->name('producer.edit');
+    Route::post('producer/{id}/update', 'ProducerController@update')->name('producer.update');
+
     Route::get('orders', 'OrderController@index')->name('order.index');
+    Route::get('processing', 'OrderController@processing')->name('order.processing');
+    Route::get('completed', 'OrderController@completed')->name('order.completed');
     Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
     Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
 
@@ -93,6 +103,9 @@ Route::namespace('Pages')->group(function () {
   Route::get('user/profile', 'UserController@show')->name('show_user');
   Route::get('user/edit', 'UserController@edit')->name('edit_user');
   Route::post('user/save', 'UserController@save')->name('save_user');
+  // change passwordd
+  Route::get('user/editPassword', 'UserController@changePass')->name('edit_Password');
+  Route::post('user/savePassword', 'UserController@savePass')->name('save_Password');
   //page products
   Route::get('products', 'ProductsController@index')->name('products_page');
   Route::get('producer/{id}', 'ProductsController@getProducer')->name('producer_page');
@@ -107,13 +120,10 @@ Route::namespace('Pages')->group(function () {
   Route::post('checkout', 'CartController@showCheckout')->name('show_checkout');
   Route::post('payment', 'CartController@payment')->name('payment');
   Route::get('payment/response', 'CartController@responsePayment')->name('payment_response');
-
   Route::get('/user-coupons', 'CouponController@getUserCoupons')->name('user_coupons');
   Route::post('/validate-coupon', 'CouponController@validateCoupon')->name('validate_coupon');
   Route::post('/save-coupon', 'CouponController@saveCoupon')->name('save.coupon');
-
   Route::post('send-contact', 'ContactController@sendContact')->name('send_contact');
-
   Route::post('/toggle-wishlist', 'ProductsController@toggleWishlist')->name('toggle_wishlist');
   Route::get('show-wishlist', 'ProductsController@showWishlist')->name('show_wishlist');
 });

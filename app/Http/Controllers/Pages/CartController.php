@@ -134,7 +134,7 @@ class CartController extends Controller
   public function showCheckout(Request $request)
   {
     // Redirect admin users to home page
-    if (Auth::check() && Auth::user()->admin) {
+    if (Auth::check() && Auth::user()->Role) {
         return redirect()->route('home_page')->with([
             'alert' => [
                 'type' => 'error',

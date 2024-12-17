@@ -31,7 +31,7 @@
       <div class="section-content">
         <form action="{{ route('products_page') }}" method="GET" accept-charset="utf-8">
           <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
               <div class="row">
                 <div class="col-md-3 col-sm-6 col-xs-6">
                   <input type="text" name="name" placeholder="Tìm kiếm..." value="{{ Request::input('name') }}">
@@ -62,10 +62,9 @@
                     </option>
                   </select>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-6">
-                  <label for="price-range">Khoảng Giá</label>
+
+                <div class="col-md-6 col-sm-6 col-xs-6" style="margin-right: 10px">
+                  {{-- <label for="price-range">Khoảng Giá</label> --}}
                   <div id="price-range"></div>
                   <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
                   <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
@@ -74,6 +73,9 @@
                   </div>
                 </div>
               </div>
+            
+             
+              
             </div>
           </div>
             <div class="btn-group-filter">
@@ -165,7 +167,10 @@
       display: flex;
       justify-content: center;
       gap: 12px;
+      justify-content: flex-start;
     }
+
+    
   </style>
 @endsection
 
