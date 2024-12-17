@@ -17,7 +17,7 @@ class AdminAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with(['alert' => [
                 'type' => 'warning',
                 'title' => 'Từ chối truy cập!',
@@ -30,13 +30,6 @@ class AdminAuthenticate
                 'title' => 'Từ chối truy cập!',
                 'content' => 'Tài khoản của bạn không có quyền truy cập. Trang này chỉ dành cho tài khoản Admin.'
             ]]);
-            if (Auth::user()->Role == 2) {
-                return redirect()->route('home_page')->with(['alert' => [
-                    'type' => 'warning',
-                    'title' => 'Từ chối truy cập!',
-                    'content' => 'Tài khoản của bạn không có quyền truy cập vào trang này.'
-                ]]);
-            }
         } else {
             return $next($request);
         }

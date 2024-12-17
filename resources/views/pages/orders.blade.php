@@ -125,6 +125,15 @@
                                                         @case(8)
                                                             <span class="label label-danger">Đã hủy</span>
                                                         @break
+                                                        @case(9)
+                                                            <p class="label label-primary">Chờ xác nhận hoàn hàng</p>
+                                                        @break
+                                                        @case(10)
+                                                            <p class="label label-success">Xác nhận hoàn hàng</p>
+                                                        @break
+                                                        @case(11)
+                                                            <p class="label label-danger">Đơn hoàn bị từ chối</p>
+                                                        @break
                                                     @endswitch
                                                 </td>
                                                 {{-- <td>
@@ -400,7 +409,7 @@
                 cancelButtonText: 'Huỷ',
                 html: `
                         <div>
-                            <label for="returnReasonInput">Lý do hoàn hàng:</label>
+                            <label for="returnReasonInput">Lý do hoàn hàng và thông tin tài khoản:</label>
                             <textarea id="returnReasonInput" class="swal2-textarea" placeholder="Nhập lý do hoàn hàng..."></textarea>
                         </div>
                     `

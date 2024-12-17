@@ -3,7 +3,8 @@
 @section('title', 'Quản Lý Bài Viết')
 
 @section('embed-css')
-    <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 @endsection
 
 @section('custom-css')
@@ -63,81 +64,75 @@
 
 @section('content')
 
-    <!-- Main row -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-md-5 col-sm-6 col-xs-6">
-                            <div id="search-input" class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control" placeholder="search...">
-                            </div>
-                        </div>
-                        <div class="col-md-7 col-sm-6 col-xs-6">
-                            <div class="btn-group pull-right">
-                                <a href="{{ route('admin.post.index') }}" class="btn btn-flat btn-primary" title="Refresh"
-                                    style="margin-right: 5px;">
-                                    <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
-                                </a>
-                                <a href="{{ route('admin.post.new') }}" class="btn btn-success btn-flat" title="New Post">
-                                    <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Post</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <table id="post-table" class="table table-hover" style="width:100%; min-width: 768px;">
-                        <thead>
-                            <tr>
-                                <th data-width="10px">ID</th>
-                                <th data-orderable="false" data-width="100px">Hình Ảnh</th>
-                                <th data-orderable="false">Tiêu Đề</th>
-                                <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
-                                <th data-orderable="false" data-width="70px">Tác Vụ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($posts as $post)
-                                <tr>
-                                    <td class="text-center">
-                                        {{ $post->id }}
-                                    </td>
-                                    <td>
-                                        <div
-                                            style="background-image: url('{{ Helper::get_image_post_url($post->image) }}'); padding-top: 50%; background-size: contain; background-repeat: no-repeat; background-position: center;">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a class="text-left" href="{{ route('post_page', ['id' => $post->id]) }}"
-                                            title="{{ $post->title }}">{{ $post->title }}</a>
-                                    </td>
-                                    <td> {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }}</td>
-                                    <td>
-                                        <a href="{{ route('admin.post.edit', ['id' => $post->id]) }}"
-                                            class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                                        </a>
-                                        <a href="javascript:void(0);" data-id="{{ $post->id }}"
-                                            class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa"
-                                            data-url="{{ route('admin.post.delete') }}">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
+  <!-- Main row -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box">
+        <div class="box-header with-border">
+          <div class="row">
+            <div class="col-md-5 col-sm-6 col-xs-6">
+              <div id="search-input" class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" placeholder="search...">
+              </div>
             </div>
-            <!-- /.box -->
+            <div class="col-md-7 col-sm-6 col-xs-6">
+              <div class="btn-group pull-right">
+                <a href="{{ route('admin.post.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
+                  <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
+                </a>
+                <a href="{{ route('admin.post.new') }}" class="btn btn-success btn-flat" title="New Post">
+                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Post</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- /.col -->
+        <div class="box-body">
+          <table id="post-table" class="table table-hover" style="width:100%; min-width: 768px;">
+            <thead>
+              <tr>
+                <th data-width="10px">ID</th>
+                <th data-orderable="false" data-width="100px">Hình Ảnh</th>
+                <th data-orderable="false">Tiêu Đề</th>
+                <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
+                <th data-orderable="false" data-width="70px">Tác Vụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($posts as $post)
+                <tr>
+                  <td class="text-center">
+                    {{ $post->id }}
+                  </td>
+                  <td>
+                    <div style="background-image: url('{{ Helper::get_image_post_url($post->image) }}'); padding-top: 50%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                  </td>
+                  <td>
+                    <a class="text-left" href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">{{ $post->title }}</a>
+                  </td>
+             
+                  <td> {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y')}}</td>
+                  <td>
+                    <a href="{{ route('admin.post.edit', ['id' => $post->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                    </a>
+                    <a href="javascript:void(0);" data-id="{{ $post->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.post.delete') }}">
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
     </div>
-    <!-- /.row -->
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
 @endsection
 
 @section('embed-js')

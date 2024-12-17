@@ -223,12 +223,6 @@
                                                                 hàng thành công</a>
                                                         </li>
                                                     @endif
-                                                    @if ($order->status === 1)
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                        </li>
-                                                    @endif
 
                                                 </ul>
 

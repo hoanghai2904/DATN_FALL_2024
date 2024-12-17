@@ -88,7 +88,7 @@
                     <div class="avatar" style="background-image: url('{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}');"></div>
                   </a>
                   <ul class="dropdown-menu">
-                    @if(Auth::user()->Role == 1 || Auth::user()->Role == 2 )
+                    @if(Auth::user()->Role )
                     <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Quản Lý Website</a></li>
                     @else
                     <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>

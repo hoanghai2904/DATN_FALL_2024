@@ -34,7 +34,7 @@ class PostController extends Controller
       'content.required' => 'Nội dung bài viết không được để trống!',
       'image.required' => 'Hình ảnh hiển thị bài viết phải được tải lên!',
     ]);
-
+    
     if ($validator->fails()) {
       return back()
         ->withErrors($validator)
@@ -235,5 +235,5 @@ class PostController extends Controller
       'title' => 'Thành Công',
       'content' => 'Chỉnh sửa bài viết thành công.'
     ]]);
-  }
+  }  
 }

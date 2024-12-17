@@ -1,29 +1,30 @@
-
 @extends('layouts.master')
 
 @section('title', $data['user']->name)
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Tài Khoản</li>
-      </ol>
-    </nav>
-  </section>
-
-  <div class="site-user">
-    <section class="section-advertise">
-      <div class="content-advertise">
-        <div id="slide-advertise" class="owl-carousel">
-          @foreach($data['advertises'] as $advertise)
-            <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-          @endforeach
-        </div>
-      </div>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tài Khoản</li>
+            </ol>
+        </nav>
     </section>
+
+    <div class="site-user">
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
     <section class="section-user">
       <div class="section-header">
@@ -176,37 +177,37 @@
 @endsection
 
 @section('js')
-  <script>
-    $(document).ready(function(){
+    <script>
+        $(document).ready(function() {
 
-      $("#slide-advertise").owlCarousel({
-        items: 2,
-        autoplay: true,
-        loop: true,
-        margin: 10,
-        autoplayHoverPause: true,
-        nav: true,
-        dots: false,
-        responsive:{
-          0:{
-            items: 1,
-          },
-          992:{
-            items: 2,
-            animateOut: 'zoomInRight',
-            animateIn: 'zoomOutLeft',
-          }
-        },
-        navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-      });
+            $("#slide-advertise").owlCarousel({
+                items: 2,
+                autoplay: true,
+                loop: true,
+                margin: 10,
+                autoplayHoverPause: true,
+                nav: true,
+                dots: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    992: {
+                        items: 2,
+                        animateOut: 'zoomInRight',
+                        animateIn: 'zoomOutLeft',
+                    }
+                },
+                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+            });
 
-      @if(session('alert'))
-        Swal.fire(
-          '{{ session('alert')['title'] }}',
-          '{{ session('alert')['content'] }}',
-          '{{ session('alert')['type'] }}'
-        )
-      @endif
-    });
-  </script>
+            @if (session('alert'))
+                Swal.fire(
+                    '{{ session('alert')['title'] }}',
+                    '{{ session('alert')['content'] }}',
+                    '{{ session('alert')['type'] }}'
+                )
+            @endif
+        });
+    </script>
 @endsection
