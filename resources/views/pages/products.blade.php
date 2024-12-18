@@ -90,8 +90,8 @@
                     </div>
             </div>
             </form>
+        </section>
     </div>
-    </section>
 
 
 
@@ -162,7 +162,6 @@
             {{ $data['products']->appends(Request::query())->links() }}
         </div>
     </section>
-    </div>
 
 @endsection
 

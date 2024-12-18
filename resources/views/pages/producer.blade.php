@@ -120,7 +120,6 @@
                                 <div class="item-product">
                                     <a href="{{ route('product_page', ['id' => $product->id]) }}"
                                         title="{{ $product->name }}">
-                                        title="{{ $product->name }}">
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <img loading="lazy"
@@ -152,16 +151,17 @@
                                 </div>
                                 </a>
                             </div>
+                        @endforeach
                     </div>
-                @endforeach
+                @endif
             </div>
-            @endif
+            <div class="section-footer text-center">
+                {{ $data['products']->appends(Request::query())->links() }}
+            </div>
+        </section>
     </div>
-    <div class="section-footer text-center">
-        {{ $data['products']->appends(Request::query())->links() }}
-    </div>
-    </section>
-    </div>
+
+
 
 @endsection
 
