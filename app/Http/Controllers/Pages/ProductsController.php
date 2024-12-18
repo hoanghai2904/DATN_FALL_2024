@@ -297,7 +297,7 @@ class ProductsController extends Controller
             $data['msg'] = 'Đã xóa khỏi danh sách yêu thích';
             $data['status'] = 'removed';
         } else {
-            // $wishlist->push($wishlistItem);
+            $wishlist->push($wishlistItem);
             session(['wishlist' => $wishlist]);
             $data['msg'] = 'Đã thêm vào danh sách yêu thích';
             $data['status'] = 'added';

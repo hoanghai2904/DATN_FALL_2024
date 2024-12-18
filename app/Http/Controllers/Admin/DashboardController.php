@@ -48,8 +48,8 @@ class DashboardController extends Controller
       $profit = 0;
 
       foreach ($order_details as $order_detail) {
-        $revenue = $revenue + $order_detail->price * $order_detail->quantity-$order_detail->order->discount;
-        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount);
+        $revenue = $revenue + $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
+        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price)) - ($order_detail->order->discount);
         $count_products = $count_products + $order_detail->quantity;
       }
 
@@ -70,7 +70,7 @@ class DashboardController extends Controller
         $query->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'order' => function ($query) {
-          $query->select('id', 'order_code','discount');
+          $query->select('id', 'order_code', 'discount');
         },
         'product_detail' => function ($query) {
           $query->select('id', 'product_id', 'color', 'import_price')->with([

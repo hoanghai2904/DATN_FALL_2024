@@ -120,25 +120,15 @@
                                     <td>{{ $order->email }}</td>
                                     <td>{{ $order->phone }}</td>
                                     <td>{{ $order->payment_method?->name }}</td>
-                                    <td>
-                                        @if ($order?->is_paid)
-                                            <span class="label label-success">Đã thanh toán</span>
-                                        @else
-                                            <span class="label label-danger">Chưa thanh toán</span>
-                                        @endif
-                                    </td>
-
+                                    <td>{{ $order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</td>
                                     <td> {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
                                     @php
                                         $statusLabels = [
-                                            1 => ['label' => 'label-warning', 'text' => 'Chờ xác nhận'], // Chờ xác nhận
-                                            2 => ['label' => 'label-info', 'text' => 'Xác nhận'], // Đã xác nhận
-                                            3 => ['label' => 'label-primary', 'text' => 'Đang chuẩn bị'], // Đang chuẩn bị
-                                            4 => ['label' => 'label-info', 'text' => 'Đang Vận Chuyển'], // Đang vận chuyển
-                                            5 => ['label' => 'label-success', 'text' => 'Đã Giao Hàng'], // Đã giao hàng
-                                            6 => ['label' => 'label-success', 'text' => 'Đơn hàng thành công'], // Đơn hàng thành công
-                                            7 => ['label' => 'label-danger', 'text' => 'Giao hàng thất bại'], // Giao hàng thất bại
-                                            8 => ['label' => 'label-danger', 'text' => 'Hủy'], // Hủy
+                                            1 => ['label' => 'label-default', 'text' => 'Chờ xác nhận'],
+                                            2 => ['label' => 'label-info', 'text' => 'Đã xác nhận'],
+                                            3 => ['label' => 'label-info', 'text' => 'Đang Vận Chuyển'],
+                                            4 => ['label' => 'label-success', 'text' => 'Đã Giao Hàng'],
+                                            5 => ['label' => 'label-danger', 'text' => 'Hủy'],
                                         ];
                                     @endphp
                                     <td>
@@ -175,12 +165,6 @@
                                                         {{-- <li>
                                                             <a
                                                                 href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                        </li> --}}
-                                                    @endif
-                                                    @if ($order->status === 1)
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}"></i>Hủy</a>
                                                         </li>
                                                     @endif
 
@@ -225,7 +209,6 @@
                                                     @endif
 
                                                 </ul>
-
                                             </div>
                                         @else
                                         @endif

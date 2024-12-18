@@ -216,64 +216,89 @@ class OrderController extends Controller
     }
   }
 
-  public function cancelOrder($id)
+  public function cancelOrder($id, Request $request)
   {
-    if (Auth::check() && Auth::user()->Role == 0) {
-      $order = Order::where('id', $id)->first();
-      if (!$order) {
-        abort(404);
-      }
-
-      // Kiểm tra quyền truy cập
-      if (Auth::user()->id != $order->user_id) {
-        return redirect()->route('home_page')->with([
-          'alert' => [
-            'type' => 'warning',
-            'title' => 'Cảnh Báo',
-            'content' => 'Bạn không có quyền truy cập vào trang này!'
-          ]
-        ]);
-      } else {
-        // Kiểm tra trạng thái đơn hàng và thực hiện hủy nếu đơn hàng ở trạng thái có thể hủy
-        if ($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::CONFIRMED || $order->status == OrderStatusEnum::PREPARING || $order->status == OrderStatusEnum::FAILED) {
-          // Cập nhật trạng thái đơn hàng thành CANCELLED
-          $order->status = OrderStatusEnum::CANCELLED;
-          $order->save();
-
-          // Cộng lại số lượng sản phẩm trong kho
-          foreach ($order->order_details as $orderDetail) {
-            $productDetail = $orderDetail->product_detail;
-
-            // Kiểm tra nếu productDetail tồn tại
-            if ($productDetail) {
-              $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
-              $productDetail->save();
-            }
+      if (Auth::check() && Auth::user()->Role == 0) {
+          $order = Order::where('id', $id)->first();
+          if (!$order) {
+              abort(404);
           }
-
-          return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
-        } else {
-          return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
-        }
+  
+          // Kiểm tra quyền truy cập
+          if (Auth::user()->id != $order->user_id) {
+              return redirect()->route('home_page')->with([
+                  'alert' => [
+                      'type' => 'warning',
+                      'title' => 'Cảnh Báo',
+                      'content' => 'Bạn không có quyền truy cập vào trang này!'
+                  ]
+              ]);
+          }
+  
+          // Xử lý theo phương thức thanh toán
+          if ($order->payment_method_id == 2) { // Nếu phương thức thanh toán là VNPay
+              if ($request->has('cancel_reason')) {
+                  // Lưu lý do hoàn hàng
+                  $order->status = OrderStatusEnum::CANCELLED_PENDING; // Chuyển trạng thái đơn hàng thành hoàn trả
+                  $order->cancel_reason = $request->input('cancel_reason'); // Ghi lại lý do hoàn trả
+                  $order->save();
+  
+                  // Cộng lại số lượng sản phẩm trong kho
+                  foreach ($order->order_details as $orderDetail) {
+                      $productDetail = $orderDetail->product_detail;
+  
+                      // Kiểm tra nếu productDetail tồn tại
+                      if ($productDetail) {
+                          $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+                          $productDetail->save();
+                      }
+                  }
+  
+                  return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
+              } else {
+                  return response()->json(['status' => 'error', 'message' => 'Lý do hủy đơn không được để trống!']);
+              }
+          } else { // Xử lý hủy bình thường cho các phương thức thanh toán khác
+              if ($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::CONFIRMED || $order->status == OrderStatusEnum::PREPARING || $order->status == OrderStatusEnum::FAILED) {
+                  // Cập nhật trạng thái đơn hàng thành CANCELLED
+                  $order->status = OrderStatusEnum::CANCELLED;
+                  $order->save();
+  
+                  // Cộng lại số lượng sản phẩm trong kho
+                  foreach ($order->order_details as $orderDetail) {
+                      $productDetail = $orderDetail->product_detail;
+  
+                      // Kiểm tra nếu productDetail tồn tại
+                      if ($productDetail) {
+                          $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+                          $productDetail->save();
+                      }
+                  }
+  
+                  return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
+              } else {
+                  return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
+              }
+          }
+      } else if (Auth::check()) {
+          return redirect()->route('admin.dashboard')->with([
+              'alert' => [
+                  'type' => 'warning',
+                  'title' => 'Cảnh Báo',
+                  'content' => 'Bạn không có quyền truy cập vào trang này!'
+              ]
+          ]);
+      } else {
+          return redirect()->route('login')->with([
+              'alert' => [
+                  'type' => 'warning',
+                  'title' => 'Cảnh Báo',
+                  'content' => 'Bạn phải đăng nhập để sử dụng chức năng này!'
+              ]
+          ]);
       }
-    } else if (Auth::check()) {
-      return redirect()->route('admin.dashboard')->with([
-        'alert' => [
-          'type' => 'warning',
-          'title' => 'Cảnh Báo',
-          'content' => 'Bạn không có quyền truy cập vào trang này!'
-        ]
-      ]);
-    } else {
-      return redirect()->route('login')->with([
-        'alert' => [
-          'type' => 'warning',
-          'title' => 'Cảnh Báo',
-          'content' => 'Bạn phải đăng nhập để sử dụng chức năng này!'
-        ]
-      ]);
-    }
   }
+  
 
   public function reciveOrder($id)
   {

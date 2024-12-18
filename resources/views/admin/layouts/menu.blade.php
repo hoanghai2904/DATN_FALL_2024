@@ -2,10 +2,10 @@
     <!-- LOGO -->
     <div class="navbar-brand-box">
         <!-- Dark Logo-->
-     
+
         <!-- Light Logo-->
         <a href="#" class="logo logo-light">
-           
+
             <span class="logo-lg">
                 <img src="{{ asset('theme/admin/assets/images/logo-light.png') }}" alt="" height="17">
             </span>
@@ -30,7 +30,7 @@
                     <div class="collapse menu-dropdown" id="sidebarDashboards">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{route('admin.dashboard')}}" class="nav-link">Tổng quát</a>
+                                <a href="{{ route('admin.dashboard') }}" class="nav-link">Tổng quát</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#" class="nav-link"> Thống kê theo vv...</a>
@@ -46,7 +46,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.brands.index') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.brands.index') }}"
+                        aria-controls="sidebarDashboards">
                         <i class="ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý thương hiệu</span>
                     </a>
                 </li>
@@ -88,7 +89,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}" aria-controls="sidebarDashboards">
+                    <a class="nav-link menu-link" href="{{ route('admin.vouchers.index') }}"
+                        aria-controls="sidebarDashboards">
                         <i class="ri-gift-2-fill"></i> <span data-key="t-dashboards">Quản lý khuyến mại</span>
                     </a>
                 </li>
@@ -117,7 +119,7 @@
                                     lý danh mục</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.posts.index')}}" class="nav-link">Quản lý bài viết</a>
+                                <a href="{{ route('admin.posts.index') }}" class="nav-link">Quản lý bài viết</a>
                             </li>
                         </ul>
                     </div>
@@ -141,40 +143,12 @@
                         </ul>
                     </div>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="#contact" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="ri-phone-fill"></i> <span data-key="t-dashboards">Quản lý liên hệ</span>
-                    </a>
-
-                    <div class="collapse menu-dropdown" id="contact">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">ádfsdfsf</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li> --}}
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.comments.listComment') }}"
                         aria-controls="sidebarDashboards">
                         <i class="bx bx-message-detail"></i> <span data-key="t-dashboards">Quản lý Bình Luận</span>
                     </a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link menu-link" href="#review" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class=" ri-pencil-fill"></i> <span data-key="t-dashboards">Quản lý đánh giá</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="review">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">abcd</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> --}}
             </ul>
         </div>
 
@@ -182,5 +156,5 @@
     <!-- Sidebar -->
 </div>
 
-    <div class="sidebar-background"></div>
+<div class="sidebar-background"></div>
 </div>
