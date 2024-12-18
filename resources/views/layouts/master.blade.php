@@ -32,6 +32,7 @@
   @if(Request::route()->getName() != 'show_cart')
   <link rel="stylesheet" href="{{ asset('css/minicart.css') }}">
   <link rel="stylesheet" href="{{ asset('css/wishlist.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/social.css') }}">
   @endif
   @yield('css')
 </head>
@@ -78,6 +79,7 @@
     <!-- MiniCart display -->
     @include('layouts.minicart')
     @include('layouts.wishlist')
+    @include('layouts.social')
     @endif
 
     <!-- Footer -->
