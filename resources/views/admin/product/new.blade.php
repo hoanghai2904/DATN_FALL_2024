@@ -39,123 +39,109 @@
 
 @section('content')
 
-    <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8"
-        enctype="multipart/form-data">
-        @csrf
-        <div class="box box-primary">
-            <div class="box-header">
-                <h3 class="box-title">Thông Tin Sản Phẩm</h3>
-                <div class="box-tools">
-                    <!-- This will cause the box to collapse when clicked -->
-                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
-                            class="fa fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
-                        <div class="upload-image text-center">
-                            <div title="Image Preview" class="image-preview"
-                                style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;">
-                            </div>
-                            <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i
-                                    class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
-                            <input type="file" accept="image/*" id="upload" style="display:none" name="image"
-                                required>
-                        </div>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
-                                    <input type="text" name="name" class="form-control" id="name"
-                                        placeholder="Tên sản Phẩm" required autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="sku_code">Mã Sản Phẩm <span class="text-red">*</span></label>
-                                    <input type="text" name="sku_code" class="form-control" id="sku_code"
-                                        placeholder="Mã sản Phẩm" required autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Danh mục <span class="text-red">*</span></label>
-                                    <select class="form-control" name="producer_id" required>
-                                        <option value="">-- Chọn danh mục --</option>
-                                        @foreach ($producers as $producer)
-                                            <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+  @csrf
+  <div class="box box-primary">
+    <div class="box-header">
+      <h3 class="box-title">Thông Tin Sản Phẩm</h3>
+      <div class="box-tools">
+        <!-- This will cause the box to collapse when clicked -->
+        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="row">
+        <div class="col-md-3">
+          <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
+          <div class="upload-image text-center">
+            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
+            <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
+            <input type="file" accept="image/*" id="upload" style="display:none" name="image" required>
+          </div>
         </div>
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Thông Tin Khuyến Mãi</h3>
-                <div class="box-tools">
-                    <!-- This will cause the box to collapse when clicked -->
-                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
-                            class="fa fa-minus"></i></button>
-                </div>
+        <div class="col-md-9">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Tên sản Phẩm" required autocomplete="off">
+              </div>
             </div>
-            <div class="box-body">
-                <div id="product-promotions"></div>
-                <div class="text-center">
-                    <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Khuyến
-                        Mãi</button>
-                </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="sku_code">Mã Sản Phẩm <span class="text-red">*</span></label>
+                <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
+              </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label>Danh mục <span class="text-red">*</span></label>
+                <select class="form-control" name="producer_id" required>
+                  <option value="">-- Chọn danh mục --</option>
+                  @foreach($producers as $producer)
+                    <option value="{{ $producer->id }}">{{ $producer->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Thông Tin Màu Sắc Và Giá Sản Phẩm</h3>
-                <div class="box-tools">
-                    <!-- This will cause the box to collapse when clicked -->
-                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
-                            class="fa fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="box-body">
-                <div id="product-details"></div>
-            </div>
-            <div class="text-center box-footer">
-                <button class="add btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Mầu Sắc Sản
-                    Phẩm</button>
-            </div>
-        </div>
-        <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#product-information" data-toggle="tab">Cấu Hình Chi Tiết</a></li>
-                <li><a href="#product-introduction" data-toggle="tab">Bài Viết Sản Phẩm</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="active tab-pane" id="product-information">
-                    <textarea name="information_details" rows="20"></textarea>
-                </div>
-                <div class="tab-pane" id="product-introduction">
-                    <textarea name="product_introduction" rows="20"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="box box-solid">
-            <div class="box-body">
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o"
-                            aria-hidden="true"></i> Lưu</button>
-                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right"
-                        style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
-                </div>
-            </div>
-        </div>
-    </form>
+      </div>
+    </div>
+  </div>
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Thông Tin Khuyến Mãi</h3>
+      <div class="box-tools">
+        <!-- This will cause the box to collapse when clicked -->
+        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div id="product-promotions"></div>
+      <div class="text-center">
+        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Thông tin </button>
+      </div>
+    </div>
+  </div>
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">Thông Tin thể loại Và Giá Sản Phẩm</h3>
+      <div class="box-tools">
+        <!-- This will cause the box to collapse when clicked -->
+        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div id="product-details"></div>
+    </div>
+    <div class="text-center box-footer">
+      <button class="add btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm thể loại Sản Phẩm</button>
+    </div>
+  </div>
+  <div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#product-information" data-toggle="tab">Mô tả sản phẩm</a></li>
+      {{-- <li><a href="#product-introduction" data-toggle="tab">Chi tiết Sản Phẩm</a></li> --}}
+    </ul>
+    <div class="tab-content">
+      <div class="active tab-pane" id="product-information">
+        <textarea name="information_details" rows="20"></textarea>
+      </div>
+      <div class="tab-pane" id="product-introduction">
+        <textarea name="product_introduction" rows="20"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="box box-solid">
+    <div class="box-body">
+      <div class="form-group">
+        <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
+        <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+      </div>
+    </div>
+  </div>
+</form>
 @endsection
 
 @section('embed-js')

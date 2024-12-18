@@ -31,15 +31,18 @@ class DashboardController extends Controller
 
       $data['labels'][] = $date;
 
-      $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
-        ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
-        ->whereHas('order', function (Builder $query) {
-          $query->where('status', '=', OrderStatusEnum::DELIVERED);
-        })->with([
-          'product_detail' => function ($query) {
-            $query->select('id', 'import_price');
-          }
-        ])->get();
+      $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
+      ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
+      ->whereHas('order', function (Builder $query) {
+        $query->where('status', '=', OrderStatusEnum::COMPLETED);
+      })->with([
+        'order' => function ($query) {
+          $query->select('id', 'order_code','discount');
+        },
+        'product_detail' => function ($query) {
+          $query->select('id', 'import_price','promotion_price');
+        }
+      ])->latest()->get();
 
       $revenue = 0;
       $profit = 0;

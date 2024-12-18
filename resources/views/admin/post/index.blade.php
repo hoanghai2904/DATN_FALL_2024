@@ -82,7 +82,7 @@
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
                 <a href="{{ route('admin.post.new') }}" class="btn btn-success btn-flat" title="New Post">
-                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> New Post</span>
+                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs">Thêm bài viết </span>
                 </a>
               </div>
             </div>
