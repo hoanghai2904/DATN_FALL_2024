@@ -438,66 +438,66 @@
             @else
               <p class="text-center"><strong>Đang cập nhật ...</strong></p>
             @endif --}}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
+  </div>
 
 @endsection
 
 @section('css')
-    <link type="text/css" rel="stylesheet" href="{{ asset('common/lightGallery/dist/css/lightgallery.css') }}" />
-    <link type="text/css" rel="stylesheet" href="{{ asset('common/lightslider/dist/css/lightslider.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/product.css') }}">
+  <link type="text/css" rel="stylesheet" href="{{ asset('common/lightGallery/dist/css/lightgallery.css') }}" />
+  <link type="text/css" rel="stylesheet" href="{{ asset('common/lightslider/dist/css/lightslider.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/product.css') }}">
 @endsection
 
 @section('js')
-    <script src="{{ asset('common/Rate/rater.js') }}"></script>
-    <script src="{{ asset('common/lightGallery/dist/js/lightgallery.js') }}"></script>
-    <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
-    <script src="{{ asset('js/product.js') }}"></script>
-    <script>
-        $(document).ready(function() {
+  <script src="{{ asset('common/Rate/rater.js') }}"></script>
+  <script src="{{ asset('common/lightGallery/dist/js/lightgallery.js') }}"></script>
+  <script src="{{ asset('common/lightslider/dist/js/lightslider.js') }}"></script>
+  <script src="{{ asset('js/product.js') }}"></script>
+  <script>
+     $(document).ready(function() {
 
-            $(".section-rating .rating-form form").submit(function(eventObj) {
-                $("<input />").attr("type", "hidden")
-                    .attr("name", "rate")
-                    .attr("value", $(".rating-product").rate("getValue"))
-                    .appendTo(".section-rating .rating-form form");
-                return true;
-            });
-            @if (session('vote_alert'))
-                scrollToxx();
-                Swal.fire(
-                    '{{ session('vote_alert')['title'] }}',
-                    '{{ session('vote_alert')['content'] }}',
-                    '{{ session('vote_alert')['type'] }}'
-                );
-            @endif
-            @if (session('alert'))
-                Swal.fire(
-                    '{{ session('alert')['title'] }}',
-                    '{{ session('alert')['content'] }}',
-                    '{{ session('alert')['type'] }}'
-                );
-            @endif
-            @if (session('wishlist_alert'))
-                Swal.fire(
-                    '{{ session('wishlist_alert')['title'] }}',
-                    '{{ session('wishlist_alert')['content'] }}',
-                    '{{ session('wishlist_alert')['type'] }}'
-                );
-                var icon = $('.wishlist-icon');
-                if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
-                    icon.addClass('wishlist-added');
-                } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
-                    icon.removeClass('wishlist-added');
-                }
-            @endif
-        });
-    </script>
+      $(".section-rating .rating-form form").submit( function(eventObj) {
+        $("<input />").attr("type", "hidden")
+          .attr("name", "rate")
+          .attr("value", $(".rating-product").rate("getValue"))
+          .appendTo(".section-rating .rating-form form");
+        return true;
+      });
+      @if(session('vote_alert'))
+        scrollToxx();
+        Swal.fire(
+          '{{ session('vote_alert')['title'] }}',
+          '{{ session('vote_alert')['content'] }}',
+          '{{ session('vote_alert')['type'] }}'
+        );
+      @endif
+      @if(session('alert'))
+        Swal.fire(
+          '{{ session('alert')['title'] }}',
+          '{{ session('alert')['content'] }}',
+          '{{ session('alert')['type'] }}'
+        );
+      @endif
+      @if(session('wishlist_alert'))
+            Swal.fire(
+                '{{ session('wishlist_alert')['title'] }}',
+                '{{ session('wishlist_alert')['content'] }}',
+                '{{ session('wishlist_alert')['type'] }}'
+            );
+            var icon = $('.wishlist-icon');
+            if ('{{ session('wishlist_alert')['status'] }}' === 'added') {
+                icon.addClass('wishlist-added');
+            } else if ('{{ session('wishlist_alert')['status'] }}' === 'removed') {
+                icon.removeClass('wishlist-added');
+            }
+        @endif
+    });
+  </script>
 @endsection

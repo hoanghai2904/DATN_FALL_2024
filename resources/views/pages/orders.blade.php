@@ -109,12 +109,11 @@
 
                                                         @case(4)
                                                             <div style="display:flex">
-                                                                <button class="btn btn-success" style="margin-right: 10px;"
+                                                                <span class="label label-info" style="margin-right:10px">Đang
+                                                                    giao</span>
+                                                                <button class="btn btn-success"
                                                                     onclick="handleReceiveOrder({{ $order->id }})">Đã
                                                                     nhận</button>
-                                                                <button class="btn btn-warning"
-                                                                    onclick="handleRequestReturn({{ $order->id }})">Hoàn
-                                                                    hàng</button>
                                                             </div>
                                                         @break
 

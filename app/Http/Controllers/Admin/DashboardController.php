@@ -31,25 +31,22 @@ class DashboardController extends Controller
 
       $data['labels'][] = $date;
 
-      $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
-      ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
-      ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED);
-      })->with([
-        'order' => function ($query) {
-          $query->select('id', 'order_code','discount');
-        },
-        'product_detail' => function ($query) {
-          $query->select('id', 'import_price');
-        }
-      ])->latest()->get();
+      $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
+        ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
+        ->whereHas('order', function (Builder $query) {
+          $query->where('status', '=', OrderStatusEnum::DELIVERED);
+        })->with([
+          'product_detail' => function ($query) {
+            $query->select('id', 'import_price');
+          }
+        ])->get();
 
       $revenue = 0;
       $profit = 0;
 
       foreach ($order_details as $order_detail) {
-        $revenue = $revenue + $order_detail->price * $order_detail->quantity-$order_detail->order->discount;
-        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount);
+        $revenue = $revenue + $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
+        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price)) - ($order_detail->order->discount);
         $count_products = $count_products + $order_detail->quantity;
       }
 
@@ -70,7 +67,7 @@ class DashboardController extends Controller
         $query->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'order' => function ($query) {
-          $query->select('id', 'order_code','discount');
+          $query->select('id', 'order_code', 'discount');
         },
         'product_detail' => function ($query) {
           $query->select('id', 'product_id', 'color', 'import_price')->with([

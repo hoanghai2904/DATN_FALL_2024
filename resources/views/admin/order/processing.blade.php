@@ -438,29 +438,35 @@
                                                 @endif
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
-                                            
+
                                             <td style="display: flex; align-items: center;justify-content: space-between">
                                                 <span class="truncated-text" title="{{ $order->return_reason }}">
                                                     {{ strlen($order->return_reason) > 20 ? substr($order->return_reason, 0, 7) . '...' : $order->return_reason }}
                                                 </span>
-                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm tip" title="Chi Tiết" data-toggle="modal" data-target="#returnReasonModal" data-reason="{{ $order->return_reason }}">
+                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm tip"
+                                                    title="Chi Tiết" data-toggle="modal" data-target="#returnReasonModal"
+                                                    data-reason="{{ $order->return_reason }}">
                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                 </a>
                                             </td>
-                                            
+
                                             <!-- Modal to show full reason -->
-                                            <div class="modal fade" id="returnReasonModal" tabindex="-1" role="dialog" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="returnReasonModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="returnReasonModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                            <h4 class="modal-title" id="returnReasonModalLabel">Lý Do Hoàn Hàng</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title" id="returnReasonModalLabel">Lý Do Hoàn
+                                                                Hàng</h4>
                                                         </div>
                                                         <div class="modal-body" id="modalReturnReason">
                                                             <!-- Full return reason will be displayed here -->
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Đóng</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -472,7 +478,6 @@
                                                         9 => ['label' => 'label-info', 'text' => 'Đang xác nhận'],
                                                         10 => ['label' => 'label-primary', 'text' => 'Đã hoàn'],
                                                         11 => ['label' => 'label-danger', 'text' => 'Từ chối'],
-
                                                     ];
                                                 @endphp
                                                 @if (isset($statusLabels[$order->status]))
@@ -670,7 +675,7 @@
 @section('custom-js')
     <script>
         // When the eye icon is clicked, load the full return reason into the modal
-        $('#returnReasonModal').on('show.bs.modal', function (event) {
+        $('#returnReasonModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget); // Button that triggered the modal
             var reason = button.data('reason'); // Extract the reason from the data-* attribute
             var modal = $(this);
