@@ -1,0 +1,21 @@
+.support-social {
+    position: fixed;
+    left: 20px;
+    bottom: 100px;
+    z-index: 1000;
+}
+
+.support-social .social-item {
+    display: block;
+    margin-bottom: 15px;
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.support-social img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+}

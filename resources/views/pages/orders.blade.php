@@ -85,7 +85,7 @@
                                                                 <span class="label label-warning" style="margin-right:10px">Chờ xác
                                                                     nhận</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }},{{ $order->is_paid }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -94,7 +94,7 @@
                                                                 <span class="label label-warning" style="margin-right:10px">Đã xác
                                                                     nhận</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }},{{ $order->is_paid }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -103,7 +103,7 @@
                                                                 <span class="label label-primary" style="margin-right:10px">Đang
                                                                     chuẩn bị</span>
                                                                 <button class="btn btn-danger"
-                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }})">Huỷ</button>
+                                                                    onclick="handleCancelOrder({{ $order->id }},{{ $order->payment_method_id }},{{ $order->is_paid }})">Huỷ</button>
                                                             </div>
                                                         @break
 
@@ -242,7 +242,7 @@
 
 @section('js')
     <script>
-        const handleCancelOrder = (id, paymentMethodId) => {
+        const handleCancelOrder = (id, paymentMethodId,isPaid) => {
             let swalOptions = {
                 title: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
                 text: "Hành động này không thể hoàn tác!",
@@ -254,7 +254,7 @@
                 cancelButtonText: 'Huỷ'
             };
 
-            if (paymentMethodId === 2) { // Thanh toán Online
+            if (paymentMethodId === 2 && isPaid === 1) { // Thanh toán Online
                 swalOptions.html = `
             <div>
                 <label for="cancelReasonInput">Lý do hủy đơn hàng và thông tin tài khoản:</label>

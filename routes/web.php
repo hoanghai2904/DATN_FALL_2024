@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\pages\OrderTrackingController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +101,8 @@ Route::namespace('Pages')->group(function () {
   Route::post('payment-now/{id}', 'CartController@paymentNow')->name(name: 'payment_now');
   Route::post('recive-order/{id}', 'OrderController@reciveOrder')->name(name: 'receive_order');
 
+  Route::get('tracking', [OrderTrackingController::class, 'index'])->name('tracking');
+  Route::post('search', action: [OrderTrackingController::class, 'searchOrder'])->name('search');
 
   Route::get('user/profile', 'UserController@show')->name('show_user');
   Route::get('user/edit', 'UserController@edit')->name('edit_user');

@@ -236,7 +236,7 @@ class OrderController extends Controller
           }
   
           // Xử lý theo phương thức thanh toán
-          if ($order->payment_method_id == 2) { // Nếu phương thức thanh toán là VNPay
+          if ($order->payment_method_id == 2 && $order->is_paid == 1) { // Nếu phương thức thanh toán là VNPay
               if ($request->has('cancel_reason')) {
                   // Lưu lý do hoàn hàng
                   $order->status = OrderStatusEnum::CANCELLED_PENDING; // Chuyển trạng thái đơn hàng thành hoàn trả

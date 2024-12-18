@@ -34,9 +34,9 @@
                   <span class="fas fa-ticket"></span>
                   {{ __('Mã giảm giá') }}</a>
               </li>
-              <li class="nav-item {{ Helper::check_active(['about_page']) }}"><a href="{{ route('about_page') }}" title="{{ __('Giới Thiệu') }}">
-                  <span class="fas fa-info"></span>
-                  {{ __('Giới Thiệu') }}</a>
+              <li class="nav-item {{ Helper::check_active(['tracking']) }}"><a href="{{ route('tracking') }}" title="{{ __('Tra cứu') }}">
+                  <span class="fas fa-search"></span>
+                  {{ __('Tra cứu') }}</a>
               </li>
               <li class="nav-item dropdown {{ Helper::check_active(['products_page', 'producer_page', 'product_page']) }}">
                 <a href="{{ route('products_page') }}" title="{{ __('Sản Phẩm') }}">
