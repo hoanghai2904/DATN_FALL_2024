@@ -40,7 +40,7 @@ class DashboardController extends Controller
           $query->select('id', 'order_code','discount');
         },
         'product_detail' => function ($query) {
-          $query->select('id', 'import_price');
+          $query->select('id', 'import_price','promotion_price');
         }
       ])->latest()->get();
 

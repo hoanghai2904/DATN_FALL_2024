@@ -95,7 +95,7 @@
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
                 <a href="#new-account-modal" class="btn btn-success btn-flat" data-toggle="modal" title="New Account">
-                  <i class="fa fa-user-plus" aria-hidden="true"></i><span class="hidden-xs"> New Account</span>
+                  <i class="fa fa-user-plus" aria-hidden="true"></i><span class="hidden-xs">Thêm mới </span>
                 </a>
               </div>
             </div>
@@ -134,9 +134,9 @@
                   <td> {{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
                   <td>
                     @if($user->active)
-                      <span class="label-success status-label">Activated</span>
+                      <span class="label-success status-label">Hoạt Động </span>
                     @else
-                      <span class="label-danger status-label">Not Activated</span>
+                      <span class="label-danger status-label">Chưa kích hoạt</span>
                     @endif
                   </td>
                   <td>

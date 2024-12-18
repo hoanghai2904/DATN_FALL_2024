@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'User Profile')
+@section('title', 'Thông tin Khách hàng')
 
 @section('embed-css')
 @endsection

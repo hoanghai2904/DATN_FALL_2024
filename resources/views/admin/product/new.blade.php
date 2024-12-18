@@ -97,7 +97,7 @@
     <div class="box-body">
       <div id="product-promotions"></div>
       <div class="text-center">
-        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Khuyến Mãi</button>
+        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Thông tin </button>
       </div>
     </div>
   </div>

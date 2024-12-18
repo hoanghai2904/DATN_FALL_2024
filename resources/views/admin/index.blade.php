@@ -394,9 +394,10 @@
                       $statusLabels = [
                           1 => ['label' => 'label-default', 'text' => 'Chờ xác nhận'],
                           2 => ['label' => 'label-info', 'text' => 'Đã xác nhận'],
-                          3 => ['label' => 'label-info', 'text' => 'Đang Vận Chuyển'],
-                          4 => ['label' => 'label-success', 'text' => 'Đã Giao Hàng'],
-                          5 => ['label' => 'label-danger', 'text' => 'Hủy'],
+                          3 => ['label' => 'label-info', 'text' => 'Chuẩn bị '],
+                          4 => ['label' => 'label-warning', 'text' => 'Đang giao'],
+                          6 => ['label' => 'label-success', 'text' => 'Thành công'],
+                          8 => ['label' => 'label-danger', 'text' => 'Hủy'],
                       ];
                   @endphp
                   <td>
