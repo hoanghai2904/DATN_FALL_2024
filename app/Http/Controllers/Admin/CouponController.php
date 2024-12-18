@@ -54,32 +54,66 @@ class CouponController extends Controller
         ]]);
     }
 
+    // public function delete(Request $request)
+    // {
+    //     $coupon = Coupon::find($request->input('coupon_id'));
+    //     if (!$coupon) {
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'title' => 'Thất Bại',
+    //             'content' => 'Mã giảm giá không tồn tại.'
+    //         ]);
+    //     }
+    //     $orders = Order::where('coupon_id', operator: $coupon->id)->get();
+    //     if ($orders->count() > 0) {
+    //         return response()->json([
+    //             'type' => 'error',
+    //             'title' => 'Thất Bại',
+    //             'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
+    //         ]);
+    //     }
+    //     $coupon->delete();
+
+    //     return response()->json([
+    //         'type' => 'success',
+    //         'title' => 'Thành Công',
+    //         'content' => 'Xóa mã giảm giá thành công.'
+    //     ]);
+    // }
     public function delete(Request $request)
     {
+        // Lấy coupon chưa bị xóa
         $coupon = Coupon::find($request->input('coupon_id'));
+    
+        // Kiểm tra nếu mã giảm giá không tồn tại
         if (!$coupon) {
             return response()->json([
                 'type' => 'error',
                 'title' => 'Thất Bại',
                 'content' => 'Mã giảm giá không tồn tại.'
-            ]);
+            ], 404); // Trả về mã lỗi 404
         }
-        $orders = Order::where('coupon_id', operator: $coupon->id)->get();
-        if ($orders->count() > 0) {
+    
+        try {
+            // Thực hiện xóa mã giảm giá
+            $coupon->delete();  // Hoặc $coupon->forceDelete() để xóa hoàn toàn
+    
+            return response()->json([
+                'type' => 'success',
+                'title' => 'Thành Công',
+                'content' => 'Xóa mã giảm giá thành công.'
+            ], 200);  // Trả về mã 200 nếu thành công
+        } catch (\Exception $e) {
+            // Xử lý lỗi nếu có
             return response()->json([
                 'type' => 'error',
-                'title' => 'Thất Bại',
-                'content' => 'Mã giảm giá đang được sử dụng, không thể xóa.'
-            ]);
+                'title' => 'Lỗi',
+                'content' => 'Có lỗi xảy ra: ' . $e->getMessage()
+            ], 500);  // Trả về mã lỗi 500 nếu có lỗi trong quá trình xóa
         }
-        $coupon->delete();
-
-        return response()->json([
-            'type' => 'success',
-            'title' => 'Thành Công',
-            'content' => 'Xóa mã giảm giá thành công.'
-        ]);
     }
+    
+    
 
     public function edit($id)
     {

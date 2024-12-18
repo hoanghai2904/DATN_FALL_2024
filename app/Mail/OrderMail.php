@@ -33,7 +33,7 @@ class OrderMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Đơn hàng' . $this->data['order_code'],
+            subject: 'Đơn hàng' . ' ' . $this->data['order_code'],
         );
     }
 

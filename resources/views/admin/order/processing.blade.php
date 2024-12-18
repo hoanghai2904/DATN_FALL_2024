@@ -12,12 +12,18 @@
         #confirmed td,
         #confirmed th,
         #preOrder td,
-        #preOrder th {
+        #preOrder th,
+        #returnOrders td,
+        #returnOrders th,
+        #cancelOrders td,
+        #cancelOrders th {
             vertical-align: middle !important;
         }
 
         #confirmed span.status-label,
-        #preOrder span.status-label {
+        #preOrder span.status-label,
+        #returnOrders span.status-label,
+        #cancelOrders span.status-label{
             display: block;
             width: 85px;
             text-align: center;
@@ -58,10 +64,10 @@
         }
 
         .custom-dropdown-menu {
-            min-width: 80px; /* Đảm bảo menu không nhỏ hơn 50px */
-            max-width: 100px; /* Giới hạn chiều rộng tối đa */
-            overflow-wrap: break-word; /* Tự động xuống dòng nếu nội dung dài */
-            white-space: normal; /* Cho phép xuống dòng */
+            min-width: 80px;
+            max-width: 100px;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
     </style>
 @endsection
@@ -89,7 +95,8 @@
                         </div>
                         <div class="col-md-7 col-sm-6 col-xs-6">
                             <div class="btn-group pull-right">
-                                <a href="{{ route('admin.order.processing') }}" class="btn btn-flat btn-primary" title="Refresh">
+                                <a href="{{ route('admin.order.processing') }}" class="btn btn-flat btn-primary"
+                                    title="Refresh">
                                     <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                                 </a>
                             </div>
@@ -99,10 +106,19 @@
                 <!-- Tab Navigation -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
-                        <a href="#confirmed-orders" aria-controls="confirmed-orders " role="tab" data-toggle="tab">Đã Xác Nhận</a>
+                        <a href="#confirmed-orders" aria-controls="confirmed-orders " role="tab" data-toggle="tab">Đã
+                            Xác Nhận</a>
                     </li>
                     <li role="presentation">
                         <a href="#pre-orders" aria-controls="pre-orders" role="tab" data-toggle="tab">Đang Chuẩn Bị</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#return-orders" aria-controls="return-orders" role="tab" data-toggle="tab">Hoàn
+                            Hàng</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#cancel-orders" aria-controls="cancel-orders" role="tab" data-toggle="tab">Hủy
+                            Hàng</a>
                     </li>
                 </ul>
 
@@ -184,11 +200,11 @@
                                                     class="btn btn-icon btn-sm btn-primary tip" title="Chi Tiết">
                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if (($order->status === 1 || $order->status === 2 || $order->status === 3))
+                                                @if ($order->status === 1 || $order->status === 2 || $order->status === 3)
                                                     <div class="btn-group">
                                                         <button type="button" style="height: 30px;"
-                                                            class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown"
-                                                            aria-expanded='true'>
+                                                            class="btn btn-success btn-xs dropdown-toggle"
+                                                            data-toggle="dropdown" aria-expanded='true'>
                                                             Thao tác
                                                             <span class="caret"></span>
                                                             <span class="sr-only">Toggle-dropdown</span>
@@ -199,36 +215,39 @@
                                                                     ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
                                                                 <li>
                                                                     <a
-                                                                        href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác nhận</a>
+                                                                        href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác
+                                                                        nhận</a>
                                                                 </li>
                                                                 <li>
                                                                     <a
                                                                         href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
                                                                 </li>
                                                             @endif
-        
+
                                                             @if ($order->status === 2)
                                                                 <li>
                                                                     <a
-                                                                        href="{{ route('admin.orderTransaction', ['preparing', $order->id]) }}">Chuẩn bị</a>
+                                                                        href="{{ route('admin.orderTransaction', ['preparing', $order->id]) }}">Chuẩn
+                                                                        bị</a>
                                                                 </li>
                                                                 <li>
                                                                     <a
                                                                         href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
                                                                 </li>
                                                             @endif
-        
+
                                                             @if ($order->status === 3)
                                                                 <li>
                                                                     <a
-                                                                        href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao Hàng</a>
+                                                                        href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao
+                                                                        Hàng</a>
                                                                 </li>
                                                                 <li>
                                                                     <a
                                                                         href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
                                                                 </li>
                                                             @endif
-        
+
                                                             @if ($order->status === 4)
                                                                 <li>
                                                                     <a
@@ -236,7 +255,7 @@
                                                                         Giao Hàng</a>
                                                                 </li>
                                                             @endif
-        
+
                                                             @if ($order->status === 5)
                                                                 <li>
                                                                     <a
@@ -244,9 +263,9 @@
                                                                         hàng thành công</a>
                                                                 </li>
                                                             @endif
-        
+
                                                         </ul>
-        
+
                                                     </div>
                                                 @else
                                                 @endif
@@ -334,71 +353,293 @@
                                                     class="btn btn-icon btn-sm btn-primary tip" title="Chi Tiết">
                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                 </a>
-                                                @if (($order->status === 1 || $order->status === 2 || $order->status === 3))
+                                                @if ($order->status === 1 || $order->status === 2 || $order->status === 3)
                                                     <div class="btn-group">
                                                         <button type="button" style="height: 30px;"
-                                                            class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown"
-                                                            aria-expanded='true'>
+                                                            class="btn btn-success btn-xs dropdown-toggle"
+                                                            data-toggle="dropdown" aria-expanded='true'>
                                                             Thao tác
                                                             <span class="caret"></span>
                                                             <span class="sr-only">Toggle-dropdown</span>
                                                         </button>
                                                         <ul class="dropdown-menu custom-dropdown-menu" role="menu">
-                                                            @if (
-                                                                ($order->status === 1 && $order->payment_method_id == 1) ||
-                                                                    ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['confirmed', $order->id]) }}">Xác nhận</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                                </li>
-                                                            @endif
-        
-                                                            @if ($order->status === 2)
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['preparing', $order->id]) }}">Chuẩn bị</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                                </li>
-                                                            @endif
-        
                                                             @if ($order->status === 3)
                                                                 <li>
                                                                     <a
-                                                                        href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao Hàng</a>
+                                                                        href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao
+                                                                        Hàng</a>
                                                                 </li>
                                                                 <li>
                                                                     <a
                                                                         href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
                                                                 </li>
                                                             @endif
-        
-                                                            @if ($order->status === 4)
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['delivered', $order->id]) }}">Đã
-                                                                        Giao Hàng</a>
-                                                                </li>
-                                                            @endif
-        
-                                                            @if ($order->status === 5)
-                                                                <li>
-                                                                    <a
-                                                                        href="{{ route('admin.orderTransaction', ['completed', $order->id]) }}">Đơn
-                                                                        hàng thành công</a>
-                                                                </li>
-                                                            @endif
-        
+
                                                         </ul>
-        
+
                                                     </div>
                                                 @else
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Đơn Hoàn Hàng -->
+                    <div role="tabpanel" class="tab-pane" id="return-orders">
+                        <div class="box-body">
+                            <table id="returnOrders" class="table table-hover" style="width:100%; min-width: 1024px;">
+                                <thead>
+                                    <tr>
+                                        <th data-width="10px">ID</th>
+                                        <th data-orderable="false" data-width="85px">Mã Đơn Hàng</th>
+                                        <th data-orderable="false">Tài Khoản</th>
+                                        <th data-orderable="false">Tên</th>
+                                        <th data-orderable="false">Email</th>
+                                        <th data-orderable="false" data-width="70px">Điện Thoại</th>
+                                        <th data-orderable="false">Phương Thức Thanh Toán</th>
+                                        <th class="sort">Trạng thái thanh toán</th>
+                                        <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
+                                        <th data-width="66px">Lý do hoàn hàng</th>
+                                        <th data-width="66px">Trạng thái</th>
+                                        <?php if ($order->status == 9): ?>
+                                        <th data-orderable="false" data-width="130px">Tác Vụ</th>
+                                        <?php endif; ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($returnOrders as $order)
+                                        <tr>
+                                            <td class="text-center">{{ $order->id }}</td>
+                                            <td><a
+                                                    href="{{ route('admin.order.show', ['id' => $order->id]) }}">{{ '#' . $order->order_code }}</a>
+                                            </td>
+                                            <td>
+                                                @if ($order->user)
+                                                    <a href="{{ route('admin.user_show', ['id' => $order->user->id]) }}"
+                                                        class="text-left"
+                                                        title="{{ $order->user->name }}">{{ $order->user->name }}</a>
+                                                @else
+                                                    <span>---</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $order->name }}</td>
+                                            <td>{{ $order->email }}</td>
+                                            <td>{{ $order->phone }}</td>
+                                            <td>{{ $order->payment_method?->name }}</td>
+                                            <td>
+                                                @if ($order?->is_paid)
+                                                    <span class="label label-success">Đã thanh toán</span>
+                                                @else
+                                                    <span class="label label-danger">Chưa thanh toán</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
+
+                                            <td style="display: flex; align-items: center;justify-content: space-between">
+                                                <span class="truncated-text" title="{{ $order->return_reason }}">
+                                                    {{ strlen($order->return_reason) > 20 ? substr($order->return_reason, 0, 7) . '...' : $order->return_reason }}
+                                                </span>
+                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm tip"
+                                                    title="Chi Tiết" data-toggle="modal" data-target="#returnReasonModal"
+                                                    data-reason="{{ $order->return_reason }}">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+
+                                            <!-- Modal to show full reason -->
+                                            <div class="modal fade" id="returnReasonModal" tabindex="-1" role="dialog"
+                                                aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title" id="returnReasonModalLabel">Lý Do Hoàn
+                                                                Hàng</h4>
+                                                        </div>
+                                                        <div class="modal-body" id="modalReturnReason">
+                                                            <!-- Full return reason will be displayed here -->
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default"
+                                                                data-dismiss="modal">Đóng</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <td>
+                                                @php
+                                                    $statusLabels = [
+                                                        9 => ['label' => 'label-info', 'text' => 'Đang xác nhận'],
+                                                        10 => ['label' => 'label-primary', 'text' => 'Đã hoàn'],
+                                                        11 => ['label' => 'label-danger', 'text' => 'Từ chối'],
+                                                    ];
+                                                @endphp
+                                                @if (isset($statusLabels[$order->status]))
+                                                    <span class="label {{ $statusLabels[$order->status]['label'] }}"
+                                                        style="font-size:13px; display: inline-block; width: 100%">
+                                                        {{ $statusLabels[$order->status]['text'] }}
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td>
+
+                                                @if ($order->status === 9)
+                                                    <div class="btn-group">
+                                                        <button type="button" style="height: 30px;"
+                                                            class="btn btn-success btn-xs dropdown-toggle"
+                                                            data-toggle="dropdown" aria-expanded='true'>
+                                                            Thao tác
+                                                            <span class="caret"></span>
+                                                            <span class="sr-only">Toggle-dropdown</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu custom-dropdown-menu" role="menu">
+                                                            @if ($order->status === 9)
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('admin.orderTransaction', ['returned', $order->id]) }}">Xác
+                                                                        nhận</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('admin.orderTransaction', ['cancelReturn', $order->id]) }}">Hủy</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Đơn Hủy Hàng -->
+                    <div role="tabpanel" class="tab-pane" id="cancel-orders">
+                        <div class="box-body">
+                            <table id="cancelOrders" class="table table-hover" style="width:100%; min-width: 1024px;">
+                                <thead>
+                                    <tr>
+                                        <th data-width="10px">ID</th>
+                                        <th data-orderable="false" data-width="85px">Mã Đơn Hàng</th>
+                                        <th data-orderable="false">Tài Khoản</th>
+                                        <th data-orderable="false">Tên</th>
+                                        <th data-orderable="false">Email</th>
+                                        <th data-orderable="false" data-width="70px">Điện Thoại</th>
+                                        <th data-orderable="false">Phương Thức Thanh Toán</th>
+                                        <th class="sort">Trạng thái thanh toán</th>
+                                        <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
+                                        <th data-width="66px">Lý do hoàn hàng</th>
+                                        <th data-width="66px">Trạng thái</th>
+                                        <?php if ($order->status == 12): ?>
+                                        <th data-orderable="false" data-width="130px">Tác Vụ</th>
+                                        <?php endif; ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($cancelOrders as $order)
+                                        <tr>
+                                            <td class="text-center">{{ $order->id }}</td>
+                                            <td><a
+                                                    href="{{ route('admin.order.show', ['id' => $order->id]) }}">{{ '#' . $order->order_code }}</a>
+                                            </td>
+                                            <td>
+                                                @if ($order->user)
+                                                    <a href="{{ route('admin.user_show', ['id' => $order->user->id]) }}"
+                                                        class="text-left"
+                                                        title="{{ $order->user->name }}">{{ $order->user->name }}</a>
+                                                @else
+                                                    <span>---</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $order->name }}</td>
+                                            <td>{{ $order->email }}</td>
+                                            <td>{{ $order->phone }}</td>
+                                            <td>{{ $order->payment_method?->name }}</td>
+                                            <td>
+                                                @if ($order?->is_paid)
+                                                    <span class="label label-success">Đã thanh toán</span>
+                                                @else
+                                                    <span class="label label-danger">Chưa thanh toán</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
+                                            
+                                            <td style="display: flex; align-items: center;justify-content: space-between">
+                                                <span class="truncated-text" title="{{ $order->cancel_reason }}">
+                                                    {{ strlen($order->cancel_reason) > 20 ? substr($order->cancel_reason, 0, 7) . '...' : $order->cancel_reason }}
+                                                </span>
+                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm tip" title="Chi Tiết" data-toggle="modal" data-target="#cancelReasonModal" data-reason="{{ $order->cancel_reason }}">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+                                            
+                                            <!-- Modal to show full reason -->
+                                            <div class="modal fade" id="cancelReasonModal" tabindex="-1" role="dialog" aria-labelledby="cancelReasonModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title" id="cancelReasonModalLabel">Lý Do Hoàn Hàng</h4>
+                                                        </div>
+                                                        <div class="modal-body" id="modalCancelReason">
+                                                            <!-- Full return reason will be displayed here -->
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <td>
+                                                @php
+                                                    $statusLabels = [
+                                                        12 => ['label' => 'label-info', 'text' => 'Đang xác nhận'],
+                                                        8 => ['label' => 'label-primary', 'text' => 'Đã hủy'],
+                                                        13 => ['label' => 'label-danger', 'text' => 'Từ chối'],
+
+                                                    ];
+                                                @endphp
+                                                @if (isset($statusLabels[$order->status]))
+                                                    <span class="label {{ $statusLabels[$order->status]['label'] }}"
+                                                        style="font-size:13px; display: inline-block; width: 100%">
+                                                        {{ $statusLabels[$order->status]['text'] }}
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td>
+
+                                                @if ($order->status === 12)
+                                                    <div class="btn-group">
+                                                        <button type="button" style="height: 30px;"
+                                                            class="btn btn-success btn-xs dropdown-toggle"
+                                                            data-toggle="dropdown" aria-expanded='true'>
+                                                            Thao tác
+                                                            <span class="caret"></span>
+                                                            <span class="sr-only">Toggle-dropdown</span>
+                                                        </button>
+                                                        <ul class="dropdown-menu custom-dropdown-menu" role="menu">
+                                                            @if ($order->status === 12)
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Xác
+                                                                        nhận</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a
+                                                                        href="{{ route('admin.orderTransaction', ['cancelReturn', $order->id]) }}">Hủy</a>
+                                                                </li>
+                                                            @endif
+                                                        </ul>
+                                                    </div>
                                                 @endif
                                             </td>
                                         </tr>
@@ -432,6 +673,21 @@
 @endsection
 
 @section('custom-js')
+    <script>
+        // When the eye icon is clicked, load the full return reason into the modal
+        $('#returnReasonModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var reason = button.data('reason'); // Extract the reason from the data-* attribute
+            var modal = $(this);
+            modal.find('#modalReturnReason').text(reason); // Display the full reason in the modal
+        });
+        $('#cancelReasonModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var reason = button.data('reason'); // Extract the reason from the data-* attribute
+            var modal = $(this);
+            modal.find('#modalCancelReason').text(reason); // Display the full reason in the modal
+        });
+    </script>
     <script>
         $(function() {
             var tableConfirmed = $('#confirmed').DataTable({
@@ -473,10 +729,30 @@
                     }
                 }
             });
+            var returnOrder = $('#returnOrders').DataTable({
+                "language": {
+                    "zeroRecords": "Không tìm thấy kết quả phù hợp",
+                    "info": "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> đơn hàng",
+                    "infoEmpty": "Hiển thị trang <b>1/1</b> của <b>0</b> đơn hàng",
+                    "infoFiltered": "(Tìm kiếm từ <b>_MAX_</b> đơn hàng)",
+                    "emptyTable": "Không có dữ liệu đơn hàng",
+                },
+                "lengthChange": false,
+                "autoWidth": false,
+                "order": [],
+                "dom": '<"table-responsive"t><<"row"<"col-md-6 col-sm-6"i><"col-md-6 col-sm-6"p>>>',
+                "drawCallback": function(settings) {
+                    var api = this.api();
+                    if (api.page.info().pages <= 1) {
+                        $('#' + $(this).attr('id') + '_paginate').hide();
+                    }
+                }
+            });
 
             $('#search-input input').on('keyup', function() {
                 tableConfirmed.search(this.value).draw();
                 tablePreOrder.search(this.value).draw();
+                returnOrder.search(this.value).draw();
             });
         });
     </script>

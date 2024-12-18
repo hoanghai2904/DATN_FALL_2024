@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Quản Lý Mã giảm giá')
+@section('title', 'Quản Lý Mã Giảm Giá')
 
 @section('embed-css')
 <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
@@ -53,7 +53,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li class="active">Quản Lý mã giảm giá</li>
+  <li class="active">Quản lý mã giảm giá</li>
 </ol>
 @endsection
 
@@ -92,7 +92,7 @@
                 <th data-orderable="false">Mã</th>
                 <th data-orderable="false">Giảm giá (%)</th>
                 <th data-orderable="false">Giảm tối đa (đ)</th>
-                <th data-orderable="false">Đơn hàng tối thiểu</th>
+                <th data-orderable="false">Đơn hàng tối thiểu (đ)</th>
                 <th data-orderable="false">Thời gian áp dụng</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
               </tr>
@@ -120,17 +120,42 @@
                   </td>
                   <td>
                     @if ($coupon->start_date && $coupon->end_date)
-                      {{ $coupon->start_date }} ~ {{ $coupon->end_date }}
+                    @php
+                        $currentDate = now();
+                    @endphp
+                    @if ($coupon->end_date < $currentDate)
+                        <span style="color: red;">Đã hết hạn</span>
+                    @else
+                        {{ $coupon->start_date }} ~ {{ $coupon->end_date }}
                     @endif
+                @endif
+                
                   </td>
                   <td>
-                    <a href="{{ route('admin.coupon.edit', ['id' => $coupon->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
-                      <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </a>
-                    <a href="javascript:void(0);" data-id="{{ $coupon->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.coupon.delete') }}">
-                      <i class="fa fa-trash"></i>
-                    </a>
-                  </td>
+                    @php
+                        $currentDate = now();
+                    @endphp
+                
+                    @if ($coupon->end_date < $currentDate)
+                        <!-- Hiển thị nút Xóa khi hết hạn -->
+                        <a href="javascript:void(0);" 
+                           data-id="{{ $coupon->id }}" 
+                           class="btn btn-icon btn-sm btn-danger deleteDialog tip" 
+                           title="Xóa" 
+                           data-url="{{ route('admin.coupon.delete') }}">
+                           <i class="fa fa-trash"></i>
+                        </a>
+                    @else
+                        <!-- Hiển thị nút Chỉnh Sửa khi còn hạn -->
+                        <a href="{{ route('admin.coupon.edit', ['id' => $coupon->id]) }}" 
+                           class="btn btn-icon btn-sm btn-primary tip" 
+                           title="Chỉnh Sửa">
+                           <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a>
+                    @endif
+                </td>
+                
+                
                 </tr>
               @endforeach
             </tbody>
@@ -184,12 +209,14 @@
     });
   });
 
-  $(document).ready(function(){
 
     $(".deleteDialog").click(function() {
 
       var coupon_id = $(this).attr('data-id');
       var url = $(this).attr('data-url');
+      console.log(coupon_id);
+      console.log(url);
+      
 
       Swal.fire({
         type: 'question',
@@ -240,6 +267,6 @@
         }
       })
     });
-  });
+
 </script>
 @endsection

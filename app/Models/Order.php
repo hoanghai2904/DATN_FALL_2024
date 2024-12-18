@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
+  use SoftDeletes;
   public function user() {
     return $this->belongsTo('App\Models\User');
   }
@@ -16,7 +18,7 @@ class Order extends Model
   public function order_details() {
     return $this->hasMany('App\Models\OrderDetail');
   }
-  protected $guarded = [''];
+  // protected $guarded = [''];
 
   // protected $status = [
   //   '1' => [

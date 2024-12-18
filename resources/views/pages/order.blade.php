@@ -3,39 +3,41 @@
 @section('title', $data['order']->order_code)
 
 @section('content')
-<section class="bread-crumb">
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ route('home_page') }}">Trang Chủ</a></li>
-      <li class="breadcrumb-item"><a href="{{ route('orders_page') }}">Đơn Hàng</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{ $data['order']->order_code }}</li>
-    </ol>
-  </nav>
-</section>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">Trang Chủ</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('orders_page') }}">Đơn Hàng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $data['order']->order_code }}</li>
+            </ol>
+        </nav>
+    </section>
 
-<div class="container my-4">
-  <!-- Section quảng cáo -->
-  <section class="section-advertise">
-    <div class="content-advertise">
-      <div id="slide-advertise" class="owl-carousel">
-        @foreach($data['advertises'] as $advertise)
-          <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-        @endforeach
-      </div>
-    </div>
-  </section>
+    <div class="container my-4">
+        <!-- Section quảng cáo -->
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
   <!-- Thông tin đơn hàng -->
   <div class="card my-4">
     <div class="card-header d-flex justify-content-between">
-      <h5>Đơn Hàng: {{ $data['order']->order_code }}</h5>
+      <h4>Đơn Hàng: {{ $data['order']->order_code }}</h4>
       <span>Ngày tạo: {{ date_format($data['order']->created_at, 'd/m/Y') }}</span>
     </div>
     <div class="card-body">
       <div class="row">
         <!-- Thông tin tài khoản -->
         <div class="col-md-6 mb-3">
-          <h6>Thông Tin Tài Khoản</h6>
+          <h3 class="text-warning">Thông Tin Tài Khoản</h3>
           <ul class="list-group order-info">
             <li class="list-group-item"><span>Tên:</span> {{ $data['order']->user->name }}</li>
             <li class="list-group-item"><span>Email:</span> {{ $data['order']->user->email }}</li>
@@ -49,7 +51,7 @@
         
         <!-- Thông tin mua hàng -->
         <div class="col-md-6 mb-3">
-          <h6>Thông Tin Mua Hàng</h6>
+          <h3>Thông Tin Mua Hàng</h3>
           <ul class="list-group order-info">
             <li class="list-group-item"><span>Tên:</span> {{ $data['order']->name }}</li>
             <li class="list-group-item"><span>Email:</span> {{ $data['order']->email }}</li>
@@ -57,15 +59,21 @@
             <li class="list-group-item"><span>Địa Chỉ:</span> {{ $data['order']->address }}</li>
             <li class="list-group-item"><span>Phương Thức Thanh Toán:</span> {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
             <li class="list-group-item">
-              <span>Trạng thái thanh toán:</span> {{ $data['order']->is_paid ? 'Đã thanh toán' : "Chưa thanh toán" }}
-              @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1)
+              <span>Trạng thái thanh toán:</span>
+              @if($data['order']->status === 8)
+                <span class="text-danger">Đã hủy</span>
+              @else
+                {{ $data['order']->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}
+                @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1 && $data['order']->status !== 8)
                   <form id="payment-form-{{ $data['order']->id }}" action="{{ route('payment_now', $data['order']->id) }}" method="POST" style="display: none;">
-                      @csrf
-                      <input type="hidden" name="id" value="{{ $data['order']->id }}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $data['order']->id }}">
                   </form>
                   <button class="btn btn-primary ml-5" onclick="document.getElementById('payment-form-{{ $data['order']->id }}').submit();">Thanh toán ngay</button>
+                @endif
               @endif
             </li>
+            
             <li class="list-group-item">
               <span>Trạng thái đơn hàng:</span>
                 @switch($data['order']?->status)
@@ -105,7 +113,7 @@
           <th class="text-center">STT</th>
           <th class="text-center">Mã Sản Phẩm</th>
           <th class="text-center">Tên Sản Phẩm</th>
-          <th class="text-center">Màu Sắc</th>
+          <th class="text-center">Loại</th>
           <th class="text-center">Số Lượng</th>
           <th class="text-center">Đơn Giá</th>
           <th class="text-center">Thành Tiền</th>
@@ -161,87 +169,90 @@
 @endsection
 
 @section('css')
-<style>
-  .carousel-item {
-    height: 300px;
-  }
-  .carousel-item img {
-    object-fit: cover;
-  }
+    <style>
+        .carousel-item {
+            height: 300px;
+        }
 
-  <style>
-    .slide-advertise-inner {
-      background-repeat: no-repeat;
-      background-size: cover;
-      padding-top: 21.25%;
-    }
-    #slide-advertise.owl-carousel .owl-item.active {
-      -webkit-animation-name: zoomIn;
-      animation-name: zoomIn;
-      -webkit-animation-duration: .6s;
-      animation-duration: .6s;
-    }
-    .order-info span {
-      font-weight: bold;
-    }
-    .final-total {
-      font-size: 20px;
-    }
-  </style>
-</style>
+        .carousel-item img {
+            object-fit: cover;
+        }
+
+        <style>.slide-advertise-inner {
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 21.25%;
+        }
+
+        #slide-advertise.owl-carousel .owl-item.active {
+            -webkit-animation-name: zoomIn;
+            animation-name: zoomIn;
+            -webkit-animation-duration: .6s;
+            animation-duration: .6s;
+        }
+
+        .order-info span {
+            font-weight: bold;
+        }
+
+        .final-total {
+            font-size: 20px;
+        }
+    </style>
+    </style>
 @endsection
 
 @section('js')
-  <script>
-    const handleReceiveOrder = (id) => {
-      $.ajax({
-          url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
-          method: 'POST',
-          data: {
-            id: id,
-            _token: `{{ csrf_token() }}`
-          },
-          success: function(response) {
-            if (response.status) {
-              Swal.fire(
-                'Thành công!',
-                response.message,
-                'success'
-              ).then(() => {
-                location.reload();
-              });
-            } else {
-              Swal.fire(
-                'Thất bại!',
-                response.message,
-                'error'
-              );
-            }
-          }
-        });
-    }
-    $(document).ready(function(){
+    <script>
+        const handleReceiveOrder = (id) => {
+            $.ajax({
+                url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+                method: 'POST',
+                data: {
+                    id: id,
+                    _token: `{{ csrf_token() }}`
+                },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire(
+                            'Thành công!',
+                            response.message,
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Thất bại!',
+                            response.message,
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+        $(document).ready(function() {
 
-      $("#slide-advertise").owlCarousel({
-        items: 2,
-        autoplay: true,
-        loop: true,
-        margin: 10,
-        autoplayHoverPause: true,
-        nav: true,
-        dots: false,
-        responsive:{
-          0:{
-            items: 1,
-          },
-          992:{
-            items: 2,
-            animateOut: 'zoomInRight',
-            animateIn: 'zoomOutLeft',
-          }
-        },
-        navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-      });
-    });
-  </script>
-@endsection 
+            $("#slide-advertise").owlCarousel({
+                items: 2,
+                autoplay: true,
+                loop: true,
+                margin: 10,
+                autoplayHoverPause: true,
+                nav: true,
+                dots: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    992: {
+                        items: 2,
+                        animateOut: 'zoomInRight',
+                        animateIn: 'zoomOutLeft',
+                    }
+                },
+                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+            });
+        });
+    </script>
+@endsection

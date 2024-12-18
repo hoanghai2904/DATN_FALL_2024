@@ -51,18 +51,18 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="checkbox">
-                  <label><input name="remember" type="checkbox" {{ old('remember') ? 'checked' : '' }}>Remember me</label>
+                  <label><input name="remember" type="checkbox" {{ old('remember') ? 'checked' : '' }}>Ghi nhớ</label>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="forgot-password">
-                    <a href="{{ route('password.request') }}" title="Forgot password">Forgot password</a>
+                    <a href="{{ route('password.request') }}" title="Forgot password">Quên mật khẩu </a>
                 </div>
               </div>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-default">LOGIN</button>
+          <button type="submit" class="btn btn-default">Đăng Nhập</button>
         </form>
       </div>
       <div class="login-social">
@@ -77,7 +77,7 @@
         </div>
       </div>
       <div class="sign-up-now">
-        Not a member? <a href="{{ route('register') }}">Sign up now</a>
+        Not a member? <a href="{{ route('register') }}">Đăng ký </a>
       </div>
   </div>
 @endsection

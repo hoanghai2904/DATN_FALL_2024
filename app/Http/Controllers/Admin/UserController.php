@@ -18,7 +18,7 @@ class UserController extends Controller
 {
   public function index()
   {
-    $users = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where('admin', '<>', true)->get();
+    $users = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where('Role', false)->get();
     return view('admin.user.index')->with('users', $users);
   }
 
@@ -63,8 +63,8 @@ class UserController extends Controller
 
   public function delete(Request $request)
   {
-    $user = User::where([['id', $request->user_id],['active', false]])->first();
-    if(!$user) {
+    $user = User::where([['id', $request->user_id], ['active', false]])->first();
+    if (!$user) {
 
       $data['type'] = 'error';
       $data['title'] = 'Thất Bại';
@@ -83,28 +83,28 @@ class UserController extends Controller
 
   public function show($id)
   {
-    $user = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['admin', false]])->first();
-    if(!$user) abort(404);
-    $product_votes = ProductVote::where('user_id', $user->id)->with(['product' => function($query) {
+    $user = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['Role', false]])->first();
+    if (!$user) abort(404);
+    $product_votes = ProductVote::where('user_id', $user->id)->with(['product' => function ($query) {
       $query->select('id', 'name', 'image');
     }])->latest()->get();
 
     $orders = Order::where('user_id', $user->id)->with([
-      'payment_method' => function($query) {
+      'payment_method' => function ($query) {
         $query->select('id', 'name');
       },
-      'order_details' => function($query) {
+      'order_details' => function ($query) {
         $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
-        ->with([
-          'product_detail' => function ($query) {
-            $query->select('id', 'product_id', 'color')
-            ->with([
-              'product' => function ($query) {
-                $query->select('id', 'name', 'image', 'sku_code');
-              }
-            ]);
-          }
-        ]);
+          ->with([
+            'product_detail' => function ($query) {
+              $query->select('id', 'product_id', 'color')
+                ->with([
+                  'product' => function ($query) {
+                    $query->select('id', 'name', 'image', 'sku_code');
+                  }
+                ]);
+            }
+          ]);
       }
     ])->latest()->get();
     return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders]);
@@ -112,8 +112,8 @@ class UserController extends Controller
 
   public function send($id)
   {
-    $user = User::where([['id', $id], ['active', false], ['admin', false]])->first();
-    if(!$user) abort(404);
+    $user = User::where([['id', $id], ['active', false], ['Role', false]])->first();
+    if (!$user) abort(404);
 
     $data['token'] = $user->active_token;
     $data['password'] = null;

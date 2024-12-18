@@ -1,29 +1,30 @@
-
 @extends('layouts.master')
 
 @section('title', 'Tin Tức')
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Tin Tức</li>
-      </ol>
-    </nav>
-  </section>
-
-  <div class="site-posts">
-    <section class="section-advertise">
-      <div class="content-advertise">
-        <div id="slide-advertise" class="owl-carousel">
-          @foreach($data['advertises'] as $advertise)
-            <div class="slide-advertise-inner" style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');" data-dot="<button>{{ $advertise->title }}</button>"></div>
-          @endforeach
-        </div>
-      </div>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Tin Tức</li>
+            </ol>
+        </nav>
     </section>
+
+    <div class="site-posts">
+        <section class="section-advertise">
+            <div class="content-advertise">
+                <div id="slide-advertise" class="owl-carousel">
+                    @foreach ($data['advertises'] as $advertise)
+                        <div class="slide-advertise-inner"
+                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
+                            data-dot="<button>{{ $advertise->title }}</button>"></div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
 
     <section class="section-posts">
       <div class="row">
@@ -51,7 +52,9 @@
                         </div>
                         <div class="desc-post">
                           <span><i class="fas fa-user"></i> Admin</span>
-                          <span><i class="fas fa-clock"></i> {{ date_format($post->created_at, 'd/m/Y') }}</span>
+                          <span><i class="fas fa-clock"></i> 
+                            {{ \Carbon\Carbon::parse($post->created_at)->locale('vi')->isoFormat('dddd-DD-Y') }}
+                        </span>                        
                         </div>
                       </div>
                     </div>
@@ -104,23 +107,24 @@
 @endsection
 
 @section('css')
-  <style>
-    .slide-advertise-inner {
-      background-repeat: no-repeat;
-      background-size: cover;
-      padding-top: 21.25%;
-    }
-    #slide-advertise.owl-carousel .owl-item.active {
-      -webkit-animation-name: zoomIn;
-      animation-name: zoomIn;
-      -webkit-animation-duration: .6s;
-      animation-duration: .6s;
-    }
-  </style>
+    <style>
+        .slide-advertise-inner {
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding-top: 21.25%;
+        }
+
+        #slide-advertise.owl-carousel .owl-item.active {
+            -webkit-animation-name: zoomIn;
+            animation-name: zoomIn;
+            -webkit-animation-duration: .6s;
+            animation-duration: .6s;
+        }
+    </style>
 @endsection
 
 @section('js')
-  <script>
+  {{-- <script>
     $(document).ready(function(){
 
       $("#slide-advertise").owlCarousel({
@@ -144,5 +148,5 @@
         navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
       });
     });
-  </script>
+  </script> --}}
 @endsection

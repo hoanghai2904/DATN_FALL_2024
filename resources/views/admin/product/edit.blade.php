@@ -134,7 +134,7 @@
       @endif
       </div>
       <div class="text-center">
-        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Khuyến Mãi</button>
+        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm thông tin </button>
       </div>
     </div>
   </div>

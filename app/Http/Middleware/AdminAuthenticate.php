@@ -17,13 +17,14 @@ class AdminAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with(['alert' => [
                 'type' => 'warning',
                 'title' => 'Từ chối truy cập!',
                 'content' => 'Bạn không có quyền truy cập. Hãy đăng nhập tài khoản Admin để truy cập trang này.'
             ]]);
-        } else if(!Auth::user()->admin) {
+        } else if(!Auth::user()->Role) {
+           
             return redirect()->route('home_page')->with(['alert' => [
                 'type' => 'warning',
                 'title' => 'Từ chối truy cập!',

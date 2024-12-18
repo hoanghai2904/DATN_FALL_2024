@@ -4,14 +4,14 @@
 
 @section('content')
 
-  <section class="bread-crumb">
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Sản Phẩm</li>
-      </ol>
-    </nav>
-  </section>
+    <section class="bread-crumb">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('home_page') }}">{{ __('Trang Chủ') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sản Phẩm</li>
+            </ol>
+        </nav>
+    </section>
 
   <div class="site-products">
     <section class="section-advertise">
@@ -63,86 +63,101 @@
                   </select>
                 </div>
 
-                <div class="col-md-6 col-sm-6 col-xs-6" style="margin-right: 10px">
-                  {{-- <label for="price-range">Khoảng Giá</label> --}}
-                  <div id="price-range"></div>
-                  <input type="hidden" id="price_min" name="price_min" value="{{ Request::input('price_min') }}">
-                  <input type="hidden" id="price_max" name="price_max" value="{{ Request::input('price_max') }}">
-                  <div class="price-range-values">
-                    <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
-                  </div>
-                </div>
-              </div>
-            
-             
-              
-            </div>
-          </div>
-            <div class="btn-group-filter">
-              <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
-              <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </section>
+                                <div class="col-md-6 col-sm-6 col-xs-6" style="margin-right: 10px">
+                                    {{-- <label for="price-range">Khoảng Giá</label> --}}
+                                    <div id="price-range"></div>
+                                    <input type="hidden" id="price_min" name="price_min"
+                                        value="{{ Request::input('price_min') }}">
+                                    <input type="hidden" id="price_max" name="price_max"
+                                        value="{{ Request::input('price_max') }}">
+                                    <div class="price-range-values">
+                                        <span id="price-range-min"></span> - <span id="price-range-max"></span> VNĐ
+                                    </div>
+                                </div>
+                            </div>
 
-    <section class="section-products">
-      <div class="section-header">
-        <div class="section-header-left">
-          <h2 class="section-title">SẢN PHẨM</h2>
-        </div>
-        <div class="section-header-right">
-          <ul>
-            @foreach($data['producers'] as $producer)
-              <li><a href="{{ route('producer_page', ['id' => $producer->id]) }}" title="{{ $producer->name }}">{{ $producer->name }}</a></li>
-            @endforeach
-          </ul>
-        </div>
-      </div>
-      <div class="section-content">
-        @if($data['products']->isEmpty())
-          <div class="empty-content">
-            <div class="icon"><i class="fab fa-searchengin"></i></div>
-            <div class="title">Oooops!</div>
-            <div class="content">Product Item Not Found</div>
-          </div>
-        @else
-        <div class="product-container">
-            @foreach($data['products'] as $key => $product)
-              <div class="item-product">
-                <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                  <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                      <div class="image-product">
-                        <img loading="lazy" src="{{ Helper::get_image_product_url($product->image) }}" 
-                          alt="Product Image" 
-                          style="width: 100%; height: 280px;"
-                          onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
-                        {!! Helper::get_promotion_percent($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                      </div>
-                      <div class="content-product">
-                        <h3 class="title">{{ $product->name }}</h3>
-                        <div class="start-vote">
-                          {!! Helper::get_start_vote($product->rate) !!}
+
+
                         </div>
-                        <div class="price">
-                          {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                </a>
-              </div>
-            @endforeach
-          </div>
-        @endif
-      </div>
-      <div class="section-footer text-center">
-        {{ $data['products']->appends(Request::query())->links() }}
-      </div>
+                    <div class="btn-group-filter">
+                        <button type="submit" class="btn btn-default">Lọc Sản Phẩm</button>
+                        <button type="button" class="btn btn-secondary" id="clear-filters">Xóa Bộ Lọc</button>
+                    </div>
+            </div>
+            </form>
+        </section>
+    </div>
+
+
+
+    {{--  --}}
+    <section class="section-products">
+        <div class="section-header">
+            <div class="section-header-left">
+                <h2 class="section-title">SẢN PHẨM</h2>
+            </div>
+            <div class="section-header-right">
+                <ul>
+                    @foreach ($data['producers'] as $producer)
+                        <li><a href="{{ route('producer_page', ['id' => $producer->id]) }}"
+                                title="{{ $producer->name }}">{{ $producer->name }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        <div class="section-content">
+            @if ($data['products']->isEmpty())
+                <div class="empty-content">
+                    <div class="icon"><i class="fab fa-searchengin"></i></div>
+                    <div class="title">Oooops!</div>
+                    <div class="content">Product Item Not Found</div>
+                </div>
+            @else
+                <div class="row">
+                    @foreach ($data['products'] as $key => $product)
+                        <div class="col-md-2 col-md-20">
+                            <div class="item-product">
+                                <a href="{{ route('product_page', ['id' => $product->id]) }}"
+                                    title="{{ $product->name }}">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="image-product"
+                                                style="background-image: url('{{ Helper::get_image_product_url($product->image) }}');padding-top: 100%;background-size: 100%;">
+                                                {!! Helper::get_promotion_percent(
+                                                    $product->product_detail->sale_price,
+                                                    $product->product_detail->promotion_price,
+                                                    $product->product_detail->promotion_start_date,
+                                                    $product->product_detail->promotion_end_date,
+                                                ) !!}
+                                            </div>
+                                            <div class="content-product">
+                                                <h3 class="title">{{ $product->name }}</h3>
+                                                <div class="start-vote">
+                                                    {!! Helper::get_start_vote($product->rate) !!}
+                                                </div>
+                                                <div class="price">
+                                                    {!! Helper::get_real_price(
+                                                        $product->product_detail->sale_price,
+                                                        $product->product_detail->promotion_price,
+                                                        $product->product_detail->promotion_start_date,
+                                                        $product->product_detail->promotion_end_date,
+                                                    ) !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+        <div class="section-footer text-center">
+            {{ $data['products']->appends(Request::query())->links() }}
+        </div>
     </section>
-  </div>
 
 @endsection
 
@@ -175,9 +190,9 @@
 @endsection
 
 @section('js')
-<script src="{{ asset('common/noUiSlider/dist/nouislider.min.js') }}"></script>
-<script>
-  $(document).ready(function(){
+    <script src="{{ asset('common/noUiSlider/dist/nouislider.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
 
     $("#slide-advertise").owlCarousel({
       items: 2,
