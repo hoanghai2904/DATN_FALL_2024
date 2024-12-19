@@ -152,27 +152,12 @@ class CartController extends Controller
         ]
       ]);
     }
+
     $payment_methods = PaymentMethod::select('id', 'name', 'describe')->get();
-    $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
+    $oldCart = Session::has('cart') ? Session::get('cart') : null;
     $cart = new Cart($oldCart);
-    $cart->update();
-    Session::put('cart', $cart);
-    if ($cart->items == null) {
-      return redirect()->route('home_page')->with([
-        'alert' => [
-          'type' => 'warning',
-          'title' => 'Thông Báo',
-          'content' => 'Giỏ hàng của bạn đang trống!'
-        ]
-      ]);
-    }
-    // Retrieve user address if logged in
-    $user_address = null;
-    if (Auth::check()) {
-      $user = Auth::user();
-      $user_address = $user->address ?? null; // Replace 'address' with the actual field storing the user's address
-    }
-    // Handle 'buy_now' type
+
+    // Xử lý nút "Mua ngay"
     if ($request->has('type') && $request->type == 'buy_now') {
       $product = ProductDetail::where('id', $request->id)
         ->with([
@@ -183,34 +168,49 @@ class CartController extends Controller
         ->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
         ->first();
 
-      $cart = new Cart(null);
-
-      // Check if the product can be added to the cart
-      if (!$cart->add($product, $product->id, $request->qty)) {
+      // Nếu không tìm thấy sản phẩm, quay lại với thông báo lỗi
+      if (!$product) {
         return back()->with([
           'alert' => [
-            'type' => 'warning',
+            'type' => 'error',
             'title' => 'Thông Báo',
-            'content' => 'Số lượng sản phẩm trong giỏ vượt quá số lượng sản phẩm trong kho!'
+            'content' => 'Không tìm thấy sản phẩm!'
           ]
         ]);
       }
+
+      // Tạo giỏ hàng mới nếu chưa có và thêm sản phẩm vào
+      $cart = new Cart(null);
+      $cart->add($product, $product->id, $request->qty ?? 1);
 
       return view('pages.checkout', [
         'cart' => $cart,
         'payment_methods' => $payment_methods,
         'buy_method' => $request->type,
-        'user_address' => $user_address
+        'user_address' => Auth::check() ? Auth::user()->address : null,
       ]);
     }
 
+    // Kiểm tra nếu giỏ hàng trống
+    if (!$cart->items) {
+      return redirect()->route('home_page')->with([
+        'alert' => [
+          'type' => 'warning',
+          'title' => 'Thông Báo',
+          'content' => 'Giỏ hàng của bạn đang trống!'
+        ]
+      ]);
+    }
+
+    // Hiển thị trang checkout
     return view('pages.checkout', [
       'cart' => $cart,
       'payment_methods' => $payment_methods,
       'buy_method' => $request->type,
-      'user_address' => $user_address
+      'user_address' => Auth::check() ? Auth::user()->address : null,
     ]);
   }
+
   function createVNPayUrl($order_code, $amount, $order_info, $ip_address)
   {
     $vnp_TmnCode = env('VNP_TMNCODE');

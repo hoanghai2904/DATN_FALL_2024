@@ -65,10 +65,10 @@
                         <div class="step-text">Đã giao hàng</div>
                     </div>
                     <!-- Bước 5 -->
-                    <div class="order-step completed">
+                    {{-- <div class="order-step completed">
                         <div class="step-icon"><i class="fas fa-flag-checkered"></i></div>
                         <div class="step-text">Hoàn tất</div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section>
@@ -230,10 +230,6 @@
                             {
                                 icon: 'fas fa-box',
                                 text: 'Đã giao hàng'
-                            },
-                            {
-                                icon: 'fas fa-flag-checkered',
-                                text: 'Hoàn tất'
                             }
                         ];
 
