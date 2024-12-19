@@ -72,7 +72,7 @@
           <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Password Confirmation" required autocomplete="new-password">
         </div>
 
-        <button type="submit" class="btn btn-default">REGISTER</button>
+        <button type="submit" class="btn btn-default">Đăng kí</button>
       </form>
     </div>
     <div class="register-social">
@@ -87,7 +87,7 @@
       </div>
     </div>
     <div class="sign-in-now">
-      You are a member? <a href="{{ route('login') }}">Sign in now</a>
+      Bạn là Hội viên? <a href="{{ route('login') }}">Đăng nhập ngay</a>
     </div>
   </div>
 @endsection

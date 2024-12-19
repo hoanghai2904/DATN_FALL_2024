@@ -20,7 +20,7 @@
                                     <div class="form-group">
                                         <label for="email">Email <span class="text-danger">*</span></label>
                                         <input name="email" type="email" class="form-control"
-                                            @error('email') is-invalid @enderror" id="email" autocomplete="email"
+                                           @error('email') is-invalid @enderror id="email" autocomplete="email"
                                             value="{{ old('email') ?: Auth::user()->email ?? null }}" required>
                                         <div class="messages"></div>
                                     </div>

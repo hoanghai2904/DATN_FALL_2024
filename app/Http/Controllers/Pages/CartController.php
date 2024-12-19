@@ -143,7 +143,7 @@ class CartController extends Controller
   public function showCheckout(Request $request)
   {
     // Redirect admin users to home page
-    if (Auth::check() && Auth::user()->admin) {
+    if (Auth::check() && Auth::user()->Role) {
       return redirect()->route('home_page')->with([
         'alert' => [
           'type' => 'error',
@@ -211,6 +211,9 @@ class CartController extends Controller
       'user_address' => $user_address
     ]);
   }
+
+  
+
   function createVNPayUrl($order_code, $amount, $order_info, $ip_address)
   {
     $vnp_TmnCode = env('VNP_TMNCODE');
