@@ -127,7 +127,7 @@
                     <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                       <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <a href="javascript:void(0);" data-id="{{ $product->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
+                    <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
                       <i class="fa fa-trash"></i>
                     </a>
                   </td>
@@ -186,13 +186,13 @@
 
   $(document).ready(function() {
     $(".deleteDialog").click(function() {
-        var post_id = $(this).attr('data-id');
+        var product_id = $(this).attr('data-id');
         var url = $(this).attr('data-url');
-
+        
         Swal.fire({
             icon: 'question',
             title: 'Thông báo',
-            text: 'Bạn có chắc muốn xóa sản phẩmphẩm này?',
+            text: 'Bạn có chắc muốn xóa sản phẩm này?',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
@@ -206,7 +206,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         body: JSON.stringify({
-                            'post_id': post_id
+                            'product_id': product_id 
                         }),
                     })
                     .then(response => {

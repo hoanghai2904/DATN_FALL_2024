@@ -535,8 +535,8 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="color_{?}">loại sản phẩm<span class="text-red">*</span></label>
-            <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Mầu sắc" required autocomplete="off">
+            <label for="color_{?}">Loại sản phẩm<span class="text-red">*</span></label>
+            <input type="text" name="product_details[{?}][color]" class="form-control color" id="color_{?}" placeholder="Loại sản phẩm" required autocomplete="off">
           </div>
         </div>
         <div class="col-md-4">
