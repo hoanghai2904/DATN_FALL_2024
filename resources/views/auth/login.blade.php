@@ -77,7 +77,7 @@
         </div>
       </div>
       <div class="sign-up-now">
-        Not a member? <a href="{{ route('register') }}">Đăng ký </a>
+        Không phải thành viên? <a href="{{ route('register') }}">Đăng ký </a>
       </div>
   </div>
 @endsection

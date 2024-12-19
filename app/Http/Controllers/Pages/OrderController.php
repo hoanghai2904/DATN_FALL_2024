@@ -348,7 +348,7 @@ class OrderController extends Controller
   public function returnOrder(Request $request, $id)
   {
     // dd($request->all()); 
-    if (Auth::check() && Auth::user()->admin == 0) {
+    if (Auth::check() && Auth::user()->Role == 0) {
       $order = Order::where('id', $id)->first();
 
       // Kiểm tra xem đơn hàng có tồn tại không
