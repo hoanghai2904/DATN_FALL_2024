@@ -235,29 +235,74 @@ class OrderController extends Controller
               ]);
           }
   
-          // Xử lý theo phương thức thanh toán
           if ($order->payment_method_id == 2 && $order->is_paid == 1) { // Nếu phương thức thanh toán là VNPay
-              if ($request->has('cancel_reason')) {
+            if (in_array($order->status, [
+                OrderStatusEnum::PENDING, 
+                OrderStatusEnum::CONFIRMED, 
+                OrderStatusEnum::PREPARING, 
+                OrderStatusEnum::FAILED
+            ])) {
+                // Kiểm tra lý do hủy đơn hàng
+                if ($request->has('cancel_reason') && $request->input('cancel_reason') != '') {
+                    // Lưu lý do hoàn hàng
+                    $order->status = OrderStatusEnum::CANCELLED_PENDING; // Chuyển trạng thái đơn hàng thành hoàn trả
+                    $order->cancel_reason = $request->input('cancel_reason'); // Ghi lại lý do hoàn trả
+                    $order->save();
+        
+                    // Cộng lại số lượng sản phẩm trong kho (bỏ comment code ở dưới)
+                    foreach ($order->order_details as $orderDetail) {
+                        $productDetail = $orderDetail->product_detail;
+        
+                        // Kiểm tra nếu productDetail tồn tại
+                        if ($productDetail) {
+                            $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+                            $productDetail->save();
+                        }
+                    }
+        
+                    return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'Vui lòng nhập lý do hủy đơn hàng!']);
+                }
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
+            }
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Đơn hàng không hợp lệ hoặc chưa thanh toán!']);
+        }
+        if ($order->payment_method_id == 2 && $order->is_paid == 1) { // Nếu phương thức thanh toán là VNPay
+          if (in_array($order->status, [
+              OrderStatusEnum::PENDING, 
+              OrderStatusEnum::CONFIRMED, 
+              OrderStatusEnum::PREPARING, 
+              OrderStatusEnum::FAILED
+          ])) {
+              // Kiểm tra lý do hủy đơn hàng
+              if ($request->has('cancel_reason') && $request->input('cancel_reason') != '') {
                   // Lưu lý do hoàn hàng
                   $order->status = OrderStatusEnum::CANCELLED_PENDING; // Chuyển trạng thái đơn hàng thành hoàn trả
                   $order->cancel_reason = $request->input('cancel_reason'); // Ghi lại lý do hoàn trả
                   $order->save();
-  
-                  // Cộng lại số lượng sản phẩm trong kho
-                  foreach ($order->order_details as $orderDetail) {
-                      $productDetail = $orderDetail->product_detail;
-  
-                      // Kiểm tra nếu productDetail tồn tại
-                      if ($productDetail) {
-                          $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
-                          $productDetail->save();
-                      }
-                  }
-  
+      
+                  // Cộng lại số lượng sản phẩm trong kho (bỏ comment code ở dưới)
+                  // foreach ($order->order_details as $orderDetail) {
+                  //     $productDetail = $orderDetail->product_detail;
+      
+                  //     // Kiểm tra nếu productDetail tồn tại
+                  //     if ($productDetail) {
+                  //         $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+                  //         $productDetail->save();
+                  //     }
+                  // }
+      
                   return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
               } else {
-                  return response()->json(['status' => 'error', 'message' => 'Lý do hủy đơn không được để trống!']);
+                  return response()->json(['status' => 'error', 'message' => 'Vui lòng nhập lý do hủy đơn hàng!']);
               }
+          } else {
+              return response()->json(['status' => 'error', 'message' => 'Không thể hủy đơn hàng đã được xử lý!']);
+          }
+          
           } else { // Xử lý hủy bình thường cho các phương thức thanh toán khác
               if ($order->status == OrderStatusEnum::PENDING || $order->status == OrderStatusEnum::CONFIRMED || $order->status == OrderStatusEnum::PREPARING || $order->status == OrderStatusEnum::FAILED) {
                   // Cập nhật trạng thái đơn hàng thành CANCELLED

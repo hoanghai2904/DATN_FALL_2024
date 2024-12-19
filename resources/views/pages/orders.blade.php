@@ -78,7 +78,7 @@
                                                     {{ number_format($price + $order->fee - $order->discount, 0, ',', '.') }}₫
                                                 </td>
                                                 <td>{{ $order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</td>
-                                                <td>
+                                                <td style="display: flex; justify-content: center; padding-top:20px">
                                                     @switch($order->status)
                                                         @case(1)
                                                             <div style="display:flex">
@@ -291,17 +291,17 @@
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire(
-                                    'Thành công!',
+                                    response.status == 'error' ? 'Thất bại!' : 'Thành công',
                                     response.message,
-                                    'success'
+                                    response.status
                                 ).then(() => {
                                     location.reload();
                                 });
                             } else {
                                 Swal.fire(
-                                    'Thất bại!',
+                                    response.status == 'success' ? 'Thành công!' : 'Thất bại',
                                     response.message,
-                                    'error'
+                                    response.status
                                 );
                             }
                         },

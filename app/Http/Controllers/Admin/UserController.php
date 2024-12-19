@@ -106,7 +106,9 @@ class UserController extends Controller
             }
           ]);
       }
-    ])->latest()->get();
+    ])
+    ->whereIn('status',[6,8])
+    ->latest()->get();
     return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders]);
   }
 

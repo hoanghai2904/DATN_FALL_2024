@@ -148,7 +148,7 @@
                             <th class="text-center" style="vertical-align: middle;">STT</th>
                             <th class="text-center" style="vertical-align: middle;">Mã<br>Sản Phẩm</th>
                             <th class="text-center" style="vertical-align: middle;">Tên<br>Sản Phẩm</th>
-                            <th class="text-center" style="vertical-align: middle;">Mầu Sắc</th>
+                            <th class="text-center" style="vertical-align: middle;">Loại</th>
                             <th class="text-center" style="vertical-align: middle;">Số Lượng</th>
                             <th class="text-center" style="vertical-align: middle;">Đơn Giá</th>
                           </tr>
@@ -169,10 +169,10 @@
                     </div>
                   </div>
                   <div class="timeline-footer">
-                    @if($order->status)
+                    @if($order->status == 6)
                     <span class="label label-success">Thành Công</span>
-                    @else
-                    <span class="label label-danger">Thất Bại</span>
+                    @elseif($order->status == 8)
+                    <span class="label label-danger">Hủy</span>
                     @endif
                   </div>
                 </div>
