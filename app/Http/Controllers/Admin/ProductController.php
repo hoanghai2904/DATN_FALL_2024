@@ -479,35 +479,38 @@ class ProductController extends Controller
 
     if ($request->has('old_product_details')) {
       foreach ($request->old_product_details as $key => $product_detail) {
-        $sum = OrderDetail::where('product_detail_id', $key)->sum('quantity');
-        $old_product_detail = ProductDetail::where('id', $key)->first();
-        if (!$old_product_detail) abort(404);
-
-        $old_product_detail->color = $product_detail['color'];
-        $old_product_detail->import_quantity = $product_detail['quantity'];
-        $old_product_detail->quantity = $product_detail['quantity'] - $sum;
-        $old_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
-        $old_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
-        if ($product_detail['promotion_price'] != null) {
-          $old_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
-        }
-        if ($product_detail['promotion_date'] != null) {
-          //Xử lý ngày bắt đầu, ngày kết thúc
-          list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
-
-          $start_date = str_replace('/', '-', $start_date);
-          $start_date = date('Y-m-d', strtotime($start_date));
-
-          $end_date = str_replace('/', '-', $end_date);
-          $end_date = date('Y-m-d', strtotime($end_date));
-
-          $old_product_detail->promotion_start_date = $start_date;
-          $old_product_detail->promotion_end_date = $end_date;
-        }
-
-        $old_product_detail->save();
+          $sum = OrderDetail::where('product_detail_id', $key)->sum('quantity'); // Tổng số lượng đã bán
+          $old_product_detail = ProductDetail::where('id', $key)->first();
+          if (!$old_product_detail) abort(404);
+  
+          // Cập nhật thông tin sản phẩm
+          $old_product_detail->color = $product_detail['color'];
+  
+          // Cộng số lượng mới vào import_quantity
+          $old_product_detail->import_quantity += $product_detail['quantity'];
+  
+          // Cập nhật số lượng tồn kho (tồn kho hiện tại + nhập mới - đã bán)
+          $old_product_detail->quantity = $old_product_detail->quantity + $product_detail['quantity'];
+  
+          $old_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
+          $old_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+  
+          if ($product_detail['promotion_price'] != null) {
+              $old_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
+          }
+  
+          if ($product_detail['promotion_date'] != null) {
+              list($start_date, $end_date) = explode(' - ', $product_detail['promotion_date']);
+              $start_date = date('Y-m-d', strtotime(str_replace('/', '-', $start_date)));
+              $end_date = date('Y-m-d', strtotime(str_replace('/', '-', $end_date)));
+              $old_product_detail->promotion_start_date = $start_date;
+              $old_product_detail->promotion_end_date = $end_date;
+          }
+  
+          $old_product_detail->save();
       }
-    }
+  }
+  
 
     if ($request->has('product_details')) {
       foreach ($request->product_details as $key => $product_detail) {

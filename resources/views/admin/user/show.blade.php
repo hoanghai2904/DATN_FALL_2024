@@ -28,9 +28,9 @@
         <h3 class="profile-username text-center">{{ $user->name }}</h3>
 
         @if($user->active)
-        <p class="text-center"><span class="label label-success">Activated</span></p>
+        <p class="text-center"><span class="label label-success">Đã kích hoạt</span></p>
         @else
-        <p class="text-center"><span class="label label-danger">Not Activated</span></p>
+        <p class="text-center"><span class="label label-danger">Chưa kích hoạt</span></p>
         @endif
 
         <ul class="list-group list-group-unbordered">
@@ -50,7 +50,7 @@
         <strong><i class="fa fa-map-marker margin-r-5"></i> Địa chỉ</strong>
         <p class="text-muted">{{ $user->address }}</p>
         @if(!$user->active)
-        <a href="{{ route('admin.user_send', ['id' => $user->id]) }}" class="btn btn-warning btn-block"><b>Send Active Account</b></a>
+        <a href="{{ route('admin.user_send', ['id' => $user->id]) }}" class="btn btn-warning btn-block"><b>Kích hoạt tài khoản</b></a>
         @endif
       </div>
       <!-- /.box-body -->
@@ -61,7 +61,7 @@
   <div class="col-md-9">
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#comment-timeline" data-toggle="tab">Lịch Sử Bình Luận</a></li>
+        <li class="active"><a href="#comment-timeline" data-toggle="tab">Lịch Sử Đánh Giá</a></li>
         <li><a href="#order-timeline" data-toggle="tab">Lịch Sử Mua Hàng</a></li>
       </ul>
       <div class="tab-content">

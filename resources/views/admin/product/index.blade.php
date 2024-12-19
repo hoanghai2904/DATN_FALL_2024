@@ -206,7 +206,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         body: JSON.stringify({
-                            'product_id': product_id 
+                            'product_id': product_id
                         }),
                     })
                     .then(response => {

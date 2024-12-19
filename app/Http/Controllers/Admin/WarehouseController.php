@@ -39,7 +39,7 @@ class WarehouseController extends Controller
                 'product_details.color',
                 'product_details.created_at',
                 DB::raw('SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN COALESCE(order_details.quantity, 0) ELSE 0 END) as orderDetailQuantity'),
-                DB::raw('product_details.import_quantity - SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN COALESCE(order_details.quantity, 0) ELSE 0 END) AS conlai')
+                DB::raw('product_details.quantity - SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN COALESCE(order_details.quantity, 0) ELSE 0 END) AS conlai')
             )
             ->groupBy('product_details.id', 'products.name', 'products.image', 'products.sku_code', 'product_details.quantity', 'product_details.import_quantity', 'product_details.size', 'product_details.product_id', 'product_details.color', 'product_details.created_at')
             ->orderBy('product_details.created_at', 'DESC')
