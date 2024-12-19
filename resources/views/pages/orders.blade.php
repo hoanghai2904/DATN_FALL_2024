@@ -109,11 +109,12 @@
 
                                                         @case(4)
                                                             <div style="display:flex">
-                                                                <span class="label label-info" style="margin-right:10px">Đang
-                                                                    giao</span>
-                                                                <button class="btn btn-success"
+                                                                <button class="btn btn-success" style="margin-right: 10px;"
                                                                     onclick="handleReceiveOrder({{ $order->id }})">Đã
                                                                     nhận</button>
+                                                                <button class="btn btn-warning"
+                                                                    onclick="handleRequestReturn({{ $order->id }})">Hoàn
+                                                                    hàng</button>
                                                             </div>
                                                         @break
 
@@ -270,7 +271,7 @@
                         _token: `{{ csrf_token() }}`
                     };
 
-                    if (paymentMethodId === 2) { // Với thanh toán Online, thêm lý do hủy
+                    if (paymentMethodId === 2 && isPaid === 1) { // Với thanh toán Online, thêm lý do hủy
                         const cancelReason = document.getElementById('cancelReasonInput')?.value.trim();
                         if (!cancelReason) {
                             Swal.fire(

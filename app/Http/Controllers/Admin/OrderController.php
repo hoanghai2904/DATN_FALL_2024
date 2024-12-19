@@ -69,19 +69,24 @@ class OrderController extends Controller
         case 'confirmed':
           $orderAction->status = OrderStatusEnum::CONFIRMED;
           $status = 'Đã xác nhận';
+          $orderAction->save();
           break;
         case 'preparing':
           $orderAction->status = OrderStatusEnum::PREPARING;
+          $orderAction->save();
           break;
         case 'delivering':
           $orderAction->status = OrderStatusEnum::DELIVERING;
+          $orderAction->save();
           $status = 'Đang giao';
           break;
         case 'delivered':
           $orderAction->status = OrderStatusEnum::DELIVERED;
+          $orderAction->save();
           break;
         case 'completed':
           $orderAction->status = OrderStatusEnum::COMPLETED;
+          $orderAction->save();
           $status = 'Hoàn thành';
           break;
         case 'failed':
