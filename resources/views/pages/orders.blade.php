@@ -78,7 +78,7 @@
                                                     {{ number_format($price + $order->fee - $order->discount, 0, ',', '.') }}₫
                                                 </td>
                                                 <td>{{ $order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</td>
-                                                <td>
+                                                <td style="display: flex; justify-content: center; padding-top:20px">
                                                     @switch($order->status)
                                                         @case(1)
                                                             <div style="display:flex">

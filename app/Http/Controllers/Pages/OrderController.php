@@ -244,15 +244,15 @@ class OrderController extends Controller
                   $order->save();
   
                   // Cộng lại số lượng sản phẩm trong kho
-                  foreach ($order->order_details as $orderDetail) {
-                      $productDetail = $orderDetail->product_detail;
+                  // foreach ($order->order_details as $orderDetail) {
+                  //     $productDetail = $orderDetail->product_detail;
   
-                      // Kiểm tra nếu productDetail tồn tại
-                      if ($productDetail) {
-                          $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
-                          $productDetail->save();
-                      }
-                  }
+                  //     // Kiểm tra nếu productDetail tồn tại
+                  //     if ($productDetail) {
+                  //         $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+                  //         $productDetail->save();
+                  //     }
+                  // }
   
                   return response()->json(['status' => 'success', 'message' => 'Hủy đơn hàng thành công!']);
               } else {

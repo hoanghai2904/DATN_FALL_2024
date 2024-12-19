@@ -416,6 +416,10 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
+        $product = ProductDetail::find($request->product_id);
+        $product->quantity = $product->quantity - $request->totalQty;
+        $product->save();
+
         $totalPayment = $request->price * $request->totalQty + $order->fee;
         $vnpUrl = $this->createVNPayUrl(
           $order->order_code,
