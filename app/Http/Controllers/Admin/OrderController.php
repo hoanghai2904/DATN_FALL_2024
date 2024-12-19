@@ -180,7 +180,7 @@ class OrderController extends Controller
     ->latest()
     ->get();
 
-    // dd($returnOrder);
+    // dd($cancelOrders);
 
     return view('admin.order.processing', compact('orders', 'preOrders', 'returnOrders','cancelOrders'));
   }
