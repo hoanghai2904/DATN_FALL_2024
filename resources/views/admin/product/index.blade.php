@@ -186,7 +186,7 @@
 
   $(document).ready(function() {
     $(".deleteDialog").click(function() {
-        var post_id = $(this).attr('data-id');
+        var product_id = $(this).attr('data-id');
         var url = $(this).attr('data-url');
 
         Swal.fire({
@@ -206,7 +206,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         body: JSON.stringify({
-                            'post_id': post_id
+                            'product_id': product_id
                         }),
                     })
                     .then(response => {

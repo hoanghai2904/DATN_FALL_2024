@@ -166,7 +166,7 @@
                       </div>
                       <div class="box-body">
                         <div class="row">
-                          <div class="col-md-12">
+                          <div class="col-md-8">
                             <div class="chart">
                               <!-- Sales Chart Canvas -->
                               <canvas id="salesChart" style="height: 300px;"></canvas>
@@ -177,9 +177,6 @@
                             <!-- /.chart-responsive -->
                           </div>
                           <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                        <div class="row">
                           <div class="col-md-4 col-sm-4 col-xs-4">
                             <div class="chart" style="margin-bottom: 10px;">
                               <!-- Sales Chart Canvas -->
@@ -187,33 +184,15 @@
                             </div>
                             <!-- /.chart-responsive -->
                             <p class="text-center">
-                              <i>Hình 2: Thị phần sản phẩm bán được theo nhà sản xuất</i>
+                              <i>Hình 2: Thị phần sản phẩm bán được theo danh mục</i>
                             </p>
                           </div>
-                          <!-- /.col -->
-                          <div class="col-md-4 col-sm-4 col-xs-4">
-                            <div class="chart" style="margin-bottom: 10px;">
-                              <!-- Sales Chart Canvas -->
-                              <div id="revenueChart" style="width: 200px; height: 200px; margin: 0 auto;"></div>
-                            </div>
-                            <!-- /.chart-responsive -->
-                            <p class="text-center">
-                              <i>Hình 3: Thị phần doanh thu theo nhà sản xuất</i>
-                            </p>
-                          </div>
-                          <!-- /.col -->
-                          <div class="col-md-4 col-sm-4 col-xs-4">
-                            <div class="chart" style="margin-bottom: 10px;">
-                              <!-- Sales Chart Canvas -->
-                              <div id="profitChart" style="width: 200px; height: 200px; margin: 0 auto;"></div>
-                            </div>
-                            <!-- /.chart-responsive -->
-                            <p class="text-center">
-                              <i>Hình 4: Thị phần lợi nhuận theo nhà sản xuất</i>
-                            </p>
-                          </div>
-                          <!-- /.col -->
                         </div>
+                        <!-- /.row -->
+                        <div class="row">
+                      
+                          <!-- /.col -->
+                          
                       </div>
                       <div class="box-footer" style="border-bottom: 1px solid #f4f4f4;">
                         <div class="row">
@@ -791,7 +770,7 @@
                     printable: 'print',
                     type: 'html',
                     documentTitle: ' ',
-                    header: 'Báo Cáo Tình Hình Kinh Doanh Website PhoneStore',
+                    header: 'Báo Cáo Tình Hình Kinh Doanh Website',
                     headerStyle: 'font-size: 14px; margin-bottom: 10px;',
                     style: '.box { margin-top: 10px; border-top: none; box-shadow: none; } ' +
                         '@media print { .box-footer { page-break-after: always; } } ' +
