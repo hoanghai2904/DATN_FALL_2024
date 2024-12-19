@@ -291,17 +291,17 @@
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire(
-                                    'Thành công!',
+                                    response.status == 'error' ? 'Thất bại!' : 'Thành công',
                                     response.message,
-                                    'success'
+                                    response.status
                                 ).then(() => {
                                     location.reload();
                                 });
                             } else {
                                 Swal.fire(
-                                    'Thất bại!',
+                                    response.status == 'success' ? 'Thành công!' : 'Thất bại',
                                     response.message,
-                                    'error'
+                                    response.status
                                 );
                             }
                         },
