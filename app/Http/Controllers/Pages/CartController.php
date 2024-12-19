@@ -310,9 +310,9 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
-        // $product = ProductDetail::find($request->product_id);
-        // $product->quantity = $product->quantity - $request->totalQty;
-        // $product->save();
+        $product = ProductDetail::find($request->product_id);
+        $product->quantity = $product->quantity - $request->totalQty;
+        $product->save();
         $dataSend = $this->prepareDataSend($order);
         SendOrderMail::dispatch($dataSend);
 
