@@ -247,8 +247,8 @@
                                 <th style="vertical-align: middle;">Đơn Hàng</th>
                                 <th style="vertical-align: middle;">Ngày Xuất</th>
                                 <th style="text-align: center; vertical-align: middle;">Số Lượng</th>
-                                <th style="vertical-align: middle;">Giá Nhập</th>
-                                <th style="vertical-align: middle;">Giá Xuất</th>
+                                {{-- <th style="vertical-align: middle;">Giá Nhập</th>
+                                <th style="vertical-align: middle;">Giá Xuất</th> --}}
                                 <th style="vertical-align: middle;">Doanh Thu</th>
                                 <th style="vertical-align: middle;">Lợi Nhuận</th>
                               </tr>
@@ -267,8 +267,8 @@
                                   <td style="vertical-align: middle;">{{ '#'.$order_detail->order->order_code }}</td>
                                   <td style="vertical-align: middle;">{{ date_format($order_detail->created_at, 'd/m/Y') }}</td>
                                   <td style="text-align: center; vertical-align: middle;">{{ $order_detail->quantity }}</td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td>
+                                  {{-- <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
+                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td> --}}
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity - $order_detail->order->discount,0,',','.') }} VNĐ</span></td>
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
                                 </tr>

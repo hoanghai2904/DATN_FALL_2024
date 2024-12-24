@@ -110,8 +110,9 @@
                 <th>Phân loại</th>
                 <th>Size</th>
                 <th>Số Lượng Nhập</th>
-                <th>Đã Bán</th>
-                <th>Còn Lại</th>
+                <th>SL Đã Bán</th>
+                <th>SL Còn Lại</th>
+                <th>SL khác</th>
                 <th>Trạng thái</th>
                 <th data-type="date-euro">Ngày Nhập</th>
               </tr>
@@ -129,14 +130,17 @@
                   <td>{{$product_dt?->size ?? '---'}}</td>
                   <td>{{$product_dt->import_quantity}}</td>
                   <td>{{$product_dt->orderDetailQuantity ? $product_dt->orderDetailQuantity : 0}}</td>
-                  <td>{{$product_dt->conlai ? $product_dt->conlai : $product_dt->quantity}}</td>
+                  <td>{{$product_dt->quantity}}</td>
+                  <td>{{$product_dt->soluongkhac}}</td>
                   <td>
-                    @if(($product_dt->conlai ? $product_dt->conlai : $product_dt->quantity) == 0)
+                    
+                    @if( $product_dt->quantity== 0)
                     <span class="badge badge-danger">Đã Hết Hàng</span>
                   @else
                     <span class="badge badge-success">Còn Hàng</span>
                   @endif
                   </td>
+                 
                   <td>{{ \Carbon\Carbon::parse($product_dt->created_at)->format('d/m/Y')}}</td>
                 </tr>
               @endforeach

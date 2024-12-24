@@ -104,14 +104,19 @@
 @section('custom-js')
 <script>
   $(document).ready(function(){
-    //Date range picker
     $('#start_end_date').daterangepicker({
-      autoApply: true,
-      minDate: "{{ date_format(date_create($coupon?->start_date), 'd/m/Y') }}",
-      "locale": {
+    autoApply: true,
+    minDate: moment(), // Ngày bắt đầu không được trước ngày hiện tại
+    "locale": {
         "format": "DD/MM/YYYY",
-      }
-    });
+    }
+}, function(start, end, label) {
+    // Kiểm tra nếu ngày kết thúc bé hơn ngày bắt đầu
+    if (end.isBefore(start)) {
+        alert('Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu!');
+        $('#start_end_date').val(''); // Xóa giá trị nếu không hợp lệ
+    }
+});
 
     $('input#max_discount_amount').autoNumeric('init', {
       aSep: '.',

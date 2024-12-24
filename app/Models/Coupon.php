@@ -12,4 +12,9 @@ class Coupon extends Model
     
 
     protected $guarded = [];
+
+      public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_coupons')->withTimestamps()->onDelete('cascade');
+    }
 }

@@ -118,9 +118,9 @@
                   <td> {{ \Carbon\Carbon::parse($advertise->created_at)->format('d/m/Y')}}</td>
                   <td>
                     @if($advertise->start_date <= date('Y-m-d') && $advertise->end_date >= date('Y-m-d'))
-                      <span class="label-success status-label">Active</span>
+                      <span class="label-success status-label">Hoạt động</span>
                     @else
-                      <span class="label-danger status-label">Inactive</span>
+                      <span class="label-danger status-label">Dừng hoạt động</span>
                     @endif
                   </td>
                   <td>

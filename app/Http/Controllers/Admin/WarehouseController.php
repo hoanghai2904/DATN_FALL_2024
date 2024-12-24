@@ -24,8 +24,8 @@ class WarehouseController extends Controller
             ->join('products', 'product_details.product_id', '=', 'products.id')
             ->leftJoin('order_details', 'product_details.id', '=', 'order_details.product_detail_id')
             ->leftJoin('orders', function ($query) {
-                $query->on('order_details.order_id', '=', 'orders.id')
-                    ->where('orders.status', OrderStatusEnum::COMPLETED);
+                $query->on('order_details.order_id', '=', 'orders.id');
+                   
             })
             ->select(
                 'products.name',
@@ -39,8 +39,8 @@ class WarehouseController extends Controller
                 'product_details.color',
                 'product_details.created_at',
                 DB::raw('SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN COALESCE(order_details.quantity, 0) ELSE 0 END) as orderDetailQuantity'),
-                DB::raw('product_details.quantity - SUM(CASE WHEN orders.status = ' . OrderStatusEnum::COMPLETED . ' THEN COALESCE(order_details.quantity, 0) ELSE 0 END) AS conlai')
-            )
+                DB::raw('SUM(CASE WHEN orders.status in ( 1,2,3,4,5,7,8,9,10,11,12,13) THEN COALESCE(order_details.quantity, 0) ELSE 0 END) AS soluongkhac ')
+            )   
             ->groupBy('product_details.id', 'products.name', 'products.image', 'products.sku_code', 'product_details.quantity', 'product_details.import_quantity', 'product_details.size', 'product_details.product_id', 'product_details.color', 'product_details.created_at')
             ->orderBy('product_details.created_at', 'DESC')
             ->get();
