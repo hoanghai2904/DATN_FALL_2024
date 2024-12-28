@@ -25,6 +25,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/Ionicons/css/ionicons.min.css') }}">
   <!-- Sweet Alert 2 -->
   <link rel="stylesheet" href="{{ asset('common/css/sweetalert2.min.css') }}">
+ <!-- Thêm CSS cho select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
   <!-- Embed CSS -->
   @yield('embed-css')
   <!-- Theme style -->
@@ -87,6 +89,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('AdminLTE/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <!-- Sweet Alert 2 -->
 <script src="{{ asset('common/js/sweetalert2.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- selected 22 --}}
+<!-- Thêm JavaScript cho select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <!-- Embed JS -->
 @yield('embed-js')
 <!-- AdminLTE App -->

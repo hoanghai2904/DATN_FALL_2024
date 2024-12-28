@@ -49,9 +49,32 @@
                 class="{{ Helper::check_active(['admin.producer.index', 'admin.producer.new', 'admin.producer.edit']) }}">
                 <a href="{{ route('admin.producer.index') }}"><i class="fa fa-list" aria-hidden="true"></i> <span>Quản
                         Lý Danh mục</span></a></li>
-            <li class="{{ Helper::check_active(['admin.product.index', 'admin.product.new', 'admin.product.edit']) }}">
-                <a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>
-                    <span>Quản Lý Sản Phẩm</span></a></li>
+           
+            {{-- ql sp --}}
+            <li
+            class="treeview {{ Helper::check_active(['admin.order.index', 'admin.order.show', 'admin.order.processing', 'admin.order.completed']) }}">
+            <a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Sản Phẩm</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                {{-- product old --}}
+                <li class="{{ Helper::check_active(['admin.product.index', 'admin.product.new', 'admin.product.edit']) }}">
+                    <a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>
+                        <span>Quản Lý Sản Phẩm</span></a>
+                </li>
+                {{-- Product new --}}
+                <li class="{{ Helper::check_active(['admin.products.index', 'admin.products.new', 'admin.products.edit']) }}">
+                    <a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>
+                        <span>Quản Lý Sản Phẩm new</span></a>
+                </li>
+                <li class="{{ Helper::check_active(['admin.attributes.index', 'admin.attributes.create', 'admin.attributes.edit']) }}">
+                    <a href="{{ route('admin.attributes.index') }}"><i class="fa fa-circle-o"></i>Thuộc tính sản phẩm </a>
+                </li>
+              
+            </ul>
+        </li>
             {{-- <li class="{{ Helper::check_active(['admin.order.index', 'admin.order.show']) }}"><a href="{{ route('admin.order.index') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Quản Lý Đơn Hàng</span></a></li> --}}
 
             <li

@@ -179,7 +179,18 @@
     <script>
         tinymce.init({
             selector: '#product-information>textarea',
-            plugins: 'media image code table link lists preview fullscreen',
+
+                input.onchange = function() {
+                    var file = this.files[0];
+
+                    var reader = new FileReader();
+                    reader.onload = function() {
+
+                        var id = 'blobid' + (new Date()).getTime();
+                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        var base64 = reader.result.split(',')[1];
+                        var blobInfo = blobCache.create(id, file, base64);
+              plugins: 'media image code table link lists preview fullscreen',
             toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | numlist bullist | outdent indent | link image media table | code preview fullscreen',
             toolbar_drawer: 'sliding',
             entity_encoding: "raw",
@@ -203,18 +214,7 @@
                 input.setAttribute('type', 'file');
                 input.setAttribute('accept', 'image/*');
 
-
-                input.onchange = function() {
-                    var file = this.files[0];
-
-                    var reader = new FileReader();
-                    reader.onload = function() {
-
-                        var id = 'blobid' + (new Date()).getTime();
-                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
+                      blobCache.add(blobInfo);
 
                         /* call the callback and populate the Title field with the file name */
                         cb(blobInfo.blobUri(), {

@@ -4,29 +4,54 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class Product extends Model
 {
-  use SoftDeletes;
-  public function advertises() {
+  use HasFactory, SoftDeletes;
+  protected $fillable = [
+    'producer_id',
+    'name',
+    'image',
+    'sku_code',
+    'stock',
+    'information_details',
+    'product_introduction',
+    'rate'
+  ];
+  //varian
+  public function variants()
+  {
+    return $this->hasMany(ProductVariant::class);
+  }
+  // khác 
+  public function advertises()
+  {
     return $this->hasMany('App\Models\Advertise');
   }
-  public function comments() {
+  public function comments()
+  {
     return $this->hasMany('App\Models\Comment');
   }
-  public function product_votes() {
+  public function product_votes()
+  {
     return $this->hasMany('App\Models\ProductVote');
   }
-  public function promotions() {
+  public function promotions()
+  {
     return $this->hasMany('App\Models\Promotion');
   }
-  public function product_details() {
+  public function product_details()
+  {
     return $this->hasMany('App\Models\ProductDetail');
   }
-  public function producer() {
+  public function producer()
+  {
     return $this->belongsTo('App\Models\Producer');
   }
-  public function product_detail() {
+  public function product_detail()
+  {
     return $this->hasOne('App\Models\ProductDetail', 'product_id', 'id');
   }
 }

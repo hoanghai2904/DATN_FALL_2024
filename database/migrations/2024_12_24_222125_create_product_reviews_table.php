@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_coupons', function (Blueprint $table) {
+        Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('coupon_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_used')->default(false);
-            $table->timestamp('used_at')->nullable();
+            $table->foreignId('variant_id')->constrained('product_variants')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->tinyInteger('rating')->unsigned();
+            $table->text('review')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_coupons');
+        Schema::dropIfExists('product_reviews');
     }
 };

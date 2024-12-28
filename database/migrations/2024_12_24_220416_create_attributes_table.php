@@ -8,22 +8,26 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id(); // unsignedBigInteger mặc định
-            $table->string('name')->unique();
+        Schema::create('attributes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug')->unique();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('attributes');
     }
 };
