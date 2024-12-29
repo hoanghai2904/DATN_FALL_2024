@@ -111,6 +111,7 @@ class ProductController extends Controller
 
   public function save(Request $request)
   {
+    dd($request);
     $product = new Product;
 
     if ($request->information_details != null) {

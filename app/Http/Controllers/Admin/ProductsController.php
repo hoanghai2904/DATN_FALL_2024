@@ -36,72 +36,72 @@ class ProductsController extends Controller
     return view('admin.products.index')->with('products', $products);
   }
 
-  public function delete(Request $request)
-  {
-    $product = Product::whereHas('product_details', function (Builder $query) {
-      $query->where('import_quantity', '>', 0);
-    })->where('id', $request->product_id)->first();
+//   public function delete(Request $request)
+//   {
+//     $product = Product::whereHas('product_details', function (Builder $query) {
+//       $query->where('import_quantity', '>', 0);
+//     })->where('id', $request->product_id)->first();
 
-    if (!$product) {
+//     if (!$product) {
 
-      $data['type'] = 'error';
-      $data['title'] = 'Thất Bại';
-      $data['content'] = 'Bạn không thể xóa sản phẩm không tồn tại!';
-    } else {
+//       $data['type'] = 'error';
+//       $data['title'] = 'Thất Bại';
+//       $data['content'] = 'Bạn không thể xóa sản phẩm không tồn tại!';
+//     } else {
 
-      $can_delete = 1;
-      $product_details = $product->product_details;
-      foreach ($product_details as $product_detail) {
-        if ($product_detail->import_quantity == 0 || $product_detail->import_quantity != $product_detail->quantity) {
-          $can_delete = 0;
-          break;
-        }
-      }
+//       $can_delete = 1;
+//       $product_details = $product->product_details;
+//       foreach ($product_details as $product_detail) {
+//         if ($product_detail->import_quantity == 0 || $product_detail->import_quantity != $product_detail->quantity) {
+//           $can_delete = 0;
+//           break;
+//         }
+//       }
 
-      if ($can_delete) {
+//       if ($can_delete) {
 
-        foreach ($product_details as $product_detail) {
-          foreach ($product_detail->product_images as $image) {
-            Storage::disk('public')->delete('images/products/' . $image->image_name);
-            $image->delete();
-          }
-          $product_detail->delete();
-        }
-        foreach ($product->promotions as $promotion) {
-          $promotion->delete();
-        }
-        foreach ($product->product_votes as $product_vote) {
-          $product_vote->delete();
-        }
-        $product->delete();
-      } else {
-        foreach ($product_details as $product_detail) {
-          if ($product_detail->import_quantity > 0 && $product_detail->import_quantity == $product_detail->quantity) {
+//         foreach ($product_details as $product_detail) {
+//           foreach ($product_detail->product_images as $image) {
+//             Storage::disk('public')->delete('images/products/' . $image->image_name);
+//             $image->delete();
+//           }
+//           $product_detail->delete();
+//         }
+//         foreach ($product->promotions as $promotion) {
+//           $promotion->delete();
+//         }
+//         foreach ($product->product_votes as $product_vote) {
+//           $product_vote->delete();
+//         }
+//         $product->delete();
+//       } else {
+//         foreach ($product_details as $product_detail) {
+//           if ($product_detail->import_quantity > 0 && $product_detail->import_quantity == $product_detail->quantity) {
 
-            foreach ($product_detail->product_images as $image) {
-              Storage::disk('public')->delete('images/products/' . $image->image_name);
-              $image->delete();
-            }
-            $product_detail->delete();
-          } else {
+//             foreach ($product_detail->product_images as $image) {
+//               Storage::disk('public')->delete('images/products/' . $image->image_name);
+//               $image->delete();
+//             }
+//             $product_detail->delete();
+//           } else {
 
-            $product_detail->import_quantity = 0;
-            $product_detail->quantity = 0;
-            $product_detail->save();
-          }
-        }
-        foreach ($product->promotions as $promotion) {
-          $promotion->delete();
-        }
-      }
+//             $product_detail->import_quantity = 0;
+//             $product_detail->quantity = 0;
+//             $product_detail->save();
+//           }
+//         }
+//         foreach ($product->promotions as $promotion) {
+//           $promotion->delete();
+//         }
+//       }
 
-      $data['type'] = 'success';
-      $data['title'] = 'Thành Công';
-      $data['content'] = 'Xóa sản phẩm thành công!';
-    }
+//       $data['type'] = 'success';
+//       $data['title'] = 'Thành Công';
+//       $data['content'] = 'Xóa sản phẩm thành công!';
+//     }
 
-    return response()->json($data, 200);
-  }
+//     return response()->json($data, 200);
+//   }
 
   public function new(Request $request)
   {
@@ -111,6 +111,7 @@ class ProductsController extends Controller
 
   public function save(Request $request)
   {
+    dd($request);    
     $product = new Product;
 
     if ($request->information_details != null) {
@@ -246,12 +247,11 @@ class ProductsController extends Controller
       foreach ($request->product_details as $key => $product_detail) {
         $new_product_detail = new ProductDetail;
         $new_product_detail->product_id = $product->id;
-        $new_product_detail->color = $product_detail['color'];
-        $new_product_detail->size = $product_detail['size'];
-        $new_product_detail->import_quantity = $product_detail['quantity'];
-        $new_product_detail->quantity = $product_detail['quantity'];
-        $new_product_detail->import_price = str_replace('.', '', $product_detail['import_price']);
-        $new_product_detail->sale_price = str_replace('.', '', $product_detail['sale_price']);
+        $new_product_detail->sku = $product_detail['sku'] . '-' . $request->sku;
+        $new_product_detail->attributes = $product_detail['sku'];
+        $new_product_detail->stock_quantity = $product_detail['quantity'];
+        $new_product_detail->purchase_price = str_replace('.', '', $product_detail['import_price']);
+        $new_product_detail->price = str_replace('.', '', $product_detail['sale_price']);
         if ($product_detail['promotion_price'] != null) {
           $new_product_detail->promotion_price = str_replace('.', '', $product_detail['promotion_price']);
         }
