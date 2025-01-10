@@ -14,19 +14,7 @@
     </section>
 
     <div class="container my-4">
-        <!-- Section quảng cáo -->
-        <section class="section-advertise">
-            <div class="content-advertise">
-                <div id="slide-advertise" class="owl-carousel">
-                    @foreach ($data['advertises'] as $advertise)
-                        <div class="slide-advertise-inner"
-                            style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}');"
-                            data-dot="<button>{{ $advertise->title }}</button>"></div>
-                    @endforeach
-                </div>
-            </div>
-        </section>
-
+      
   <!-- Thông tin đơn hàng -->
   <div class="card my-4">
     <div class="card-header d-flex justify-content-between">
@@ -60,9 +48,9 @@
             <li class="list-group-item"><span>Phương Thức Thanh Toán:</span> {{ $data['order']->payment_method->name ?? 'Chưa xác định' }}</li>
             <li class="list-group-item">
               <span>Trạng thái thanh toán:</span>
-              @if($data['order']->status === 8)
+              {{-- @if($data['order']->status === 8)
                 <span class="text-danger">Đã hủy</span>
-              @else
+              @else --}}
                 {{ $data['order']->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}
                 @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1 && $data['order']->status !== 8)
                   <form id="payment-form-{{ $data['order']->id }}" action="{{ route('payment_now', $data['order']->id) }}" method="POST" style="display: none;">
@@ -71,7 +59,7 @@
                   </form>
                   <button class="btn btn-primary ml-5" onclick="document.getElementById('payment-form-{{ $data['order']->id }}').submit();">Thanh toán ngay</button>
                 @endif
-              @endif
+              {{-- @endif --}}
             </li>
             
             <li class="list-group-item">

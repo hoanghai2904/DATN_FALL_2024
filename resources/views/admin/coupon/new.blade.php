@@ -110,96 +110,112 @@
 @section('custom-js')
 
 <script>
-  $(document).ready(function(){
-    $('#start_end_date').daterangepicker({
-      autoApply: true,
-      minDate: moment(),
-      "locale": {
-        "format": "DD/MM/YYYY",
-      }
-    });
-    $('input#max_discount_amount').autoNumeric('init', {
-      aSep: '.',
-      aDec: ',',
-      aPad: false,
-      lZero: 'deny',
-      vMin: '0'
-    });
+$(document).ready(function(){
+  $('#start_end_date').daterangepicker({
+    autoApply: true,
+    minDate: moment(),
+    "locale": {
+      "format": "DD/MM/YYYY",
+    }
+  });
+  
+  // Các thiết lập autoNumeric khác
+  $('input#max_discount_amount').autoNumeric('init', {
+    aSep: '.',
+    aDec: ',',
+    aPad: false,
+    lZero: 'deny',
+    vMin: '0'
+  });
 
-  // Initialize autoNumeric for min_order_amount
-    $('input#min_order_amount').autoNumeric('init', {
-      aSep: '.',
-      aDec: ',',
-      aPad: false,
-      lZero: 'deny',
-      vMin: '0'
-    });
+  $('input#min_order_amount').autoNumeric('init', {
+    aSep: '.',
+    aDec: ',',
+    aPad: false,
+    lZero: 'deny',
+    vMin: '0'
+  });
 
-  // Initialize autoNumeric for discount_percentage
-    $('input#discount_percentage').autoNumeric('init', {
-      aSep: '.',
-      aDec: ',',
-      aPad: false,
-      lZero: 'deny',
-      vMin: '0',
-      vMax: '100'
-    });
-    $('#coupon-form').validate({
-      rules: {
-        name: {
-          required: true
-        },
-        code: {
-          required: true
-        },
-        description: {
-          required: true
-        },
-        discount_percentage: {
-          required: true,
-        },
-        max_discount_amount: {
-          required: true,
-          min: 0
-        },
-        min_order_amount: {
-          min: 0
-        },
-        start_end_date: {
-          required: false
-        }
+  $('input#discount_percentage').autoNumeric('init', {
+    aSep: '.',
+    aDec: ',',
+    aPad: false,
+    lZero: 'deny',
+    vMin: '0',
+    vMax: '100'
+  });
+
+  $('#coupon-form').validate({
+    rules: {
+      name: {
+        required: true
       },
-      messages: {
-        name: {
-          required: "Tên là bắt buộc."
-        },
-        code: {
-          required: "Mã là bắt buộc."
-        },
-        description: {
-          required: "Mô tả là bắt buộc."
-        },
-        discount_percentage: {
-          required: "Giảm giá (%) là bắt buộc.",
-          number: "Giảm giá (%) phải là số.",
-          min: "Giảm giá (%) phải lớn hơn hoặc bằng 0.",
-          max: "Giảm giá (%) phải nhỏ hơn hoặc bằng 100."
-        },
-        max_discount_amount: {
-          required: "Giảm tối đa (đ) là bắt buộc.",
-          number: "Giảm tối đa (đ) phải là số.",
-          min: "Giảm tối đa (đ) phải lớn hơn hoặc bằng 0."
-        },
-        min_order_amount: {
-          number: "Đơn hàng tối thiểu (đ) phải là số.",
-          min: "Đơn hàng tối thiểu (đ) phải lớn hơn hoặc bằng 0."
-        }
+      code: {
+        required: true
       },
-      errorPlacement: function(error, element) {
-        error.addClass('text-red');
-        error.insertAfter(element);
+      description: {
+        required: true
+      },
+      discount_percentage: {
+        required: true,
+      },
+      max_discount_amount: {
+        required: true,
+        min: 0
+      },
+      min_order_amount: {
+        min: 0
+      },
+      start_end_date: {
+        required: false,
+        validDateRange: true // Thêm quy tắc kiểm tra ngày
       }
-    });
+    },
+    messages: {
+      name: {
+        required: "Tên là bắt buộc."
+      },
+      code: {
+        required: "Mã là bắt buộc."
+      },
+      description: {
+        required: "Mô tả là bắt buộc."
+      },
+      discount_percentage: {
+        required: "Giảm giá (%) là bắt buộc.",
+        number: "Giảm giá (%) phải là số.",
+        min: "Giảm giá (%) phải lớn hơn hoặc bằng 0.",
+        max: "Giảm giá (%) phải nhỏ hơn hoặc bằng 100."
+      },
+      max_discount_amount: {
+        required: "Giảm tối đa (đ) là bắt buộc.",
+        number: "Giảm tối đa (đ) phải là số.",
+        min: "Giảm tối đa (đ) phải lớn hơn hoặc bằng 0."
+      },
+      min_order_amount: {
+        number: "Đơn hàng tối thiểu (đ) phải là số.",
+        min: "Đơn hàng tối thiểu (đ) phải lớn hơn hoặc bằng 0."
+      },
+      start_end_date: {
+        validDateRange: "Ngày kết thúc phải lớn hơn ngày bắt đầu."
+      }
+    },
+    errorPlacement: function(error, element) {
+      error.addClass('text-red');
+      error.insertAfter(element);
+    }
+  });
+
+  // Thêm quy tắc xác thực cho ngày
+  $.validator.addMethod("validDateRange", function(value, element) {
+  var startDate = $('#start_end_date').data('daterangepicker').startDate;
+  var endDate = $('#start_end_date').data('daterangepicker').endDate;
+
+  // Kiểm tra ngày kết thúc phải lớn hơn ngày bắt đầu
+  return startDate && endDate && endDate.isAfter(startDate, 'day'); // So sánh theo đơn vị 'day'
 });
+});
+
+
 </script>
 @endsection

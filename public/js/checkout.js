@@ -5,23 +5,31 @@ $(document).ready(function(){
   });
 });
 $(document).ready(function() {
-    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-    var selectedCouponId = null; // Variable to store the selected coupon ID
-    var finalPrice = null;
-    $('#apply-coupon-btn').click(function() {
-        var url = $(this).data('url');
-        $.ajax({
-            url: url,
-            method: "GET",
-            success: function(response) {
-                var coupons = response.coupons;
-                var couponForm = $('#coupon-form');
-                couponForm.empty();
-                if (coupons.length === 0) {
-                    couponForm.append("<p>Chưa lưu coupon nào</p>");
-                } else {
-                  coupons.forEach(function(coupon, index) {
-                      var columnClass = 'col-md-12';
+  var csrfToken = $('meta[name="csrf-token"]').attr('content');
+  var selectedCouponId = null; // Variable to store the selected coupon ID
+  var finalPrice = null;
+  
+  $('#apply-coupon-btn').click(function() {
+      var url = $(this).data('url');
+      $.ajax({
+          url: url,
+          method: "GET",
+          success: function(response) {
+              var coupons = response.coupons;
+              var couponForm = $('#coupon-form');
+              couponForm.empty();
+              
+              var currentDate = new Date(); // Lấy ngày hiện tại
+              var validCoupons = coupons.filter(function(coupon) {
+                  var endDate = new Date(coupon.end_date);
+                  return endDate >= currentDate; // Lọc các coupon chưa hết hạn
+              });
+  
+              if (validCoupons.length === 0) {
+                  // Hiển thị thông báo nếu không có mã giảm giá nào hợp lệ
+                  couponForm.append("<p>Chưa có mã khuyến mại nào !</p>");
+              } else {
+                  validCoupons.forEach(function(coupon, index) {
                       var formattedMaxDiscount = new Intl.NumberFormat('vi-VN', {
                           style: 'currency',
                           currency: 'VND'
@@ -49,12 +57,13 @@ $(document).ready(function() {
                           </div>
                       `);
                   });
-                }
-                $('#couponModal').modal('show');
-            }
-        });
-    });
-
+              }
+              
+              $('#couponModal').modal('show');
+          }
+      });
+  });
+  
     $('#apply-coupon').click(function() {
         var selectedCoupon = $('input[name="coupon"]:checked');
         if (selectedCoupon.length > 0) {

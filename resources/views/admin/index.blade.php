@@ -3,6 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('embed-css')
+  <!-- daterange picker -->
+    <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
@@ -131,32 +133,54 @@
                                 <div class="box-header with-border">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <h3 class="box-title">Thống Kê Doanh Thu Bán Hàng</h3>
+                                    <div class="form-action">
+                                              <form action="{{ route('admin.statistic.edit') }}" method="POST" accept-charset="utf-8">
+                                                @csrf
+                                                <div class="row" style="margin-right: -5px; margin-left: -5px;">
+                                                  
+                                                  <div class="col-md-12 col-sm-12 col-xs-12" style="padding-right: 5px; padding-left: 5px;">
+                                                    <div class="input-group" >
+                                                      <div class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                      </div>
+                                                      <input type="text" class="form-control pull-right change-statistic" id="start_end_date" name="start_end_date" autocomplete="off" value="{{ old('start_end_date') }}">
+                                                    </div>
+                                                  </div>
 
-                    <div class="form-action">
-                      <form action="{{ route('admin.statistic.edit') }}" method="POST" accept-charset="utf-8">
-                        @csrf
-                        <div class="row" style="margin-right: -5px; margin-left: -5px;">
-                          <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 5px; padding-left: 5px;">
-                            <select class="form-control change-statistic" name="month">
-                              <option value="">-- Chọn Tháng --</option>
-                              @for ($i = 0; $i < 12; $i++)
-                                <option value="{{ $i + 1 }}">Tháng {{ $i + 1 }}</option>
-                              @endfor
-                            </select>
-                          </div>
-                          <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 5px; padding-left: 5px;">
-                            <select class="form-control change-statistic" name="year">
-                              <option value="">-- Chọn Năm --</option>
-                              @for ($i = 0; $i < 5; $i++)
-                                <option value="{{ date('Y') - $i }}">Năm {{ date('Y') - $i }}</option>
-                              @endfor
-                            </select>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
+                                                  {{-- <div class="col-md-12 col-sm-12 col-xs-12" style="padding-right: 5px; padding-left: 5px;">
+                                                    <div class="input-group">
+                                                        <div class="input-group-addon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </div>
+                                                        <input type="text change-statistic" id="daterange-input" name="start_end_date" value="{{ old('start_end_date') }}" class="form-control" placeholder="Chọn khoảng thời gian" autocomplete="off">
+                                                    </div>
+                                                  </div> --}}
+                                                
+                                                
+
+                                                  {{-- <div class="col-md-3 col-sm-3 col-xs-3" style="padding-right: 5px; padding-left: 5px;">
+                                                    <select class="form-control change-statistic" name="month">
+                                                      <option value="">Chọn Tháng</option>
+                                                      @for ($i = 0; $i < 12; $i++)
+                                                        <option value="{{ $i + 1 }}">Tháng {{ $i + 1 }}</option>
+                                                      @endfor
+                                                    </select>
+                                                  </div> --}}
+
+                                                  {{-- <div class="col-md-4 col-sm-3 col-xs-3" style="padding-right: 5px; padding-left: 5px;">
+                                                    <select class="form-control change-statistic" name="year">
+                                                      <option value="">Chọn Năm</option>
+                                                      @for ($i = 0; $i < 5; $i++)
+                                                        <option value="{{ date('Y') - $i }}">Năm {{ date('Y') - $i }}</option>
+                                                      @endfor
+                                                    </select>
+                                                  </div> --}}
+                                                  
+                                                </div>
+                                              </form>
+                                    </div>
+                                   </div>
+                                </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                   <div id="print">
@@ -166,18 +190,18 @@
                       </div>
                       <div class="box-body">
                         <div class="row">
-                          <div class="col-md-8">
+                          <div class="col-md-12">
                             <div class="chart">
                               <!-- Sales Chart Canvas -->
                               <canvas id="salesChart" style="height: 300px;"></canvas>
                             </div>
                             <p class="text-center">
-                              <i>Hình 1: Biểu đồ doanh số bán hàng</i>
+                              <i>Biểu đồ doanh số bán hàng</i>
                             </p>
                             <!-- /.chart-responsive -->
                           </div>
                           <!-- /.col -->
-                          <div class="col-md-4 col-sm-4 col-xs-4">
+                          {{-- <div class="col-md-4 col-sm-4 col-xs-4">
                             <div class="chart" style="margin-bottom: 10px;">
                               <!-- Sales Chart Canvas -->
                               <div id="quantityChart" style="width: 200px; height: 200px; margin: 0 auto;"></div>
@@ -186,7 +210,7 @@
                             <p class="text-center">
                               <i>Hình 2: Thị phần sản phẩm bán được theo danh mục</i>
                             </p>
-                          </div>
+                          </div> --}}
                         </div>
                         <!-- /.row -->
                         <div class="row">
@@ -247,8 +271,8 @@
                                 <th style="vertical-align: middle;">Đơn Hàng</th>
                                 <th style="vertical-align: middle;">Ngày Xuất</th>
                                 <th style="text-align: center; vertical-align: middle;">Số Lượng</th>
-                                <th style="vertical-align: middle;">Giá Nhập</th>
-                                <th style="vertical-align: middle;">Giá Xuất</th>
+                                {{-- <th style="vertical-align: middle;">Giá Nhập</th>
+                                <th style="vertical-align: middle;">Giá Xuất</th> --}}
                                 <th style="vertical-align: middle;">Doanh Thu</th>
                                 <th style="vertical-align: middle;">Lợi Nhuận</th>
                               </tr>
@@ -267,8 +291,8 @@
                                   <td style="vertical-align: middle;">{{ '#'.$order_detail->order->order_code }}</td>
                                   <td style="vertical-align: middle;">{{ date_format($order_detail->created_at, 'd/m/Y') }}</td>
                                   <td style="text-align: center; vertical-align: middle;">{{ $order_detail->quantity }}</td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td>
+                                  {{-- <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
+                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td> --}}
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity - $order_detail->order->discount,0,',','.') }} VNĐ</span></td>
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
                                 </tr>
@@ -302,7 +326,7 @@
           </div>
       </div>
     </div>
-  </div>
+    </div>
   {{-- order status --}}
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTwo">
@@ -461,12 +485,35 @@
     <script src="{{ asset('AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
     <script src="{{ asset('AdminLTE/bower_components/fastclick/lib/fastclick.js') }}"></script>
+    <!-- date-range-picker -->
+    <script src="{{ asset('AdminLTE/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/jquery-validate/jquery.validate.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/autoNumeric.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/date-euro.js"></script>
 @endsection
 
 @section('custom-js')
     <script>
         $(document).ready(function() {
+
+          $('#start_end_date').daterangepicker({
+            opens:'right',
+            autoApply: true,
+            // minDate: moment(),
+            "locale": {
+              "format": "DD/MM/YYYY",
+              "customRangeLabel": "Tùy chỉnh",
+            },
+            "ranges": {
+              // 'Hôm nay': [moment(), moment()],
+              'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+              '7 ngày trước': [moment().subtract(6, 'days'), moment()],
+              '30 ngày trước': [moment().subtract(29, 'days'), moment()],
+              'Tháng này': [moment().startOf('month'), moment().endOf('month')],
+            }
+
+          });
             // -----------------------
             // - MONTHLY SALES CHART -
             // -----------------------
@@ -598,154 +645,101 @@
             var profitChart = $.plot('#profitChart', profitData, options);
             /* END DONUT CHART */
 
-            $('select.change-statistic').on('change', function() {
-                $(this).closest('.box').append(
-                    '<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-                var url = $(this).closest('form').attr('action');
-                var data = $(this).closest('form').serialize();
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        console.log(data)
-                        $('div.overlay').remove();
-                        $('#print .box-chart .box-title').text(data.text.title1);
-                        $('#print .box-table .box-title').text(data.text.title2);
-                        $('#print .box-chart .description-order .description-header').text(data
-                            .count_orders);
-                        $('#print .box-chart .description-product .description-header').text(
-                            data.count_products);
-                        $('#print .box-chart .description-revenue .description-header span')
-                            .text(formatMoney(data.total_revenue));
-                        $('#print .box-chart .description-revenue .description-text').text(data
-                            .text.revenue);
-                        $('#print .box-chart .description-profit .description-header span')
-                            .text(formatMoney(data.total_profit));
-                        $('#print .box-chart .description-profit .description-text').text(data
-                            .text.profit);
+            $('.change-statistic').on('change', function () {
+              $(this).closest('.box').append(
+                  '<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>'
+              );
 
-                        myChart.destroy();
+              var url = $(this).closest('form').attr('action');
+              var data = $(this).closest('form').serialize();
 
-                        var salesChartData = {
-                            labels: data.labels,
-                            datasets: [{
-                                label: 'Doanh Số Bán Hàng',
-                                fillColor: 'rgba(60,141,188,0.9)',
-                                strokeColor: 'rgba(60,141,188,0.8)',
-                                pointColor: '#3b8bba',
-                                pointStrokeColor: 'rgba(60,141,188,1)',
-                                pointHighlightFill: '#fff',
-                                pointHighlightStroke: 'rgba(60,141,188,1)',
-                                data: data.revenues
-                            }]
-                        };
+              $.ajax({
+                  url: url,
+                  type: 'POST',
+                  data: data,
+                  dataType: 'JSON',
+                  success: function (data) {
+                      console.log(data);
+                      $('div.overlay').remove();
 
-                        myChart = salesChart.Line(salesChartData, salesChartOptions);
+                      // Cập nhật thông tin chart và bảng
+                      $('#print .box-chart .box-title').text(data.text.title1);
+                      $('#print .box-table .box-title').text(data.text.title2);
+                      $('#print .box-chart .description-order .description-header').text(data.count_orders);
+                      $('#print .box-chart .description-product .description-header').text(data.count_products);
+                      $('#print .box-chart .description-revenue .description-header span').text(formatMoney(data.total_revenue));
+                      $('#print .box-chart .description-revenue .description-text').text(data.text.revenue);
+                      $('#print .box-chart .description-profit .description-header span').text(formatMoney(data.total_profit));
+                      $('#print .box-chart .description-profit .description-text').text(data.text.profit);
 
-                        quantityData = [];
-                        revenueData = [];
-                        profitData = [];
+                      // Cập nhật chart
+                      myChart.destroy();
 
-                        $.each(data.producer, function(key, value) {
-                            quantityData.push({
-                                label: key,
-                                data: value.quantity
-                            });
-                            revenueData.push({
-                                label: key,
-                                data: value.revenue
-                            });
-                            profitData.push({
-                                label: key,
-                                data: value.profit
-                            });
-                        });
+                      var salesChartData = {
+                          labels: data.labels,
+                          datasets: [{
+                              label: 'Doanh Số Bán Hàng',
+                              fillColor: 'rgba(60,141,188,0.9)',
+                              strokeColor: 'rgba(60,141,188,0.8)',
+                              pointColor: '#3b8bba',
+                              pointStrokeColor: 'rgba(60,141,188,1)',
+                              pointHighlightFill: '#fff',
+                              pointHighlightStroke: 'rgba(60,141,188,1)',
+                              data: data.revenues
+                          }]
+                      };
 
-                        quantityChart.destroy();
-                        revenueChart.destroy();
-                        profitChart.destroy();
+                      myChart = salesChart.Line(salesChartData, salesChartOptions);
 
-                        quantityChart = $.plot('#quantityChart', quantityData, options);
-                        revenueChart = $.plot('#revenueChart', revenueData, options);
-                        profitChart = $.plot('#profitChart', profitData, options);
+                      // Cập nhật bảng dữ liệu
+                      $('.box-table table tbody').empty();
+                      var price = 0, profit = 0;
 
-                        $('.box-table table tbody').empty();
+                      $.each(data.order_details, function (key, value) {
+                          price += value.price * value.quantity;
+                          profit += value.quantity * (value.price - value.product_detail.import_price);
 
-                        var price = 0;
-                        var profit = 0;
+                          $('.box-table table tbody').append(
+                              '<tr>' +
+                              '<td style="text-align: center; vertical-align: middle;">' + (key + 1) + '</td>' +
+                              '<td style="vertical-align: middle;">#' + value.product_detail.product.sku_code + '</td>' +
+                              '<td style="vertical-align: middle;">' + value.product_detail.product.name + '</td>' +
+                              '<td style="vertical-align: middle;">' + value.product_detail.color + '</td>' +
+                              '<td style="vertical-align: middle;">#' + value.order.order_code + '</td>' +
+                              '<td style="vertical-align: middle;">' + formatDate(value.created_at) + '</td>' +
+                              '<td style="text-align: center; vertical-align: middle;">' + value.quantity + '</td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.product_detail.import_price) + '</span></td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.price) + '</span></td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.price * value.quantity) + '</span></td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.quantity * (value.price - value.product_detail.import_price)) + '</span></td>' +
+                              '</tr>'
+                          );
+                      });
 
-                        $.each(data.order_details, function(key, value) {
+                      $('.box-table table tbody').append(
+                          '<tr>' +
+                          '<td colspan="11" style="text-align: right;">' +
+                          '<i style="margin-right: 10px;">*Tổng Doanh Thu = <span style="color: #f30;">' + formatMoney(price) + '</span></i>' +
+                          '<i>*Tổng Lợi Nhuận = <span style="color: #f30;">' + formatMoney(profit) + '</span></i>' +
+                          '</td>' +
+                          '</tr>'
+                      );
+                  },
+                  error: function (data) {
+                      var errors = data.responseJSON;
+                      Swal.fire({
+                          title: 'Thất bại',
+                          text: errors.msg,
+                          icon: 'error'
+                      });
+                  }
+              });
+          });
 
-                            price = price + value.price * value.quantity;
-                            profit = profit + value.quantity * (value.price - value
-                                .product_detail.import_price);
-
-                            $('.box-table table tbody').append(
-                                '<tr>' +
-                                '<td style="text-align: center; vertical-align: middle;">' +
-                                (key + 1) + '</td>' +
-                                '<td style="vertical-align: middle;"> #' + value
-                                .product_detail.product.sku_code + '</td>' +
-                                '<td style="vertical-align: middle;">' + value
-                                .product_detail.product.name + '</td>' +
-                                '<td style="vertical-align: middle;">' + value
-                                .product_detail.color + '</td>' +
-                                '<td style="vertical-align: middle;"> #' + value
-                                .order.order_code + '</td>' +
-                                '<td style="vertical-align: middle;">' + formatDate(
-                                    value.created_at) + '</td>' +
-                                '<td style="text-align: center; vertical-align: middle;">' +
-                                value.quantity + '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.product_detail.import_price) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.price) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.price * value.quantity) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.quantity * (value.price - value
-                                    .product_detail.import_price)) +
-                                '</span>' +
-                                '</td>' +
-                                '</tr>'
-                            );
-                        });
-
-                        $('.box-table table tbody').append(
-                            '<tr>' +
-                            '<td colspan="11" style="text-align: right;">' +
-                            '<i style="margin-right: 10px;">*Tổng Doanh Thu = <span style="color: #f30;">' +
-                            formatMoney(price) + '</span></i>' +
-                            '<i>*Tổng Lợi Nhuận = <span style="color: #f30;">' +
-                            formatMoney(profit) + '</span></i>' +
-                            '</td>' +
-                            '</tr>'
-                        );
-                    },
-                    error: function(data) {
-                        var errors = data.responseJSON;
-                        Swal.fire({
-                            title: 'Thất bại',
-                            text: errors.msg,
-                            type: 'error'
-                        })
-                    }
-                });
-            });
         });
     </script>
+
+
 
     <!-- Page script -->
     <script>

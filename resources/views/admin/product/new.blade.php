@@ -39,109 +39,123 @@
 
 @section('content')
 
-<form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-  @csrf
-  <div class="box box-primary">
-    <div class="box-header">
-      <h3 class="box-title">Thông Tin Sản Phẩm</h3>
-      <div class="box-tools">
-        <!-- This will cause the box to collapse when clicked -->
-        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
-      </div>
-    </div>
-    <div class="box-body">
-      <div class="row">
-        <div class="col-md-3">
-          <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
-          <div class="upload-image text-center">
-            <div title="Image Preview" class="image-preview" style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;"></div>
-            <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
-            <input type="file" accept="image/*" id="upload" style="display:none" name="image" required>
-          </div>
+    <form id="productForm" action="{{ route('admin.product.save') }}" method="POST" accept-charset="utf-8"
+        enctype="multipart/form-data">
+        @csrf
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Thông Tin Sản Phẩm</h3>
+                <div class="box-tools">
+                    <!-- This will cause the box to collapse when clicked -->
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
+                            class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="title">Hình Ảnh Hiển Thị <span class="text-red">*</span></label>
+                        <div class="upload-image text-center">
+                            <div title="Image Preview" class="image-preview"
+                                style="background-image: url('{{ Helper::get_image_product_url() }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px; border: 1px solid #f4f4f4;">
+                            </div>
+                            <label for="upload" title="Upload Image" class="btn btn-primary btn-sm"><i
+                                    class="fa fa-folder-open"></i>Chọn Hình Ảnh</label>
+                            <input type="file" accept="image/*" id="upload" style="display:none" name="image"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
+                                    <input type="text" name="name" class="form-control" id="name"
+                                        placeholder="Tên sản Phẩm" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="sku_code">Mã Sản Phẩm <span class="text-red">*</span></label>
+                                    <input type="text" name="sku_code" class="form-control" id="sku_code"
+                                        placeholder="Mã sản Phẩm" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Danh mục <span class="text-red">*</span></label>
+                                    <select class="form-control" name="producer_id" required>
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach ($producers as $producer)
+                                            <option value="{{ $producer->id }}">{{ $producer->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-9">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
-                <input type="text" name="name" class="form-control" id="name" placeholder="Tên sản Phẩm" required autocomplete="off">
-              </div>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Thông Tin Khuyến Mãi</h3>
+                <div class="box-tools">
+                    <!-- This will cause the box to collapse when clicked -->
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
+                            class="fa fa-minus"></i></button>
+                </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="sku_code">Mã Sản Phẩm <span class="text-red">*</span></label>
-                <input type="text" name="sku_code" class="form-control" id="sku_code" placeholder="Mã sản Phẩm" required autocomplete="off">
-              </div>
+            <div class="box-body">
+                <div id="product-promotions"></div>
+                <div class="text-center">
+                    <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Thông
+                        tin </button>
+                </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label>Danh mục <span class="text-red">*</span></label>
-                <select class="form-control" name="producer_id" required>
-                  <option value="">-- Chọn danh mục --</option>
-                  @foreach($producers as $producer)
-                    <option value="{{ $producer->id }}">{{ $producer->name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Thông Tin Khuyến Mãi</h3>
-      <div class="box-tools">
-        <!-- This will cause the box to collapse when clicked -->
-        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
-      </div>
-    </div>
-    <div class="box-body">
-      <div id="product-promotions"></div>
-      <div class="text-center">
-        <button class="add-promotion btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm Thông tin </button>
-      </div>
-    </div>
-  </div>
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">Thông Tin thể loại Và Giá Sản Phẩm</h3>
-      <div class="box-tools">
-        <!-- This will cause the box to collapse when clicked -->
-        <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
-      </div>
-    </div>
-    <div class="box-body">
-      <div id="product-details"></div>
-    </div>
-    <div class="text-center box-footer">
-      <button class="add btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm thể loại Sản Phẩm</button>
-    </div>
-  </div>
-  <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#product-information" data-toggle="tab">Mô tả sản phẩm</a></li>
-      {{-- <li><a href="#product-introduction" data-toggle="tab">Chi tiết Sản Phẩm</a></li> --}}
-    </ul>
-    <div class="tab-content">
-      <div class="active tab-pane" id="product-information">
-        <textarea name="information_details" rows="20"></textarea>
-      </div>
-      <div class="tab-pane" id="product-introduction">
-        <textarea name="product_introduction" rows="20"></textarea>
-      </div>
-    </div>
-  </div>
-  <div class="box box-solid">
-    <div class="box-body">
-      <div class="form-group">
-        <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu</button>
-        <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right" style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
-      </div>
-    </div>
-  </div>
-</form>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Thông Tin thể loại Và Giá Sản Phẩm</h3>
+                <div class="box-tools">
+                    <!-- This will cause the box to collapse when clicked -->
+                    <button class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse"><i
+                            class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div id="product-details"></div>
+            </div>
+            <div class="text-center box-footer">
+                <button class="add btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Thêm thể loại Sản
+                    Phẩm</button>
+            </div>
+        </div>
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#product-information" data-toggle="tab" style="display: none">Mô tả sản phẩm</a></li>
+                <li><a href="#product-introduction" data-toggle="tab">Chi tiết sản phẩm </a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="active tab-pane" id="product-information">
+                    <textarea name="information_details" rows="20"></textarea>
+                </div>
+                <div class="tab-pane" id="product-introduction">
+                    <textarea name="product_introduction" rows="20"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="box box-solid">
+            <div class="box-body">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o"
+                            aria-hidden="true"></i> Lưu</button>
+                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right"
+                        style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
+                </div>
+            </div>
+        </div>
+    </form>
 @endsection
 
 @section('embed-js')
@@ -163,137 +177,59 @@
 
 @section('custom-js')
     <script>
-        tinymce.init({
-            selector: '#product-information>textarea',
-            plugins: 'media image code table link lists preview fullscreen',
-            toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | numlist bullist | outdent indent | link image media table | code preview fullscreen',
-            toolbar_drawer: 'sliding',
-            entity_encoding: "raw",
-            branding: false,
-            /* enable title field in the Image dialog*/
-            image_title: true,
-            height: 400,
-            min_height: 300,
-            /* Link Custom */
-            link_assume_external_targets: 'http',
-            /* disable media advanced tab */
-            media_alt_source: false,
-            media_poster: false,
-            /* enable automatic uploads of images represented by blob or data URIs*/
-            automatic_uploads: true,
-            /*
-              URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
-              images_upload_url: 'postAcceptor.php',
-              here we add custom filepicker only to Image dialog
-            */
-            file_picker_types: 'image',
-            /* and here's our custom image picker*/
-            file_picker_callback: function(cb, value, meta) {
-                var input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
+     // Tạo cấu hình chung cho TinyMCE
+const tinyMceConfig = {
+    plugins: 'media image code table link lists preview fullscreen',
+    toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | numlist bullist | outdent indent | link image media table | code preview fullscreen',
+    toolbar_drawer: 'sliding',
+    entity_encoding: "raw",
+    branding: false,
+    image_title: true,
+    height: 400,
+    min_height: 300,
+    link_assume_external_targets: 'http',
+    media_alt_source: false,
+    media_poster: false,
+    automatic_uploads: true,
+    file_picker_types: 'image',
+    file_picker_callback: function (cb, value, meta) {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
 
-                /*
-                  Note: In modern browsers input[type="file"] is functional without
-                  even adding it to the DOM, but that might not be the case in some older
-                  or quirky browsers like IE, so you might want to add it to the DOM
-                  just in case, and visually hide it. And do not forget do remove it
-                  once you do not need it anymore.
-                */
+        input.onchange = function () {
+            const file = this.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function () {
+                const id = 'blobid' + new Date().getTime();
+                const blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                const base64 = reader.result.split(',')[1];
+                const blobInfo = blobCache.create(id, file, base64);
+                blobCache.add(blobInfo);
 
-                input.onchange = function() {
-                    var file = this.files[0];
+                // Gọi callback để thêm ảnh
+                cb(blobInfo.blobUri(), { title: file.name });
+            };
 
-                    var reader = new FileReader();
-                    reader.onload = function() {
-                        /*
-                          Note: Now we need to register the blob in TinyMCEs image blob
-                          registry. In the next release this part hopefully won't be
-                          necessary, as we are looking to handle it internally.
-                        */
-                        var id = 'blobid' + (new Date()).getTime();
-                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
+            reader.readAsDataURL(file);
+        };
 
-                        /* call the callback and populate the Title field with the file name */
-                        cb(blobInfo.blobUri(), {
-                            title: file.name
-                        });
-                    };
-                    reader.readAsDataURL(file);
-                };
+        input.click();
+    }
+};
 
-                input.click();
-            }
-        });
+// Khởi tạo TinyMCE cho các textarea cụ thể
+tinymce.init({
+    ...tinyMceConfig,
+    selector: '#product-information>textarea'
+});
 
-        tinymce.init({
-            selector: '#product-introduction>textarea',
-            plugins: 'media image code table link lists preview fullscreen',
-            toolbar: 'undo redo | formatselect | fontsizeselect | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | numlist bullist | outdent indent | link image media table | code preview fullscreen',
-            toolbar_drawer: 'sliding',
-            entity_encoding: "raw",
-            branding: false,
-            /* enable title field in the Image dialog*/
-            image_title: true,
-            height: 400,
-            min_height: 300,
-            /* Link Custom */
-            link_assume_external_targets: 'http',
-            /* disable media advanced tab */
-            media_alt_source: false,
-            media_poster: false,
-            /* enable automatic uploads of images represented by blob or data URIs*/
-            automatic_uploads: true,
-            /*
-              URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
-              images_upload_url: 'postAcceptor.php',
-              here we add custom filepicker only to Image dialog
-            */
-            file_picker_types: 'image',
-            /* and here's our custom image picker*/
-            file_picker_callback: function(cb, value, meta) {
-                var input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
+tinymce.init({
+    ...tinyMceConfig,
+    selector: '#product-introduction>textarea'
+});
 
-                /*
-                  Note: In modern browsers input[type="file"] is functional without
-                  even adding it to the DOM, but that might not be the case in some older
-                  or quirky browsers like IE, so you might want to add it to the DOM
-                  just in case, and visually hide it. And do not forget do remove it
-                  once you do not need it anymore.
-                */
-
-                input.onchange = function() {
-                    var file = this.files[0];
-
-                    var reader = new FileReader();
-                    reader.onload = function() {
-                        /*
-                          Note: Now we need to register the blob in TinyMCEs image blob
-                          registry. In the next release this part hopefully won't be
-                          necessary, as we are looking to handle it internally.
-                        */
-                        var id = 'blobid' + (new Date()).getTime();
-                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        var base64 = reader.result.split(',')[1];
-                        var blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-
-                        /* call the callback and populate the Title field with the file name */
-                        cb(blobInfo.blobUri(), {
-                            title: file.name
-                        });
-                    };
-                    reader.readAsDataURL(file);
-                };
-
-                input.click();
-            }
-        });
 
         $(document).ready(function() {
             $("#upload").change(function(event) {

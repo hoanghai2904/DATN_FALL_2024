@@ -71,7 +71,7 @@ class ProductsController extends Controller
           $query_products->orderBy('rate', 'desc');
       }
   
-      $products = $query_products->paginate(16);
+      $products = $query_products->paginate(15);
   
       $advertises = Advertise::where([
           ['start_date', '<=', date('Y-m-d')],

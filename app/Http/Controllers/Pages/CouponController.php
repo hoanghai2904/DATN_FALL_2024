@@ -64,7 +64,8 @@ class CouponController extends Controller
 
         $coupon = $userCoupon->coupon;
 
-        $currentDate = now();
+        $currentDate = now()->startOfDay();
+        
         if (($coupon?->start_date && $currentDate < $coupon->start_date) || ($coupon?->end_date && $currentDate > $coupon->end_date)) {
             return response()->json(['success' => false, 'message' => 'Mã giảm giá đã hết hạn hoặc chưa đến thời gian sử dụng.']);
         }

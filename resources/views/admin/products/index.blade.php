@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Quản Lý Quảng Cáo')
+@section('title', 'Quản Lý Sản Phẩm')
 
 @section('embed-css')
 <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
@@ -8,11 +8,11 @@
 
 @section('custom-css')
 <style>
-  #advertise-table td,
-  #advertise-table th {
+  #product-table td,
+  #product-table th {
     vertical-align: middle !important;
   }
-  #advertise-table span.status-label {
+  #product-table span.status-label {
     display: block;
     width: 85px;
     text-align: center;
@@ -53,7 +53,7 @@
 @section('breadcrumb')
 <ol class="breadcrumb">
   <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-  <li class="active">Quản Lý Quảng Cáo</li>
+  <li class="active">Quản Lý Sản Phẩm</li>
 </ol>
 @endsection
 
@@ -73,61 +73,61 @@
             </div>
             <div class="col-md-7 col-sm-6 col-xs-6">
               <div class="btn-group pull-right">
-                <a href="{{ route('admin.advertise.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
+                <a href="{{ route('admin.product.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
-                <a href="{{ route('admin.advertise.new') }}" class="btn btn-success btn-flat" title="Thêm Mới">
-                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs"> Thêm Mới</span>
+                <a href="{{ route('admin.products.new') }}" class="btn btn-success btn-flat" title="New Product">
+                  <i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-xs">Thêm sản phẩm </span>
                 </a>
               </div>
             </div>
           </div>
         </div>
         <div class="box-body">
-          <table id="advertise-table" class="table table-hover" style="width:100%; min-width: 768px;">
+          <table id="product-table" class="table table-hover" style="width:100%; min-width: 985px;">
             <thead>
               <tr>
-                <th data-width="10px">ID</th>
-                <th data-orderable="false" data-width="100px">Hình Ảnh</th>
-                <th data-orderable="false">Tiêu Đề</th>
-                <th data-orderable="false" data-width="85px">Hiển Thị</th>
+                <th data-width="10px">STT</th>
+                <th data-orderable="false" data-width="75px">Hình Ảnh</th>
+                <th data-orderable="false" data-width="85px">Mã Sản Phẩm</th>
+                <th data-orderable="false">Tên Sản Phẩm</th>
+                <th data-width="90px">Hãng Sản Xuất</th>
+                <th data-width="60px">Đánh Giá</th>
                 <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
                 <th data-width="66px">Trạng Thái</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
               </tr>
             </thead>
             <tbody>
-              @foreach($advertises as $advertise)
+              @foreach($products as $key=>$product)
                 <tr>
                   <td class="text-center">
-                    {{ $advertise->id }}
+                    {{ $key+1 }}
                   </td>
                   <td>
-                    <div style="background-image: url('{{ Helper::get_image_advertise_url($advertise->image) }}'); padding-top: 50%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                    <div style="background-image: url('{{ Helper::get_image_product_url($product->image) }}'); padding-top: 100%; background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
                   </td>
                   <td>
-                    <a href="javascript:void(0);" class="text-left" title="{{ $advertise->title }}">{{ $advertise->title }}</a>
+                    <a class="text-left" href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">{{ $product->sku_code }}</a>
                   </td>
                   <td>
-                    @if($advertise->at_home_page)
-                      Trang Chủ
+                    <a class="text-left" href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">{{ $product->name }}</a>
+                  </td>
+                  <td>{{ $product->producer->name }}</td>
+                  <td>{{ $product->rate }}/5 Điểm</td>
+                  <td> {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y')}}</td>
+                  <td>
+                    @if($product->product_details_count > 0)
+                      <span class="label-success status-label">Còn Hàng</span>
                     @else
-                      Trang Thường
+                      <span class="label-danger status-label">Hết Hàng</span>
                     @endif
                   </td>
-                  <td> {{ \Carbon\Carbon::parse($advertise->created_at)->format('d/m/Y')}}</td>
                   <td>
-                    @if($advertise->start_date <= date('Y-m-d') && $advertise->end_date >= date('Y-m-d'))
-                      <span class="label-success status-label">Hoạt động</span>
-                    @else
-                      <span class="label-danger status-label">Dừng hoạt động</span>
-                    @endif
-                  </td>
-                  <td>
-                    <a href="{{ route('admin.advertise.edit', ['id' => $advertise->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+                    <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                       <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <a href="javascript:void(0);" data-id="{{ $advertise->id }}" class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.advertise.delete') }}">
+                    <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
                       <i class="fa fa-trash"></i>
                     </a>
                   </td>
@@ -159,13 +159,13 @@
 @section('custom-js')
 <script>
   $(function () {
-    var table = $('#advertise-table').DataTable({
+    var table = $('#product-table').DataTable({
       "language": {
         "zeroRecords":    "Không tìm thấy kết quả phù hợp",
-        "info":           "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> hình ảnh quảng cáo",
-        "infoEmpty":      "Hiển thị trang <b>1/1</b> của <b>0</b> hình ảnh quảng cáo",
-        "infoFiltered":   "(Tìm kiếm từ <b>_MAX_</b> hình ảnh quảng cáo)",
-        "emptyTable": "Không có dữ liệu hình ảnh quảng cáo",
+        "info":           "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> sản phẩm",
+        "infoEmpty":      "Hiển thị trang <b>1/1</b> của <b>0</b> sản phẩm",
+        "infoFiltered":   "(Tìm kiếm từ <b>_MAX_</b> sản phẩm)",
+        "emptyTable": "Không có dữ liệu sản phẩm",
       },
       "lengthChange": false,
        "autoWidth": false,
@@ -184,16 +184,15 @@
     });
   });
 
- 
   $(document).ready(function() {
     $(".deleteDialog").click(function() {
-        var advertise_id = $(this).attr('data-id');
+        var product_id = $(this).attr('data-id');
         var url = $(this).attr('data-url');
-
+        
         Swal.fire({
             icon: 'question',
             title: 'Thông báo',
-            text: 'Bạn có chắc muốn xóa sản phẩmphẩm này?',
+            text: 'Bạn có chắc muốn xóa sản phẩm này?',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
@@ -207,7 +206,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         body: JSON.stringify({
-                          'advertise_id': advertise_id
+                            'product_id': product_id 
                         }),
                     })
                     .then(response => {
@@ -244,5 +243,7 @@
         });
     });
 });
+
+
 </script>
 @endsection

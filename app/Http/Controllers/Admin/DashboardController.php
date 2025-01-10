@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatusEnum;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -104,6 +105,7 @@ class DashboardController extends Controller
     }
     return $data;
   }
+  
 
   public function orderGroupByStatus()
   {
@@ -136,6 +138,42 @@ class DashboardController extends Controller
 
     return $orders;
   }
+  // public function index(Request $request)
+  // {
+  //     // Đếm số lượng các bản ghi trong các bảng
+  //     $count['user'] = User::where([['active', true], ['Role', false]])->count();
+  //     $count['post'] = Post::count();
+  //     $count['product'] = Product::whereHas('product_details', function (Builder $query) {
+  //         $query->where('quantity', '>', 0);
+  //     })->count();
+  //     $count['order'] = Order::where('status', OrderStatusEnum::COMPLETED)->count();
+  
+  //     // Lấy giá trị start_end_date từ request (client gửi lên)
+  //     $date_range = $request->input('start_end_date');
+  //     $start_date = Carbon::now()->subDays(30)->format('Y-m-d');
+  //     $end_date = Carbon::now()->format('Y-m-d');
+      
+  //     // if ($date_range) {
+  //     //     list($start_date, $end_date) = explode(' - ', $date_range);
+  //     // }
+  
+  //     // Gọi phương thức dashboardData với start_date và end_date
+  //     $data = $this->dashboardData($request);
+  
+  //     // Gọi các phương thức lấy trạng thái đơn hàng và đơn hàng mới nhất
+  //     $orderStatuses = $this->orderGroupByStatus();
+  //     $orders = $this->lastestOrder();
+  
+  //     // dd($data);
+  //     // Trả về view với các dữ liệu đã chuẩn bị
+  //     return view('admin.index')->with([
+  //         'count' => $count,
+  //         'data' => $data,
+  //         'orderStatuses' => $orderStatuses,
+  //         'orders' => $orders
+  //     ]);
+  // }
+  
   public function index()
   {
 
