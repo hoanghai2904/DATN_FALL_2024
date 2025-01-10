@@ -119,7 +119,9 @@
                                                         @break
 
                                                         @case(6)
-                                                            <span class="label label-success">Thành công</span>
+                                                            <span class="label label-success" style="margin-right: 10px;">Thành công</span>
+                                                            <button class="btn btn-primary"
+                                                                    onclick="handleRequestReturn({{ $order->id }})">Đánh giá</button>
                                                         @break
 
                                                         @case(8)

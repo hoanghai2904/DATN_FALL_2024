@@ -409,7 +409,6 @@
                           6 => ['label' => 'label-success', 'text' => 'Thành công'],
                           8 => ['label' => 'label-danger', 'text' => 'Hủy'],
                           10 => ['label' => 'label-danger', 'text' => 'Đã hoàn hàng'],
-                          8 => ['label' => 'label-danger', 'text' => 'Hủy'],
                       ];
                   @endphp
                   <td>

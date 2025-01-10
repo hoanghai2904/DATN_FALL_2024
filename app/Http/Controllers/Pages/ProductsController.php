@@ -242,7 +242,7 @@ class ProductsController extends Controller
                     ->exists();
                    
       // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
-        $canComment = $hasPurchased && !$hasCommented;
+        $canComment = $hasPurchased ;
     }
     return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
   }
