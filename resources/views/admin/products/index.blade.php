@@ -73,7 +73,7 @@
             </div>
             <div class="col-md-7 col-sm-6 col-xs-6">
               <div class="btn-group pull-right">
-                <a href="{{ route('admin.product.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
+                <a href="{{ route('admin.products.index') }}" class="btn btn-flat btn-primary" title="Refresh" style="margin-right: 5px;">
                   <i class="fa fa-refresh"></i><span class="hidden-xs"> Refresh</span>
                 </a>
                 <a href="{{ route('admin.products.new') }}" class="btn btn-success btn-flat" title="New Product">
@@ -93,6 +93,7 @@
                 <th data-orderable="false">Tên Sản Phẩm</th>
                 <th data-width="90px">Hãng Sản Xuất</th>
                 <th data-width="60px">Đánh Giá</th>
+                {{-- <th data-width="60px">Số lượng</th> --}}
                 <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
                 <th data-width="66px">Trạng Thái</th>
                 <th data-orderable="false" data-width="70px">Tác Vụ</th>
@@ -114,20 +115,30 @@
                     <a class="text-left" href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">{{ $product->name }}</a>
                   </td>
                   <td>{{ $product->producer->name }}</td>
-                  <td>{{ $product->rate }}/5 Điểm</td>
+                  <td>
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= $product->rate)
+                            <i class="fa fa-star" style="color: gold; font-size: 10px;"></i> <!-- Sao vàng cho điểm -->
+                        @else
+                            <i class="fa fa-star-o" style="color: gray; font-size: 10px;"></i> <!-- Sao không đầy cho điểm còn lại -->
+                        @endif
+                    @endfor
+                </td>
+                
+                  {{-- <td class="text-center">{{ $product->stock }}</td> --}}
                   <td> {{ \Carbon\Carbon::parse($product->created_at)->format('d/m/Y')}}</td>
                   <td>
-                    @if($product->product_details_count > 0)
+                    @if($product->stock > 0)
                       <span class="label-success status-label">Còn Hàng</span>
                     @else
                       <span class="label-danger status-label">Hết Hàng</span>
                     @endif
                   </td>
                   <td>
-                    <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
+                    <a href="{{ route('admin.products.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                       <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.product.delete') }}">
+                    <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.products.delete') }}">
                       <i class="fa fa-trash"></i>
                     </a>
                   </td>
@@ -184,11 +195,12 @@
     });
   });
 
-  $(document).ready(function() {
-    $(".deleteDialog").click(function() {
+  $(document).ready(function () {
+    $(".deleteDialog").click(function () {
         var product_id = $(this).attr('data-id');
         var url = $(this).attr('data-url');
-        
+        console.log("url:",url);
+        ("url",url)
         Swal.fire({
             icon: 'question',
             title: 'Thông báo',
@@ -199,34 +211,23 @@
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        body: JSON.stringify({
-                            'product_id': product_id 
-                        }),
-                    })
-                    .then(response => {
-                        // Kiểm tra nếu phản hồi không phải JSON
-                        if (response.headers.get('content-type').includes('application/json')) {
-                            return response.json();  // Nếu là JSON, tiếp tục phân tích
-                        } else {
-                            throw new Error('Phản hồi từ server không phải JSON!');
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    body: JSON.stringify({ product_id: product_id }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json(); // Trả về JSON nếu thành công
                         }
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     })
-                    .catch(error => {
-                        Swal.showValidationMessage(error.message);
-
-                        Swal.update({
-                            icon: 'error',
-                            title: 'Lỗi!',
-                            text: error.message,
-                            showConfirmButton: false,
-                            cancelButtonText: 'Ok',
-                        });
+                    .catch((error) => {
+                        Swal.showValidationMessage(`Lỗi: ${error.message}`);
+                        throw error; // Ngừng xử lý SweetAlert
                     });
             },
         }).then((result) => {
@@ -235,11 +236,17 @@
                     icon: result.value.icon || 'success',
                     title: result.value.title || 'Thành công!',
                     text: result.value.content || 'Sản phẩm đã được xóa thành công!',
-                }).then((result) => {
-                    if (result.value)
-                        location.reload(true);
+                }).then(() => {
+                    location.reload(true); // Tải lại trang nếu xóa thành công
                 });
             }
+        }).catch((error) => {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+            });
         });
     });
 });

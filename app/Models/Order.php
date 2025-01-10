@@ -18,6 +18,13 @@ class Order extends Model
   public function order_details() {
     return $this->hasMany('App\Models\OrderDetail');
   }
+
+  public function variants()
+    {
+        
+        return $this->belongsTo(ProductVariant::class, 'product_detail_id');
+    }
+    
   // protected $guarded = [''];
 
   // protected $status = [

@@ -47,11 +47,12 @@
                         <div class="col-md-8">
                             <div class="cart-items">
                                 @foreach ($cart->items as $key => $item)
+                                {{-- <pre>{{ print_r($item, true) }}</pre> --}}
                                     <div class="item product-{{ $key }}">
                                         <div class="image-product">
                                             <a href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
                                                 target="_blank"
-                                                title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">
+                                                title="{{ $item['item']->product->name . ' - ' . $item['item']->sku }}">
                                                 <img src="{{ Helper::get_image_product_url($item['item']->product->image) }}"
                                                     style="background-size: 100%;"
                                                     onError="this.onerror=null; this.src='{{ asset('images/no_image.png') }}';" />
@@ -59,15 +60,19 @@
                                         </div>
                                         <div class="info-product">
                                             <div class="name"><a
-                                                    href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
-                                                    target="_blank"
-                                                    title="{{ $item['item']->product->name . ' - ' . $item['item']->color }}">{{ $item['item']->product->name . ' - ' . $item['item']->color }}</a>
+                                                href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
+                                                target="_blank"
+                                                title="{{ $item['item']->product->name . ' - ' . \Illuminate\Support\Str::after($item['item']->sku, '-') }}">
+                                                {{ $item['item']->product->name . ' - ' . \Illuminate\Support\Str::after($item['item']->sku, '-') }}
+                                            </a>
+                                                  
                                             </div>
-                                            @if ($item['item']?->size)
-                                                <div>Size: {{ $item['item']?->size }}</div>
+                                            @if ($item['item']?->sku)
+                                                <div>phân loại: {{ \Illuminate\Support\Str::after($item['item']?->sku, '-') }}
+                                                </div>
                                             @endif
                                             <div class="price">{!! Helper::get_real_price(
-                                                $item['item']->sale_price,
+                                                $item['item']->price,
                                                 $item['item']->promotion_price,
                                                 $item['item']->promotion_start_date,
                                                 $item['item']->promotion_end_date,
@@ -78,7 +83,7 @@
                                                         class="reduced_pop items-count btn-minus btn btn-default bootstrap-touchspin-down"
                                                         type="button">–</button>
                                                     <input type="text" onchange="if(this.value == 0) this.value=1;"
-                                                        maxlength="12" min="1" max="{{ $item['item']->quantity }}"
+                                                        maxlength="12" min="1" max="{{ $item['item']->stock_quantity }}"
                                                         disabled
                                                         class="form-control quantity-r2 quantity js-quantity-product input-text number-sidebar input_pop input_pop qtyItem{{ $key }}"
                                                         id="qtyItem{{ $key }}" name="Lines" size="4"

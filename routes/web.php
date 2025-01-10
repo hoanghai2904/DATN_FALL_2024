@@ -37,40 +37,32 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::get('user/{id}/show', 'UserController@show')->name('user_show');
     Route::get('user/{id}/send', 'UserController@send')->name('user_send');
 
-  Route::get('posts', 'PostController@index')->name('post.index');
-  Route::get('post/new', 'PostController@new')->name('post.new');
-  Route::post('post/save', 'PostController@save')->name('post.save');
-  Route::post('post/delete', 'PostController@delete')->name('post.delete');
-  Route::get('post/{id}/edit', 'PostController@edit')->name('post.edit');
-  Route::post('post/{id}/update', 'PostController@update')->name('post.update');
-  Route::post('/update-post-status/{id}', 'PostController@updateStatus')->name('post.updateStatus');
-  
-  Route::get('advertises', 'AdvertiseController@index')->name('advertise.index');
-  Route::get('advertise/new', 'AdvertiseController@new')->name('advertise.new');
-  Route::post('advertise/save', 'AdvertiseController@save')->name('advertise.save');
-  Route::post('advertise/delete', 'AdvertiseController@delete')->name('advertise.delete');
-  Route::get('advertise/{id}/edit', 'AdvertiseController@edit')->name('advertise.edit');
-  Route::post('advertise/{id}/update', 'AdvertiseController@update')->name('advertise.update');
-    // product old 
-    Route::get('products', 'ProductController@index')->name('product.index');
-    Route::get('product/new', 'ProductController@new')->name('product.new');
-    Route::post('product/save', 'ProductController@save')->name('product.save');
-    Route::post('product/delete', 'ProductController@delete')->name('product.delete');
-    Route::get('product/{id}/edit', 'ProductController@edit')->name('product.edit');
-    Route::post('product/{id}/update', 'ProductController@update')->name('product.update');
-    Route::post('promotion/delete', 'ProductController@delete_promotion')->name('product.delete_promotion');
-    Route::post('product_detail/delete', 'ProductController@delete_product_detail')->name('product.delete_product_detail');
-    Route::post('product/image/delete', 'ProductController@delete_image')->name('product.delete_image');
+    Route::get('posts', 'PostController@index')->name('post.index');
+    Route::get('post/new', 'PostController@new')->name('post.new');
+    Route::post('post/save', 'PostController@save')->name('post.save');
+    Route::post('post/delete', 'PostController@delete')->name('post.delete');
+    Route::get('post/{id}/edit', 'PostController@edit')->name('post.edit');
+    Route::post('post/{id}/update', 'PostController@update')->name('post.update');
+    Route::post('/update-post-status/{id}', 'PostController@updateStatus')->name('post.updateStatus');
 
-    // Product_new 
+    Route::get('advertises', 'AdvertiseController@index')->name('advertise.index');
+    Route::get('advertise/new', 'AdvertiseController@new')->name('advertise.new');
+    Route::post('advertise/save', 'AdvertiseController@save')->name('advertise.save');
+    Route::post('advertise/delete', 'AdvertiseController@delete')->name('advertise.delete');
+    Route::get('advertise/{id}/edit', 'AdvertiseController@edit')->name('advertise.edit');
+    Route::post('advertise/{id}/update', 'AdvertiseController@update')->name('advertise.update');
+
+
+    // Product_new
+
     Route::get('Product_new', [ProductsController::class, 'index'])->name('products.index');
     Route::get('Product_new/new', [ProductsController::class, 'new'])->name('products.new');
     Route::post('Product_new/save', [ProductsController::class, 'save'])->name('products.save');
     Route::post('Product_new/delete', [ProductsController::class, 'delete'])->name('products.delete');
     Route::get('Product_new/{id}/edit', [ProductsController::class, 'edit'])->name('products.edit');
     Route::post('Product_new/{id}/update', [ProductsController::class, 'update'])->name('products.update');
-    Route::post('promotion/delete', [ProductsController::class, 'deletePromotion'])->name('products.delete_promotion');
-    Route::post('Product_new_detail/delete', [ProductsController::class, 'deleteProductDetail'])->name('products.delete_product_detail');
+    Route::post('promotions/delete', [ProductsController::class, 'deletePromotion'])->name('products.deletes_promotion');
+    Route::post('Product_new_detail/delete', [ProductsController::class, 'deleteProductDetail'])->name('products.delete_products_detail');
     Route::post('Product_new/image/delete', [ProductsController::class, 'deleteImage'])->name('products.delete_image');
 
     // Thuộc tính
@@ -80,8 +72,10 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::get('attributes/{id}/edit', [AttributeController::class, 'edit'])->name('attributes.edit');
     Route::put('attributes/{id}', [AttributeController::class, 'update'])->name('attributes.update');
     Route::delete('attributes/{id}', [AttributeController::class, 'destroy'])->name('attributes.destroy');
-    
-  
+    Route::get('attributes/{id}/values', [AttributeController::class, 'getAttributeValues'])->name('attributes.values');
+
+
+
 
     Route::get('coupons', 'CouponController@index')->name('coupon.index');
     Route::get('coupon/new', 'CouponController@new')->name('coupon.new');

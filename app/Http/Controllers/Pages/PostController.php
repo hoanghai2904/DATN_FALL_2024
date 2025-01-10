@@ -21,11 +21,11 @@ class PostController extends Controller
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
     $suggest_products = Product::select('id','name', 'image', 'rate')
-    ->whereHas('product_details', function (Builder $query) {
-        $query->where('quantity', '>', 0);
+    ->whereHas('variants', function (Builder $query) {
+        $query->where('stock_quantity', '>', 0);
     })
-    ->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
+    ->with(['variants' => function($query) {
+      $query->select('id', 'product_id', 'sku', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('stock_quantity', '>', 0)->orderBy('price', 'ASC');
     }])->latest()->limit(4)->get();
 
     $posts = Post::select('id', 'title', 'image', 'created_at')->latest()->paginate(11);
@@ -42,11 +42,11 @@ class PostController extends Controller
     ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
     $suggest_products = Product::select('id','name', 'image', 'rate')
-    ->whereHas('product_details', function (Builder $query) {
-        $query->where('quantity', '>', 0);
+    ->whereHas('variants', function (Builder $query) {
+        $query->where('stock_quantity', '>', 0);
     })
-    ->with(['product_detail' => function($query) {
-      $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
+    ->with(['variants' => function($query) {
+      $query->select('id', 'product_id', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('stock_quantity', '>', 0)->orderBy('price', 'ASC');
     }])->latest()->limit(4)->get();
 
     $post = Post::select('id', 'title', 'image', 'content', 'created_at')

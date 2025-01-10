@@ -119,9 +119,9 @@
           @endphp
           <tr>
             <td class="text-center">{{ $key + 1 }}</td>
-            <td class="text-center">#{{ $order_detail->product_detail->product->sku_code }}</td>
-            <td class="text-center">{{ $order_detail->product_detail->product->name }}</td>
-            <td class="text-center">{{ $order_detail->product_detail->color }}</td>
+            <td class="text-center">#{{ $order_detail->variants->product->sku_code }}</td>
+            <td class="text-center">{{ $order_detail->variants->product->name }}</td>
+            <td class="text-center">{{ $order_detail->variants->sku }}</td>
             <td class="text-center">{{ $order_detail->quantity }}</td>
             <td class="text-center text-danger">{{ number_format($order_detail->price, 0, ',', '.') }}₫</td>
             <td class="text-center text-danger">{{ number_format($order_detail->price * $order_detail->quantity, 0, ',', '.') }}₫</td>

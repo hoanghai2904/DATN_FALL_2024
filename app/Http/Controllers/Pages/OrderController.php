@@ -101,8 +101,8 @@ class OrderController extends Controller
         'order_details' => function ($query) {
           $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
             ->with([
-              'product_detail' => function ($query) {
-                $query->select('id', 'product_id', 'color')
+              'variants' => function ($query) {
+                $query->select('id', 'product_id', 'sku')
                   ->with([
                     'product' => function ($query) {
                       $query->select('id', 'name', 'image', 'sku_code');
@@ -222,11 +222,11 @@ class OrderController extends Controller
 
           // Cộng lại số lượng sản phẩm trong kho
           foreach ($order->order_details as $orderDetail) {
-            $productDetail = $orderDetail->product_detail;
+            $productDetail = $orderDetail->variants;
 
             // Kiểm tra nếu productDetail tồn tại
             if ($productDetail) {
-              $productDetail->quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
+              $productDetail->stock_quantity += $orderDetail->quantity; // Cộng số lượng sản phẩm
               $productDetail->save();
             }
           }
@@ -371,10 +371,10 @@ class OrderController extends Controller
 
           // Hoàn lại số lượng sản phẩm trong kho
           foreach ($order->order_details as $orderDetail) {
-            $productDetail = $orderDetail->product_detail;
+            $productDetail = $orderDetail->variants;
             if ($productDetail) {
               // Tăng số lượng sản phẩm trong kho
-              $productDetail->quantity += $orderDetail->quantity;
+              $productDetail->stock_quantity += $orderDetail->quantity;
               $productDetail->save();
             }
           }

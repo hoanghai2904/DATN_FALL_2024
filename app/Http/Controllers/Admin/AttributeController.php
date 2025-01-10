@@ -178,4 +178,33 @@ class AttributeController extends Controller
             ], 500);
         }
     }
+
+
+
+    public function getAttributeValues($id)
+    {
+        // Tìm Attribute
+        $attribute = Attribute::with('values')->find($id);
+    
+        // Kiểm tra nếu không tìm thấy thuộc tính
+        if (!$attribute) {
+            return response()->json(['error' => 'Thuộc tính không tồn tại'], 404);
+        }
+    
+        // Kiểm tra nếu không có giá trị cho thuộc tính
+        if ($attribute->values->isEmpty()) {
+            return response()->json(['message' => 'Không có giá trị cho thuộc tính này'], 404);
+        }
+    
+        // Trả về giá trị thuộc tính
+        return response()->json([
+            'values' => $attribute->values->map(function ($value) {
+                return [
+                    'id' => $value->id,
+                    'name' => $value->value,  // Đảm bảo trường giá trị đúng
+                ];
+            }),
+        ]);
+    }
+    
 }

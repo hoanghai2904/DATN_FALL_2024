@@ -56,7 +56,7 @@
         </tr>
         @foreach($data['order_details'] as $detail)
             <tr>
-                <td>{{ $detail['product_detail']['product']['name'] }}</td>
+                <td>{{ $detail['variants']['product']['name'] }}</td>
                 <td>{{ $detail['quantity'] }}</td>
                 <td>{{ number_format($detail['price'], 0, ',', '.') }} đ</td>
                 <td>{{ number_format($detail['price'] * $detail['quantity'], 0, ',', '.') }} đ</td>
