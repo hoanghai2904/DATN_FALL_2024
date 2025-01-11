@@ -31,7 +31,7 @@
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
+        <li><a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
                 Phẩm</a></li>
         <li class="active">Thêm Sản Phẩm Mới</li>
     </ol>
@@ -73,13 +73,6 @@
                                     <label for="name">Tên Sản Phẩm <span class="text-red">*</span></label>
                                     <input type="text" name="name" class="form-control" id="name"
                                         placeholder="Tên sản Phẩm" required autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="stock">Số Lượng Sản Phẩm <span class="text-red">*</span></label>
-                                    <input type="number" name="stock" class="form-control" id="stock"
-                                        placeholder="Số lượng sản Phẩm" required autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -128,6 +121,7 @@
         {{-- End promotion --}}
 
            {{-- Start astribuse --}}
+         
            <div class="box box-primary">
             <div class="box-header">
                 <h3 class="box-title">Thông Tin Thuộc Tính</h3>
@@ -141,11 +135,10 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="name">Tên Thuộc Tính <span class="text-red">*</span></label>
-                            <select name="attributes[{?}][attributes][]" class="form-control select2" id="attributes" multiple="multiple" required>
-                                
-                                <option value="option1">Thuộc tính 1</option>
-                                <option value="option2">Thuộc tính 2</option>
-                                <option value="option3">Thuộc tính 3</option>
+                            <select name="attributes[0][attribute][]" class="form-control select2" id="attributes_0" multiple="multiple" required>
+                            @foreach($attributes as $attribute)
+                                <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
+                            @endforeach
                             </select>
                             <span class="error" id="name-error"></span>
                         </div>
@@ -162,6 +155,7 @@
                 </div>
             </div>
         </div>
+
         {{-- End  astribuse --}}
 
          {{-- Start Detail --}}
@@ -202,7 +196,7 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o"
                             aria-hidden="true"></i> Lưu</button>
-                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right"
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-danger btn-flat pull-right"
                         style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
                 </div>
             </div>
@@ -216,6 +210,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.0.15/tinymce.min.js"></script>
     <!-- include jquery.repeater -->
     <script src="{{ asset('AdminLTE/bower_components/jquery.repeatable.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/piexifjs/1.0.3/piexif.min.js"></script>
     <!-- include Bootstrap File Input -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.6/js/fileinput.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.6/themes/explorer-fa/theme.js"></script>
@@ -347,10 +342,8 @@
                     <div class="col-md-12">
                         <div class="form-group" style="margin-bottom: 0;">
                             <label for="attribute_{?}">Giá trị thuộc tính <span class="text-red">*</span></label>
-                            <select name="values[{?}][value][]" class="form-control attribute select2" id="attribute_{?}" multiple="multiple" required>
-                                <option value="value1">Giá trị 1</option>
-                                <option value="value2">Giá trị 2</option>
-                                <option value="value3">Giá trị 3</option>
+                            <select name="values[{?}][value][]" class="form-control attribute select2" id="values_{?}" multiple="multiple" required>
+                                
                             </select>
                             <span class="error" id="attribute_{?}-error"></span>
                         </div>
@@ -362,12 +355,13 @@
 </script>
 <script>
     $(document).ready(function() {
+      
          // Ẩn nút "Tạo Các Biến Thể" ban đầu
     var addVariantsButton = $('.add-variants');
     addVariantsButton.hide();  // Ẩn nút khi chưa có lựa chọn
 
     // Lắng nghe sự thay đổi của select thuộc tính
-    $('#attributes').on('change', function() {
+    $('[id^="attributes_"]').on('change', function() {
         var selectedValue = $(this).val(); // Lấy giá trị của thuộc tính được chọn
 
         // Nếu có giá trị được chọn, hiển thị nút "Tạo Các Biến Thể"
@@ -485,44 +479,96 @@
             }
         });
     
+
         let attributeIndex = 0;
+
+// Hàm khởi tạo Select2
+function initializeSelect2() {
+    $('.select2').select2({
+        placeholder: "Chọn giá trị thuộc tính",
+        allowClear: true
+    });
+}
+
+// Hàm thêm trường thuộc tính mới
+function addAttributeField(index, attributeId, attributeName) {
+    const template = $('#product-attributes-template').html();
+    const newField = template.replace(/{\?}/g, index);
+    const fieldHTML = $(newField);
+
+    // Đặt tiêu đề cho box dựa trên giá trị thuộc tính
+    fieldHTML.find('.box-title').text(`Thuộc tính: ${attributeName}`);
     
-        // Hàm khởi tạo Select2
-        function initializeSelect2() {
-            $('.select2').select2({
-                placeholder: "Chọn giá trị thuộc tính",
-                allowClear: true
+    // Gán data-attribute-id cho trường mới
+    fieldHTML.attr('data-attribute-id', attributeId);
+
+    $('#product-attributes').append(fieldHTML);
+
+    // Gọi API để lấy giá trị của thuộc tính
+    $.ajax({
+        url: `/admin/attributes/${attributeId}/values`, // API để lấy giá trị thuộc tính
+        type: 'GET',
+        success: function (response) {
+            const selectElement = fieldHTML.find('.attribute');
+
+            // Thêm các giá trị vào select
+            response.values.forEach(value => {
+                selectElement.append(`<option value="${value.id}">${value.name}</option>`);
             });
-        }
-    
-        // Hàm thêm trường thuộc tính mới
-        function addAttributeField() {
-            const template = $('#product-attributes-template').html();
-            const newField = template.replace(/{\?}/g, attributeIndex);
-            $('#product-attributes').append(newField);
-            attributeIndex++;
-    
-            // Khởi tạo Select2 cho các phần tử mới thêm
+
+            // Khởi tạo lại Select2 cho các phần tử mới
             initializeSelect2();
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            alert(`Không thể tải giá trị của thuộc tính: ${attributeName}`);
         }
-    
-        // Khởi tạo Select2 lần đầu
-        initializeSelect2();
-    
-        // Khi thay đổi giá trị trong select, tự động thêm đoạn mã
-        $('#attributes').on('change', function() {
-            const selectedValue = $(this).val();
-            if (selectedValue) {
-                addAttributeField();
-            }
-        });
-    
-        // Xóa trường thuộc tính
-        $(document).on('click', '.delete-attribute', function() {
-            $(this).closest('.field-group').remove();
-        });
-    
-     // Xử lý khi nhấn nút "Tạo Các Biến Thể"
+    });
+}
+
+// Khởi tạo Select2 lần đầu
+initializeSelect2();
+
+// Lưu trạng thái trước đó của trường
+let previousValues = {};
+
+// Khi thay đổi giá trị trong select, tự động thêm/xóa đoạn mã
+$(document).on('change', '[id^="attributes_"]', function () {
+    const selectId = $(this).attr('id');
+    const selectedValues = $(this).val() || []; // Giá trị hiện tại (nếu không có trả về mảng rỗng)
+    const prevSelectedValues = previousValues[selectId] || []; // Giá trị trước đó
+
+    // Tìm các giá trị được thêm vào
+    const addedValues = selectedValues.filter(value => !prevSelectedValues.includes(value));
+    // Tìm các giá trị bị xóa
+    const removedValues = prevSelectedValues.filter(value => !selectedValues.includes(value));
+
+    // Thêm các giá trị mới
+    addedValues.forEach(attributeId => {
+        // Kiểm tra xem thuộc tính đã được thêm vào chưa
+        if (!$(`#product-attributes .field-group[data-attribute-id="${attributeId}"]`).length) {
+            const attributeName = $(this).find(`option[value="${attributeId}"]`).text(); // Lấy tên thuộc tính
+            addAttributeField(attributeIndex, attributeId, attributeName);
+            attributeIndex++;
+        }
+    });
+
+    // Xóa các giá trị bị loại bỏ
+    removedValues.forEach(value => {
+        // Sử dụng `data-attribute-id` để tìm đúng phần tử cần xóa
+        $(`#product-attributes .field-group[data-attribute-id="${value}"]`).remove();
+    });
+
+    // Cập nhật trạng thái trước đó
+    previousValues[selectId] = selectedValues;
+});
+
+// Xóa trường thuộc tính
+$(document).on('click', '.delete-attribute', function () {
+    $(this).closest('.field-group').remove();
+});
+
+// Xử lý khi nhấn nút "Tạo Các Biến Thể"
 $(document).on('click', '.add-variants', function() {
     let allAttributes = [];
     
@@ -541,29 +587,42 @@ $(document).on('click', '.add-variants', function() {
     productDetailsContainer.empty();
 
     // Tạo các biến thể mới
-    combinations.forEach((combination, index) => {
-        const variantName = combination.filter(val => val).join(' - ');
-        // In ra giá trị variantName để kiểm tra
-    console.log('variantName:', variantName);
-        let newDetail = productDetailTemplate.replace(/{\?}/g, index);
-        
-        newDetail = newDetail.replace('<span class="name"></span>', `<span class="name">${combination.filter(val => val).join(' - ')}</span>`);
+combinations.forEach((combination, index) => {
+    // Lấy tên của từng thuộc tính từ `combination` (thay vì lấy `id`, lấy `name` của các option)
+    const variantName = combination.map(attributeId => {
+        // Tìm option theo value (attributeId) và lấy text (name)
+        const optionText = $(`option[value="${attributeId}"]`).text();
+        return optionText; // Trả về tên của option
+    }).join(' - '); // Nối các tên lại thành tên biến thể
 
-        newDetail = newDetail.replace(
+    // In ra giá trị variantName để kiểm tra
+    console.log('variantName:', variantName);
+
+    // Sử dụng variantName trong template
+    let newDetail = productDetailTemplate.replace(/{\?}/g, index);
+    
+    // Thêm tên biến thể vào phần tử
+    newDetail = newDetail.replace('<span class="name"></span>', `<span class="name">${variantName}</span>`);
+
+    // Thêm SKU và giá trị variantName vào input SKU
+    newDetail = newDetail.replace(
         '<input type="text" name="product_details[{?}][sku]" class="form-control" id="sku_{?}" placeholder="Mã Sku " required autocomplete="off">',
         `<input type="text" name="product_details[${index}][sku]" class="form-control" id="sku_${index}" value="${variantName}" placeholder="Mã Sku " required autocomplete="off">`
     );
-        // Thêm các biến thể mới vào container
-        productDetailsContainer.append(newDetail);
+    
+    // Thêm các biến thể mới vào container
+    productDetailsContainer.append(newDetail);
 
-          // Đảm bảo giá trị SKU được điền vào đúng ô input
+    // Đảm bảo giá trị SKU được điền vào đúng ô input
     $(`#sku_${index}`).val(variantName);
+});
 
-    });
 
     // Sau khi thêm mục mới vào
     afterAdd();
 });
+
+
 
     
         function generateCombinations(attributes) {
@@ -645,5 +704,23 @@ $(document).on('click', '.add-variants', function() {
         }
     });
     </script>
-    
+    <script>
+$(document).ready(function () {
+    // Áp dụng boxWidget cho tất cả các box trong #testtest
+    $('#testtest .box').boxWidget();
+
+    // Đảm bảo mỗi box có thể mở/đóng độc lập
+    $('#testtest .box .btn-box-tool').click(function () {
+        var $box = $(this).closest('.box'); // Tìm box gần nhất
+        if ($box.hasClass('collapsed-box')) {
+            $box.removeClass('collapsed-box'); // Mở box
+            $(this).find('i').removeClass('fa-plus').addClass('fa-minus');
+        } else {
+            $box.addClass('collapsed-box'); // Đóng box
+            $(this).find('i').removeClass('fa-minus').addClass('fa-plus');
+        }
+    });
+});
+
+    </script>
 @endsection

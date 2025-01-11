@@ -635,4 +635,4 @@ class ProductController extends Controller
     $image->delete();
     return response()->json();
   }
-}
+} 

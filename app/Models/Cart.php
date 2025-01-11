@@ -4,7 +4,8 @@ namespace App\Models;
 
 use App\Models\ProductDetail;
 use Illuminate\Support\Arr;
-
+use App\Models\ProductVariant;
+;
 class Cart
 {
   public $items = NULL;
@@ -29,10 +30,10 @@ class Cart
     if(($item->promotion_price > 0) && ($item->promotion_start_date <= date('Y-m-d')) && ($item->promotion_end_date >= date('Y-m-d')))
       $storedItem = ['qty' => 0, 'price' => $item->promotion_price, 'item' => $item];
     else
-      $storedItem = ['qty' => 0, 'price' => $item->sale_price, 'item' => $item];
+      $storedItem = ['qty' => 0, 'price' => $item->price, 'item' => $item];
 
     if($this->items && array_key_exists($id, $this->items)) {
-      if(($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->quantity)
+      if(($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->stock_quantity)
         return false;
       else
         $storedItem = $this->items[$id];
@@ -48,7 +49,7 @@ class Cart
 
   public function updateItem($id, $qty) {
     $this->update();
-    if($qty > $this->items[$id]['item']->quantity)
+    if($qty > $this->items[$id]['item']->stock_quantity)
       return false;
     else {
       $increase = $qty - $this->items[$id]['qty'];
@@ -65,14 +66,14 @@ class Cart
     } else {
       $this->totalPrice = 0;
       foreach($this->items as $key => $item) {
-        $product = ProductDetail::where('id',$key)->with(['product' => function($query) {
+        $product = ProductVariant::where('id',$key)->with(['product' => function($query) {
           $query->select('id', 'name', 'image', 'sku_code');
-        }])->select('id', 'product_id', 'color','size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
+        }])->select('id', 'product_id', 'sku','attributes', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
         $this->items[$key]['item'] = $product;
         if(($product?->promotion_price > 0) && ($product?->promotion_start_date <= date('Y-m-d')) && ($product?->promotion_end_date >= date('Y-m-d')))
           $this->items[$key]['price'] = $product?->promotion_price;
         else
-          $this->items[$key]['price'] = $product?->sale_price;
+          $this->items[$key]['price'] = $product?->price;
         $this->totalPrice = $this->totalPrice + $this->items[$key]['price'] * $this->items[$key]['qty'];
       }
       return true;

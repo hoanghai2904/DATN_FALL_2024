@@ -955,7 +955,31 @@
       </div>
       </script>
 
-
+      <script type="text/template" id="product-attributes-template">
+        <div class="field-group">
+            <div class="box box-solid box-default" style="margin-bottom: 5px;">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                    <div class="box-tools">
+                        <button class="btn btn-box-tool delete-attribute" title="Remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="attribute_{?}">Giá trị thuộc tính <span class="text-red">*</span></label>
+                                <select name="values[{?}][value][]" class="form-control attribute select2" id="values_{?}" multiple="multiple" required>
+                                    
+                                </select>
+                                <span class="error" id="attribute_{?}-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
 
 
 

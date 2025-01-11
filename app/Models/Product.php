@@ -23,8 +23,12 @@ class Product extends Model
   //varian
   public function variants()
   {
-    return $this->hasMany(ProductVariant::class);
+    return $this->hasMany(ProductVariant::class,'product_id', 'id');
   }
+
+  // public function variants() {
+  //   return $this->belongsTo('App\Models\ProductVariant','product_id', 'id');
+  // }
   // khác 
   public function advertises()
   {

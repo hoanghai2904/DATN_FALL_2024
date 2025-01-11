@@ -40,17 +40,17 @@ class DashboardController extends Controller
         'order' => function ($query) {
           $query->select('id', 'order_code','discount');
         },
-        'product_detail' => function ($query) {
-          $query->select('id', 'import_price','promotion_price');
+        'variants' => function ($query) {
+          $query->select('id', 'purchase_price','promotion_price');
         }
       ])->latest()->get();
-
+        // dd($order_details);
       $revenue = 0;
       $profit = 0;
 
       foreach ($order_details as $order_detail) {
         $revenue = $revenue + $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
-        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price)) - ($order_detail->order->discount);
+        $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - ($order_detail->order->discount);
         $count_products = $count_products + $order_detail->quantity;
       }
 
@@ -73,8 +73,8 @@ class DashboardController extends Controller
         'order' => function ($query) {
           $query->select('id', 'order_code', 'discount');
         },
-        'product_detail' => function ($query) {
-          $query->select('id', 'product_id', 'color', 'import_price')->with([
+        'variants' => function ($query) {
+          $query->select('id', 'product_id', 'attributes','sku' ,'purchase_price')->with([
             'product' => function ($query) {
               $query->select('id', 'producer_id', 'name', 'sku_code')->with([
                 'producer' => function ($query) {
@@ -95,14 +95,16 @@ class DashboardController extends Controller
       $data['producer'][$producer->name]['revenue'] = 0;
       $data['producer'][$producer->name]['profit'] = 0;
     }
+    // dd($order_detail);
 
     foreach ($order_details as $order_detail) {
-      $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] = $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] + $order_detail->quantity;
-
-      $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] = $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] + $order_detail->quantity * $order_detail->price;
-
-      $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] = $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
+      $producerName = $order_detail->variants->product->producer->name ?? 'Không thấy danh mục';
+  
+      $data['producer'][$producerName]['quantity'] = ($data['producer'][$producerName]['quantity'] ?? 0) + $order_detail->quantity;
+      $data['producer'][$producerName]['revenue'] = ($data['producer'][$producerName]['revenue'] ?? 0) + $order_detail->quantity * $order_detail->price;
+      $data['producer'][$producerName]['profit'] = ($data['producer'][$producerName]['profit'] ?? 0) + $order_detail->quantity * ($order_detail->price - ($order_detail->variants->purchase_price ?? 0));
     }
+  // dd($data);  
     return $data;
   }
   
@@ -138,49 +140,13 @@ class DashboardController extends Controller
 
     return $orders;
   }
-  // public function index(Request $request)
-  // {
-  //     // Đếm số lượng các bản ghi trong các bảng
-  //     $count['user'] = User::where([['active', true], ['Role', false]])->count();
-  //     $count['post'] = Post::count();
-  //     $count['product'] = Product::whereHas('product_details', function (Builder $query) {
-  //         $query->where('quantity', '>', 0);
-  //     })->count();
-  //     $count['order'] = Order::where('status', OrderStatusEnum::COMPLETED)->count();
-  
-  //     // Lấy giá trị start_end_date từ request (client gửi lên)
-  //     $date_range = $request->input('start_end_date');
-  //     $start_date = Carbon::now()->subDays(30)->format('Y-m-d');
-  //     $end_date = Carbon::now()->format('Y-m-d');
-      
-  //     // if ($date_range) {
-  //     //     list($start_date, $end_date) = explode(' - ', $date_range);
-  //     // }
-  
-  //     // Gọi phương thức dashboardData với start_date và end_date
-  //     $data = $this->dashboardData($request);
-  
-  //     // Gọi các phương thức lấy trạng thái đơn hàng và đơn hàng mới nhất
-  //     $orderStatuses = $this->orderGroupByStatus();
-  //     $orders = $this->lastestOrder();
-  
-  //     // dd($data);
-  //     // Trả về view với các dữ liệu đã chuẩn bị
-  //     return view('admin.index')->with([
-  //         'count' => $count,
-  //         'data' => $data,
-  //         'orderStatuses' => $orderStatuses,
-  //         'orders' => $orders
-  //     ]);
-  // }
-  
   public function index()
   {
 
     $count['user'] = User::where([['active', true], ['Role', false]])->count();
     $count['post'] = Post::count();
-    $count['product'] = Product::whereHas('product_details', function (Builder $query) {
-      $query->where('quantity', '>', 0);
+    $count['product'] = Product::whereHas('variants', function (Builder $query) {
+      $query->where('stock_quantity', '>', 0);
     })->count();
     $count['order'] = Order::where('status', OrderStatusEnum::COMPLETED)->count();
     $data = $this->dashboardData();

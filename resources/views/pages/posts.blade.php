@@ -26,83 +26,90 @@
             </div>
         </section>
 
-    <section class="section-posts">
-      <div class="row">
-        <div class="col-lg-8 col-md-8">
-          <div class="section-left">
-            <div class="section-header">
-              <h2 class="section-title">Tin Tức</h2>
-            </div>
-            <div class="section-content">
-              @if($data['posts']->isEmpty())
-                <div class="empty-content">
-                  <div class="icon"><i class="fab fa-searchengin"></i></div>
-                  <div class="title">Oooops!</div>
-                  <div class="content">Posts Item Not Found</div>
-                </div>
-              @else
-                @foreach($data['posts'] as $post)
-                  <a href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">
-                    <div class="item-post">
-                      <div class="image-post" style="background-image: url('{{ Helper::get_image_post_url($post->image) }}');">
-                      </div>
-                      <div class="info-post">
-                        <div class="title-post">
-                          <h3>{{ $post->title }}</h3>
+        <section class="section-posts">
+            <div class="row">
+                <div class="col-lg-8 col-md-8">
+                    <div class="section-left">
+                        <div class="section-header">
+                            <h2 class="section-title">Tin Tức</h2>
                         </div>
-                        <div class="desc-post">
-                          <span><i class="fas fa-user"></i> Admin</span>
-                          <span><i class="fas fa-clock"></i> 
-                            {{ \Carbon\Carbon::parse($post->created_at)->locale('vi')->isoFormat('dddd-DD-Y') }}
-                        </span>                        
+                        <div class="section-content">
+                            @if ($data['posts']->isEmpty())
+                                <div class="empty-content">
+                                    <div class="icon"><i class="fab fa-searchengin"></i></div>
+                                    <div class="title">Oooops!</div>
+                                    <div class="content">Posts Item Not Found</div>
+                                </div>
+                            @else
+                                @foreach ($data['posts'] as $post)
+                                    <a href="{{ route('post_page', ['id' => $post->id]) }}" title="{{ $post->title }}">
+                                        <div class="item-post">
+                                            <div class="image-post"
+                                                style="background-image: url('{{ Helper::get_image_post_url($post->image) }}');">
+                                            </div>
+                                            <div class="info-post">
+                                                <div class="title-post">
+                                                    <h3>{{ $post->title }}</h3>
+                                                </div>
+                                                <div class="desc-post">
+                                                    <span><i class="fas fa-user"></i> Admin</span>
+                                                    <span><i class="fas fa-clock"></i>
+                                                        {{ \Carbon\Carbon::parse($post->created_at)->locale('vi')->isoFormat('dddd-DD-Y') }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
                         </div>
-                      </div>
+                        @if ($data['posts']->isNotEmpty())
+                            <div class="section-footer text-center">
+                                {{ $data['posts']->links() }}
+                            </div>
+                        @endif
                     </div>
-                  </a>
-                @endforeach
-              @endif
-            </div>
-            @if($data['posts']->isNotEmpty())
-              <div class="section-footer text-center">
-                {{ $data['posts']->links() }}
-              </div>
-            @endif
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-4">
-          <div class="section-right">
-            <div class="suggest-product">
-              <div class="suggest-header">
-                <h2>Sản Phẩm Mới Nhất</h2>
-              </div>
-              @if($data['suggest_products']->isNotEmpty())
-                <div class="suggest-content">
-                  @foreach($data['suggest_products'] as $product)
-                    <a href="{{ route('product_page', ['id' => $product->id]) }}" title="{{ $product->name }}">
-                      <div class="product-content">
-                        <div class="image">
-                          <img src="{{ Helper::get_image_product_url($product->image) }}">
-                        </div>
-                        <div class="content">
-                          <h3 class="title">{{ $product->name }}</h3>
-                          <div class="start-vote">
-                            {!! Helper::get_start_vote($product->rate) !!}
-                          </div>
-                          <div class="price">
-                            {!! Helper::get_real_price($product->product_detail->sale_price, $product->product_detail->promotion_price, $product->product_detail->promotion_start_date, $product->product_detail->promotion_end_date) !!}
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  @endforeach
                 </div>
-              @endif
+                <div class="col-lg-4 col-md-4">
+                    <div class="section-right">
+                        <div class="suggest-product">
+                            <div class="suggest-header">
+                                <h2>Sản Phẩm Mới Nhất</h2>
+                            </div>
+                            @if ($data['suggest_products']->isNotEmpty())
+                                <div class="suggest-content">
+                                    @foreach ($data['suggest_products'] as $product)
+                                        <a href="{{ route('product_page', ['id' => $product->id]) }}"
+                                            title="{{ $product->name }}">
+                                            <div class="product-content">
+                                                <div class="image">
+                                                    <img src="{{ Helper::get_image_product_url($product->image) }}">
+                                                </div>
+                                                <div class="content">
+                                                    <h3 class="title">{{ $product->name }}</h3>
+                                                    <div class="start-vote">
+                                                        {!! Helper::get_start_vote($product->rate) !!}
+                                                    </div>
+                                                    <div class="price">
+                                                      {!! Helper::get_real_price(
+                                                        $product->variants->first()?->price,
+                                                        $product->variants->first()?->promotion_price,
+                                                        $product->variants->first()?->promotion_start_date,
+                                                        $product->variants->first()?->promotion_end_date,
+                                                    ) !!}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        </section>
+    </div>
 
 @endsection
 
@@ -124,7 +131,7 @@
 @endsection
 
 @section('js')
-  {{-- <script>
+    {{-- <script>
     $(document).ready(function(){
 
       $("#slide-advertise").owlCarousel({

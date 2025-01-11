@@ -18,24 +18,25 @@ use App\Models\PaymentMethod;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\NL_Checkout;
+use App\Models\ProductVariant;
 
 class CartController extends Controller
 {
   public function addCart(Request $request)
   {
-
-    $product = ProductDetail::where('id', $request->id)
+    
+    
+    $product = ProductVariant::where('id', $request->id)
       ->with([
         'product' => function ($query) {
-          $query->select('id', 'name', 'image', 'sku_code');
+          $query->select('id', 'name', 'stock', 'image', 'sku_code');
         }
-      ])->select('id', 'product_id', 'color', 'size', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
+      ])->select('id', 'product_id', 'attributes', 'sku', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
 
     if (!$product) {
       $data['msg'] = 'Product Not Found!';
       return response()->json($data, 404);
     }
-
     $oldCart = Session::has('cart') ? Session::get('cart') : NULL;
     $cart = new Cart($oldCart);
     if (!$cart->add($product, $product->id, $request->qty)) {
@@ -47,7 +48,7 @@ class CartController extends Controller
     $data['msg'] = "Thêm giỏ hàng thành công";
     $data['url'] = route('home_page');
     $data['response'] = Session::get('cart');
-
+  
     return response()->json($data, 200);
   }
 
@@ -95,10 +96,10 @@ class CartController extends Controller
       'id' => $request->id,
       'qty' => $cart->items[$request->id]['qty'],
       'price' => $cart->items[$request->id]['price'],
-      'salePrice' => $cart->items[$request->id]['item']->sale_price,
+      'salePrice' => $cart->items[$request->id]['item']->price,
       'totalPrice' => $cart->totalPrice,
       'totalQty' => $cart->totalQty,
-      'maxQty' => $cart->items[$request->id]['item']->quantity
+      'maxQty' => $cart->items[$request->id]['item']->stock_quantity
     );
     $data['response'] = $response;
     return response()->json($data, 200);
@@ -120,7 +121,7 @@ class CartController extends Controller
       'price' => $cart->items[$request->id]['price'],
       'totalPrice' => $cart->totalPrice,
       'totalQty' => $cart->totalQty,
-      'maxQty' => $cart->items[$request->id]['item']->quantity
+      'maxQty' => $cart->items[$request->id]['item']->stock_quantity
     );
     $data['response'] = $response;
     return response()->json($data, 200);
@@ -159,13 +160,13 @@ class CartController extends Controller
 
     // Xử lý nút "Mua ngay"
     if ($request->has('type') && $request->type == 'buy_now') {
-      $product = ProductDetail::where('id', $request->id)
+      $product = ProductVariant::where('id', $request->id)
         ->with([
           'product' => function ($query) {
             $query->select('id', 'name', 'image', 'sku_code');
           }
         ])
-        ->select('id', 'product_id', 'color', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
+        ->select('id', 'product_id', 'sku','attributes', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
         ->first();
 
       // Nếu không tìm thấy sản phẩm, quay lại với thông báo lỗi
@@ -264,7 +265,7 @@ class CartController extends Controller
   public function prepareDataSend($order)
   {
     // Ensure the order object includes the order_details and payment_method relationships
-    $order->load(['order_details.product_detail.product', 'payment_method']);
+    $order->load(['order_details.variants.product', 'payment_method']);
 
     // Convert the order object to an array
     $dataSend = $order->toArray();
@@ -310,7 +311,9 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
- 
+        $product = ProductVariant::find($request->product_id);
+        $product->	stock_quantity = $product->	stock_quantity - $request->totalQty;
+        $product->save();
         $dataSend = $this->prepareDataSend($order);
         SendOrderMail::dispatch($dataSend);
 
@@ -365,8 +368,8 @@ class CartController extends Controller
           $order_details->price = $item['price'];
           $order_details->save();
 
-          $product = ProductDetail::find($item['item']->id);
-          $product->quantity = $product->quantity - $item['qty'];
+          $product = ProductVariant::find($item['item']->id);
+          $product->	stock_quantity = $product->	stock_quantity - $item['qty'];
           $product->save();
         }
 
@@ -414,8 +417,8 @@ class CartController extends Controller
         $order_details->price = $request->price;
         $order_details->save();
 
-        $product = ProductDetail::find($request->product_id);
-        $product->quantity = $product->quantity - $request->totalQty;
+        $product = ProductVariant::find($request->product_id);
+        $product->stock_quantity = $product->stock_quantity - $request->totalQty;
         $product->save();
 
         $totalPayment = $request->price * $request->totalQty + $order->fee;
@@ -471,8 +474,8 @@ class CartController extends Controller
           $order_details->price = $item['price'];
           $order_details->save();
 
-          $product = ProductDetail::find($item['item']->id);
-          $product->quantity = $product->quantity - $item['qty'];
+          $product = ProductVariant::find($item['item']->id);
+          $product->stock_quantity = $product->stock_quantity - $item['qty'];
           $product->save();
         }
 

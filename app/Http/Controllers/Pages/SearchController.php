@@ -29,11 +29,11 @@ class SearchController extends Controller
 
             $products = Product::select('id','name', 'image', 'rate')
             ->where('name', 'LIKE', '%' . $request->search_key . '%')
-            ->whereHas('product_detail', function (Builder $query) {
-                $query->where('quantity', '>', 0);
+            ->whereHas('variants', function (Builder $query) {
+                $query->where('	stock_quantity', '>', 0);
             })
-            ->with(['product_detail' => function($query) {
-              $query->select('id', 'product_id', 'quantity', 'sale_price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('quantity', '>', 0)->orderBy('sale_price', 'ASC');
+            ->with(['variants' => function($query) {
+              $query->select('id', 'product_id', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->where('stock_quantity', '>', 0)->orderBy('price', 'ASC');
             }])->latest()->limit(19)->get();
 
             $posts = Post::select('id', 'title', 'image', 'created_at')

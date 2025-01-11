@@ -60,10 +60,10 @@
             </a>
             <ul class="treeview-menu">
                 {{-- product old --}}
-                <li class="{{ Helper::check_active(['admin.product.index', 'admin.product.new', 'admin.product.edit']) }}">
+                {{-- <li class="{{ Helper::check_active(['admin.product.index', 'admin.product.new', 'admin.product.edit']) }}">
                     <a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>
                         <span>Quản Lý Sản Phẩm</span></a>
-                </li>
+                </li> --}}
                 {{-- Product new --}}
                 <li class="{{ Helper::check_active(['admin.products.index', 'admin.products.new', 'admin.products.edit']) }}">
                     <a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>

@@ -90,7 +90,6 @@
                                 <th>Mã Sản Phẩm</th>
                                 <th>Tên Sản Phẩm</th>
                                 <th>Phân loại</th>
-                                <th>Kích thước</th>
                                 <th style="text-align: center;">Số Lượng</th>
                                 <th>Đơn Giá</th>
                                 <th>Tổng Tiền</th>
@@ -102,10 +101,11 @@
                                 <?php $price = $price + $order_detail->price * $order_detail->quantity; ?>
                                 <tr>
                                     <td style="text-align: center;">{{ $key + 1 }}</td>
-                                    <td>{{ '#' . $order_detail->product_detail->product->sku_code }}</td>
-                                    <td>{{ $order_detail->product_detail->product->name }}</td>
-                                    <td>{{ $order_detail->product_detail->color }}</td>
-                                    <td>{{ $order_detail?->product_detail?->size ?? '---' }}</td>
+                                    <td>{{ '#' . $order_detail->variants->product->sku_code }}</td>
+                                    <td>{{ $order_detail->variants->product->name }}</td>
+                                    <td>{{ substr($order_detail->variants->sku, strpos($order_detail->variants->sku, '-') + 1) }}</td>
+
+                                    
                                     <td style="text-align: center;">{{ $order_detail->quantity }}</td>
                                     <td><span style="color: #f30;">{{ number_format($order_detail->price, 0, ',', '.') }}
                                             VNĐ</span></td>

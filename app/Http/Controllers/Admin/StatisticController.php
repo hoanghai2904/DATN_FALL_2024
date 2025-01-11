@@ -47,8 +47,8 @@ class StatisticController extends Controller
                       ->whereBetween('created_at', [$start_date, $end_date]);
               })
               ->with([
-                  'product_detail' => function ($query) {
-                      $query->select('id', 'import_price');
+                  'variants' => function ($query) {
+                      $query->select('id', 'purchase_price');
                   }
               ])
               ->get();
@@ -59,7 +59,7 @@ class StatisticController extends Controller
   
           foreach ($order_details as $order_detail) {
               $revenue += $order_detail->price * $order_detail->quantity;
-              $profit += $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
+              $profit += $order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price);
               $count_products += $order_detail->quantity;
           }
   
@@ -86,23 +86,21 @@ class StatisticController extends Controller
               $query->where('status', '=', OrderStatusEnum::COMPLETED);
           })
           ->with([
-              'order' => function ($query) {
-                  $query->select('id', 'order_code');
-              },
-              'product_detail' => function ($query) {
-                  $query->select('id', 'product_id', 'color', 'import_price')->with([
-                      'product' => function ($query) {
-                          $query->select('id', 'producer_id', 'name', 'sku_code')->with([
-                              'producer' => function ($query) {
-                                  $query->select('id', 'name');
-                              }
-                          ]);
-                      }
+            'order' => function ($query) {
+              $query->select('id', 'order_code', 'discount');
+            },
+            'variants' => function ($query) {
+              $query->select('id', 'product_id', 'attributes','sku' ,'purchase_price')->with([
+                'product' => function ($query) {
+                  $query->select('id', 'producer_id', 'name', 'sku_code')->with([
+                    'producer' => function ($query) {
+                      $query->select('id', 'name');
+                    }
                   ]);
-              }
-          ])
-          ->latest()
-          ->get();
+                }
+              ]);
+            }
+          ])->latest()->get();
   
       // Lưu chi tiết đơn hàng vào mảng dữ liệu
       $data['order_details'] = $order_details;
@@ -118,9 +116,11 @@ class StatisticController extends Controller
   
       // Tính tổng số lượng, doanh thu và lợi nhuận theo nhà sản xuất
       foreach ($order_details as $order_detail) {
-          $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] += $order_detail->quantity;
-          $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] += $order_detail->quantity * $order_detail->price;
-          $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] += $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
+        $producerName = $order_detail->variants->product->producer->name ?? 'Không thấy danh mục';
+    
+        $data['producer'][$producerName]['quantity'] = ($data['producer'][$producerName]['quantity'] ?? 0) + $order_detail->quantity;
+        $data['producer'][$producerName]['revenue'] = ($data['producer'][$producerName]['revenue'] ?? 0) + $order_detail->quantity * $order_detail->price;
+        $data['producer'][$producerName]['profit'] = ($data['producer'][$producerName]['profit'] ?? 0) + $order_detail->quantity * ($order_detail->price - ($order_detail->variants->purchase_price ?? 0));
       }
   
       // Cập nhật tiêu đề cho biểu đồ và danh sách sản phẩm

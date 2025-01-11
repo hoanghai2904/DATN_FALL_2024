@@ -102,12 +102,12 @@
                                                         {!! Helper::get_start_vote($product->rate) !!}
                                                     </div>
                                                     <div class="price">
-                                                        {!! Helper::get_real_price(
-                                                            $product->product_detail->sale_price,
-                                                            $product->product_detail->promotion_price,
-                                                            $product->product_detail->promotion_start_date,
-                                                            $product->product_detail->promotion_end_date,
-                                                        ) !!}
+                                                      {!! Helper::get_real_price(
+                                                        $product->variants->first()?->price,
+                                                        $product->variants->first()?->promotion_price,
+                                                        $product->variants->first()?->promotion_start_date,
+                                                        $product->variants->first()?->promotion_end_date,
+                                                    ) !!}
                                                     </div>
                                                 </div>
                                             </div>

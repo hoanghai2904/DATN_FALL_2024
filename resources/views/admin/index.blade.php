@@ -90,7 +90,7 @@
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="{{ route('admin.product.index') }}" class="small-box-footer">More info <i
+                <a href="{{ route('admin.products.index') }}" class="small-box-footer">More info <i
                         class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -282,19 +282,19 @@
                               <?php $profit = 0; ?>
                               @foreach($data['order_details'] as $key => $order_detail)
                                 <?php $price = $price + $order_detail->price * $order_detail->quantity- $order_detail->order->discount; ?>
-                                <?php $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount); ?>
+                                <?php $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price))-($order_detail->order->discount); ?>
                                 <tr>
                                   <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}</td>
-                                  <td style="vertical-align: middle;">{{ '#'.$order_detail->product_detail->product->sku_code }}</td>
-                                  <td style="vertical-align: middle;">{{ $order_detail->product_detail->product->name }}</td>
-                                  <td style="vertical-align: middle;">{{ $order_detail->product_detail->color }}</td>
+                                  <td style="vertical-align: middle;">{{ '#'.$order_detail->variants->product->sku_code }}</td>
+                                  <td style="vertical-align: middle;">{{ $order_detail->variants->product->name }}</td>
+                                  <td style="vertical-align: middle;">{{ $order_detail->variants->sku }}</td>
                                   <td style="vertical-align: middle;">{{ '#'.$order_detail->order->order_code }}</td>
                                   <td style="vertical-align: middle;">{{ date_format($order_detail->created_at, 'd/m/Y') }}</td>
                                   <td style="text-align: center; vertical-align: middle;">{{ $order_detail->quantity }}</td>
                                   {{-- <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td> --}}
                                   <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity - $order_detail->order->discount,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
+                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
                                 </tr>
                               @endforeach
                               <tr>
@@ -698,21 +698,21 @@
 
                       $.each(data.order_details, function (key, value) {
                           price += value.price * value.quantity;
-                          profit += value.quantity * (value.price - value.product_detail.import_price);
+                          profit += value.quantity * (value.price - value.variants.purchase_price);
 
                           $('.box-table table tbody').append(
                               '<tr>' +
                               '<td style="text-align: center; vertical-align: middle;">' + (key + 1) + '</td>' +
-                              '<td style="vertical-align: middle;">#' + value.product_detail.product.sku_code + '</td>' +
-                              '<td style="vertical-align: middle;">' + value.product_detail.product.name + '</td>' +
-                              '<td style="vertical-align: middle;">' + value.product_detail.color + '</td>' +
+                              '<td style="vertical-align: middle;">#' + value.variants.product.sku_code + '</td>' +
+                              '<td style="vertical-align: middle;">' + value.variants.product.name + '</td>' +
+                              '<td style="vertical-align: middle;">' + value.variants.sku + '</td>' +
                               '<td style="vertical-align: middle;">#' + value.order.order_code + '</td>' +
                               '<td style="vertical-align: middle;">' + formatDate(value.created_at) + '</td>' +
                               '<td style="text-align: center; vertical-align: middle;">' + value.quantity + '</td>' +
-                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.product_detail.import_price) + '</span></td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.variants.purchase_price) + '</span></td>' +
                               '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.price) + '</span></td>' +
                               '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.price * value.quantity) + '</span></td>' +
-                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.quantity * (value.price - value.product_detail.import_price)) + '</span></td>' +
+                              '<td style="vertical-align: middle;"><span style="color: #f30;">' + formatMoney(value.quantity * (value.price - value.variants.purchase_price)) + '</span></td>' +
                               '</tr>'
                           );
                       });
