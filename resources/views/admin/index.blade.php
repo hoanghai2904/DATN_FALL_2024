@@ -3,6 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('embed-css')
+  <!-- daterange picker -->
+    <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
 @endsection
 
@@ -315,6 +317,11 @@ p span {
     <script src="{{ asset('AdminLTE/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
     <!-- FastClick -->
     <script src="{{ asset('AdminLTE/bower_components/fastclick/lib/fastclick.js') }}"></script>
+    <!-- date-range-picker -->
+    <script src="{{ asset('AdminLTE/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/jquery-validate/jquery.validate.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/autoNumeric.js') }}"></script>
+    <script src="{{ asset('AdminLTE/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/date-euro.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>

@@ -14,98 +14,6 @@ use App\Models\Producer;
 
 class StatisticController extends Controller
 {
-  /**
-   * Handle the incoming request.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
-  // public function index()
-  // {
-  //   $carbon = new Carbon('first day of this month');
-
-  //   $count_products = 0;
-  //   $total_revenue = 0;
-  //   $total_profit = 0;
-
-  //   for($i = 0; $i < $carbon->daysInMonth; $i++) {
-
-  //     $date = $carbon->copy()->addDay($i)->format('d/m/Y');
-
-  //     $data['labels'][] = $date;
-
-  //     $order_details = OrderDetail::select('product_detail_id', 'quantity', 'price')
-  //       ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
-  //       ->whereHas('order', function (Builder $query) {
-  //         $query->where('status', '=', OrderStatusEnum::COMPLETED);
-  //       })->with([
-  //         'product_detail' => function($query) {
-  //           $query->select('id', 'import_price');
-  //         }
-  //       ])->get();
-
-  //     $revenue = 0;
-  //     $profit = 0;
-
-  //     foreach ($order_details as $order_detail) {
-  //       $revenue = $revenue + $order_detail->price * $order_detail->quantity;
-  //       $profit = $profit + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
-  //       $count_products = $count_products + $order_detail->quantity;
-  //     }
-
-  //     $total_revenue = $total_revenue + $revenue;
-  //     $total_profit = $total_profit + $profit;
-  //     $data['revenues'][] = $revenue;
-  //   }
-
-  //   $data['count_products'] = $count_products;
-  //   $data['total_revenue'] = $total_revenue;
-  //   $data['total_profit'] = $total_profit;
-  //   $data['count_orders'] = Order::where('status', '=', OrderStatusEnum::COMPLETED)
-  //     ->whereYear('created_at', $carbon->year)
-  //     ->whereMonth('created_at', $carbon->month)->count();
-
-  //   $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')->whereYear('created_at', $carbon->year)->whereMonth('created_at', $carbon->month)
-  //     ->whereHas('order', function (Builder $query) {
-  //       $query->where('status', '=', OrderStatusEnum::COMPLETED);
-  //     })->with([
-  //       'order' => function($query) {
-  //         $query->select('id', 'order_code');
-  //       },
-  //       'product_detail' =>function($query) {
-  //         $query->select('id', 'product_id', 'color', 'import_price')->with([
-  //           'product' => function($query) {
-  //             $query->select('id', 'producer_id', 'name', 'sku_code')->with([
-  //               'producer' => function($query) {
-  //                 $query->select('id', 'name');
-  //               }
-  //             ]);
-  //           }
-  //         ]);
-  //       }
-  //     ])->latest()->get();
-
-  //   $data['order_details'] = $order_details;
-
-  //   $producers = Producer::select('name')->has('products')->get();
-
-  //   foreach ($producers as $producer) {
-  //     $data['producer'][$producer->name]['quantity'] = 0;
-  //     $data['producer'][$producer->name]['revenue'] = 0;
-  //     $data['producer'][$producer->name]['profit'] = 0;
-  //   }
-
-  //   foreach ($order_details as $order_detail) {
-  //     $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] = $data['producer'][$order_detail->product_detail->product->producer->name]['quantity'] + $order_detail->quantity;
-
-  //     $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] = $data['producer'][$order_detail->product_detail->product->producer->name]['revenue'] + $order_detail->quantity * $order_detail->price;
-
-  //     $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] = $data['producer'][$order_detail->product_detail->product->producer->name]['profit'] + $order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price);
-  //   }
-
-  //   return view('admin.index')->with('data', $data);
-  // }
-
   public function edit(Request $request)
   {
     // Lấy giá trị từ request
@@ -149,9 +57,9 @@ for ($i = 0; $i < $daysInMonth; $i++) {
     $date = $currentDay->format('d/m/Y');
     $data['labels'][] = $date;
 
-    $order_details = OrderDetail::whereDate('created_at', $currentDay->format('Y-m-d'))
+    $order_details = OrderDetail::withTrashed()->whereDate('created_at', $currentDay->format('Y-m-d'))
         ->whereHas('order', function (Builder $query) {
-            $query->where('status', '=', OrderStatusEnum::COMPLETED);
+            $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
         })
         ->with(['order:id,order_code,discount', 'variants:id,purchase_price'])
         ->get();
@@ -187,8 +95,8 @@ for ($monthLoop = 1; $monthLoop <= 12; $monthLoop++) {
         continue; // Bỏ qua các tháng không phải là tháng được chọn
     }
 
-    $order_details = OrderDetail::whereHas('order', function ($query) use ($monthLoop, $carbon) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED)
+    $order_details = OrderDetail::withTrashed()->whereHas('order', function ($query) use ($monthLoop, $carbon) {
+        $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
             ->whereYear('created_at', $carbon->year)
             ->whereMonth('created_at', $monthLoop);
     })
@@ -209,8 +117,8 @@ for ($monthLoop = 1; $monthLoop <= 12; $monthLoop++) {
 
 // Doanh thu và lợi nhuận theo năm
 for ($yearLoop = $carbon->year - 4; $yearLoop <= $carbon->year; $yearLoop++) {
-    $order_details = OrderDetail::whereHas('order', function ($query) use ($yearLoop) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED)
+    $order_details = OrderDetail::withTrashed()->whereHas('order', function ($query) use ($yearLoop) {
+        $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
             ->whereYear('created_at', $yearLoop);
     })
     ->with('order', 'variants')
@@ -232,13 +140,13 @@ for ($yearLoop = $carbon->year - 4; $yearLoop <= $carbon->year; $yearLoop++) {
 $data['count_products'] = $count_products;
 $data['total_revenue'] = $total_revenue;
 $data['total_profit'] = $total_profit;
-$data['count_orders'] = Order::where('status', '=', OrderStatusEnum::COMPLETED)
+$data['count_orders'] = Order::withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
     ->whereYear('created_at', $carbon->year)
     ->whereMonth('created_at', $carbon->month)
     ->count();
 
 // Nhà sản xuất
-$producers = Producer::select('name')->has('products')->get();
+$producers = Producer::withTrashed()->select('name')->has('products')->get();
 foreach ($producers as $producer) {
     $data['producer'][$producer->name] = [
         'quantity' => 0,
@@ -247,8 +155,8 @@ foreach ($producers as $producer) {
     ];
 }
 
-$order_details = OrderDetail::whereHas('order', function ($query) {
-    $query->where('status', '=', OrderStatusEnum::COMPLETED);
+$order_details = OrderDetail::withTrashed()->whereHas('order', function ($query) {
+    $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
 })
 ->with('variants.product.producer')
 ->get();

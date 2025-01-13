@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\OrderStatusEnum;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,17 +45,17 @@ class DashboardController extends Controller
           $date = $carbon->copy()->addDay($i)->format('d/m/Y');
           $data['labels'][] = $date;
   
-          $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
+          $order_details = OrderDetail::withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
               ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
               ->whereHas('order', function (Builder $query) {
-                  $query->where('status', '=', OrderStatusEnum::COMPLETED);
+                  $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
               })
               ->with([
                   'order' => function ($query) {
-                      $query->select('id', 'order_code', 'discount');
+                      $query->withTrashed()->select('id', 'order_code', 'discount');
                   },
                   'variants' => function ($query) {
-                      $query->select('id', 'purchase_price', 'promotion_price');
+                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price');
                   },
               ])
               ->get();
@@ -85,8 +86,8 @@ class DashboardController extends Controller
   
       // Doanh thu theo tháng
       for ($month = 1; $month <= 12; $month++) {
-          $order_details = OrderDetail::whereHas('order', function ($query) use ($month, $carbon) {
-              $query->where('status', '=', OrderStatusEnum::COMPLETED)
+          $order_details = OrderDetail::withTrashed()->whereHas('order', function ($query) use ($month, $carbon) {
+              $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
                   ->whereYear('created_at', $carbon->year)
                   ->whereMonth('created_at', $month);
           })
@@ -107,8 +108,8 @@ class DashboardController extends Controller
   
       // Doanh thu và lợi nhuận theo năm
       for ($year = $carbon->year - 4; $year <= $carbon->year; $year++) {
-          $order_details = OrderDetail::whereHas('order', function ($query) use ($year) {
-              $query->where('status', '=', OrderStatusEnum::COMPLETED)
+          $order_details = OrderDetail::withTrashed()->whereHas('order', function ($query) use ($year) {
+              $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
                   ->whereYear('created_at', $year);
           })
           ->with('order') // Eager load the 'order' relationship
@@ -135,7 +136,7 @@ class DashboardController extends Controller
           ->whereMonth('created_at', $carbon->month)->count();
   
       // Nhà sản xuất
-      $producers = Producer::select('name')->has('products')->get();
+      $producers = Producer::withTrashed()->select('name')->has('products')->get();
       foreach ($producers as $producer) {
           $data['producer'][$producer->name] = [
               'quantity' => 0,

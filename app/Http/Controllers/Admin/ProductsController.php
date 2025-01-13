@@ -22,7 +22,7 @@ class ProductsController extends Controller
 {
   public function index()
   {
-    $products = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'stock', 'rate', 'created_at')
+    $products = Product::withTrashed()->select('id', 'producer_id', 'name', 'image', 'sku_code', 'stock', 'rate', 'created_at')
       ->whereHas('variants', function (Builder $query) {
         $query->where('stock_quantity', '>', 0);
       })
@@ -33,9 +33,11 @@ class ProductsController extends Controller
       ])
       ->withCount([
         'variants' => function (Builder $query) {
-          $query->where([['stock_quantity', '>', 0]]);
+          $query->withTrashed()->where([['stock_quantity', '>', 0]]);
         }
       ])->latest()->get();
+      // dd($products);
+
     return view('admin.products.index')->with('products', $products);
   }
 
@@ -90,7 +92,7 @@ class ProductsController extends Controller
     $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
 
     // Lấy tất cả thuộc tính và giá trị của từng thuộc tính
-    $attributes = Attribute::with('values')->get();
+    $attributes = Attribute::withTrashed()->with('values')->get();
 
     return view('admin.products.new', [
       'producers' => $producers,

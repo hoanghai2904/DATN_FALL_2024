@@ -14,14 +14,17 @@ class OrderDetail extends Model
     return $this->belongsTo('App\Models\Order');
     // return $this->belongsTo(Order::class,'order_id');
   }
-  public function product_detail() {
-    return $this->belongsTo('App\Models\ProductDetail');
-  }
+  // public function product_detail() {
+  //   return $this->belongsTo('App\Models\ProductDetail');
+  // }
 
   public function variants()
     {
         
-        return $this->belongsTo(ProductVariant::class, 'product_detail_id');
+        return $this->belongsTo(ProductVariant::class, 'product_detail_id','id');
     }
+  public function product_votes(){
+    return $this->hasOne(ProductVote::class, 'order_detail_id');
+  }
     
 }
