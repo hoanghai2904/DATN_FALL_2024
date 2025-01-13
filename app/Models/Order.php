@@ -24,6 +24,11 @@ class Order extends Model
         
         return $this->belongsTo(ProductVariant::class, 'product_detail_id');
     }
+
+    public function reviews()
+{
+    return $this->hasMany(ProductVote::class, 'order_item_id');
+}
     
   // protected $guarded = [''];
 

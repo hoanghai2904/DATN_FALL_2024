@@ -32,16 +32,16 @@ class DashboardController extends Controller
 
       $data['labels'][] = $date;
 
-      $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
+      $order_details = OrderDetail::withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
       ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
       ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED);
+        $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'order' => function ($query) {
-          $query->select('id', 'order_code','discount');
+          $query->withTrashed()->select('id', 'order_code','discount');
         },
         'variants' => function ($query) {
-          $query->select('id', 'purchase_price','promotion_price');
+          $query->withTrashed()->select('id', 'purchase_price','promotion_price');
         }
       ])->latest()->get();
         // dd($order_details);
@@ -66,19 +66,19 @@ class DashboardController extends Controller
       ->whereYear('created_at', $carbon->year)
       ->whereMonth('created_at', $carbon->month)->count();
 
-    $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')->whereYear('created_at', $carbon->year)->whereMonth('created_at', $carbon->month)
+    $order_details = OrderDetail::withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')->whereYear('created_at', $carbon->year)->whereMonth('created_at', $carbon->month)
       ->whereHas('order', function (Builder $query) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED);
+        $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
       })->with([
         'order' => function ($query) {
-          $query->select('id', 'order_code', 'discount');
+          $query->withTrashed()->select('id', 'order_code', 'discount');
         },
         'variants' => function ($query) {
-          $query->select('id', 'product_id', 'attributes','sku' ,'purchase_price')->with([
+          $query->withTrashed()->select('id', 'product_id', 'attributes','sku' ,'purchase_price')->with([
             'product' => function ($query) {
-              $query->select('id', 'producer_id', 'name', 'sku_code')->with([
+              $query->withTrashed()->select('id', 'producer_id', 'name', 'sku_code')->with([
                 'producer' => function ($query) {
-                  $query->select('id', 'name');
+                  $query->withTrashed()->select('id', 'name');
                 }
               ]);
             }

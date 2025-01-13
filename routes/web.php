@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\pages\OrderTrackingController;
 
+use App\Http\Controllers\Pages\ProductVoteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +38,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::post('user/delete', 'UserController@delete')->name('user_delete');
     Route::get('user/{id}/show', 'UserController@show')->name('user_show');
     Route::get('user/{id}/send', 'UserController@send')->name('user_send');
+
+    Route::post('/product-vote/{commentId}/reply', [UserController::class, 'storeReply'])->name('vote.reply');
+
 
     Route::get('posts', 'PostController@index')->name('post.index');
     Route::get('post/new', 'PostController@new')->name('post.new');
@@ -122,6 +127,9 @@ Route::namespace('Pages')->group(function () {
   Route::get('tracking', [OrderTrackingController::class, 'index'])->name('tracking');
   Route::post('search', action: [OrderTrackingController::class, 'searchOrder'])->name('search');
 
+  Route::get('/reviews/{id}', [ProductVoteController::class, 'index'])->name('review.index');
+  Route::post('/review/store', [ProductVoteController::class, 'store'])->name('review.store');
+
   Route::get('user/profile', 'UserController@show')->name('show_user');
   Route::get('user/edit', 'UserController@edit')->name('edit_user');
   Route::post('user/save', 'UserController@save')->name('save_user');
@@ -148,4 +156,8 @@ Route::namespace('Pages')->group(function () {
   Route::post('send-contact', 'ContactController@sendContact')->name('send_contact');
   Route::post('/toggle-wishlist', 'ProductsController@toggleWishlist')->name('toggle_wishlist');
   Route::get('show-wishlist', 'ProductsController@showWishlist')->name('show_wishlist');
+});
+
+Route::fallback(function () {
+  abort(404, 'Trang không tồn tại');
 });

@@ -120,8 +120,8 @@
 
                                                         @case(6)
                                                             <span class="label label-success" style="margin-right: 10px;">Thành công</span>
-                                                            <button class="btn btn-primary"
-                                                                    onclick="handleRequestReturn({{ $order->id }})">Đánh giá</button>
+                                                            {{-- <button class="btn btn-primary"
+                                                                    onclick="voteProduct({{ $order->id }})">Đánh giá</button> --}}
                                                         @break
 
                                                         @case(8)
@@ -149,12 +149,6 @@
                                                         @break
                                                     @endswitch
                                                 </td>
-                                                {{-- <td>
-                          {{ $order->is_received ? 'Đã nhận hàng' : 'Chưa nhận hàng' }}
-                          @if (!$order->is_received && $order->status == 4)
-                            <button class="btn btn-success" onclick="handleReceiveOrder({{ $order->id }})">Đã nhận hàng</button>
-                          @endif
-                        </td> --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -321,56 +315,56 @@
 
 
 
-        const handleReceiveOrder = (id) => {
-            $.ajax({
-                url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
-                method: 'POST',
-                data: {
-                    id: id,
-                    _token: `{{ csrf_token() }}`
-                },
-                success: function(response) {
-                    if (response.status) {
-                        Swal.fire(
-                            'Thành công!',
-                            response.message,
-                            'success'
-                        ).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire(
-                            'Thất bại!',
-                            response.message,
-                            'error'
-                        );
-                    }
-                }
-            });
-        }
+        // const handleReceiveOrder = (id) => {
+        //     $.ajax({
+        //         url: "{{ route('receive_order', ['id' => ':id']) }}".replace(':id', id),
+        //         method: 'POST',
+        //         data: {
+        //             id: id,
+        //             _token: `{{ csrf_token() }}`
+        //         },
+        //         success: function(response) {
+        //             if (response.status) {
+        //                 Swal.fire(
+        //                     'Thành công!',
+        //                     response.message,
+        //                     'success'
+        //                 ).then(() => {
+        //                     location.reload();
+        //                 });
+        //             } else {
+        //                 Swal.fire(
+        //                     'Thất bại!',
+        //                     response.message,
+        //                     'error'
+        //                 );
+        //             }
+        //         }
+        //     });
+        // }
 
-        $(document).ready(function() {
-            $("#slide-advertise").owlCarousel({
-                items: 2,
-                autoplay: true,
-                loop: true,
-                margin: 10,
-                autoplayHoverPause: true,
-                nav: true,
-                dots: false,
-                responsive: {
-                    0: {
-                        items: 1,
-                    },
-                    992: {
-                        items: 2,
-                        animateOut: 'zoomInRight',
-                        animateIn: 'zoomOutLeft',
-                    }
-                },
-                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
-            });
-        });
+        // $(document).ready(function() {
+        //     $("#slide-advertise").owlCarousel({
+        //         items: 2,
+        //         autoplay: true,
+        //         loop: true,
+        //         margin: 10,
+        //         autoplayHoverPause: true,
+        //         nav: true,
+        //         dots: false,
+        //         responsive: {
+        //             0: {
+        //                 items: 1,
+        //             },
+        //             992: {
+        //                 items: 2,
+        //                 animateOut: 'zoomInRight',
+        //                 animateIn: 'zoomOutLeft',
+        //             }
+        //         },
+        //         navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>']
+        //     });
+        // });
     </script>
 
     <script>
@@ -516,4 +510,146 @@
 
         };
     </script>
+
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    const voteProduct = (orderId) => {
+        console.log(orderId);
+        
+        $.ajax({
+            url: "{{ route('getOrderDetails', ['id' => ':id']) }}".replace(':id', orderId),
+            method: "GET",
+            success: function(response) {
+                // Lấy tên sản phẩm từ order details
+                const productName = response.data.order_details; 
+                console.log(productName);
+                
+
+                Swal.fire({
+                    title: `Đánh giá sản phẩm: ${productName}`, // Hiển thị tên sản phẩm
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Huỷ',
+                    html: `
+                        <div>
+                            <div class="rating-product">
+                                <!-- Thêm sao đánh giá -->
+                                <div id="ratingStars"></div>
+                            </div>
+                            <textarea id="content" class="swal2-textarea" placeholder="Đánh giá..."></textarea>
+                        </div>
+                        <style>
+                            .rating-product {
+                                display: flex;
+                                justify-content: center;
+                                direction: row;
+                            }
+                            .star {
+                                font-size: 50px;
+                                cursor: pointer;
+                            }
+                            .star.checked {
+                                color: gold;
+                            }
+                        </style>
+                    `,
+                    didOpen: () => {
+                        // Tạo sao đánh giá từ 1 đến 5 sao
+                        const stars = document.getElementById('ratingStars');
+                        for (let i = 1; i <= 5; i++) {
+                            const star = document.createElement('span');
+                            star.classList.add('star');
+                            star.innerHTML = '★';
+                            star.addEventListener('click', () => setRating(i)); // Xử lý sự kiện click
+                            stars.appendChild(star);
+                        }
+                    }
+                }).then((result) => {
+                    if (result.value) {
+                        const content = document.getElementById('content').value.trim();
+                        const rating = document.querySelectorAll('.star.checked').length; // Lấy số sao đã chọn
+
+                        console.log('Đánh giá sao:', rating); // Kiểm tra đánh giá sao
+
+                        if (rating === 0) {
+                            Swal.fire(
+                                'Lỗi!',
+                                'Vui lòng chọn đánh giá sao!',
+                                'error'
+                            );
+                            return;
+                        }
+
+                        // Gửi AJAX request để gửi đánh giá
+                        $.ajax({
+                            url: "{{ route('vote_product', ['id' => ':id']) }}".replace(':id', orderId),
+                            method: "POST",
+                            data: {
+                                id: orderId,
+                                content: content, // Đánh giá nội dung
+                                rating: rating, // Đánh giá sao
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(response) {
+                                console.log('AJAX response:', response); // Kiểm tra phản hồi AJAX
+                                if (response.status === 'success') {
+                                    Swal.fire(
+                                        'Thành công!',
+                                        response.message,
+                                        'success'
+                                    ).then(() => {
+                                        location.reload(); // Reload lại trang sau khi thành công
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Thất bại!',
+                                        response.message,
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log('AJAX error:', error); // Kiểm tra lỗi AJAX
+                                Swal.fire(
+                                    'Lỗi!',
+                                    'Đã xảy ra lỗi trong quá trình xử lý.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+
+                // Hàm để thiết lập đánh giá sao
+                function setRating(rating) {
+                    const stars = document.querySelectorAll('.star');
+                    stars.forEach((star, index) => {
+                        if (index < rating) {
+                            star.classList.add('checked'); // Đánh dấu sao đã chọn
+                        } else {
+                            star.classList.remove('checked'); // Bỏ dấu sao chưa chọn
+                        }
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('AJAX error:', error); // Kiểm tra lỗi khi gọi API
+                Swal.fire(
+                    'Lỗi!',
+                    'Không thể lấy thông tin chi tiết đơn hàng.',
+                    'error'
+                );
+            }
+        });
+    };
+</script> --}}
+
+
+
+
 @endsection

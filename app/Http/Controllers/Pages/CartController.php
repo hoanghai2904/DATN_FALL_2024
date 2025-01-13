@@ -281,6 +281,19 @@ class CartController extends Controller
     $payment_method = PaymentMethod::select('id', 'name')->where('id', $request->payment_method)->first();
     if (Str::contains($payment_method->name, 'COD')) {
       if ($request->buy_method == 'buy_now') {
+
+        $product = ProductVariant::find($request->product_id);
+
+                // Kiểm tra tồn kho
+                if (!$product || $product->stock_quantity <= 0) {
+                    return redirect()->back()->with([
+                        'alert' => [
+                            'type' => 'danger',
+                            'title' => 'Mua hàng thất bại',
+                            'content' => 'Rất tiếc, sản phẩm đã hết hàng hoặc không đủ số lượng.'
+                        ]
+                    ]);
+                }
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
@@ -336,6 +349,21 @@ class CartController extends Controller
           ]);
         }
 
+        foreach ($cart->items as $key => $item) {
+          $product = ProductVariant::find($item['item']->id);
+
+          // Kiểm tra tồn kho từng sản phẩm trong giỏ
+          if (!$product || $product->stock_quantity < $item['qty']) {
+              return redirect()->back()->with([
+                  'alert' => [
+                      'type' => 'danger',
+                      'title' => 'Mua hàng thất bại',
+                      'content' => "Rất tiếc, sản phẩm {$item['item']->name} đã hết hàng hoặc không đủ số lượng."
+                  ]
+              ]);
+          }
+        }
+
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
@@ -387,6 +415,20 @@ class CartController extends Controller
       }
     } elseif (Str::contains($payment_method->name, 'Online Payment')) {
       if ($request->buy_method == 'buy_now') {
+
+        $product = ProductVariant::find($request->product_id);
+
+        // Kiểm tra tồn kho
+        if (!$product || $product->stock_quantity < $request->totalQty) {
+            return redirect()->back()->with([
+                'alert' => [
+                    'type' => 'danger',
+                    'title' => 'Mua hàng thất bại',
+                    'content' => 'Rất tiếc, sản phẩm đã hết hàng hoặc không đủ số lượng.'
+                ]
+            ]);
+        }
+
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
@@ -443,6 +485,20 @@ class CartController extends Controller
           ]);
         }
 
+        foreach ($cart->items as $key => $item) {
+          $product = ProductVariant::find($item['item']->id);
+
+          // Kiểm tra tồn kho từng sản phẩm trong giỏ
+          if (!$product || $product->stock_quantity < $item['qty']) {
+              return redirect()->back()->with([
+                  'alert' => [
+                      'type' => 'danger',
+                      'title' => 'Mua hàng thất bại',
+                      'content' => "Rất tiếc, sản phẩm {$item['item']->name} đã hết hàng hoặc không đủ số lượng."
+                  ]
+              ]);
+          }
+        }
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
