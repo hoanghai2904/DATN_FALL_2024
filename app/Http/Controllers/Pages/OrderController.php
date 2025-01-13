@@ -382,40 +382,4 @@ class OrderController extends Controller
       }
     }
   }
-
-//   public function voteProduct($id){
-    
-//   }
-
-//   public function getOrderDetails($id)
-// {
-//   $order = Order::where('id', $id)->with([
-//     'payment_method' => function ($query) {
-//       $query->select('id', 'name');
-//     },
-//     'user' => function ($query) {
-//       $query->select('id', 'name', 'email', 'phone', 'address');
-//     },
-//     'order_details' => function ($query) {
-//       $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
-//         ->with([
-//           'variants' => function ($query) {
-//             $query->select('id', 'product_id', 'sku')
-//               ->with([
-//                 'product' => function ($query) {
-//                   $query->select('id', 'name', 'image', 'sku_code');
-//                 },
-//               ]);
-//           },
-//         ]);
-//     },
-//   ])->first();
-// dd($order->order_details->variants);
-//   // $nameProduct = 
-//     return response()->json([
-//         'status' => 'success',
-//         'data' => $order
-//     ]);
-// }
-
 }

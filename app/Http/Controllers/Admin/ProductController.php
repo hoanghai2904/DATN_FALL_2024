@@ -578,24 +578,34 @@ class ProductController extends Controller
 
   public function delete_promotion(Request $request)
   {
-    $promotion = Promotion::where('id', $request->promotion_id)->first();
-
-    if (!$promotion) {
-
-      $data['type'] = 'error';
-      $data['title'] = 'Thất Bại';
-      $data['content'] = 'Bạn không thể xóa khuyễn mãi không tồn tại!';
-    } else {
-
-      $promotion->delete();
-
-      $data['type'] = 'success';
-      $data['title'] = 'Thành Công';
-      $data['content'] = 'Xóa khuyến mãi thành công!';
-    }
-
-    return response()->json($data, 200);
+      $promotion = Promotion::find($request->promotion_id);
+  
+      if (!$promotion) {
+          return response()->json([
+              'status' => 'error',
+              'title' => 'Thất Bại',
+              'message' => 'Bạn không thể xóa khuyến mãi không tồn tại!',
+          ], 404);
+      }
+  
+      try {
+          $promotion->delete();
+  
+          return response()->json([
+              'status' => 'success',
+              'title' => 'Thành Công',
+              'message' => 'Xóa khuyến mãi thành công!',
+          ], 200);
+      } catch (\Exception $e) {
+          return response()->json([
+              'status' => 'error',
+              'title' => 'Lỗi Hệ Thống',
+              'message' => 'Đã xảy ra lỗi khi xóa khuyến mãi. Vui lòng thử lại sau!',
+              'error' => $e->getMessage(),
+          ], 500);
+      }
   }
+  
 
   public function delete_product_detail(Request $request)
   {

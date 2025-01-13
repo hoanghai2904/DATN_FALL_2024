@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-  use SoftDeletes;
+
+  use SoftDeletes,HasFactory;
+  protected $fillable = ['user_id', 'discount'];
   public function user() {
     return $this->belongsTo('App\Models\User');
   }

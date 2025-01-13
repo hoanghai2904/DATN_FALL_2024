@@ -28,7 +28,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
  <!-- Thêm CSS cho select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
 {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> --}}
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
   <!-- Embed CSS -->
   @yield('embed-css')
   <!-- Theme style -->
@@ -93,9 +93,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('common/js/sweetalert2.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 {{-- selected 22 --}}
+
 <!-- Thêm JavaScript cho select2 -->
+
+
+{{-- date piker --}}
+
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
 <!-- Embed JS -->
 @yield('embed-js')
 <!-- AdminLTE App -->

@@ -31,7 +31,7 @@
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
+        <li><a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
                 Phẩm</a></li>
         <li class="active">Chỉnh Sửa Sản Phẩm</li>
     </ol>
@@ -190,7 +190,7 @@
                                             title="Collapse"><i class="fa fa-plus"></i></button>
                                         <a href="javascript:void(0);" data-id="{{ $product_detail->id }}"
                                             class="btn btn-box-tool remove-product-detail" title="Xóa"
-                                            data-url="{{ route('admin.product.delete_product_detail') }}"
+                                            data-url="{{ route('admin.products.delete_product_detail') }}"
                                             style="color: #f30;">
                                             <i class="fa fa-times"></i>
                                         </a>
@@ -320,7 +320,7 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o"
                             aria-hidden="true"></i> Lưu</button>
-                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right"
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-danger btn-flat pull-right"
                         style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
                 </div>
             </div>

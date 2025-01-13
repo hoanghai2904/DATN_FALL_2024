@@ -32,6 +32,7 @@ Route::get('active/{token}', 'Auth\RegisterController@activation')->name('active
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   ->group(function () {
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+    // Route::get('dashboard', 'DashboardController@dashboardData')->name('data.dashboard');
 
     Route::get('users', 'UserController@index')->name('users');
     Route::post('user/new', 'UserController@new')->name('user_new');
@@ -66,8 +67,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::post('Product_new/delete', [ProductsController::class, 'delete'])->name('products.delete');
     Route::get('Product_new/{id}/edit', [ProductsController::class, 'edit'])->name('products.edit');
     Route::post('Product_new/{id}/update', [ProductsController::class, 'update'])->name('products.update');
-    Route::post('promotions/delete', [ProductsController::class, 'deletePromotion'])->name('products.deletes_promotion');
-    Route::post('Product_new_detail/delete', [ProductsController::class, 'deleteProductDetail'])->name('products.delete_products_detail');
+    Route::post('promotions/delete', [ProductsController::class, 'delete_promotion'])->name('products.delete_promotion');
+    Route::post('Product_new_detail/delete', [ProductsController::class, 'delete_product_detail'])->name('products.delete_product_detail');
     Route::post('Product_new/image/delete', [ProductsController::class, 'deleteImage'])->name('products.delete_image');
 
     // Thuộc tính
@@ -102,8 +103,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
     Route::get('active/{id}/action/{action}', 'OrderController@actionTransaction')->name('orderTransaction');
     Route::get('order/{id}/show', 'OrderController@show')->name('order.show');
 
-    Route::get('statistic', 'StatisticController@index')->name('statistic');
-    Route::post('statistic/change', 'StatisticController@edit')->name('statistic.edit');
+    // Route::get('statistic', 'StatisticController@index')->name('statistic');
+    Route::get('statistic/change', 'StatisticController@edit')->name('statistic.edit');
 
     route::get('warehouse', 'WarehouseController@index')->name('warehouse');
     route::get('orderDetails', 'WarehouseController@orderDetails')->name('orderDetails');
