@@ -480,17 +480,6 @@ class CartController extends Controller
             ]
           ]);
         }
-        $product = ProductVariant::find(array_key_first($cart->items));
-
-        if ($product->stock_quantity <= 0) {
-          return redirect()->route('home_page')->with([
-            'alert' => [
-              'type' => 'error',
-              'title' => 'Hết hàng',
-              'content' => 'Sản phẩm này hiện đã hết hàng hoặc không đủ số lượng yêu cầu!'
-            ]
-          ]);
-        }
 
         $order = new Order;
         $order->user_id = Auth::user()?->id ?? NULL;

@@ -18,7 +18,7 @@ class UserController extends Controller
 {
   public function index()
   {
-    $users = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where('Role', false)->get();
+    $users = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where('Role', '!=', 1)->get();
     return view('admin.user.index')->with('users', $users);
   }
 
@@ -28,9 +28,9 @@ class UserController extends Controller
       'email' => array('required', 'regex:/^[a-z](\.?[a-z0-9]){5,}@gmail\.com$/', 'unique:users')
     );
     $messsages = array(
-      'email.required'  =>  'Email không được để trống!',
-      'email.regex'  =>  'Email không đúng định dạng!',
-      'email.unique'  =>  'Email đã tồn tại!'
+      'email.required' => 'Email không được để trống!',
+      'email.regex' => 'Email không đúng định dạng!',
+      'email.unique' => 'Email đã tồn tại!'
     );
     $validator = Validator::make($request->all(), $rules, $messsages);
     if ($validator->fails()) {
@@ -83,49 +83,90 @@ class UserController extends Controller
 
   public function show($id)
   {
-    $user = User::select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['Role', false]])->first();
-    if (!$user) abort(404);
-    $product_votes = ProductVote::where('user_id', $user->id)->with(['product' => function ($query) {
-      $query->select('id', 'name', 'image');
-    }])->latest()->get();
-
-    $orders = Order::where('user_id', $user->id)->with([
+    $user = User::withTrashed()->select('id', 'name', 'email', 'phone', 'address', 'provider', 'avatar_image', 'active', 'created_at')->where([['id', $id], ['Role', '!=', 1]])->first();
+    if (!$user)
+      abort(404);
+    $product_votes = ProductVote::withTrashed()->where('user_id', $user->id)
+      ->with([
+        'order_details.variants.product' => function ($query) {
+          $query->withTrashed()->select('id', 'name', 'image');
+        },
+        'replies' => function ($query) {
+          $query->withTrashed()->with('user')->latest(); // Phản hồi bình luận
+        }
+      ])
+      ->latest()
+      ->get();
+// dd($product_votes);
+    $orders = Order::withTrashed()->where('user_id', $user->id)->with([
       'payment_method' => function ($query) {
-        $query->select('id', 'name');
+        $query->withTrashed()->select('id', 'name');
       },
       'order_details' => function ($query) {
-        $query->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
+        $query->withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
           ->with([
-            'product_detail' => function ($query) {
-              $query->select('id', 'product_id', 'color')
+            'variants' => function ($query) {
+              $query->withTrashed()->select('id', 'product_id', 'sku')
                 ->with([
                   'product' => function ($query) {
-                    $query->select('id', 'name', 'image', 'sku_code');
+                    $query->withTrashed()->select('id', 'name', 'image', 'sku_code');
+                    // ->where('deleted_at', '!=', null);
                   }
                 ]);
             }
           ]);
       }
     ])
-    ->whereIn('status',[6,8])
-    ->latest()->get();
-    return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders]);
+      ->whereIn('status', [6, 8])
+      ->latest()->get();
+    // dd($user->product);
+
+    return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders, ]);
+  }
+
+  // Trả lời đánh giá
+  public function storeReply(Request $request, $commentId)
+  {
+    // dd($request->all(),$commentId);
+    $validated = $request->validate([
+      'content' => 'required|string|max:1000',
+    ]);
+
+    $reply = new ProductVote();
+    $reply->order_detail_id = $request->order_detail_id;
+    $reply->content = $validated['content'];
+    $reply->rate = null; // Bình luận trả lời không cần đánh giá sao
+    $reply->user_id = auth()->id();
+    $reply->parent_id = $commentId;
+
+    $reply->save();
+
+    return back()->with([
+      'alert' => [
+        'type' => 'success',
+        'title' => 'Thành Công',
+        'content' => 'Trả lời bình luận thành công.'
+      ]
+    ]);
   }
 
   public function send($id)
   {
     $user = User::where([['id', $id], ['active', false], ['Role', false]])->first();
-    if (!$user) abort(404);
+    if (!$user)
+      abort(404);
 
     $data['token'] = $user->active_token;
     $data['password'] = null;
 
     Mail::to($user)->send(new ActiveAccountMail($data));
 
-    return back()->with(['alert' => [
-      'type' => 'success',
-      'title' => 'Thành Công',
-      'content' => 'Gửi email kích hoạt tài khoản thành công.'
-    ]]);
+    return back()->with([
+      'alert' => [
+        'type' => 'success',
+        'title' => 'Thành Công',
+        'content' => 'Gửi email kích hoạt tài khoản thành công.'
+      ]
+    ]);
   }
 }

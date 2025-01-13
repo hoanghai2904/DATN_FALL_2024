@@ -80,8 +80,8 @@
                 <input type="text" class="form-control pull-right" id="start_end_date" name="start_end_date" autocomplete="off" value="{{ old('start_end_date') }}">
               </div>
               @error('start_end_date')
-              <span class="text-red">{{ $message }}</span>
-          @enderror
+                <span class="text-red">{{ $message }}</span>
+              @enderror
               <!-- /.input group -->
             </div>
             <div class="form-group">
