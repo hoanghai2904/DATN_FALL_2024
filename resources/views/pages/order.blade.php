@@ -35,7 +35,7 @@
             <li class="list-group-item" style="display: flex; justify-content: space-between; align-items: center;">
               <strong style="font-size: 1.1em">Trạng thái thanh toán:</strong> 
               <div class="d-flex flex-column align-items-end">
-                <span class="badge {{ $data['order']->is_paid ? 'bg-success' : 'bg-warning' }}">{{ $data['order']->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
+                <span class="badge {{ $data['order']->is_paid ? 'bg-success' : 'bg-warning' }}" style="font-weight: 700">{{ $data['order']->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</span>
                 @if (!$data['order']->is_paid && $data['order']->payment_method_id != 1 && $data['order']->status !== 8)
                   <form id="payment-form-{{ $data['order']->id }}" action="{{ route('payment_now', $data['order']->id) }}" method="POST" class="mt-2">
                     @csrf
@@ -69,7 +69,7 @@
                         bg-success
                         @break
                 @endswitch
-              ">
+              " style="font-weight: 700">
                 @switch($data['order']?->status)
                     @case(1)
                         Chờ xác nhận
@@ -94,7 +94,7 @@
             </li>
             <li class="list-group-item" style="display: flex; justify-content: space-between;">
               <strong style="font-size: 1.1em">Trạng thái nhận hàng:</strong>
-              <span class="badge {{ $data['order']->is_received ? 'bg-success' : 'bg-warning' }}">
+              <span class="badge {{ $data['order']->is_received ? 'bg-success' : 'bg-warning' }}" style="font-weight: 700">
                 {{ $data['order']->is_received ? 'Đã nhận hàng' : 'Chưa nhận hàng' }}
               </span>
             </li>
@@ -137,31 +137,31 @@
                         {{ implode('-', array_slice(explode('-', $order_detail->variants->sku), 1)) }}
                     </td>
                     <td class="text-center fw-bold">{{ $order_detail->quantity }}</td>
-                    <td class="text-end text-price fw-bold fs-5">{{ number_format($order_detail->price, 0, ',', '.') }}₫</td>
-                    <td class="text-end text-price fw-bold fs-5">{{ number_format($order_detail->price * $order_detail->quantity, 0, ',', '.') }}₫</td>
+                    <td class="text-end text-price fw-bold fs-5"  style="font-size: 1.5rem;">{{ number_format($order_detail->price, 0, ',', '.') }}₫</td>
+                    <td class="text-end text-price fw-bold fs-5"  style="font-size: 1.5rem;">{{ number_format($order_detail->price * $order_detail->quantity, 0, ',', '.') }}₫</td>
                   </tr>
                 @endforeach
               </tbody>
               <tfoot class="table-light border-top">
                 <tr class="total-row">
-                  <td colspan="4" class="text-end"><strong>Tổng Cộng:</strong></td>
+                  <td colspan="4" class="text-end"><strong style="font-size: 1.5rem;">Tổng Cộng:</strong></td>
                   <td class="text-center"><strong>{{ $totalQuantity }}</strong></td>
-                  <td colspan="2" class="text-end text-price fw-bold fs-5"><strong>{{ number_format($totalAmount, 0, ',', '.') }}₫</strong></td>
+                  <td colspan="2" class="text-end text-price fw-bold fs-5"><strong style="font-size: 1.5rem;">{{ number_format($totalAmount, 0, ',', '.') }}₫</strong></td>
                 </tr>
                 <tr>
-                  <td colspan="5" class="text-end"><strong>Phí giao hàng:</strong></td>
-                  <td colspan="2" class="text-end fw-bold fs-5"><strong>{{ number_format($data['order']?->fee, 0, ',', '.') }}₫</strong></td>
+                  <td colspan="5" class="text-end"><strong style="font-size: 1.5rem;">Phí giao hàng:</strong></td>
+                  <td colspan="2" class="text-end fw-bold fs-5"><strong style="font-size: 1.5rem;">{{ number_format($data['order']?->fee, 0, ',', '.') }}₫</strong></td>
                 </tr>
                 <tr>
                   <td colspan="5" class="text-end"><strong>Giảm giá:</strong></td>
-                  <td colspan="2" class="text-end fw-bold fs-5"><strong>{{ number_format($data['order']?->discount, 0, ',', '.') }}₫</strong></td>
+                  <td colspan="2" class="text-end fw-bold fs-5"><strong style="font-size: 1.5rem;">{{ number_format($data['order']?->discount, 0, ',', '.') }}₫</strong></td>
                 </tr>
                 <tr class="table-primary total-row">
                   <td colspan="5" class="text-end">
-                    <strong class="fs-3">Tổng Thanh Toán:</strong>
+                    <strong class="fs-3" style="font-size: 1.5rem;">Tổng Thanh Toán:</strong>
                   </td>
                   <td colspan="2" class="text-end">
-                    <strong class="fs-2 text-danger">{{ number_format($totalAmount + $data['order']?->fee - $data['order']?->discount, 0, ',', '.') }}₫</strong>
+                    <strong class="fs-1 text-danger" style="font-size: 2rem;">{{ number_format($totalAmount + $data['order']?->fee - $data['order']?->discount, 0, ',', '.') }}₫</strong>
                   </td>
                 </tr>
               </tfoot>
@@ -584,25 +584,6 @@
             .col-md-8 {
                 padding-left: 15px;
             }
-        }
-
-        /* Style cho dòng Tổng Thanh Toán */
-        .table-primary.total-row {
-            background-color: #e3f2fd !important;
-        }
-
-        .table-primary.total-row td {
-            padding: 1.5rem 1rem !important;
-        }
-
-        .table-primary.total-row .fs-3 {
-            font-size: 1.8rem !important;
-            color: #2c3e50;
-        }
-
-        .table-primary.total-row .fs-2 {
-            font-size: 2rem !important;
-            font-weight: 700 !important;
         }
     </style>
 @endsection
