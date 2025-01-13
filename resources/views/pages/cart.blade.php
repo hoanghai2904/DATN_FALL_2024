@@ -62,7 +62,7 @@
                                             <div class="name"><a
                                                 href="{{ route('product_page', ['id' => $item['item']->product->id]) }}"
                                                 target="_blank"
-                                                title="{{ $item['item']->product->name . ' - ' . \Illuminate\Support\Str::after($item['item']->sku, '-') }}">
+                                                title="{{ $item['item']->product->name . ' - ' . \Illuminate\Support\Str::after($item['item']->sku, '-') }}" style="font-size: 15px">
                                                 {{ $item['item']->product->name . ' - ' . \Illuminate\Support\Str::after($item['item']->sku, '-') }}
                                             </a>
                                                   

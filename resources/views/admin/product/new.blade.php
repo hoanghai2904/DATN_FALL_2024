@@ -31,7 +31,7 @@
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="{{ route('admin.product.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
+        <li><a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i> Quản Lý Sản
                 Phẩm</a></li>
         <li class="active">Thêm Sản Phẩm Mới</li>
     </ol>
@@ -150,7 +150,7 @@
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-flat pull-right"><i class="fa fa-floppy-o"
                             aria-hidden="true"></i> Lưu</button>
-                    <a href="{{ route('admin.product.index') }}" class="btn btn-danger btn-flat pull-right"
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-danger btn-flat pull-right"
                         style="margin-right: 5px;"><i class="fa fa-ban" aria-hidden="true"></i> Hủy</a>
                 </div>
             </div>

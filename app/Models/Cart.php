@@ -4,8 +4,7 @@ namespace App\Models;
 
 use App\Models\ProductDetail;
 use Illuminate\Support\Arr;
-use App\Models\ProductVariant;
-;
+use App\Models\ProductVariant;;
 class Cart
 {
   public $items = NULL;
@@ -15,7 +14,7 @@ class Cart
 
   public function __construct($oldCart)
   {
-    if($oldCart) {
+    if ($oldCart) {
       $this->items = $oldCart->items;
       $this->totalQty = $oldCart->totalQty;
       $this->totalPrice = $oldCart->totalPrice;
@@ -23,17 +22,18 @@ class Cart
     }
   }
 
-  public function add($item, $id, $qty) {
+  public function add($item, $id, $qty)
+  {
 
     $this->update();
 
-    if(($item->promotion_price > 0) && ($item->promotion_start_date <= date('Y-m-d')) && ($item->promotion_end_date >= date('Y-m-d')))
+    if (($item->promotion_price > 0) && ($item->promotion_start_date <= date('Y-m-d')) && ($item->promotion_end_date >= date('Y-m-d')))
       $storedItem = ['qty' => 0, 'price' => $item->promotion_price, 'item' => $item];
     else
       $storedItem = ['qty' => 0, 'price' => $item->price, 'item' => $item];
 
-    if($this->items && array_key_exists($id, $this->items)) {
-      if(($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->stock_quantity)
+    if ($this->items && array_key_exists($id, $this->items)) {
+      if (($this->items[$id]['qty'] + $qty) > $this->items[$id]['item']->stock_quantity)
         return false;
       else
         $storedItem = $this->items[$id];
@@ -47,9 +47,10 @@ class Cart
     return true;
   }
 
-  public function updateItem($id, $qty) {
+  public function updateItem($id, $qty)
+  {
     $this->update();
-    if($qty > $this->items[$id]['item']->stock_quantity)
+    if ($qty > $this->items[$id]['item']->stock_quantity)
       return false;
     else {
       $increase = $qty - $this->items[$id]['qty'];
@@ -60,17 +61,18 @@ class Cart
     }
   }
 
-  public function update() {
-    if($this->totalQty == 0) {
+  public function update()
+  {
+    if ($this->totalQty == 0) {
       return false;
     } else {
       $this->totalPrice = 0;
-      foreach($this->items as $key => $item) {
-        $product = ProductVariant::where('id',$key)->with(['product' => function($query) {
+      foreach ($this->items as $key => $item) {
+        $product = ProductVariant::where('id', $key)->with(['product' => function ($query) {
           $query->select('id', 'name', 'image', 'sku_code');
-        }])->select('id', 'product_id', 'sku','attributes', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
+        }])->select('id', 'product_id', 'sku', 'attributes', 'stock_quantity', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')->first();
         $this->items[$key]['item'] = $product;
-        if(($product?->promotion_price > 0) && ($product?->promotion_start_date <= date('Y-m-d')) && ($product?->promotion_end_date >= date('Y-m-d')))
+        if (($product?->promotion_price > 0) && ($product?->promotion_start_date <= date('Y-m-d')) && ($product?->promotion_end_date >= date('Y-m-d')))
           $this->items[$key]['price'] = $product?->promotion_price;
         else
           $this->items[$key]['price'] = $product?->price;
@@ -80,8 +82,9 @@ class Cart
     }
   }
 
-  public function remove($id) {
-    if($this->items && array_key_exists($id, $this->items)) {
+  public function remove($id)
+  {
+    if ($this->items && array_key_exists($id, $this->items)) {
       $qty = $this->items[$id]['qty'];
       $price = $this->items[$id]['price'];
       $this->items = Arr::except($this->items, $id);
@@ -94,7 +97,8 @@ class Cart
     }
   }
 
-  public function updateFee($fee) {
+  public function updateFee($fee)
+  {
     $this->fee = $fee;
     return true;
   }

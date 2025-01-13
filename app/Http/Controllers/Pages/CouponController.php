@@ -16,7 +16,7 @@ class CouponController extends Controller
             ['start_date', '<=', date('Y-m-d')],
             ['end_date', '>=', date('Y-m-d')],
             ['at_home_page', '=', false]
-          ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
+        ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
         $coupons = Coupon::all();
         $savedCoupons = [];
 
@@ -35,7 +35,7 @@ class CouponController extends Controller
     {
         $user = Auth::user();
         $userCoupons = $user->userCoupons()->with('coupon')->where('is_used', false)
-        ->where('used_at', null)->get();
+            ->where('used_at', null)->get();
         $coupons = $userCoupons->map(function ($userCoupon) {
             return [
                 'id' => $userCoupon?->coupon?->id,
@@ -48,7 +48,7 @@ class CouponController extends Controller
                 'description' => $userCoupon?->coupon?->description,
             ];
         });
- // Assuming the user has a relationship with coupons
+        // Assuming the user has a relationship with coupons
         return response()->json(['coupons' => $coupons]);
     }
     public function validateCoupon(Request $request)
@@ -65,7 +65,7 @@ class CouponController extends Controller
         $coupon = $userCoupon->coupon;
 
         $currentDate = now()->startOfDay();
-        
+
         if (($coupon?->start_date && $currentDate < $coupon->start_date) || ($coupon?->end_date && $currentDate > $coupon->end_date)) {
             return response()->json(['success' => false, 'message' => 'Mã giảm giá đã hết hạn hoặc chưa đến thời gian sử dụng.']);
         }
@@ -81,7 +81,7 @@ class CouponController extends Controller
 
         $finalPrice = $totalPrice - $discountAmount;
 
-        return response()->json(['success' => true,'coupon_id' => $couponId, 'discount_amount' => $discountAmount, 'final_price' => $finalPrice]);
+        return response()->json(['success' => true, 'coupon_id' => $couponId, 'discount_amount' => $discountAmount, 'final_price' => $finalPrice]);
     }
 
     public function saveCoupon(Request $request)

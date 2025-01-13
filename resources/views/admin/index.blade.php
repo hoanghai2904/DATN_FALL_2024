@@ -8,6 +8,25 @@
 
 @section('custom-css')
     <style>
+      /* Đặt cho đoạn văn tổng doanh thu và tổng lợi nhuận */
+p {
+    font-size: 18px; /* Tăng kích thước chữ */
+    font-weight: normal; /* Đặt mặc định font-weight cho text */
+    margin: 10px 0; /* Thêm khoảng cách giữa các đoạn */
+}
+
+/* Đặt cho các span chứa tổng doanh thu và tổng lợi nhuận */
+#totalRevenue, #totalProfit {
+    font-weight: bold; /* Làm chữ đậm */
+    font-size: 20px; /* Làm chữ to lên một chút */
+    color: #1a73e8; /* Chỉnh màu cho tiền (ví dụ màu xanh) */
+}
+
+/* Tùy chọn: Để chữ trong các đoạn <p> có thể đậm lên */
+p span {
+    font-size: 22px; /* Tăng thêm kích thước chữ nếu cần */
+}
+
         .form-action select.form-control {
             position: static;
             width: 100%;
@@ -88,7 +107,7 @@
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="{{ route('admin.product.index') }}" class="small-box-footer">More info <i
+                <a href="{{ route('admin.products.index') }}" class="small-box-footer">More info <i
                         class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -113,7 +132,6 @@
 
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        {{-- dashboard --}}
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
@@ -131,313 +149,149 @@
                                 <div class="box-header with-border">
                                     <div style="display: flex; align-items: center; justify-content: space-between;">
                                         <h3 class="box-title">Thống Kê Doanh Thu Bán Hàng</h3>
+                                        <div class="form-action">
+                                            <form action="{{ route('admin.statistic.edit') }}" method="POST"
+                                                accept-charset="utf-8">
+                                                @csrf
+                                                <div class="row" style="margin-right: -5px; margin-left: -5px;">
+                                                    <!-- Dropdown chọn ngày -->
+                                                    <div class="col-md-3 col-sm-4 col-xs-12" style="padding-right: 5px; padding-left: 5px;">
+                                                      <label for="select-day">Chọn Ngày</label>
+                                                      <input type="text" id="select-day" class="form-control change-statistic" placeholder="Chọn ngày" />
+                                                  </div>
+                                                  
+                                                  <div class="col-md-3 col-sm-4 col-xs-12" style="padding-right: 5px; padding-left: 5px;">
+                                                      <label for="select-month">Chọn Tháng</label>
+                                                      <input type="text" id="select-month" class="form-control change-statistic" placeholder="Chọn tháng" />
+                                                  </div>
+                                                  
+                                                  <div class="col-md-3 col-sm-4 col-xs-12" style="padding-right: 5px; padding-left: 5px;">
+                                                      <label for="select-year">Chọn Năm</label>
+                                                      <input type="text" id="select-year" class="form-control change-statistic" placeholder="Chọn năm" />
+                                                  </div>
+                                                  
 
-                    <div class="form-action">
-                      <form action="{{ route('admin.statistic.edit') }}" method="POST" accept-charset="utf-8">
-                        @csrf
-                        <div class="row" style="margin-right: -5px; margin-left: -5px;">
-                          <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 5px; padding-left: 5px;">
-                            <select class="form-control change-statistic" name="month">
-                              <option value="">-- Chọn Tháng --</option>
-                              @for ($i = 0; $i < 12; $i++)
-                                <option value="{{ $i + 1 }}">Tháng {{ $i + 1 }}</option>
-                              @endfor
-                            </select>
-                          </div>
-                          <div class="col-md-6 col-sm-6 col-xs-6" style="padding-right: 5px; padding-left: 5px;">
-                            <select class="form-control change-statistic" name="year">
-                              <option value="">-- Chọn Năm --</option>
-                              @for ($i = 0; $i < 5; $i++)
-                                <option value="{{ date('Y') - $i }}">Năm {{ date('Y') - $i }}</option>
-                              @endfor
-                            </select>
-                          </div>
+                                                    {{-- <div class="col-md-3 col-sm-4 col-xs-12"
+                                                        style="padding-right: 5px; padding-left: 5px;">
+                                                        <button type="submit" class="btn btn-primary"
+                                                            style="margin-top: 26px;">Lọc</button>
+                                                    </div> --}}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Biểu đồ doanh thu bán hàng, các biểu đồ tròn sẽ được gộp gọn trong cùng một hàng -->
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12" style="padding: 10px;">
+                                        <div id="salesChart" style="width: 100%; height: 300px;"></div>
+                                    </div>
+                                   
+                                </div>
+
+                                {{-- <div class="row">
+                                   
+                                    <div class="col-md-5 col-sm-12" style="padding: 10px;">
+                                      <div id="productPieChart" style="width: 100%; height: 300px;"></div>
+                                  </div>
+                                    <div class="col-md-7 col-sm-12" style="padding: 10px;">
+                                        <div id="profitChart" style="width: 100%; height: 300px;"></div>
+                                    </div>
+                                </div> --}}
+
+                                <!-- Thông tin tổng doanh thu, lợi nhuận -->
+                                <div>
+                                    <p>Tổng Doanh Thu: <span id="totalRevenue"> </span></p>
+                                    <p>Tổng Lợi Nhuận: <span id="totalProfit"> </span></p>
+                                    
+                                </div>
+                            </div>
                         </div>
-                      </form>
-                    </div>
                   </div>
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                  <div id="print">
-                    <div class="box box-default box-chart">
-                      <div class="box-header with-border text-center">
-                        <h3 class="box-title">Biểu Đồ Kinh Doanh Tháng {{ date('m').' Năm '.date('Y') }}</h3>
-                      </div>
-                      <div class="box-body">
-                        <div class="row">
-                          <div class="col-md-8">
-                            <div class="chart">
-                              <!-- Sales Chart Canvas -->
-                              <canvas id="salesChart" style="height: 300px;"></canvas>
-                            </div>
-                            <p class="text-center">
-                              <i>Hình 1: Biểu đồ doanh số bán hàng</i>
-                            </p>
-                            <!-- /.chart-responsive -->
-                          </div>
-                          <!-- /.col -->
-                          <div class="col-md-4 col-sm-4 col-xs-4">
-                            <div class="chart" style="margin-bottom: 10px;">
-                              <!-- Sales Chart Canvas -->
-                              <div id="quantityChart" style="width: 200px; height: 200px; margin: 0 auto;"></div>
-                            </div>
-                            <!-- /.chart-responsive -->
-                            <p class="text-center">
-                              <i>Hình 2: Thị phần sản phẩm bán được theo danh mục</i>
-                            </p>
-                          </div>
-                        </div>
-                        <!-- /.row -->
-                        <div class="row">
-                      
-                          <!-- /.col -->
-                          
-                      </div>
-                      <div class="box-footer" style="border-bottom: 1px solid #f4f4f4;">
-                        <div class="row">
-                          <!-- /.col -->
-                          <div class="col-sm-3 col-xs-3">
-                            <div class="description-block border-right description-order">
-                              <h5 class="description-header">{{ $data['count_orders'] }}</h5>
-                              <span class="description-text">ĐƠN HÀNG</span>
-                            </div>
-                            <!-- /.description-block -->
-                          </div>
-                          <div class="col-sm-3 col-xs-3">
-                            <div class="description-block border-right description-product">
-                              <h5 class="description-header">{{ $data['count_products'] }}</h5>
-                              <span class="description-text">SẢN PHẨM BÁN RA</span>
-                            </div>
-                            <!-- /.description-block -->
-                          </div>
-                          <!-- /.col -->
-                          <div class="col-sm-3 col-xs-3">
-                            <div class="description-block border-right description-revenue">
-                              <h5 class="description-header"><span style="color: #f30;">{{ number_format($data['total_revenue'],0,',','.').' VNĐ' }}</span></h5>
-                              <span class="description-text">DOANH THU THÁNG</span>
-                            </div>
-                            <!-- /.description-block -->
-                          </div>
-                          <!-- /.col -->
-                          <div class="col-sm-3 col-xs-3">
-                            <div class="description-block description-profit">
-                              <h5 class="description-header"><span style="color: #f30;">{{ number_format($data['total_profit'],0,',','.').' VNĐ' }}</span></h5>
-                              <span class="description-text">LỢI NHUẬN THÁNG</span>
-                            </div>
-                            <!-- /.description-block -->
-                          </div>
-                          <!-- /.col -->
-                        </div>
-                      </div>
-                    </div>
-                    <div class="box box-default box-table">
-                      <div class="box-header with-border text-center">
-                        <h3 class="box-title">Danh Sách Sản Phẩm Xuất Kho Tháng {{ date('m').' Năm '.date('Y') }}</h3>
-                      </div>
-                      <div class="box-body">
-                        <div class="table-responsive">
-                          <table class="table table-striped">
-                            <thead>
-                              <tr>
-                                <th style="text-align: center; vertical-align: middle;">STT</th>
-                                <th style="vertical-align: middle;">Mã Sản Phẩm</th>
-                                <th style="vertical-align: middle;">Tên Sản Phẩm</th>
-                                <th style="vertical-align: middle;">Loại</th>
-                                <th style="vertical-align: middle;">Đơn Hàng</th>
-                                <th style="vertical-align: middle;">Ngày Xuất</th>
-                                <th style="text-align: center; vertical-align: middle;">Số Lượng</th>
-                                {{-- <th style="vertical-align: middle;">Giá Nhập</th>
-                                <th style="vertical-align: middle;">Giá Xuất</th> --}}
-                                <th style="vertical-align: middle;">Doanh Thu</th>
-                                <th style="vertical-align: middle;">Lợi Nhuận</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <?php $price = 0; ?>
-                              <?php $profit = 0; ?>
-                              @foreach($data['order_details'] as $key => $order_detail)
-                                <?php $price = $price + $order_detail->price * $order_detail->quantity- $order_detail->order->discount; ?>
-                                <?php $profit = $profit + ($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount); ?>
-                                <tr>
-                                  <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}</td>
-                                  <td style="vertical-align: middle;">{{ '#'.$order_detail->product_detail->product->sku_code }}</td>
-                                  <td style="vertical-align: middle;">{{ $order_detail->product_detail->product->name }}</td>
-                                  <td style="vertical-align: middle;">{{ $order_detail->product_detail->color }}</td>
-                                  <td style="vertical-align: middle;">{{ '#'.$order_detail->order->order_code }}</td>
-                                  <td style="vertical-align: middle;">{{ date_format($order_detail->created_at, 'd/m/Y') }}</td>
-                                  <td style="text-align: center; vertical-align: middle;">{{ $order_detail->quantity }}</td>
-                                  {{-- <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->product_detail->import_price,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price,0,',','.') }} VNĐ</span></td> --}}
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format($order_detail->price * $order_detail->quantity - $order_detail->order->discount,0,',','.') }} VNĐ</span></td>
-                                  <td style="vertical-align: middle;"><span style="color: #f30;">{{ number_format(($order_detail->quantity * ($order_detail->price - $order_detail->product_detail->import_price))-($order_detail->order->discount) ,0,',','.') }} VNĐ</span></td>
-                                </tr>
-                              @endforeach
-                              <tr>
-                                <td colspan="11" style="text-align: right;">
-                                  <i style="margin-right: 10px;">*Tổng Doanh Thu = <span style="color: #f30;">{{ number_format($price,0,',','.') }} VNĐ</span></i>
-                                  <i>*Tổng Lợi Nhuận = <span style="color: #f30;">{{ number_format($profit,0,',','.') }} VNĐ</span></i>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- ./box-body -->
-                <div class="box-footer">
-                  <div class="row">
-                    <div class="col-xs-12">
-                      <button class="btn btn-success btn-print pull-right"><i class="fa fa-print"></i> In Báo Cáo</button>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.box-footer -->
-              </div>
-              <!-- /.box -->
             </div>
-            <!-- /.col -->
-          </div>
-      </div>
+         
+          
+          
+          
+        </div>
+
+
+        
     </div>
-  </div>
-  {{-- order status --}}
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Thống kê trạng thái đơn hàng
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-         <div class="row">
-            @foreach ($orderStatuses as $orderStatus)
-              <div class="col-lg-3 col-xs-6">
-                <div class="small-box bg-green">
-                  <div class="inner">
-                    <h4>{{ $orderStatus['status'] }}</h3>
-  
-                    <h2>{{$orderStatus['count']}}</h2>
-                  </div>
-                </div>
-              </div>
-            @endforeach
-          </div>
-      </div>
-    </div>
-  </div>
-  {{-- lastest order --}}
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingThree">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-          Đơn Hàng Mới Nhất
-        </a>
-      </h4>
-    </div>
-    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-      <div class="panel-body">
-         <table id="order-table" class="table table-hover" style="width:100%; min-width: 1024px;">
-            <thead>
-              <tr>
-                <th data-width="10px">ID</th>
-                <th data-orderable="false" data-width="85px">Mã Đơn Hàng</th>
-                <th data-orderable="false" data-width="100px">Tài Khoản</th>
-                <th data-orderable="false" data-width="100px">Tên</th>
-                <th data-orderable="false">Email</th>
-                <th data-orderable="false" data-width="70px">Điện Thoại</th>
-                <th data-orderable="false">Phương Thức Thanh Toán</th>
-                <th class="sort">Trạng thái thanh toán</th>
-                <th data-width="60px" data-type="date-euro">Ngày đặt hàng</th>
-                <th data-width="66px">Trạng thái đơn hàng</th>
-                <th data-orderable="false" data-width="130px">Tác Vụ</th>
-              </tr>
-            </thead>
+
+
+
+
+
+    {{-- lastest order --}}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                    href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Đơn Hàng Mới Nhất
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Danh Sách Đơn Hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="order-table" class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px;">ID</th>
+                                            <th>Mã Đơn Hàng</th>
+                                            
+                                            <th>Tên</th>
+                                            <th>Email</th>
+                                            <th>Điện Thoại</th>
+                                            <th>Phương Thức Thanh Toán</th>
+                                            <th>Ngày đặt hàng</th>
+                                        </tr>
+                                    </thead>
             
-            <tbody>
-              @foreach($orders as $order)
-                <tr>
-                  <td class="text-center">{{ $order->id }}</td>
-                  <td>{{ '#'.$order->order_code }}</td>
-                  <td>
-                    @if ($order->user)
-                      <a href="{{ route('admin.user_show', ['id' => $order->user->id]) }}" class="text-left" title="{{ $order->user->name }}">{{ $order->user->name }}</a>
-                    @else
-                      <span>---</span>
-                    @endif
-                  </td>
-                  <td>{{ $order->name }}</td>
-                  <td>{{ $order->email }}</td>
-                  <td>{{ $order->phone }}</td>
-                  <td>{{ $order->payment_method?->name }}</td>
-                  <td>{{ $order?->is_paid ? 'Đã thanh toán' : 'Chưa thanh toán' }}</td>
-                  <td> {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y')}}</td>
-                  @php
-                      $statusLabels = [
-                          1 => ['label' => 'label-default', 'text' => 'Chờ xác nhận'],
-                          2 => ['label' => 'label-info', 'text' => 'Đã xác nhận'],
-                          3 => ['label' => 'label-info', 'text' => 'Chuẩn bị '],
-                          4 => ['label' => 'label-warning', 'text' => 'Đang giao'],
-                          6 => ['label' => 'label-success', 'text' => 'Thành công'],
-                          8 => ['label' => 'label-danger', 'text' => 'Hủy'],
-                      ];
-                  @endphp
-                  <td>
-                      @if(isset($statusLabels[$order->status]))
-                          <span class="label {{ $statusLabels[$order->status]['label'] }}" style="font-size:13px; display: inline-block; width: 100%">
-                              {{ $statusLabels[$order->status]['text'] }}
-                          </span>
-                      @endif
-                  </td>
-                  <td>
-                    <a href="{{ route('admin.order.show', ['id' => $order->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chi Tiết">
-                      <i class="fa fa-eye" aria-hidden="true"></i>
-                    </a>
-                    {{-- @if ($order->status === 1 || $order->status === 2 || $order->status === 3)
-                      <div class="btn-group">
-                        <button type="button" style="height: 30px;" class="btn btn-success btn-xs dropdown-toggle"
-                        data-toggle="dropdown" aria-expanded='true'>
-                          Thao tác
-                          <span class="caret"></span>
-                          <span class="sr-only">Toggle-dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                          @if (($order->status === 1 && $order->payment_method_id == 1) || ($order->status === 1 && $order->payment_method_id == 2 && $order->is_paid))
-                            <li>
-                              <a href="{{route('admin.orderTransaction',['confirmed',$order->id])}}"></i>Đã xác nhận</a>
-                            </li>
-                          @endif
-                          @if ($order->status === 2)
-                            <li>
-                              <a href="{{route('admin.orderTransaction',['delivering',$order->id])}}"></i>Đang Vận Chuyển</a>
-                            </li>
-                          @endif
-                          @if ($order->status === 3)
-                            <li>
-                              <a href="{{route('admin.orderTransaction',['delivered',$order->id])}}" ></i>Đã Giao Hàng</a>
-                            </li>
-                          @endif
-                          @if ($order->status === 1)
-                            <li>
-                              <a href="{{route('admin.orderTransaction',['cancel',$order->id])}}" ></i>Hủy</a>
-                            </li>
-                          @endif
-                        </ul>
-                      </div>
-                      @else
-                    @endif --}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    <tbody>
+                                        @foreach ($orders as $order)
+                                            <tr>
+                                                <td class="text-center">{{ $order->id }}</td>
+                                                <td>{{ '#' . $order->order_code }}</td>
+                                              
+                                                <td>{{ $order->name }}</td>
+                                                <td>{{ $order->email }}</td>
+                                                <td>{{ $order->phone }}</td>
+                                                <td>{{ $order->payment_method?->name }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
+                                                @php
+                                                    $statusLabels = [
+                                                        1 => ['label' => 'label-default', 'text' => 'Chờ xác nhận'],
+                                                        2 => ['label' => 'label-info', 'text' => 'Đã xác nhận'],
+                                                        3 => ['label' => 'label-info', 'text' => 'Chuẩn bị '],
+                                                        4 => ['label' => 'label-warning', 'text' => 'Đang giao'],
+                                                        6 => ['label' => 'label-success', 'text' => 'Thành công'],
+                                                        8 => ['label' => 'label-danger', 'text' => 'Hủy'],
+                                                    ];
+                                                @endphp
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 
@@ -462,354 +316,339 @@
     <!-- FastClick -->
     <script src="{{ asset('AdminLTE/bower_components/fastclick/lib/fastclick.js') }}"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/date-euro.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
 @endsection
 
 @section('custom-js')
     <script>
-        $(document).ready(function() {
-            // -----------------------
-            // - MONTHLY SALES CHART -
-            // -----------------------
+    $(document).ready(function() {
+    const formatMoney = (value) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(value);
+    };
 
-            // Get context with jQuery - using jQuery's .get() method.
-            var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
-            // This will get the first returned node in the jQuery collection.
-            var salesChart = new Chart(salesChartCanvas);
+    // Dữ liệu từ backend
+    const chartData = {
+        labels: {!! json_encode($data['labels']) !!},
+        revenues: {!! json_encode($data['revenues']) !!},
+        profits: {!! json_encode($data['profits']) !!}, // Dữ liệu lợi nhuận
+        producers: {!! json_encode($data['producer']) !!},
+        weeklyRevenues: {!! json_encode($data['weekly_revenues']) !!},
+        monthlyRevenues: {!! json_encode($data['monthly_revenues']) !!},
+        yearlyRevenues: {!! json_encode($data['yearly_revenues']) !!},
+        totalRevenue: {!! json_encode($data['total_revenue']) !!},
+        totalProfit: {!! json_encode($data['total_profit']) !!},
+        countProducts: {!! json_encode($data['count_products']) !!},
+        countOrders: {!! json_encode($data['count_orders']) !!},
+    };
 
-            var salesChartData = {
-                labels: {!! json_encode($data['labels']) !!},
-                datasets: [{
-                    label: 'Doanh Số Bán Hàng',
-                    fillColor: 'rgba(60,141,188,0.9)',
-                    strokeColor: 'rgba(60,141,188,0.8)',
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: {!! json_encode($data['revenues']) !!}
+    // Biểu đồ doanh thu hàng tháng
+    const salesChartDom = document.getElementById('salesChart');
+    const salesChart = echarts.init(salesChartDom);
+console.log("char:",chartData);
+
+    const salesChartOption = {
+        title: {
+            text: '',
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: (params) => {
+    const values = params.reduce((acc, param) => {
+        if (param.seriesName === 'Doanh thu') acc.revenue = param.value || 0;
+        if (param.seriesName === 'Lợi nhuận') acc.profit = param.value || 0;
+        return acc;
+    }, { revenue: 0, profit: 0 });
+
+    const axisValue = params[0]?.axisValue || 'Không có dữ liệu';
+
+    return `${axisValue}: Doanh thu ${formatMoney(values.revenue)}, Lợi nhuận ${formatMoney(values.profit)}`;
+}
+        },
+        legend: {
+            data: ['Doanh thu', 'Lợi nhuận']
+        },
+        xAxis: {
+            type: 'category',
+            data: chartData.labels
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: 'Doanh thu',
+                data: chartData.revenues,
+                type: 'bar', // Cột doanh thu
+                smooth: true,
+                color: '#42a5f5' // Màu cho cột doanh thu
+            },
+            {
+                name: 'Lợi nhuận',
+                data: chartData.profits,
+                type: 'bar', // Cột lợi nhuận
+                smooth: true,
+                color: '#66bb6a' // Màu cho cột lợi nhuận
+            }
+        ]
+    };
+
+    salesChart.setOption(salesChartOption);
+// Cập nhật giá trị vào các phần tử HTML
+  document.getElementById('totalRevenue').innerText = formatMoney(chartData.totalRevenue).toLocaleString();
+  document.getElementById('totalProfit').innerText = formatMoney(chartData.totalProfit).toLocaleString();
+    // Hàm tạo biểu đồ cột (bar chart)
+    const generateBarChart = (elementId, title, dataKey) => {
+        const chartDom = document.getElementById(elementId);
+        if (!chartDom) {
+            console.error(`Không tìm thấy element với id: ${elementId}`);
+            return;
+        }
+
+        const chart = echarts.init(chartDom);
+
+        // Xử lý dữ liệu
+        const data = Object.keys(chartData.producers).map(key => ({
+            value: chartData.producers[key]?.[dataKey] ?? 0,
+            name: key
+        }));
+        console.log(data);
+        // Cấu hình biểu đồ
+        const option = {
+            title: {
+                text: title,
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c}' // Hiển thị tên và giá trị khi hover
+            },
+            xAxis: {
+                type: 'category',
+                data: data.map(item => item.name) // Tên các mục
+            },
+            yAxis: {
+                type: 'value',
+                min: 0, // Bắt đầu từ 0
+                axisLabel: {
+                    formatter: (value) => formatMoney(value) // Định dạng giá trị trục Y
+                }
+            },
+            series: [{
+                name: title,
+                type: 'bar',
+                data: data.map(item => ({
+                    value: item.value,
+                    name: item.name
+                })),
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: '{c}' // Hiển thị giá trị
+                }
+            }]
+        };
+
+        // Vẽ biểu đồ
+        chart.setOption(option);
+    };
+
+    // Tạo các biểu đồ cột
+    // generateBarChart('quantityChart', 'Số Lượng Sản Phẩm', 'quantity');
+    // generateBarChart('revenueChart', 'Doanh Thu', 'revenue');
+    // generateBarChart('profitChart', 'Lợi Nhuận', 'profit');
+
+    // Biểu đồ sản phẩm theo nhà sản xuất
+    // const generateProducerChart = () => {
+    //     const chartDom = document.getElementById('productPieChart');
+    //     const chart = echarts.init(chartDom);
+
+    //     const data = Object.keys(chartData.producers).map(key => ({
+    //         value: chartData.producers[key].quantity,
+    //         name: key
+    //     }));
+
+    //     const option = {
+    //         title: {
+    //             text: 'Sản Phẩm Theo Danh Mục',
+    //             left: 'center'
+    //         },
+    //         tooltip: {
+    //             trigger: 'item',
+    //             formatter: '{b}: {c} ({d}%)'
+    //         },
+    //         legend: {
+    //             orient: 'vertical',
+    //             left: 'left',
+    //             data: Object.keys(chartData.producers)
+    //         },
+    //         series: [{
+    //             name: 'Nhà sản xuất',
+    //             type: 'pie',
+    //             radius: ['40%', '70%'],
+    //             data
+    //         }]
+    //     };
+
+    //     chart.setOption(option);
+    // };
+
+    // generateProducerChart();
+
+    // Xử lý thay đổi dữ liệu
+    $('input.change-statistic').on('change', function() {
+    const day = $('#select-day').length ? $('#select-day').val() : null;
+    const month = $('#select-month').length ? $('#select-month').val() : null;
+    const year = $('#select-year').length ? $('#select-year').val() : null;
+
+    // Kiểm tra sự tồn tại của CSRF token
+    const csrfToken = $('meta[name="csrf-token"]').length ? $('meta[name="csrf-token"]').attr('content') : null;
+
+    if (!csrfToken) {
+        console.error('CSRF token không tồn tại!');
+        return;
+    }
+
+    const overlay = $('<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
+    $(this).closest('.box').append(overlay);
+
+    // Lấy dữ liệu từ form và chỉ gửi tham số có giá trị
+    const data = {};
+    if (day) data.day = day;
+    if (month) data.month = month;
+    if (year) data.year = year;
+
+    // Gửi yêu cầu AJAX tới backend
+    $.ajax({
+        url: '{{ route('admin.statistic.edit') }}', // Đảm bảo URL đúng
+        type: 'GET', // Hoặc POST nếu cần
+        data: data, // Gửi dữ liệu lọc
+        dataType: 'JSON',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken  // Thêm CSRF token vào header
+        },
+        beforeSend: function() {
+            // Hiển thị overlay khi đang gửi yêu cầu
+            overlay.show();
+        },
+        success: function(chartData) {
+            overlay.remove(); // Xóa overlay khi dữ liệu đã được tải xong
+            console.log("data:",chartData);
+            
+            // Cập nhật biểu đồ doanh thu
+            salesChart.setOption({
+                xAxis: {
+                    data: chartData.labels
+                },
+                series: [{
+                    data: chartData.revenues
+                }, {
+                    data: chartData.profits
                 }]
-            };
+            });
 
-            var salesChartOptions = {
-                // Boolean - If we should show the scale at all
-                showScale: true,
-                scaleLabel: function(label) {
-                    return formatMoney(label.value);
-                },
-                tooltipTemplate: function(label) {
-                    return label.label.toString() + " : " + formatMoney(label.value);
-                },
-                tooltipFontSize: 12,
-                // Boolean - Whether grid lines are shown across the chart
-                scaleShowGridLines: false,
-                // String - Colour of the grid lines
-                scaleGridLineColor: 'rgba(0,0,0,.05)',
-                // Number - Width of the grid lines
-                scaleGridLineWidth: 1,
-                // Boolean - Whether to show horizontal lines (except X axis)
-                scaleShowHorizontalLines: true,
-                // Boolean - Whether to show vertical lines (except Y axis)
-                scaleShowVerticalLines: true,
-                // Boolean - Whether the line is curved between points
-                bezierCurve: true,
-                // Number - Tension of the bezier curve between points
-                bezierCurveTension: 0.3,
-                // Boolean - Whether to show a dot for each point
-                pointDot: false,
-                // Number - Radius of each point dot in pixels
-                pointDotRadius: 4,
-                // Number - Pixel width of point dot stroke
-                pointDotStrokeWidth: 1,
-                // Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-                pointHitDetectionRadius: 20,
-                // Boolean - Whether to show a stroke for datasets
-                datasetStroke: true,
-                // Number - Pixel width of dataset stroke
-                datasetStrokeWidth: 2,
-                // Boolean - Whether to fill the dataset with a color
-                datasetFill: true,
-                // String - A legend template
-                legendTemplate: '<ul class=\'<%=name.toLowerCase()%>-legend\'><% for (var i=0; i<datasets.length; i++){%><li><span style=\'background-color:<%=datasets[i].lineColor%>\'></span><%=datasets[i].label%></li><%}%></ul>',
-                // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-                maintainAspectRatio: true,
-                // Boolean - whether to make the chart responsive to window resizing
-                responsive: true
-            };
-
-            // Create the line chart
-            var myChart = salesChart.Line(salesChartData, salesChartOptions);
-
-            // ---------------------------
-            // - END MONTHLY SALES CHART -
-            // ---------------------------
-
-            /* DONUT CHART */
-            var options = {
-                series: {
-                    pie: {
-                        show: true,
-                        radius: 1,
-                        innerRadius: 0.5,
-                        label: {
-                            show: true,
-                            radius: 2 / 3,
-                            formatter: labelFormatter,
-                            threshold: 0.1
-                        }
-                    }
-                },
-                colors: ['#3498db', '#2ecc71', '#e67e22', '#e74c3c', '#f1c40f', '#9b59b6', '#34495e'],
-                legend: {
-                    show: false
-                }
-            };
-
-            var quantityData = [
-                @foreach ($data['producer'] as $key => $producer)
-                    {
-                        label: '{{ $key }}',
-                        data: {{ $producer['quantity'] }}
-                    },
-                @endforeach
-            ];
-
-            var quantityChart = $.plot('#quantityChart', quantityData, options);
-
-            var revenueData = [
-                @foreach ($data['producer'] as $key => $producer)
-                    {
-                        label: '{{ $key }}',
-                        data: {{ $producer['quantity'] }}
-                    },
-                @endforeach
-            ];
-
-            var revenueChart = $.plot('#revenueChart', revenueData, options);
-
-            var profitData = [
-                @foreach ($data['producer'] as $key => $producer)
-                    {
-                        label: '{{ $key }}',
-                        data: {{ $producer['profit'] }}
-                    },
-                @endforeach
-            ];
-
-            var profitChart = $.plot('#profitChart', profitData, options);
-            /* END DONUT CHART */
-
-            $('select.change-statistic').on('change', function() {
-                $(this).closest('.box').append(
-                    '<div class="overlay"><i class="fa fa-refresh fa-spin"></i></div>');
-                var url = $(this).closest('form').attr('action');
-                var data = $(this).closest('form').serialize();
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        console.log(data)
-                        $('div.overlay').remove();
-                        $('#print .box-chart .box-title').text(data.text.title1);
-                        $('#print .box-table .box-title').text(data.text.title2);
-                        $('#print .box-chart .description-order .description-header').text(data
-                            .count_orders);
-                        $('#print .box-chart .description-product .description-header').text(
-                            data.count_products);
-                        $('#print .box-chart .description-revenue .description-header span')
-                            .text(formatMoney(data.total_revenue));
-                        $('#print .box-chart .description-revenue .description-text').text(data
-                            .text.revenue);
-                        $('#print .box-chart .description-profit .description-header span')
-                            .text(formatMoney(data.total_profit));
-                        $('#print .box-chart .description-profit .description-text').text(data
-                            .text.profit);
-
-                        myChart.destroy();
-
-                        var salesChartData = {
-                            labels: data.labels,
-                            datasets: [{
-                                label: 'Doanh Số Bán Hàng',
-                                fillColor: 'rgba(60,141,188,0.9)',
-                                strokeColor: 'rgba(60,141,188,0.8)',
-                                pointColor: '#3b8bba',
-                                pointStrokeColor: 'rgba(60,141,188,1)',
-                                pointHighlightFill: '#fff',
-                                pointHighlightStroke: 'rgba(60,141,188,1)',
-                                data: data.revenues
-                            }]
-                        };
-
-                        myChart = salesChart.Line(salesChartData, salesChartOptions);
-
-                        quantityData = [];
-                        revenueData = [];
-                        profitData = [];
-
-                        $.each(data.producer, function(key, value) {
-                            quantityData.push({
-                                label: key,
-                                data: value.quantity
-                            });
-                            revenueData.push({
-                                label: key,
-                                data: value.revenue
-                            });
-                            profitData.push({
-                                label: key,
-                                data: value.profit
-                            });
-                        });
-
-                        quantityChart.destroy();
-                        revenueChart.destroy();
-                        profitChart.destroy();
-
-                        quantityChart = $.plot('#quantityChart', quantityData, options);
-                        revenueChart = $.plot('#revenueChart', revenueData, options);
-                        profitChart = $.plot('#profitChart', profitData, options);
-
-                        $('.box-table table tbody').empty();
-
-                        var price = 0;
-                        var profit = 0;
-
-                        $.each(data.order_details, function(key, value) {
-
-                            price = price + value.price * value.quantity;
-                            profit = profit + value.quantity * (value.price - value
-                                .product_detail.import_price);
-
-                            $('.box-table table tbody').append(
-                                '<tr>' +
-                                '<td style="text-align: center; vertical-align: middle;">' +
-                                (key + 1) + '</td>' +
-                                '<td style="vertical-align: middle;"> #' + value
-                                .product_detail.product.sku_code + '</td>' +
-                                '<td style="vertical-align: middle;">' + value
-                                .product_detail.product.name + '</td>' +
-                                '<td style="vertical-align: middle;">' + value
-                                .product_detail.color + '</td>' +
-                                '<td style="vertical-align: middle;"> #' + value
-                                .order.order_code + '</td>' +
-                                '<td style="vertical-align: middle;">' + formatDate(
-                                    value.created_at) + '</td>' +
-                                '<td style="text-align: center; vertical-align: middle;">' +
-                                value.quantity + '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.product_detail.import_price) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.price) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.price * value.quantity) +
-                                '</span>' +
-                                '</td>' +
-                                '<td style="vertical-align: middle;">' +
-                                '<span style="color: #f30;">' +
-                                formatMoney(value.quantity * (value.price - value
-                                    .product_detail.import_price)) +
-                                '</span>' +
-                                '</td>' +
-                                '</tr>'
-                            );
-                        });
-
-                        $('.box-table table tbody').append(
-                            '<tr>' +
-                            '<td colspan="11" style="text-align: right;">' +
-                            '<i style="margin-right: 10px;">*Tổng Doanh Thu = <span style="color: #f30;">' +
-                            formatMoney(price) + '</span></i>' +
-                            '<i>*Tổng Lợi Nhuận = <span style="color: #f30;">' +
-                            formatMoney(profit) + '</span></i>' +
-                            '</td>' +
-                            '</tr>'
-                        );
-                    },
-                    error: function(data) {
-                        var errors = data.responseJSON;
-                        Swal.fire({
-                            title: 'Thất bại',
-                            text: errors.msg,
-                            type: 'error'
-                        })
-                    }
+            // Hàm cập nhật biểu đồ cột
+            const updateBarChart = (chart, key) => {
+                const updatedData = Object.keys(chartData.producer).map(k => ({
+                    value: chartData.producer[k][key],
+                    name: k
+                }));
+                chart.setOption({
+                    series: [{
+                        data: updatedData
+                    }]
                 });
-            });
-        });
-    </script>
+            };
 
-    <!-- Page script -->
-    <script>
-        function labelFormatter(label, series) {
-            return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
-                label + '<br>' + Math.round(series.percent) + '%</div>'
+            // Cập nhật các biểu đồ cột
+            // const profitChart = echarts.getInstanceByDom(document.getElementById('profitChart'));
+            // updateBarChart(profitChart, 'profit');
+
+            // Cập nhật tổng doanh thu và lợi nhuận
+            
+            $('#totalRevenue').text(formatMoney(chartData.total_revenue));
+            $('#totalProfit').text(formatMoney(chartData.total_profit));
+         
+
+            // Cập nhật biểu đồ nhà sản xuất
+            // generateProducerChart(); // Cập nhật lại biểu đồ nhà sản xuất
+        },
+        error: function(xhr, status, error) {
+            overlay.remove(); // Xóa overlay nếu có lỗi
+
+            Swal.fire({
+                title: 'Thất bại',
+                text: xhr.responseJSON?.msg || 'Có lỗi xảy ra',
+                icon: 'error'
+            });
         }
+    });
+});
 
-        function formatMoney(argument) {
-            return argument.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
-        }
 
-        function formatDate(argument) {
-            var date = new Date(argument);
-            return date.getDate().toString() + '/' + (date.getMonth() + 1).toString() + '/' + date.getFullYear().toString();
-        }
+});
+
     </script>
-    <script>
-        $(document).ready(function() {
-            $('.btn-print').click(function() {
-                printJS({
-                    printable: 'print',
-                    type: 'html',
-                    documentTitle: ' ',
-                    header: 'Báo Cáo Tình Hình Kinh Doanh Website',
-                    headerStyle: 'font-size: 14px; margin-bottom: 10px;',
-                    style: '.box { margin-top: 10px; border-top: none; box-shadow: none; } ' +
-                        '@media print { .box-footer { page-break-after: always; } } ' +
-                        'table { page-break-inside:auto } ' +
-                        'tr { page-break-inside:avoid; page-break-after:auto }',
-                    css: [
-                        '{{ asset('AdminLTE/bower_components/bootstrap/dist/css/bootstrap.min.css') }}',
-                        '{{ asset('AdminLTE/dist/css/AdminLTE.min.css') }}'
-                    ]
-                });
-            });
-        });
-    </script>
-    {{-- table lastest order --}}
-    <script>
-        $(function() {
-            var table = $('#order-table').DataTable({
-                "language": {
-                    "zeroRecords": "Không tìm thấy kết quả phù hợp",
-                    "info": "Hiển thị trang <b>_PAGE_/_PAGES_</b> của <b>_TOTAL_</b> đơn hàng",
-                    "infoEmpty": "Hiển thị trang <b>1/1</b> của <b>0</b> đơn hàng",
-                    "infoFiltered": "(Tìm kiếm từ <b>_MAX_</b> đơn hàng)",
-                    "emptyTable": "Không có dữ liệu đơn hàng",
-                },
-                "lengthChange": false,
-                "autoWidth": false,
-                "order": [],
-                "dom": '<"table-responsive"t><<"row"<"col-md-6 col-sm-6"i><"col-md-6 col-sm-6"p>>>',
-                "drawCallback": function(settings) {
-                    var api = this.api();
-                    if (api.page.info().pages <= 1) {
-                        $('#' + $(this).attr('id') + '_paginate').hide();
-                    }
-                }
-            });
+{{-- Bộ lọc filter --}}
+ {{-- <script>
+$(document).ready(function() {
+    // Hàm định dạng tiền
+    const formatMoney = (value) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(value);
+    };
 
-            $('#search-input input').on('keyup', function() {
-                table.search(this.value).draw();
-            });
-        });
+    // Dữ liệu từ backend
+    const chartData = {
+        labels: {!! json_encode($data['labels']) !!},
+        revenues: {!! json_encode($data['revenues']) !!},
+        profits: {!! json_encode($data['profits']) !!},
+        producers: {!! json_encode($data['producer']) !!},
+        weeklyRevenues: {!! json_encode($data['weekly_revenues']) !!},
+        monthlyRevenues: {!! json_encode($data['monthly_revenues']) !!},
+        yearlyRevenues: {!! json_encode($data['yearly_revenues']) !!},
+        totalRevenue: {!! json_encode($data['total_revenue']) !!},
+        totalProfit: {!! json_encode($data['total_profit']) !!},
+        countProducts: {!! json_encode($data['count_products']) !!},
+        countOrders: {!! json_encode($data['count_orders']) !!},
+    };
+
+    // Xử lý khi người dùng chọn bộ lọc
+  
+}); --}}
+
+
+ </script>
+{{-- end  --}}
+{{-- start datepiker --}}
+    <script>
+   $(document).ready(function() {
+    // Kích hoạt datepicker cho ngày
+    $('#select-day').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+    // Kích hoạt datepicker cho tháng
+    $('#select-month').datepicker({
+        format: 'mm',
+        minViewMode: 1,
+        autoclose: true,
+    });
+
+    // Kích hoạt datepicker cho năm
+    $('#select-year').datepicker({
+        format: 'yyyy',
+        minViewMode: 2,
+        autoclose: true,
+    });
+});
+
     </script>
 @endsection

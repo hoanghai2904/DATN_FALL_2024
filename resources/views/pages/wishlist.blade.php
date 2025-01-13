@@ -49,6 +49,7 @@
                 <div class="section-content">
                   <div class="product-container">
                     @foreach($wishlistItems as $item)
+                   
                     <div>
                       <div class="item-product">
                           <a href="{{ route('product_page', ['id' => $item->product->id]) }}" title="{{ $item->product->name }}">
@@ -61,12 +62,12 @@
                                 <div class="start-vote">
                                   {!! Helper::get_start_vote($item->product?->rate) !!}
                                 </div>
-                                <p style="font-weight: 600">Phân loại: {{$item?->color}}</p>
+                                <p style="font-weight: 600">Phân loại: {{ substr($item?->sku, strpos($item?->sku, '-') + 1) }}</p>
                                 @if ($item?->size)
                                     <p style="font-weight: 600">Size: {{$item?->size}}</p>
                                 @endif
                                 <div class="price">
-                                  {!! Helper::get_real_price($item->sale_price, $item->promotion_price, $item->promotion_start_date, $item->promotion_end_date) !!}
+                                  {!! Helper::get_real_price($item->price, $item->promotion_price, $item->promotion_start_date, $item->promotion_end_date) !!}
                                 </div>
                             </div>
                           </a>
