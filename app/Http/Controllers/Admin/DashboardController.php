@@ -44,17 +44,17 @@ class DashboardController extends Controller
           $date = $carbon->copy()->addDay($i)->format('d/m/Y');
           $data['labels'][] = $date;
   
-          $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
+          $order_details = OrderDetail::withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
               ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
               ->whereHas('order', function (Builder $query) {
-                  $query->where('status', '=', OrderStatusEnum::COMPLETED);
+                  $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
               })
               ->with([
                   'order' => function ($query) {
-                      $query->select('id', 'order_code', 'discount');
+                      $query->withTrashed()->select('id', 'order_code', 'discount');
                   },
                   'variants' => function ($query) {
-                      $query->select('id', 'purchase_price', 'promotion_price');
+                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price');
                   },
               ])
               ->get();

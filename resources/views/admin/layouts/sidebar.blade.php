@@ -52,7 +52,7 @@
            
             {{-- ql sp --}}
             <li
-            class="treeview {{ Helper::check_active(['admin.order.index', 'admin.order.show', 'admin.order.processing', 'admin.order.completed']) }}">
+            class="treeview {{ Helper::check_active(['admin.order.index', 'admin.products.index', 'admin.products.new', 'admin.products.edit', 'admin.attributes.index', 'admin.attributes.create', 'admin.attributes.edit']) }}">
             <a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Sản Phẩm</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
@@ -67,10 +67,10 @@
                 {{-- Product new --}}
                 <li class="{{ Helper::check_active(['admin.products.index', 'admin.products.new', 'admin.products.edit']) }}">
                     <a href="{{ route('admin.products.index') }}"><i class="fa fa-product-hunt" aria-hidden="true"></i>
-                        <span>Quản Lý Sản Phẩm new</span></a>
+                        <span>Quản Lý Sản Phẩm</span></a>
                 </li>
                 <li class="{{ Helper::check_active(['admin.attributes.index', 'admin.attributes.create', 'admin.attributes.edit']) }}">
-                    <a href="{{ route('admin.attributes.index') }}"><i class="fa fa-circle-o"></i>Thuộc tính sản phẩm </a>
+                    <a href="{{ route('admin.attributes.index') }}"><i class="fa fa-circle-o"></i>Thuộc Tính Sản Phẩm </a>
                 </li>
               
             </ul>
@@ -78,7 +78,7 @@
             {{-- <li class="{{ Helper::check_active(['admin.order.index', 'admin.order.show']) }}"><a href="{{ route('admin.order.index') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Quản Lý Đơn Hàng</span></a></li> --}}
 
             <li
-                class="treeview {{ Helper::check_active(['admin.order.index', 'admin.order.show', 'admin.order.processing', 'admin.order.completed']) }}">
+                class="treeview {{ Helper::check_active([ 'admin.order.show', 'admin.order.processing', 'admin.order.completed']) }}">
                 <a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Quản Lý Đơn Hàng</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -86,7 +86,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li class="{{ Helper::check_active(['admin.order.index', 'admin.order.show']) }}">
-                        <a href="{{ route('admin.order.index') }}"><i class="fa fa-circle-o"></i> Tất cả Đơn Hàng</a>
+                        <a href="{{ route('admin.order.index') }}"><i class="fa fa-circle-o"></i> Tất Cả Đơn Hàng</a>
                     </li>
                     <li class="{{ Helper::check_active(['admin.order.processing']) }}">
                         <a href="{{ route('admin.order.processing') }}"><i class="fa fa-circle-o"></i> Đơn Hàng Đang Xử
@@ -102,9 +102,9 @@
             <li class="{{ Helper::check_active(['admin.coupon.index', 'admin.coupon.show']) }}"><a
                     href="{{ route('admin.coupon.index') }}"><i class="fa fa-ticket" aria-hidden="true"></i> <span>Quản
                         Lý mã giảm giá</span></a></li>
-            <li class="{{ Helper::check_active(['admin.warehouse.index']) }}"><a
+            {{-- <li class="{{ Helper::check_active(['admin.warehouse.index']) }}"><a
                     href="{{ route('admin.warehouse') }}"><i class="fa fa-archive" aria-hidden="true"></i><span>Kho
-                        Hàng</span></a></li>
+                        Hàng</span></a></li> --}}
             {{-- <li class="{{ Helper::check_active(['admin.warehouse.orderDetail']) }}"><a href="{{route('admin.orderDetails')}}"><i class="fa fa-archive" aria-hidden="true"></i><span>Thống Kê Đơn Hàng</span></a></li> --}}
             {{-- <li class="{{ Helper::check_active(['admin.statistic']) }}"><a href="{{ route('admin.statistic') }}"><i class="fa fa-line-chart" aria-hidden="true"></i> <span>Thống Kê Doanh Thu</span></a></li> --}}
         </ul>

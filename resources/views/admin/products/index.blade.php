@@ -138,9 +138,9 @@
                     <a href="{{ route('admin.products.edit', ['id' => $product->id]) }}" class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                       <i class="fa fa-pencil" aria-hidden="true"></i>
                     </a>
-                    <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.products.delete') }}">
+                    {{-- <a href="javascript:void(0);" data-id="{{ $product->id }}"  class="btn btn-icon btn-sm btn-danger deleteDialog tip" title="Xóa" data-url="{{ route('admin.products.delete') }}">
                       <i class="fa fa-trash"></i>
-                    </a>
+                    </a> --}}
                   </td>
                 </tr>
               @endforeach

@@ -462,7 +462,7 @@
                                                                 Hàng</h4>
                                                         </div>
                                                         <div class="modal-body" id="modalReturnReason">
-                                                            <!-- Full return reason will be displayed here -->
+                                                            <div>{{$order->return_reason}}</div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default"
@@ -536,7 +536,7 @@
                                         <th data-orderable="false">Phương Thức Thanh Toán</th>
                                         <th class="sort">Trạng thái thanh toán</th>
                                         <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
-                                        <th data-width="66px">Lý do hoàn hàng</th>
+                                        <th data-width="66px">Lý do hủy hàng</th>
                                         <th data-width="66px">Trạng thái</th>
                                         <?php if ($order->status == 12): ?>
                                         <th data-orderable="false" data-width="130px">Tác Vụ</th>
@@ -587,10 +587,10 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                            <h4 class="modal-title" id="cancelReasonModalLabel">Lý Do Hoàn Hàng</h4>
+                                                            <h4 class="modal-title" id="cancelReasonModalLabel">Lý Do Hủy Hàng</h4>
                                                         </div>
                                                         <div class="modal-body" id="modalCancelReason">
-                                                            <!-- Full return reason will be displayed here -->
+                                                            <div>{{$order->cancel_reason}}</div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
@@ -673,21 +673,7 @@
 @endsection
 
 @section('custom-js')
-    <script>
-        // When the eye icon is clicked, load the full return reason into the modal
-        $('#returnReasonModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var reason = button.data('reason'); // Extract the reason from the data-* attribute
-            var modal = $(this);
-            modal.find('#modalReturnReason').text(reason); // Display the full reason in the modal
-        });
-        $('#cancelReasonModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var reason = button.data('reason'); // Extract the reason from the data-* attribute
-            var modal = $(this);
-            modal.find('#modalCancelReason').text(reason); // Display the full reason in the modal
-        });
-    </script>
+
     <script>
         $(function() {
             var tableConfirmed = $('#confirmed').DataTable({
