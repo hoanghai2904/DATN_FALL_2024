@@ -453,7 +453,7 @@
                                                                                 <div class="reply-item mb-3" style="margin-left: 100px" id="reply-{{ $reply->id }}">
                                                                                     <div class="vote-content">
                                                                                         <div class="vote-content-left">
-                                                                                            {{-- <img src="{{ Helper::get_image_avatar_url($vote->user->avatar_image) }}" alt=""> --}}
+                                                                                            <img src="{{ asset('images/no_avatar.jpg') }}" class="img-circle" alt="Admin">
                                                                                         </div>
                                                                                         <div class="vote-content-right" style="background-color:#f0f0f0 ; border-radius: 10px;padding:15px 10px ">
                                                                                             <div class="name" style="display: flex;">

@@ -38,10 +38,10 @@ class Product extends Model
   {
     return $this->hasMany('App\Models\Comment');
   }
-  public function product_votes()
-  {
-    return $this->hasMany('App\Models\ProductVote');
-  }
+  // public function product_votes()
+  // {
+  //   return $this->hasMany('App\Models\ProductVote');
+  // }
   public function promotions()
   {
     return $this->hasMany('App\Models\Promotion');

@@ -170,7 +170,7 @@ class ProductsController extends Controller
 
         $product = Product::select('id', 'producer_id', 'name', 'sku_code', 'rate', 'information_details', 'product_introduction')
             ->whereHas('variants', function (Builder $query) {
-                $query->where('stock_quantity', '>', 0);
+                $query->where('stock_quantity', '>=', 0);
             })
             ->where('id', $id)->with(['promotions' => function ($query) {
                 $query->select('id', 'product_id', 'content')
@@ -186,10 +186,10 @@ class ProductsController extends Controller
         if (!$product) abort(404);
 
         $product_details = ProductVariant::where('product_id', $id)
-            ->where('stock_quantity', '>', 0)
+            ->where('stock_quantity', '>=', 0)
             ->with([
                 'images' => function ($query) {
-                    $query->select('id', 'product_detail_id', 'image_name');
+                    $query->withTrashed()->select('id', 'product_detail_id', 'image_name');
                 },
             ])
             ->get()
@@ -205,7 +205,7 @@ class ProductsController extends Controller
 
                 foreach ($attributes as $attribute_id) {
                     // Tra cứu thông tin thuộc tính (VD: 40 -> Màu sắc)
-                    $attribute = Attribute::find($attribute_id);
+                    $attribute = Attribute::withTrashed()->find($attribute_id);
                     // $attribute_values = AttributeValue::where('attribute_id', $attribute_id)->get();
 
                     $variant_details[] = [

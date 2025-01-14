@@ -22,10 +22,20 @@ class ProductVoteController extends Controller
         ['at_home_page', '=', false]
       ])->latest()->limit(5)->get(['product_id', 'title', 'image']);
 
-      $productVotes = OrderDetail::whereHas('order', function ($query) use ($id) {
-        $query->where('user_id', $id) // Điều kiện user_id từ bảng orders
+      $productVotes = OrderDetail::withTrashed()->whereHas('order', function ($query) use ($id) {
+        $query->withTrashed()->where('user_id', $id) // Điều kiện user_id từ bảng orders
         ->where('status', OrderStatusEnum::COMPLETED);
-      })->with(['order', 'variants', 'variants.product', 'product_votes', 'product_votes.user'])
+      })->with(['order' => function($q) {
+          $q->withTrashed();
+      }, 'variants' => function($q) {
+          $q->withTrashed();
+      }, 'variants.product' => function($q) {
+          $q->withTrashed(); 
+      }, 'product_votes' => function($q) {
+          $q->withTrashed();
+      }, 'product_votes.user' => function($q) {
+          $q->withTrashed();
+      }])
         ->orderBy('created_at', 'DESC')
         ->paginate(10);
 

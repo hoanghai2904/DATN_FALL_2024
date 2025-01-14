@@ -52,7 +52,7 @@
            
             {{-- ql sp --}}
             <li
-            class="treeview {{ Helper::check_active(['admin.order.index', 'admin.products.index', 'admin.products.new', 'admin.products.edit', 'admin.attributes.index', 'admin.attributes.create', 'admin.attributes.edit']) }}">
+            class="treeview {{ Helper::check_active([ 'admin.products.index', 'admin.products.new', 'admin.products.edit', 'admin.attributes.index', 'admin.attributes.create', 'admin.attributes.edit']) }}">
             <a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i> <span>Sản Phẩm</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>

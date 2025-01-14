@@ -72,6 +72,9 @@
                             <!-- The timeline -->
                             <ul class="timeline timeline-inverse">
                                 @foreach ($product_votes as $vote)
+                                {{-- @php
+                                    dd($vote);
+                                @endphp --}}
                                     <!-- timeline time label -->
                                     <li class="time-label">
                                         <span class="bg-red">
@@ -87,7 +90,7 @@
 
                                             <h3 class="timeline-header"><a>{{ $user->name }}</a> đã đánh giá
                                                 <a>{{ $vote->rate }}</a> sao về sản phẩm
-                                                <a>{{ $vote->order_details->variants->product->name }} - ( {{ explode('-', $vote->order_details->variants->sku)[1] ?? $vote->order_details->variants->sku ?? "" }} )</a>
+                                                <a>{{ $vote->order_details?->variants?->product?->name ?? 'Sản phẩm đã xóa' }} - ( {{ explode('-', $vote->order_details?->variants?->sku)[1] ?? $vote->order_details?->variants?->sku ?? "" }} )</a>
                                             </h3>
                                             
                                             <div class="timeline-body">

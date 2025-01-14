@@ -78,7 +78,7 @@
                                         <div class="box-header">
                                             <h3 class="box-title">Giá trị thuộc tính</h3>
                                             <div class="box-tools">
-                                                <button class="btn btn-box-tool delete-attribute" title="Remove"><i class="fa fa-times"></i></button>
+                                                <button type="button" class="btn btn-box-tool delete-attribute" title="Remove"><i class="fa fa-times"></i></button>
                                             </div>
                                         </div>
                                         <div class="box-body">
@@ -117,11 +117,11 @@
     </form>
 
     <!-- Template cho việc thêm giá trị -->
-    <div id="product-attributes-template" style="display:none;">
+    <script type="text/template" id="product-attributes-template">
         <div class="field-group">
             <div class="box box-solid box-default" style="margin-bottom: 5px;">
                 <div class="box-header">
-                    <h3 class="box-title">Giá trị thuộc tính</h3>
+                    <h3 class="box-title"></h3>
                     <div class="box-tools">
                         <button class="btn btn-box-tool delete-attribute" title="Remove"><i class="fa fa-times"></i></button>
                     </div>
@@ -139,7 +139,30 @@
                 </div>
             </div>
         </div>
-    </div>
+    </script>
+    {{-- <div id="product-attributes-template" style="display:none;">
+        <div class="field-group">
+            <div class="box box-solid box-default" style="margin-bottom: 5px;">
+                <div class="box-header">
+                    <h3 class="box-title">Giá trị thuộc tính</h3>
+                    <div class="box-tools">
+                        <button class="btn btn-box-tool delete-attribute" title="Remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="attribute_{?}">Giá trị thuộc tính <span class="text-red">*</span></label>
+                                <input type="text" name="values[{?}][value]" class="form-control attribute" id="attribute_{?}" placeholder="Giá trị" required autocomplete="off">
+                                <span class="error" id="attribute_{?}-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 @endsection
 
 @section('embed-js')
@@ -219,6 +242,10 @@
                 }
             });
         });
+
+
+
+        
     });
 
     //valiudate from edit 
@@ -261,6 +288,54 @@
     }, true);
 });
  
-   
+
+    // Xử lý sự kiện click cho nút xóa
+ 
+    $(document).ready(function() {
+    // Hàm kiểm tra số lượng field-group và ẩn/hiện nút xóa
+    function checkFieldGroups() {
+        const fieldGroups = $('#product-attributes .field-group');
+        if (fieldGroups.length <= 1) {
+            // Ẩn tất cả nút xóa nếu chỉ còn 1 field-group
+            $('.delete-attribute').hide();
+        } else {
+            // Hiện lại tất cả nút xóa nếu có nhiều hơn 1 field-group
+            $('.delete-attribute').show();
+        }
+    }
+
+    // Kiểm tra ngay khi trang load
+    checkFieldGroups();
+
+    // Xử lý sự kiện click cho nút xóa
+    $(document).on('mousedown', '.delete-attribute', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const button = $(this);
+        const fieldGroup = button.closest('.field-group');
+        
+        Swal.fire({
+            title: 'Bạn có chắc chắn?',
+            text: "Bạn có muốn xóa giá trị thuộc tính này không?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fieldGroup.remove();
+                // Kiểm tra lại sau khi xóa
+                checkFieldGroups();
+                
+               
+            }
+        });
+        
+        return false;
+    });
+});
 </script>
 @endsection

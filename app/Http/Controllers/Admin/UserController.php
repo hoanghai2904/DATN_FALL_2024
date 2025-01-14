@@ -88,17 +88,25 @@ class UserController extends Controller
       abort(404);
     $product_votes = ProductVote::withTrashed()->where('user_id', $user->id)
       ->with([
+        'order_details' => function($query) {
+          $query->withTrashed();
+        },
+        'order_details.variants' => function($query) {
+          $query->withTrashed();
+        },
         'order_details.variants.product' => function ($query) {
           $query->withTrashed()->select('id', 'name', 'image');
         },
         'replies' => function ($query) {
-          $query->withTrashed()->with('user')->latest(); // Phản hồi bình luận
+          $query->withTrashed()->with(['user' => function($q) {
+            $q->withTrashed();
+          }])->latest(); 
         }
       ])
       ->latest()
       ->get();
-// dd($product_votes);
-    $orders = Order::where('user_id', $user->id)->with([
+
+    $orders = Order::withTrashed()->where('user_id', $user->id)->with([
       'payment_method' => function ($query) {
         $query->withTrashed()->select('id', 'name');
       },
@@ -110,7 +118,6 @@ class UserController extends Controller
                 ->with([
                   'product' => function ($query) {
                     $query->withTrashed()->select('id', 'name', 'image', 'sku_code');
-                    // ->where('deleted_at', '!=', null);
                   }
                 ]);
             }
@@ -119,7 +126,6 @@ class UserController extends Controller
     ])
       ->whereIn('status', [6, 8])
       ->latest()->get();
-    // dd($user->product);
 
     return view('admin.user.show')->with(['user' => $user, 'product_votes' => $product_votes, 'orders' => $orders, ]);
   }

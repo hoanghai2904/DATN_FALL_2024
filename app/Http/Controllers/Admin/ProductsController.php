@@ -22,7 +22,7 @@ class ProductsController extends Controller
 {
   public function index()
   {
-    $products = Product::withTrashed()->select('id', 'producer_id', 'name', 'image', 'sku_code', 'stock', 'rate', 'created_at')
+    $products = Product::select('id', 'producer_id', 'name', 'image', 'sku_code', 'stock', 'rate', 'created_at')
       ->whereHas('variants', function (Builder $query) {
         $query->where('stock_quantity', '>', 0);
       })
@@ -35,15 +35,16 @@ class ProductsController extends Controller
         'variants' => function (Builder $query) {
           $query->withTrashed()->where([['stock_quantity', '>', 0]]);
         }
-      ])->latest()->get();
-      // dd($products);
+      ])
+      ->latest()
+      ->paginate(10); // Phân trang mỗi trang 10 sản phẩm
 
     return view('admin.products.index')->with('products', $products);
   }
 
   public function delete(Request $request)
   {
-    $product = Product::with(['variants.images', 'promotions', 'product_votes'])->where('id', $request->product_id)->first();
+    $product = Product::with(['variants.images', 'promotions'])->where('id', $request->product_id)->first();
 
     // Kiểm tra nếu sản phẩm không tồn tại
     if (!$product) {
@@ -70,11 +71,7 @@ class ProductsController extends Controller
       $promotion->delete();
     }
 
-    // Xóa tất cả bình chọn liên quan đến sản phẩm
-    foreach ($product->product_votes as $product_vote) {
-      $product_vote->delete();
-    }
-
+   
     // Xóa sản phẩm chính
     $product->delete();
 
@@ -329,14 +326,14 @@ class ProductsController extends Controller
 
   public function edit($id)
   {
-    $producers = Producer::select('id', 'name')->orderBy('name', 'asc')->get();
+    $producers = Producer::withTrashed()->select('id', 'name')->orderBy('name', 'asc')->get();
 
     $product = Product::with([
       'promotions:id,product_id,content,start_date,end_date',
       'variants' => function ($query) {
         $query->select('id', 'product_id', 'sku', 'attributes', 'stock_quantity', 'purchase_price', 'price', 'promotion_price', 'promotion_start_date', 'promotion_end_date')
           ->with('images:id,product_detail_id,image_name')
-          ->where('stock_quantity', '>', 0);
+          ->where('stock_quantity', '>=', 0);
       }
     ])->findOrFail($id);
     $attributeIds = $product->variants->pluck('attributes')->map(function ($attributes) {
@@ -348,7 +345,7 @@ class ProductsController extends Controller
       return explode('-', $sku); // Tách giá trị thuộc tính từ SKU
     })->flatten()->unique(); // Lấy giá trị thuộc tính duy nhất
 
-    $attributes = Attribute::select('id', 'name')->orderBy('name')->get();
+    $attributes = Attribute::withTrashed()->select('id', 'name')->orderBy('name')->get();
 
     $attributes_value = Attribute::with('values')
       ->whereIn('id', $attributeIds->toArray()) // Chuyển collection thành mảng
@@ -363,7 +360,7 @@ class ProductsController extends Controller
   {
       // dd($request, $id);
     $product = Product::whereHas('variants', function (Builder $query) {
-      $query->where('stock_quantity', '>', 0);
+      $query->where('stock_quantity', '>=', 0);
     })->where('id', $id)->first();
     if (!$product) abort(404);
 

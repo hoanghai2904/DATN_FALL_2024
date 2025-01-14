@@ -57,11 +57,19 @@ for ($i = 0; $i < $daysInMonth; $i++) {
     $date = $currentDay->format('d/m/Y');
     $data['labels'][] = $date;
 
-    $order_details = OrderDetail::whereDate('created_at', $currentDay->format('Y-m-d'))
+    $order_details = OrderDetail::withTrashed()
+        ->whereDate('updated_at', $currentDay->format('Y-m-d'))
         ->whereHas('order', function (Builder $query) {
-            $query->where('status', '=', OrderStatusEnum::COMPLETED);
+            $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
         })
-        ->with(['order:id,order_code,discount', 'variants:id,purchase_price'])
+        ->with([
+            'order' => function($query) {
+                $query->withTrashed()->select('id', 'order_code', 'discount');
+            },
+            'variants' => function($query) {
+                $query->withTrashed()->select('id', 'purchase_price');
+            }
+        ])
         ->get();
 
     $revenue = 0;
@@ -95,13 +103,21 @@ for ($monthLoop = 1; $monthLoop <= 12; $monthLoop++) {
         continue; // Bỏ qua các tháng không phải là tháng được chọn
     }
 
-    $order_details = OrderDetail::whereHas('order', function ($query) use ($monthLoop, $carbon) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED)
-            ->whereYear('created_at', $carbon->year)
-            ->whereMonth('created_at', $monthLoop);
-    })
-    ->with('order', 'variants')
-    ->get();
+    $order_details = OrderDetail::withTrashed()
+        ->whereHas('order', function ($query) use ($monthLoop, $carbon) {
+            $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
+                ->whereYear('updated_at', $carbon->year)
+                ->whereMonth('updated_at', $monthLoop);
+        })
+        ->with([
+            'order' => function($query) {
+                $query->withTrashed();
+            },
+            'variants' => function($query) {
+                $query->withTrashed();
+            }
+        ])
+        ->get();
 
     $revenue = 0;
     $profit = 0;
@@ -117,12 +133,20 @@ for ($monthLoop = 1; $monthLoop <= 12; $monthLoop++) {
 
 // Doanh thu và lợi nhuận theo năm
 for ($yearLoop = $carbon->year - 4; $yearLoop <= $carbon->year; $yearLoop++) {
-    $order_details = OrderDetail::whereHas('order', function ($query) use ($yearLoop) {
-        $query->where('status', '=', OrderStatusEnum::COMPLETED)
-            ->whereYear('created_at', $yearLoop);
-    })
-    ->with('order', 'variants')
-    ->get();
+    $order_details = OrderDetail::withTrashed()
+        ->whereHas('order', function ($query) use ($yearLoop) {
+            $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
+                ->whereYear('updated_at', $yearLoop);
+        })
+        ->with([
+            'order' => function($query) {
+                $query->withTrashed();
+            },
+            'variants' => function($query) {
+                $query->withTrashed();
+            }
+        ])
+        ->get();
 
     $revenue = 0;
     $profit = 0;
@@ -140,13 +164,14 @@ for ($yearLoop = $carbon->year - 4; $yearLoop <= $carbon->year; $yearLoop++) {
 $data['count_products'] = $count_products;
 $data['total_revenue'] = $total_revenue;
 $data['total_profit'] = $total_profit;
-$data['count_orders'] = Order::where('status', '=', OrderStatusEnum::COMPLETED)
-    ->whereYear('created_at', $carbon->year)
-    ->whereMonth('created_at', $carbon->month)
+$data['count_orders'] = Order::withTrashed()
+    ->where('status', '=', OrderStatusEnum::COMPLETED)
+    ->whereYear('updated_at', $carbon->year)
+    ->whereMonth('updated_at', $carbon->month)
     ->count();
 
 // Nhà sản xuất
-$producers = Producer::select('name')->has('products')->get();
+$producers = Producer::withTrashed()->select('name')->has('products')->get();
 foreach ($producers as $producer) {
     $data['producer'][$producer->name] = [
         'quantity' => 0,
@@ -155,11 +180,24 @@ foreach ($producers as $producer) {
     ];
 }
 
-$order_details = OrderDetail::whereHas('order', function ($query) {
-    $query->where('status', '=', OrderStatusEnum::COMPLETED);
-})
-->with('variants.product.producer')
-->get();
+$order_details = OrderDetail::withTrashed()
+    ->whereHas('order', function ($query) {
+        $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
+    })
+    ->with([
+        'variants' => function($query) {
+            $query->withTrashed()->with([
+                'product' => function($query) {
+                    $query->withTrashed()->with([
+                        'producer' => function($query) {
+                            $query->withTrashed();
+                        }
+                    ]);
+                }
+            ]);
+        }
+    ])
+    ->get();
 
 foreach ($order_details as $order_detail) {
     $producer_name = $order_detail->variants->product->producer->name;

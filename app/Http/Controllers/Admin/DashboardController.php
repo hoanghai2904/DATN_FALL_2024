@@ -44,8 +44,9 @@ class DashboardController extends Controller
           $date = $carbon->copy()->addDay($i)->format('d/m/Y');
           $data['labels'][] = $date;
   
-          $order_details = OrderDetail::withTrashed()->select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'created_at')
-              ->whereDate('created_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
+          $order_details = OrderDetail::select('id', 'order_id', 'product_detail_id', 'quantity', 'price', 'updated_at')
+              ->withTrashed()
+              ->whereDate('updated_at', $carbon->copy()->addDay($i)->format('Y-m-d'))
               ->whereHas('order', function (Builder $query) {
                   $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED);
               })
@@ -54,8 +55,14 @@ class DashboardController extends Controller
                       $query->withTrashed()->select('id', 'order_code', 'discount');
                   },
                   'variants' => function ($query) {
-                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price');
+                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price', 'product_id');
                   },
+                  'variants.product' => function ($query) {
+                      $query->withTrashed()->select('id', 'name', 'producer_id');
+                  },
+                  'variants.product.producer' => function ($query) {
+                      $query->withTrashed()->select('id', 'name');
+                  }
               ])
               ->get();
   
@@ -63,9 +70,11 @@ class DashboardController extends Controller
           $profit = 0;
   
           foreach ($order_details as $order_detail) {
-              $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
-              $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
-              $count_products += $order_detail->quantity;
+              if ($order_detail->variants && $order_detail->variants->purchase_price) {
+                  $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
+                  $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
+                  $count_products += $order_detail->quantity;
+              }
           }
   
           $data['revenues'][] = $revenue;
@@ -85,20 +94,30 @@ class DashboardController extends Controller
   
       // Doanh thu theo tháng
       for ($month = 1; $month <= 12; $month++) {
-          $order_details = OrderDetail::whereHas('order', function ($query) use ($month, $carbon) {
-              $query->where('status', '=', OrderStatusEnum::COMPLETED)
-                  ->whereYear('created_at', $carbon->year)
-                  ->whereMonth('created_at', $month);
-          })
-          ->with('order') // Eager load the 'order' relationship
-          ->get();
+          $order_details = OrderDetail::withTrashed()
+              ->whereHas('order', function ($query) use ($month, $carbon) {
+                  $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
+                      ->whereYear('updated_at', $carbon->year)
+                      ->whereMonth('updated_at', $month);
+              })
+              ->with([
+                  'order' => function ($query) {
+                      $query->withTrashed()->select('id', 'order_code', 'discount');
+                  },
+                  'variants' => function ($query) {
+                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price', 'product_id');
+                  }
+              ])
+              ->get();
   
           $revenue = 0;
           $profit = 0;
   
           foreach ($order_details as $order_detail) {
-              $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
-              $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
+              if ($order_detail->variants && $order_detail->variants->purchase_price) {
+                  $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
+                  $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
+              }
           }
   
           $data['monthly_revenues'][$month] = $revenue;
@@ -107,19 +126,29 @@ class DashboardController extends Controller
   
       // Doanh thu và lợi nhuận theo năm
       for ($year = $carbon->year - 4; $year <= $carbon->year; $year++) {
-          $order_details = OrderDetail::whereHas('order', function ($query) use ($year) {
-              $query->where('status', '=', OrderStatusEnum::COMPLETED)
-                  ->whereYear('created_at', $year);
-          })
-          ->with('order') // Eager load the 'order' relationship
-          ->get();
+          $order_details = OrderDetail::withTrashed()
+              ->whereHas('order', function ($query) use ($year) {
+                  $query->withTrashed()->where('status', '=', OrderStatusEnum::COMPLETED)
+                      ->whereYear('updated_at', $year);
+              })
+              ->with([
+                  'order' => function ($query) {
+                      $query->withTrashed()->select('id', 'order_code', 'discount');
+                  },
+                  'variants' => function ($query) {
+                      $query->withTrashed()->select('id', 'purchase_price', 'promotion_price', 'product_id');
+                  }
+              ])
+              ->get();
   
           $revenue = 0;
           $profit = 0;
   
           foreach ($order_details as $order_detail) {
-              $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
-              $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
+              if ($order_detail->variants && $order_detail->variants->purchase_price) {
+                  $revenue += $order_detail->price * $order_detail->quantity - $order_detail->order->discount;
+                  $profit += ($order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price)) - $order_detail->order->discount;
+              }
           }
   
           $data['yearly_revenues'][$year] = $revenue;
@@ -131,8 +160,8 @@ class DashboardController extends Controller
       $data['total_revenue'] = $total_revenue;
       $data['total_profit'] = $total_profit;
       $data['count_orders'] = Order::where('status', '=', OrderStatusEnum::COMPLETED)
-          ->whereYear('created_at', $carbon->year)
-          ->whereMonth('created_at', $carbon->month)->count();
+          ->whereYear('updated_at', $carbon->year)
+          ->whereMonth('updated_at', $carbon->month)->count();
   
       // Nhà sản xuất
       $producers = Producer::select('name')->has('products')->get();
@@ -145,16 +174,20 @@ class DashboardController extends Controller
       }
   
       foreach ($order_details as $order_detail) {
-          $producer_name = $order_detail->variants->product->producer->name;
-          $data['producer'][$producer_name]['quantity'] += $order_detail->quantity;
-          $data['producer'][$producer_name]['revenue'] += $order_detail->quantity * $order_detail->price;
-          $data['producer'][$producer_name]['profit'] += $order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price);
+          if ($order_detail->variants && 
+              $order_detail->variants->product && 
+              $order_detail->variants->product->producer &&
+              $order_detail->variants->purchase_price) {
+              
+              $producer_name = $order_detail->variants->product->producer->name;
+              $data['producer'][$producer_name]['quantity'] += $order_detail->quantity;
+              $data['producer'][$producer_name]['revenue'] += $order_detail->quantity * $order_detail->price;
+              $data['producer'][$producer_name]['profit'] += $order_detail->quantity * ($order_detail->price - $order_detail->variants->purchase_price);
+          }
       }
   
       return $data;
   }
-  
-  
   
 
   public function orderGroupByStatus()
