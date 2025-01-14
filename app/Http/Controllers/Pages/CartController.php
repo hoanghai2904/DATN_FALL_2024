@@ -351,21 +351,8 @@ class CartController extends Controller
             ]
           ]);
         }
-        // $product = ProductVariant::find(array_key_first($cart->items));
+        $product = ProductVariant::find(array_key_first($cart->items));
 
-        // if ($product->stock_quantity <= 0) {
-        //   return redirect()->route('home_page')->with([
-        //     'alert' => [
-        //       'type' => 'error',
-        //       'title' => 'Hết hàng',
-        //       'content' => 'Sản phẩm này hiện đã hết hàng hoặc không đủ số lượng yêu cầu!'
-        //     ]
-        //   ]);
-        // }
-
-        $product = ProductVariant::find($request->product_id);
-        // dd($request,$product,$product->stock_quantity);
-        // Kiểm tra tồn kho sản phẩm
         if ($product->stock_quantity <= 0) {
           return redirect()->route('home_page')->with([
             'alert' => [
@@ -375,6 +362,19 @@ class CartController extends Controller
             ]
           ]);
         }
+
+        // $product = ProductVariant::find($request->product_id);
+        // // dd($request,$product,$product->stock_quantity);
+        // // Kiểm tra tồn kho sản phẩm
+        // if ($product->stock_quantity <= 0) {
+        //   return redirect()->route('home_page')->with([
+        //     'alert' => [
+        //       'type' => 'error',
+        //       'title' => 'Hết hàng',
+        //       'content' => 'Sản phẩm này hiện đã hết hàng hoặc không đủ số lượng yêu cầu!'
+        //     ]
+        //   ]);
+        // }
 
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
@@ -428,21 +428,8 @@ class CartController extends Controller
     } elseif (Str::contains($payment_method->name, 'Online Payment')) {
       if ($request->buy_method == 'buy_now') {
 
-        // $product = ProductVariant::find(array_key_first($request->product_id));
+        $product = ProductVariant::find(array_key_first($request->product_id));
 
-        // if ($product->stock_quantity <= 0) {
-        //   return redirect()->route('home_page')->with([
-        //     'alert' => [
-        //       'type' => 'error',
-        //       'title' => 'Hết hàng',
-        //       'content' => 'Sản phẩm này hiện đã hết hàng hoặc không đủ số lượng yêu cầu!'
-        //     ]
-        //   ]);
-        // }
-
-        $product = ProductVariant::find($request->product_id);
-        // dd($request,$product,$product->stock_quantity);
-        // Kiểm tra tồn kho sản phẩm
         if ($product->stock_quantity <= 0) {
           return redirect()->route('home_page')->with([
             'alert' => [
@@ -452,6 +439,19 @@ class CartController extends Controller
             ]
           ]);
         }
+
+        // $product = ProductVariant::find($request->product_id);
+        // // dd($request,$product,$product->stock_quantity);
+        // // Kiểm tra tồn kho sản phẩm
+        // if ($product->stock_quantity <= 0) {
+        //   return redirect()->route('home_page')->with([
+        //     'alert' => [
+        //       'type' => 'error',
+        //       'title' => 'Hết hàng',
+        //       'content' => 'Sản phẩm này hiện đã hết hàng hoặc không đủ số lượng yêu cầu!'
+        //     ]
+        //   ]);
+        // }
         $order = new Order;
         $order->user_id = Auth::user()->id ?? NULL;
         $order->payment_method_id = $request->payment_method;
