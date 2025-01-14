@@ -47,6 +47,22 @@
     background-color: #e8f0fe;
     border-radius: 5px;
   }
+  .pagination {
+    margin: 0;
+    float: right;
+  }
+  .pagination > li > a {
+    color: #666;
+  }
+  .pagination > .active > a,
+  .pagination > .active > span,
+  .pagination > .active > a:hover,
+  .pagination > .active > span:hover,
+  .pagination > .active > a:focus,
+  .pagination > .active > span:focus {
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+  }
 </style>
 @endsection
 
@@ -146,6 +162,20 @@
               @endforeach
             </tbody>
           </table>
+
+          <div class="row">
+            <div class="col-sm-5">
+              <div class="dataTables_info">
+                Hiển thị {{ $products->firstItem() }} đến {{ $products->lastItem() }} của {{ $products->total() }} sản phẩm
+              </div>
+            </div>
+            <div class="col-sm-7">
+              <div class="dataTables_paginate paging_simple_numbers">
+                {{ $products->links() }}
+              </div>
+            </div>
+          </div>
+
         </div>
         <!-- /.box-body -->
       </div>
@@ -198,6 +228,7 @@
   $(document).ready(function () {
     $(".deleteDialog").click(function () {
         var product_id = $(this).attr('data-id');
+      
         var url = $(this).attr('data-url');
         console.log("url:",url);
         ("url",url)
@@ -221,6 +252,7 @@
                 })
                     .then((response) => {
                         if (response.ok) {
+
                             return response.json(); // Trả về JSON nếu thành công
                         }
                         throw new Error(`HTTP error! status: ${response.status}`);

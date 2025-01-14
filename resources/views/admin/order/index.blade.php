@@ -182,33 +182,6 @@
                                                         </li>
                                                     @endif
 
-                                                    @if ($order->status === 3)
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['delivering', $order->id]) }}">Giao
-                                                                Hàng</a>
-                                                        </li>
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['cancel', $order->id]) }}">Hủy</a>
-                                                        </li>
-                                                    @endif
-
-                                                    @if ($order->status === 4)
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['delivered', $order->id]) }}">Đã
-                                                                Giao Hàng</a>
-                                                        </li>
-                                                    @endif
-
-                                                    @if ($order->status === 5)
-                                                        <li>
-                                                            <a
-                                                                href="{{ route('admin.orderTransaction', ['completed', $order->id]) }}">Đơn
-                                                                hàng thành công</a>
-                                                        </li>
-                                                    @endif
 
                                                 </ul>
                                             </div>

@@ -462,7 +462,7 @@
                                                                 Hàng</h4>
                                                         </div>
                                                         <div class="modal-body" id="modalReturnReason">
-                                                            <!-- Full return reason will be displayed here -->
+                                                            <div>{{$order->return_reason}}</div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default"
@@ -536,7 +536,7 @@
                                         <th data-orderable="false">Phương Thức Thanh Toán</th>
                                         <th class="sort">Trạng thái thanh toán</th>
                                         <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
-                                        <th data-width="66px">Lý do hoàn hàng</th>
+                                        <th data-width="66px">Lý do hủy hàng</th>
                                         <th data-width="66px">Trạng thái</th>
                                         <?php if ($order->status == 12): ?>
                                         <th data-orderable="false" data-width="130px">Tác Vụ</th>
@@ -590,7 +590,7 @@
                                                             <h4 class="modal-title" id="cancelReasonModalLabel">Lý Do Hoàn Hàng</h4>
                                                         </div>
                                                         <div class="modal-body" id="modalCancelReason">
-                                                            <!-- Full return reason will be displayed here -->
+                                                            <div>{{$order->cancel_reason}}</div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>

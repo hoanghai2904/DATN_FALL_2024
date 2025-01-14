@@ -2,6 +2,12 @@
 
 @section('title', $data['product']->name)
 
+@section('custom-css')
+    <style>
+        
+    </style>
+@endsection
+
 @section('content')
 
     <section class="bread-crumb">
@@ -377,7 +383,7 @@
                                     </div>
                                     <div id="vote" class="tab-pane fade">
                                         <div class="content-vote">
-                                            @if ($data['canComment'])
+                                            {{-- @if ($data['canComment'])
                                                 <div class="section-rating">
                                                     <div class="rating-title">Đánh Giá</div>
                                                     <div class="rating-content">
@@ -397,50 +403,82 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endif
+                                            @endif --}}
+                                            
                                             <div class="show-rate">
                                                 <div class="show-rate-header">
                                                     Đánh giá từ người dùng
                                                 </div>
                                                 <div class="show-rate-content">
+                                                    <!-- Tổng quan đánh giá -->
                                                     <div class="total-rate">
                                                         <div class="total-rate-left">{{ $data['product']->rate }}</div>
                                                         <div class="total-rate-right">
                                                             <div class="start">{!! Helper::get_start_vote($data['product']->rate) !!}</div>
-                                                            <div class="total-user">{{ $data['product_votes']->count() }}
-                                                                <i class="fas fa-users"></i>
-                                                            </div>
+                                                            <div class="total-user">{{ $data['rating_count'] }} <i class="fas fa-users"></i></div>
                                                         </div>
                                                     </div>
+                                            
+                                                    <!-- Hiển thị danh sách đánh giá -->
                                                     @if ($data['product_votes']->isNotEmpty())
                                                         <div class="vote-inner">
-                                                            @foreach ($data['product_votes'] as $vote)
-                                                                <div class="vote-content">
-                                                                    <div class="vote-content-left"><img
-                                                                            src="{{ Helper::get_image_avatar_url($vote->user->avatar_image) }}"
-                                                                            alt=""></div>
-                                                                    <div class="vote-content-right">
-                                                                        <div class="name">
-                                                                            {{ $vote->user->name }}
+                                                            @foreach ($data['product_votes']->where('parent_id', null) as $vote)
+                                                                <!-- Bọc mỗi đánh giá vào div riêng -->
+                                                                <div style="border-bottom: 2px solid black;margin:20px; ">
+                                                                    <div class="vote-content mb-4" id="vote-{{ $vote->id }}">
+                                                                        <div class="vote-content-left">
+                                                                            <img src="{{ Helper::get_image_avatar_url($vote->user->avatar_image) }}" alt="">
                                                                         </div>
-                                                                        <div class="vote-start">
-                                                                            <div class="star">{!! Helper::get_start_vote($vote->rate) !!}
+                                                                        <div class="vote-content-right" style="background-color:#f0f0f0 ; border-radius: 10px;padding:15px 10px ">
+                                                                            <div class="name">
+                                                                                {{ $vote->user->name }}
                                                                             </div>
-                                                                            <div class="date">
-                                                                                {{ date_format($vote->created_at, 'd/m/Y') }}
+                                                                            <div class="vote-start">
+                                                                                <div class="star">{!! Helper::get_start_vote($vote->rate) !!}</div>
+                                                                                <div class="date" style="margin-right: 30px">{{ $vote->created_at->format('d/m/Y') }}</div>
+                                                                                <div class="date">
+                                                                                    {{ explode('-', $vote->order_details->variants->sku ?? '')[1] ?? $vote->order_details->variants->sku ?? '' }}
+                                                                                </div>
+                                                                                                                                                                
                                                                             </div>
+                                                                            <div class="content">{{ $vote->content }}</div>
                                                                         </div>
-                                                                        <div class="content">{{ $vote->content }}</div>
                                                                     </div>
-                                                                </div>
+                                                
+                                                                    <!-- Hiển thị bình luận con -->
+                                                                    @if ($vote->replies->isNotEmpty())
+                                                                        <div class="vote-replies ms-5" >
+                                                                            @foreach ($vote->replies as $reply)
+                                                                                <!-- Bọc mỗi bình luận con vào div riêng -->
+                                                                                <div class="reply-item mb-3" style="margin-left: 100px" id="reply-{{ $reply->id }}">
+                                                                                    <div class="vote-content">
+                                                                                        <div class="vote-content-left">
+                                                                                            <img src="{{ asset('images/no_avatar.jpg') }}" class="img-circle" alt="Admin">
+                                                                                        </div>
+                                                                                        <div class="vote-content-right" style="background-color:#f0f0f0 ; border-radius: 10px;padding:15px 10px ">
+                                                                                            <div class="name" style="display: flex;">
+                                                                                                {{ $reply->user->name }}
+                                                                                                <div class="text-muted small" style="margin-left: 40px">{{ $reply->created_at->format('d/m/Y') }}</div>
+                                                                                            </div>
+                                                                                            <div class="content">{{ $reply->content }}</div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                </div>  
+
                                                             @endforeach
                                                         </div>
                                                     @else
-                                                        <p class="text-center"><strong>Chưa có lượt đánh giá nào từ người
-                                                                dùng. Hãy cho chúng tôi biết ý kiến của bạn.</strong></p>
+                                                        <p class="text-center"><strong>Chưa có lượt đánh giá nào từ người dùng. Hãy cho chúng tôi biết ý kiến của bạn.</strong></p>
                                                     @endif
                                                 </div>
                                             </div>
+                                            
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -469,12 +507,12 @@
                                                             {!! Helper::get_start_vote($product->rate) !!}
                                                         </div>
                                                         <div class="price">
-                                                          {!! Helper::get_real_price(
-                                                            $product->variants->first()?->price,
-                                                            $product->variants->first()?->promotion_price,
-                                                            $product->variants->first()?->promotion_start_date,
-                                                            $product->variants->first()?->promotion_end_date,
-                                                        ) !!}
+                                                            {!! Helper::get_real_price(
+                                                                $product->variants->first()?->price,
+                                                                $product->variants->first()?->promotion_price,
+                                                                $product->variants->first()?->promotion_start_date,
+                                                                $product->variants->first()?->promotion_end_date,
+                                                            ) !!}
                                                         </div>
                                                     </div>
                                                 </div>

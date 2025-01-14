@@ -42,9 +42,9 @@ class OrderController extends Controller
           $query->withTrashed() // Áp dụng cho order_details
             ->select('id', 'order_id', 'product_detail_id', 'quantity', 'price')
             ->with([
-              'product_detail' => function ($query) {
+              'variants' => function ($query) {
                 $query->withTrashed() // Áp dụng cho product_detail
-                  ->select('id', 'product_id', 'color', 'size')
+                  ->select('id', 'product_id', 'sku')
                   ->with([
                     'product' => function ($query) {
                       $query->withTrashed() // Áp dụng cho product

@@ -16,6 +16,7 @@ use App\Models\OrderDetail;
 use App\Models\ProductVariant;
 use App\Models\ProductVote;
 use App\Models\Attribute;
+use App\Models\Order;
 
 class ProductsController extends Controller
 {
@@ -169,7 +170,7 @@ class ProductsController extends Controller
 
         $product = Product::select('id', 'producer_id', 'name', 'sku_code', 'rate', 'information_details', 'product_introduction')
             ->whereHas('variants', function (Builder $query) {
-                $query->where('stock_quantity', '>', 0);
+                $query->where('stock_quantity', '>=', 0);
             })
             ->where('id', $id)->with(['promotions' => function ($query) {
                 $query->select('id', 'product_id', 'content')
@@ -185,10 +186,10 @@ class ProductsController extends Controller
         if (!$product) abort(404);
 
         $product_details = ProductVariant::where('product_id', $id)
-            ->where('stock_quantity', '>', 0)
+            ->where('stock_quantity', '>=', 0)
             ->with([
                 'images' => function ($query) {
-                    $query->select('id', 'product_detail_id', 'image_name');
+                    $query->withTrashed()->select('id', 'product_detail_id', 'image_name');
                 },
             ])
             ->get()
@@ -204,7 +205,7 @@ class ProductsController extends Controller
 
                 foreach ($attributes as $attribute_id) {
                     // Tra cứu thông tin thuộc tính (VD: 40 -> Màu sắc)
-                    $attribute = Attribute::find($attribute_id);
+                    $attribute = Attribute::withTrashed()->find($attribute_id);
                     // $attribute_values = AttributeValue::where('attribute_id', $attribute_id)->get();
 
                     $variant_details[] = [
@@ -273,40 +274,28 @@ class ProductsController extends Controller
             }])->latest()->limit(3)->get();
 
 
-        $product_votes = ProductVote::whereHas('user', function (Builder $query) {
-            $query->where([['active', true], ['Role', false]]);
-        })->where('product_id', $id)->with(['user' => function ($query) {
-            $query->select('id', 'name', 'avatar_image');
-        }])->latest()->get();
-        $canComment = false;
-        $user = auth()->user();
-        if ($user) {
-            $hasCommented = ProductVote::where('product_id', $product->id)
-                ->where('user_id', $user->id)
-                ->exists();
+    $product_votes = ProductVote::whereHas('order_details', function ($query) use ($id) {
+        $query->whereHas('variants', function ($query) use ($id) {
+            $query->where('product_id', $id);
+        });
+    })->with(['replies', 'order_details.variants'])->get();
 
-            $hasPurchased = OrderDetail::whereHas('order', function ($query) use ($user) {
-                $query->where('user_id', $user->id)
-                    ->where('status', OrderStatusEnum::COMPLETED)
-                    ->where('is_paid', true)
-                    ->where('is_received', true);
-            })->whereHas('variants', function ($query) use ($product) {
-                $query->where('product_id', $product->id);
-            })
-                ->exists();
+    $rating_count = ProductVote::whereHas('user', function ($query) {
+        $query->where('Role', 0); // Lọc người dùng có role = 0
+    })->whereHas('order_details', function ($query) use ($id) {
+        $query->whereHas('variants', function ($query) use ($id) {
+            $query->where('product_id', $id);
+        });
+    })->distinct('user_id')->count();
 
-            // Chỉ được bình luận nếu đã mua nhưng chưa bình luận
-            $canComment = $hasPurchased && !$hasCommented;
-            // dd($suggest_products);
-        }
-        return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes, 'canComment' => $canComment]]);
-    }
+
+    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes ,'rating_count' => $rating_count]]);
+  }
 
     public function addVote(Request $request)
     {
-        $vote = ProductVote::updateOrCreate(
-            ['user_id' => $request->user_id, 'product_id' => $request->product_id],
-            ['content' => $request->content, 'rate' => $request->rate]
+        $vote = ProductVote::Create(
+            ['user_id' => $request->user_id, 'product_id' => $request->product_id,'content' => $request->content, 'rate' => $request->rate],
         );
         $rate = ProductVote::where('product_id', $request->product_id)->avg('rate');
 
