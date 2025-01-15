@@ -83,7 +83,7 @@
             @else
             <div class="logged-menu">
               <ul>
-                <li class="menu-item dropdown {{ Helper::check_active(['orders_page', 'order_page', 'show_user', 'edit_user']) }}">
+                <li class="menu-item dropdown {{ Helper::check_active(['orders_page', 'order_page', 'show_user', 'edit_user','review.index']) }}">
                   <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" title="{{ Auth::user()->name }}">
                     <div class="avatar" style="background-image: url('{{ Helper::get_image_avatar_url(Auth::user()->avatar_image) }}');"></div>
                   </a>
@@ -92,7 +92,7 @@
                     <li><a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Quản Lý Website</a></li>
                     @else
                     <li class="{{ Helper::check_active(['orders_page', 'order_page']) }}"><a href="{{ route('orders_page') }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đơn Hàng</a></li>
-                    <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('review.index', ['id' => Auth::user()->id]) }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đánh Giá</a></li>
+                    {{-- <li class="{{ Helper::check_active(['review.index', 'review.index']) }}"><a href="{{ route('review.index', ['id' => Auth::user()->id]) }}"><i class="fas fa-clipboard-list"></i> Quản Lý Đánh Giá</a></li> --}}
                     <li class="{{ Helper::check_active(['show_user', 'edit_user']) }}"><a href="{{ route('show_user') }}"><i class="fas fa-user-cog"></i> Quản Lý Tài Khoản</a></li>
                     <li class="{{ Helper::check_active(['edit_Password']) }}"><a href="{{ route('edit_Password') }}"><i class="fas fa-user-cog"></i> Đổi mật khẩu</a></li>
                     

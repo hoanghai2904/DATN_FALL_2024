@@ -403,11 +403,11 @@
                                         <th data-orderable="false">Phương Thức Thanh Toán</th>
                                         <th class="sort">Trạng thái thanh toán</th>
                                         <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
-                                        <th data-width="66px">Lý do hoàn hàng</th>
+                                        <th data-width="66px">Lý do</th>
                                         <th data-width="66px">Trạng thái</th>
-                                        <?php if ($order->status == 9): ?>
+                                      
                                         <th data-orderable="false" data-width="130px">Tác Vụ</th>
-                                        <?php endif; ?>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -536,11 +536,11 @@
                                         <th data-orderable="false">Phương Thức Thanh Toán</th>
                                         <th class="sort">Trạng thái thanh toán</th>
                                         <th data-width="100px" data-type="date-euro">Ngày đặt hàng</th>
-                                        <th data-width="66px">Lý do hủy hàng</th>
+                                        <th data-width="66px">Lý do</th>
                                         <th data-width="66px">Trạng thái</th>
-                                        <?php if ($order->status == 12): ?>
+                                        
                                         <th data-orderable="false" data-width="130px">Tác Vụ</th>
-                                        <?php endif; ?>
+                                       
                                     </tr>
                                 </thead>
                                 <tbody>

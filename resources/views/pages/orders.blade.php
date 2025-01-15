@@ -119,10 +119,10 @@
                                                         @break
 
                                                         @case(6)
-                                                            <span class="label label-success" style="margin-right: 10px;">Thành công</span>
-                                                            {{-- <button class="btn btn-primary"
-                                                                    onclick="voteProduct({{ $order->id }})">Đánh giá</button> --}}
-                                                        @break
+                                                        <span class="label label-success" style="margin-right: 10px;">Thành công</span>
+                                                        <a class="btn btn-primary"
+                                                            href="{{ route('review.index', ['id' => Auth::user()->id]) }}">Đánh giá</a>
+                                                    @break
 
                                                         @case(8)
                                                             <span class="label label-danger">Đã hủy</span>

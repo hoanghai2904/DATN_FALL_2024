@@ -234,7 +234,7 @@ p span {
             <h4 class="panel-title">
                 <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                     href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Đơn Hàng Mới Nhất
+                   Thống Kê Đơn Hàng Và Sản Phẩm Bán Chạy Nhất 
                 </a>
             </h4>
         </div>
@@ -244,7 +244,7 @@ p span {
                 <div class="col-md-7">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title">Danh Sách Đơn Hàng</h5>
+                            <h5 class="card-title"> Top 10 Đơn Hàng Mới Nhất</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -265,7 +265,7 @@ p span {
                                     <tbody>
                                         @foreach ($orders as $order)
                                             <tr>
-                                                <td class="text-center">{{ $order->id }}</td>
+                                                <td class="text-center">{{ $loop->iteration }}</td>
                                                 <td>{{ '#' . $order->order_code }}</td>
                                               
                                                 <td>{{ $order->name }}</td>
@@ -291,11 +291,60 @@ p span {
                         </div>
                     </div>
                 </div>
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Top 5 Sản Phẩm Bán Chạy</h5>
+                            <div class="mt-3">
+                                <div class="row mb-2">
+                                    <div class="col-md-8">
+                                        <select id="date_filter" class="form-control">
+                                            <option value="today">Hôm nay</option>
+                                            <option value="this_week">Tuần này</option>
+                                            <option value="this_month">Tháng này</option>
+                                            <option value="last_month">Tháng trước</option>
+                                            <option value="custom">Tùy chọn</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" id="filter-btn" class="btn btn-primary w-100">Lọc</button>
+                                    </div>
+                                </div>
+
+                                <div id="custom-date" class="row" style="display: none;">
+                                    <div class="col-md-6 mb-2">
+                                        <input type="date" id="start_date" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <input type="date" id="end_date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Sản Phẩm</th>
+                                            <th>Hình ảnh</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Đã bán</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-table-body">
+                                        @include('admin.partials.top-products-table', ['topProducts' => $topProducts])
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
     </div>
-    </div>
+   
 @endsection
 
 @section('embed-js')
@@ -658,5 +707,61 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    // Xử lý hiển thị/ẩn form date custom
+    $('#date_filter').on('change', function() {
+        const customDateDiv = $('#custom-date');
+        if ($(this).val() === 'custom') {
+            customDateDiv.show();
+        } else {
+            customDateDiv.hide();
+        }
+    });
+
+    // Xử lý sự kiện click nút lọc
+    $('#filter-btn').on('click', function() {
+        const dateFilter = $('#date_filter').val();
+        const startDate = $('#start_date').val();
+        const endDate = $('#end_date').val();
+
+        // Kiểm tra điều kiện khi chọn custom
+        if (dateFilter === 'custom' && (!startDate || !endDate)) {
+            alert('Vui lòng chọn ngày bắt đầu và kết thúc');
+            return;
+        }
+
+        // Hiển thị loading
+        $('#products-table-body').html('<tr><td colspan="3" class="text-center">Đang tải...</td></tr>');
+
+        $.ajax({
+            url: '{{ route("admin.dashboard.filter-products") }}',
+            method: 'GET',
+            data: {
+                date_filter: dateFilter,
+                start_date: startDate,
+                end_date: endDate
+            },
+            success: function(response) {
+                $('#products-table-body').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi:', error);
+                // Hiển thị thông báo lỗi chi tiết hơn
+                $('#products-table-body').html(
+                    `<tr>
+                        <td colspan="3" class="text-center text-danger">
+                            Có lỗi xảy ra: ${xhr.responseJSON?.message || 'Không thể tải dữ liệu'}
+                        </td>
+                    </tr>`
+                );
+            },
+            // Thêm timeout để tránh chờ quá lâu
+            timeout: 10000
+        });
+    });
+});
+
     </script>
 @endsection
+
+

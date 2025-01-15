@@ -189,7 +189,7 @@ class ProductsController extends Controller
             ->where('stock_quantity', '>=', 0)
             ->with([
                 'images' => function ($query) {
-                    $query->withTrashed()->select('id', 'product_detail_id', 'image_name');
+                    $query->select('id', 'product_detail_id', 'image_name');
                 },
             ])
             ->get()
@@ -288,8 +288,24 @@ class ProductsController extends Controller
         });
     })->distinct('user_id')->count();
 
+    $rating_avg = ProductVote::whereHas('user', function ($query) {
+        $query->where('Role', 0); // Lọc người dùng có role = 0
+    })->whereHas('order_details', function ($query) use ($id) {
+        $query->whereHas('variants', function ($query) use ($id) {
+            $query->where('product_id', $id);
+        });
+    })->whereNotNull('rate')->avg('rate');
 
-    return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes ,'rating_count' => $rating_count]]);
+    // // Chỉ cập nhật nếu $rating_avg khác null
+    // $rating_avg_rounded = $rating_avg !== null ? round($rating_avg) : 0;
+    // Product::where('id', $id)->update(['rate' => $rating_avg_rounded]);
+
+    if ($rating_avg !== null) {
+        $product->rate = round($rating_avg);
+        $product->save();
+    }
+
+   return view('pages.product')->with(['data' => ['advertises' => $advertises, 'product' => $product, 'product_details' => $product_details, 'suggest_products' => $suggest_products, 'product_votes' => $product_votes ,'rating_avg'=>$rating_avg,'rating_count' => $rating_count]]);
   }
 
     public function addVote(Request $request)

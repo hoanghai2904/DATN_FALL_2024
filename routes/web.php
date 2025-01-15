@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\pages\OrderTrackingController;
@@ -32,6 +33,8 @@ Route::get('active/{token}', 'Auth\RegisterController@activation')->name('active
 Route::namespace('Admin')->prefix('admin')->name('admin.')->middleware('admin')
   ->group(function () {
     Route::get('dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/dashboard/filter-products', [App\Http\Controllers\Admin\DashboardController::class, 'filterProducts'])
+        ->name('admin.dashboard.filter-products');
     // Route::get('dashboard', 'DashboardController@dashboardData')->name('data.dashboard');
 
     Route::get('users', 'UserController@index')->name('users');
@@ -162,3 +165,6 @@ Route::namespace('Pages')->group(function () {
 Route::fallback(function () {
   abort(404, 'Trang không tồn tại');
 });
+
+Route::get('/admin/dashboard/filter-products', [DashboardController::class, 'filterProducts'])
+    ->name('admin.dashboard.filter-products');

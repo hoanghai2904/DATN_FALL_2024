@@ -155,26 +155,32 @@ class AttributeController extends Controller
             ], 500);
         }
     }
-
     public function destroy($id)
     {
         try {
             // Tìm thuộc tính theo ID, nếu không tìm thấy sẽ trả về lỗi 404
             $attribute = Attribute::findOrFail($id);
+           
+            if ($attribute->values()->count() > 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Không thể xóa Thuộc tính đã có giá trị.'
+                ]);
+            }
 
             // Xoá thuộc tính
             $attribute->delete();
 
             // Trả về phản hồi JSON thành công
             return response()->json([
-                'message' => 'Thuộc tính đã được xóa!',
-                'status' => 'success'
-            ], 200);
+                'status' => 'success',
+                'message' => 'Thuộc tính đã được xóa thành công!'
+            ]);
+
         } catch (\Exception $e) {
-            // Trả về phản hồi lỗi nếu xảy ra vấn đề
             return response()->json([
-                'message' => 'Có lỗi xảy ra khi xoá thuộc tính!',
-                'status' => 'error'
+                'status' => 'error',
+                'message' => 'Có lỗi xảy ra khi xóa thuộc tính.'
             ], 500);
         }
     }

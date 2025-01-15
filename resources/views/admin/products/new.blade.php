@@ -141,6 +141,7 @@
                             @endforeach
                             </select>
                             <span class="error" id="name-error"></span>
+                         
                         </div>
                     </div>
                     <!-- Giới thiệu Thêm Giá trị Thuộc Tính - Cột 2 -->
@@ -720,6 +721,22 @@ $(document).ready(function () {
             $(this).find('i').removeClass('fa-minus').addClass('fa-plus');
         }
     });
+
+
+                                $(document).ready(function() {
+                                    $('#attributes_0').on('change', function() {
+                                        if ($(this).val().length > 2) {
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: 'Cảnh báo',
+                                                text: 'Chỉ được chọn tối đa 2 thuộc tính',
+                                                confirmButtonText: 'Đồng ý'
+                                            });
+                                            $(this).val($(this).val().slice(0, 2));
+                                        }
+                                    });
+                                });
+                          
 });
 
     </script>

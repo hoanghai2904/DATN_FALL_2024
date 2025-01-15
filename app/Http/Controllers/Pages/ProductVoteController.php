@@ -99,6 +99,8 @@ class ProductVoteController extends Controller
               'user_id' => auth()->id(),
               'status' => 1,
           ]);
+          // $rate = ProductVote::where('product_id', $request->product_id)->avg('rate');
+
   
           // Nếu lưu thành công, trả về phản hồi thành công
           return response()->json([

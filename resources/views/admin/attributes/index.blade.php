@@ -98,13 +98,13 @@
                                 <th data-orderable="false" data-width="100px">Tên thuộc tính</th>
 
                                 <th data-width="60px" data-type="date-euro">Ngày Tạo</th>
-                                <th data-orderable="false" data-width="70px">Tác Vụ</th>
+                                <th data-orderable="false" data-width="70px" class="text-center">Tác Vụ</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($attributes as $attribute)
                                 <tr>
-                                    <td class="text-center">
+                                    <td >
                                         {{ $attribute->id }}
                                     </td>
                                     <td>
@@ -113,7 +113,7 @@
                                     </td>
 
                                     <td> {{ \Carbon\Carbon::parse($attribute->created_at)->format('d/m/Y') }}</td>
-                                    <td>
+                                    <td class="text-center">
                                         <a href="{{ route('admin.attributes.edit', $attribute->id) }}"
                                             class="btn btn-icon btn-sm btn-primary tip" title="Chỉnh Sửa">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -215,7 +215,7 @@
                     } else {
                         Swal.fire(
                             'Lỗi!',
-                            'Có lỗi xảy ra khi xóa thuộc tính.',
+                            response.message || 'Có lỗi xảy ra khi xóa thuộc tính.',
                             'error'
                         );
                     }

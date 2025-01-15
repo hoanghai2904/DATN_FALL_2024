@@ -95,12 +95,12 @@ class OrderController extends Controller
         case 'cancel':
           if ($orderAction->order_details->isNotEmpty()) {
             foreach ($orderAction->order_details as $orderDetail) {
-              $productDetail = $orderDetail->product_detail;
+              $productDetail = $orderDetail->variants;
 
               // Kiểm tra nếu productDetail tồn tại
               if ($productDetail) {
                 // Cộng số lượng sản phẩm trả về vào kho
-                $productDetail->quantity += $orderDetail->quantity;
+                $productDetail->stock_quantity += $orderDetail->quantity;
                 $productDetail->save();
               }
             }
@@ -115,12 +115,12 @@ class OrderController extends Controller
           // Kiểm tra nếu đơn hàng tồn tại và có chi tiết đơn hàng
           if ($orderAction->order_details->isNotEmpty()) {
             foreach ($orderAction->order_details as $orderDetail) {
-              $productDetail = $orderDetail->product_detail;
+              $productDetail = $orderDetail->variants;
 
               // Kiểm tra nếu productDetail tồn tại
               if ($productDetail) {
                 // Cộng số lượng sản phẩm trả về vào kho
-                $productDetail->quantity += $orderDetail->quantity;
+                $productDetail->stock_quantity += $orderDetail->quantity;
                 $productDetail->save();
               }
             }
@@ -145,7 +145,8 @@ class OrderController extends Controller
 
   public function processing()
   {
-    $orders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+    // Lỗi logic 1: Trùng lặp trường status trong select()
+    $orders = Order::select('id', 'user_id', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
       'user' => function ($query) {
         $query->select('id', 'name');
       },
@@ -154,7 +155,8 @@ class OrderController extends Controller
       }
     ])->where('status', 2)->latest()->get();
 
-    $preOrders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
+    // Lỗi logic 2: Trùng lặp trường status trong select() 
+    $preOrders = Order::select('id', 'user_id', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
       'user' => function ($query) {
         $query->select('id', 'name');
       },
@@ -163,7 +165,8 @@ class OrderController extends Controller
       }
     ])->where('status', 3)->latest()->get();
 
-    $returnOrders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'return_reason', 'created_at')->with([
+    // Lỗi logic 3: Trùng lặp trường status trong select()
+    $returnOrders = Order::select('id', 'user_id', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'return_reason', 'created_at')->with([
       'user' => function ($query) {
         $query->select('id', 'name');
       },
@@ -172,7 +175,8 @@ class OrderController extends Controller
       }
     ])->whereIn('status', [9,10,11])->latest()->get();
 
-    $cancelOrders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'cancel_reason', 'created_at')
+    // Lỗi logic 4: Trùng lặp trường status trong select()
+    $cancelOrders = Order::select('id', 'user_id', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'cancel_reason', 'created_at')
     ->with([
         'user' => function ($query) {
             $query->select('id', 'name');
@@ -184,8 +188,6 @@ class OrderController extends Controller
     ->whereIn('status', [12,13])
     ->latest()
     ->get();
-
-    // dd($cancelOrders);
 
     return view('admin.order.processing', compact('orders', 'preOrders', 'returnOrders','cancelOrders'));
   }

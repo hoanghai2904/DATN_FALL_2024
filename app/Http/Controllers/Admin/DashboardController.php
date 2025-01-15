@@ -16,6 +16,7 @@ use App\Models\OrderDetail;
 use App\Models\Producer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -211,18 +212,23 @@ class DashboardController extends Controller
 
   public function lastestOrder()
   {
-    $orders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')->with([
-      'user' => function ($query) {
-        $query->select('id', 'name');
-      },
-      'payment_method' => function ($query) {
-        $query->select('id', 'name');
-      }
-    ])->latest()->limit(5)->get();
+    $orders = Order::select('id', 'user_id', 'status', 'is_paid', 'payment_method_id', 'status', 'order_code', 'name', 'email', 'phone', 'created_at')
+      ->where('status', OrderStatusEnum::PENDING)
+      ->with([
+        'user' => function ($query) {
+          $query->select('id', 'name');
+        },
+        'payment_method' => function ($query) {
+          $query->select('id', 'name');
+        }
+      ])
+      ->latest()
+      ->limit(10)
+      ->get();
 
     return $orders;
   }
-  public function index()
+  public function index(Request $request)
   {
 
     $count['user'] = User::where([['active', true], ['Role', false]])->count();
@@ -234,6 +240,125 @@ class DashboardController extends Controller
     $data = $this->dashboardData();
     $orderStatuses = $this->orderGroupByStatus();
     $orders = $this->lastestOrder();
-    return view('admin.index')->with(['count' => $count, 'data' => $data, 'orderStatuses' => $orderStatuses, 'orders' => $orders]);
+
+
+     $dateFilter = $request->date_filter ?? 'today';
+    $startDate = now()->startOfDay();
+    $endDate = now()->endOfDay();
+
+    switch ($dateFilter) {
+      case 'today':
+          $startDate = now()->startOfDay();
+          $endDate = now()->endOfDay();
+          break;
+      case 'this_week':
+          $startDate = now()->startOfWeek();
+          $endDate = now()->endOfWeek();
+          break;
+      case 'this_month':
+          $startDate = now()->startOfMonth();
+          $endDate = now()->endOfMonth();
+          break;
+      case 'last_month':
+          $startDate = now()->subMonth()->startOfMonth();
+          $endDate = now()->subMonth()->endOfMonth();
+          break;
+      case 'custom':
+          $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : now()->startOfDay();
+          $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : now()->endOfDay();
+          break;
   }
+
+  $topProducts = OrderDetail::withTrashed()
+      ->select('product_detail_id', DB::raw('SUM(quantity) as total_quantity'))
+      ->whereHas('order', function($query) {
+          $query->withTrashed()->where('status', OrderStatusEnum::COMPLETED);
+      })
+      ->when($dateFilter !== 'custom', function($query) use ($startDate, $endDate) {
+          return $query->whereBetween('created_at', [$startDate, $endDate]);
+      })
+      ->when($dateFilter === 'custom', function($query) use ($startDate, $endDate) {
+          return $query->whereBetween('created_at', [$startDate, $endDate]);
+      })
+      ->with(['variants' => function($query) {
+          $query->withTrashed()->select('id', 'product_id', 'sku')
+              ->with(['product' => function($query) {
+                  $query->withTrashed()->select('id', 'name', 'image', 'sku_code');
+              }]);
+      }])
+      ->groupBy('product_detail_id')
+      ->orderBy('total_quantity', 'desc')
+      ->limit(5)
+      ->get();
+
+  return view('admin.index')->with([
+      'count' => $count,
+      'data' => $data,
+      'orderStatuses' => $orderStatuses,
+      'orders' => $orders,
+      'topProducts' => $topProducts,
+      'dateFilter' => $dateFilter,
+      'startDate' => $startDate->format('Y-m-d'),
+      'endDate' => $endDate->format('Y-m-d')
+  ]);
+  }
+
+  public function filterProducts(Request $request)
+  {
+      try {
+          $dateFilter = $request->date_filter;
+          $startDate = now()->startOfDay();
+          $endDate = now()->endOfDay();
+  
+          // Xác định khoảng thời gian
+          switch ($dateFilter) {
+              case 'today':
+                  $startDate = now()->startOfDay();
+                  $endDate = now()->endOfDay();
+                  break;
+              case 'this_week':
+                  $startDate = now()->startOfWeek();
+                  $endDate = now()->endOfWeek();
+                  break;
+              case 'this_month':
+                  $startDate = now()->startOfMonth();
+                  $endDate = now()->endOfMonth();
+                  break;
+              case 'last_month':
+                  $startDate = now()->subMonth()->startOfMonth();
+                  $endDate = now()->subMonth()->endOfMonth();
+                  break;
+              case 'custom':
+                  $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : now()->startOfDay();
+                  $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : now()->endOfDay();
+                  break;
+          }
+  
+          $topProducts = OrderDetail::withTrashed()
+              ->select('product_detail_id', DB::raw('SUM(quantity) as total_quantity'))
+              ->whereHas('order', function($query) {
+                  $query->withTrashed()->where('status', OrderStatusEnum::COMPLETED);
+              })
+              ->whereBetween('created_at', [$startDate, $endDate])
+              ->with(['variants' => function($query) {
+                  $query->withTrashed()->select('id', 'product_id', 'sku')
+                      ->with(['product' => function($query) {
+                          $query->withTrashed()->select('id', 'name', 'image', 'sku_code');
+                      }]);
+              }])
+              ->groupBy('product_detail_id')
+              ->orderBy('total_quantity', 'desc')
+              ->limit(5)
+              ->get();
+  
+          return view('admin.partials.top-products-table', compact('topProducts'))->render();
+  
+      } catch (\Exception $e) {
+          return response()->json([
+              'error' => true,
+              'message' => 'Có lỗi xảy ra khi lọc sản phẩm'
+          ], 500);
+      }
+  }
+
 }

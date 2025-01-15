@@ -431,14 +431,17 @@
                                                                         </div>
                                                                         <div class="vote-content-right" style="background-color:#f0f0f0 ; border-radius: 10px;padding:15px 10px ">
                                                                             <div class="name">
-                                                                                {{ $vote->user->name }}
+                                                                                <div style="display: flex; align-items: center;">
+                                                                                    <span>{{ $vote->user->name }}</span>
+                                                                                    <div class="date" style="margin-left: 20px; font-size: 12px;">
+                                                                                        {{ implode('-', array_slice(explode('-', $vote->order_details->variants->sku ?? ''), 1)) ?? $vote->order_details->variants->sku ?? '' }}
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                             <div class="vote-start">
                                                                                 <div class="star">{!! Helper::get_start_vote($vote->rate) !!}</div>
                                                                                 <div class="date" style="margin-right: 30px">{{ $vote->created_at->format('d/m/Y') }}</div>
-                                                                                <div class="date">
-                                                                                    {{ explode('-', $vote->order_details->variants->sku ?? '')[1] ?? $vote->order_details->variants->sku ?? '' }}
-                                                                                </div>
+                                                                               
                                                                                                                                                                 
                                                                             </div>
                                                                             <div class="content">{{ $vote->content }}</div>
